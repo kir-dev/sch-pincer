@@ -6,6 +6,7 @@
 	<title th:text="#{lang.header}">WebSCHop</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
 	<meta name="theme-color" content="#4C4C4D">
 	<meta name="msapplication-navbutton-color" content="#4C4C4D" />
@@ -36,75 +37,128 @@
 	</div>
 
 	<div class="content page">
-		<div class="main-article">
-			<div class="picture" style="background-image: url('https://www.vegetariantimes.com/.image/t_share/MTQ3MDM4NTA3OTA1MzI4ODc5/gyros2_2000_1125.jpg')">
-				<div class="holder black-white">
-					<span>Ma nyit</span><br />
-					<h2>DZSÁJROSZ</h2>
-				</div>
-			</div>
+		<div class="highlighted">
+			<h2>Következő nyitások</h2>
+			
+			<table class="circles-table">
+				<tr class="purple">
+					<td class="border-colored"><a href="">Vödör</a></td>
+					<td>Hetfő</td>
+					<td>18:00 (18-04-09)</td>
+					<td>Feeling típusú nyitás</td>
+					<td><a href=""><i class="material-icons">navigate_next</i></a></td>
+				</tr>
+				<tr class="blue">
+					<td class="border-colored"><a href="">Americano</a></td>
+					<td>Kedd</td>
+					<td>18:00 (18-04-09)</td>
+					<td>Random moment cuccok</td>
+					<td><a href=""><i class="material-icons">navigate_next</i></a></td>
+				</tr>
+				<tr class="orange">
+					<td class="border-colored"><a href="">Pizzásch</a></td>
+					<td>Szerda</td>
+					<td>18:00 (18-04-09)</td>
+					<td>Jack pls mit írjak ide?</td>
+					<td><a href=""><i class="material-icons">navigate_next</i></a></td>
+				</tr>
+				<tr class="green">
+					<td class="border-colored"><a href="">Dzsájrosz</a></td>
+					<td>Csütörtök</td>
+					<td>18:00 (18-05-03)</td>
+					<td>Type your feeling here</td>
+					<td><a href=""><i class="material-icons">navigate_next</i></a></td>
+				</tr>
+				<tr class="red">
+					<td class="border-colored"><a href="">Kakas</a></td>
+					<td>Vasárnap</td>
+					<td>21:00 (18-04-24)</td>
+					<td>Forradalmi nyitás</td>
+					<td><a href=""><i class="material-icons">navigate_next</i></a></td>
+				</tr>
+				<tr class="yellow">
+					<td class="border-colored"><a href="">Lángosch</a></td>
+					<td>Vasárnap</td>
+					<td>18:00 (18-04-09)</td>
+					<td>Sapkakas</td>
+					<td><a href=""><i class="material-icons">navigate_next</i></a></td>
+				</tr>
+			</table>
 		</div>
 		
-		<div class="article-set">
+		<div class="circles">
 			<div class="article orange">
-				<div class="picture">
+				<div class="picture border-colored">
 					<div class="overlay"></div>
 					<div class="image" style="background-image: url('http://wemagazin.com/assets/images/olaszgasztro1pizza.jpg')"></div>
 				</div>
-				<h3>Pizzásch</h3>
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt. Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat euismod ut eget erat.</p>
-				<a href="">Kör adatlapja</a>
-			</div>
+				<div class="message">
+					<h3>Pizzásch</h3>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt. Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat euismod ut eget erat.</p>
+					<span class="colored"><b>Következő nyitás:</b> 2018.04.12. 18:00</span>
+				</div>
+		</div>
 			
 			<div class="article green">
-				<div class="picture">
+				<div class="picture border-colored">
 					<div class="overlay"></div>
 					<div class="image" style="background-image: url('https://www.traegergrills.com/on/demandware.static/-/Library-Sites-TraegerSharedLibrary/default/dw2aeb721f/images/recipes/DW_Recipe_gyros_Hero.jpg')"></div>
 				</div>
-				<h3>Dzsájrosz</h3>
-				<p>Donec est turpis, pellentesque at dictum ut, aliquam at turpis. In et turpis at risus lobortis egestas. Mauris tellus dolor, porta id dictum tristique, rutrum sit amet leo. Donec non turpis nulla. Aliquam eget nisi id orci sollicitudin sodales a non enim. Etiam ultrices enim vel nulla gravida viverra. Vivamus congue enim sit amet dui facilisis sodales. Nulla facilisi. Praesent in neque eget.</p>
-				<a href="">Kör adatlapja</a>
+				<div class="message">
+					<h3>Dzsájrosz</h3>
+					<p>Donec est turpis, pellentesque at dictum ut, aliquam at turpis. In et turpis at risus lobortis egestas. Mauris tellus dolor, porta id dictum tristique, rutrum sit amet leo. Donec non turpis nulla. Aliquam eget nisi id orci sollicitudin sodales a non enim. Etiam ultrices enim vel nulla gravida viverra.</p>
+					<span class="colored"><b>Következő nyitás:</b> 2018.04.12. 18:00</span>
+				</div>
 			</div>
 			
 			<div class="article blue">
-				<div class="picture">
+				<div class="picture border-colored">
 					<div class="overlay"></div>
 					<div class="image" style="background-image: url('https://cdn.shopify.com/s/files/1/1254/9239/products/20-meal-1_1024x1024_59b9eba9-8b79-481b-bca4-23830b5cc063.jpg?v=1500497691')"></div>
 				</div>
-				<h3>Americano</h3>
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt. Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat euismod ut eget erat.</p>
-				<a href="">Kör adatlapja</a>
+				<div class="message">
+					<h3>Americano</h3>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt. Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat euismod ut eget erat.</p>
+					<span class="colored"><b>Következő nyitás:</b> 2018.04.12. 18:00</span>
+				</div>
 			</div>
 			
 			<div class="article purple">
-				<div class="picture">
+				<div class="picture border-colored">
 					<div class="overlay"></div>
 					<div class="image" style="background-image: url('http://www.filippiandmolnar.com/wp-content/uploads/2017/02/PANZEROTTO-FRITTO-1024x815.jpg')"></div>
 				</div>
-				<h3>Vödör</h3>
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt. Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat euismod ut eget erat.</p>
-				<a href="">Kör adatlapja</a>
+				<div class="message">
+					<h3>Vödör</h3>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt. Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat euismod ut eget erat.</p>
+					<span class="colored"><b>Következő nyitás:</b> 2018.04.12. 18:00</span>
+				</div>
 			</div>
 			
 			<div class="article red">
-				<div class="picture">
+				<div class="picture border-colored">
 					<div class="overlay"></div>
 					<div class="image" style="background-image: url('https://img-global.cpcdn.com/016_recipes/74e0e4fca8376661/751x532cq70/photo.jpg')"></div>
 				</div>
-				<h3>Kakas</h3>
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt. Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat euismod ut eget erat.</p>
-				<a href="">Kör adatlapja</a>
+				<div class="message">
+					<h3>Kakas</h3>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt. Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat euismod ut eget erat.</p>
+					<span class="colored"><b>Következő nyitás:</b> 2018.04.12. 18:00</span>
+				</div>
 			</div>
 			
 			<div class="article yellow">
-				<div class="picture">
+				<div class="picture border-colored">
 					<div class="overlay"></div>
 					<div class="image" style="background-image: url('https://www.femcafe.hu/sites/default/files/images2015/8_recept/hungarytoday-hu.jpg')"></div>
 				</div>
-				<h3>Lángosch</h3>
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt. Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat euismod ut eget erat.</p>
-				<a href="">Kör adatlapja</a>
+				<div class="message">
+					<h3>Lángosch</h3>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt. Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat euismod ut eget erat.</p>
+					<span class="colored"><b>Következő nyitás:</b> 2018.04.12. 18:00</span>
+				</div>
 			</div>
+			
 		</div>
 	</div>
 </body>

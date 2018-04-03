@@ -27,5 +27,11 @@ public class MainController {
         model.put("message", this.message);
         return "circle";
     }
+    
+    @RequestMapping("/circle/{circleId}")
+    public String circleSpecific(Map<String, Object> model) {
+        model.put("message", this.message);
+        return "circle";
+    }
 
 }

@@ -6,4 +6,4 @@ WebSCHop
 
 ## Features
 
-- Automatic CSS monify (**TODO**: js?)
+- Automatic CSS minify (**TODO**: js?)
