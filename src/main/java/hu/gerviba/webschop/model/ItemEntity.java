@@ -1,4 +1,6 @@
-package hu.gerviba.webschop.entity;
+package hu.gerviba.webschop.model;
+
+import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,11 +13,13 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "items")
-public class ItemEntity {
+public class ItemEntity implements Serializable {
+
+    private static final long serialVersionUID = -8174418379518262439L;
 
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column
@@ -23,11 +27,17 @@ public class ItemEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private CircleEntity circle;
+
+    @Column(length = 255)
+    private String description;
     
     @Column
-    String detailsJson;
+    private String detailsConfigJson;
     
     @Column
-    int costs; 
+    private int costs; 
+    
+    @Column
+    private boolean orderable;
     
 }

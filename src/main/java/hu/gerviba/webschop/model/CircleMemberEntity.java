@@ -1,4 +1,6 @@
-package hu.gerviba.webschop.entity;
+package hu.gerviba.webschop.model;
+
+import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,10 +12,13 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "circleMembers")
-public class CircleMemberEntity {
+public class CircleMemberEntity implements Serializable {
+    
+    private static final long serialVersionUID = 3999912885341511614L;
+
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column
@@ -29,4 +34,5 @@ public class CircleMemberEntity {
     
     @Column
     private int sort;
+    
 }

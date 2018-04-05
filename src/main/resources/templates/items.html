@@ -20,20 +20,23 @@
 	<div class="header">
 		<span th:text="#{lang.header}">WEBSCHOP</span>
 		<nav>
-			<a href="/" th:href="@{/}" th:text="#{lang.nav.home}">Home</a>
-			<a href="/circle" th:href="@{/circle}" th:text="#{lang.nav.circle}">Circles</a>
-			<a href="/items" th:href="@{/items}" th:text="#{lang.nav.items}">Items</a>
-			<a href="/login" th:href="@{/login}" th:text="#{lang.nav.login}">Login</a>
+			<a href="index.html"	th:href="@{/}" 		 th:text="#{lang.nav.home}">Home</a>
+			<a href="circle.html" 	th:href="@{/circle}" th:text="#{lang.nav.circle}">Circles</a>
+			<a href="items.html" 	th:href="@{/items}"  th:text="#{lang.nav.items}">Items</a>
+			<a href="#login" 		th:href="@{/login}"  th:text="#{lang.nav.login}">Login</a>
 		</nav>
 	</div>
 	
-	<div class="left-menu">
-		<a><img src="../static/icons/ecommerce_bag_check.svg" th:src="@{icons/ecommerce_bag_check.svg}" />Vödör</a>
-		<a><img src="../static/icons/ecommerce_gift.svg" th:src="@{icons/ecommerce_gift.svg}" />Americano</a>
-		<a><img src="../static/icons/ecommerce_graph_increase.svg" th:src="@{icons/ecommerce_graph_increase.svg}" />Pizzásch</a>
-		<a><img src="../static/icons/ecommerce_money.svg" th:src="@{icons/ecommerce_money.svg}" />Gyros</a>
-		<a><img src="../static/icons/ecommerce_safe.svg" th:src="@{icons/ecommerce_safe.svg}" />Kakas</a>
-		<a><img src="../static/icons/ecommerce_sale.svg" th:src="@{icons/ecommerce_sale.svg}" />Lángosch</a>
+<div class="left-menu">
+		<a th:each="circle : ${circles}">
+			<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{${circle.logoUrl}}"  />
+			<span th:text="${circle.displayName}">Vödör</span>
+		</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_gift.svg" />Americano</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_graph_increase.svg" />Pizzásch</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_money.svg" />Gyros</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_safe.svg" />Kakas</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_sale.svg" />Lángosch</a>
 	</div>
 
 	<div class="content">
@@ -252,5 +255,7 @@
 						
 		</div>
 	</div>
+	
+	<div th:replace="MainLayout :: footer"></div>
 </body>
 </html>

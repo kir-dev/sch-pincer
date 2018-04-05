@@ -18,6 +18,10 @@ input, button {
 	appearance: none;
 }
 
+em {
+	font-style: normal;
+}
+
 input:focus, button:focus {
 	outline: 0;
 }
@@ -73,16 +77,25 @@ input:focus, button:focus {
 	display: block;
 	text-align: center;
 	margin: 40px 0;
+	opacity: 1;
+	transition: opacity ease 0.2s;
+	cursor: pointer;
+}
+
+.left-menu a:hover {
+	opacity: 0.7;
 }
 
 .left-menu a img {
 	margin-bottom: 10px;
+	cursor: pointer;
 }
 
 .content {
 	padding-left: 140px;
 	padding-right: 40px;
 	text-align: center;
+	margin-bottom: 40px;
 }
 
 /** ITEMS MENU **/
@@ -220,6 +233,7 @@ input:focus, button:focus {
 
 .main-article .picture h2 {
 	display: inline-block;
+	text-transform: uppercase;
 }
 
 .main-article .black-white span {
@@ -361,7 +375,6 @@ input:focus, button:focus {
 }
 
 .highlighted h2 {
-/* 	background-color: #111111; */
 	text-transform: uppercase;
 	padding: 40px 0 0 0;
 	font-size: 30px;
@@ -453,6 +466,100 @@ input:focus, button:focus {
 	min-height: 200px;
 	width: calc(100% - 220px);
 	vertical-align: top;
+}
+
+/** FOOTER **/
+
+.footer {
+	text-align: center;
+	color: #4c4c4d;
+	background-color: #000000;
+	padding: 40px 40px 20px 140px;
+	text-transform: uppercase;
+}
+
+.footer a {
+	text-decoration: none;
+	color: #6c6c6d;
+	opacity: 1;
+	transition: opacity ease 0.3s;
+}
+
+.footer a:hover {
+	opacity: 0.7;
+}
+
+.footer a img {
+	opacity: 0.7;
+	padding-bottom: 10px;
+	max-width: 200px;
+}
+
+.footer a:hover img {
+	opacity: 0.6;
+}
+
+.footer a i {
+	position: relative;
+	top: 3px;
+	font-size: 20px;
+	padding-right: 2px;
+}
+
+.footer h3 {
+	color: #6c6c6d;
+	text-transform: uppercase;
+	font-weight: 300;
+	margin-bottom: 20px;
+	font-size: 24px;
+}
+
+.footer .wrapper {
+	max-width: 1000px;
+	display: -webkit-flex;
+	display: flex;
+	padding-bottom: 20px;
+	margin: 0 auto;
+}
+
+.footer .wrapper div {
+	flex: 1;
+	padding: 0 20px;
+}
+
+.footer p {
+	padding-bottom: 10px;
+}
+
+.footer .gerviba {
+	display: inline-block;
+	margin: 0 auto;
+/* 	border-top: 2px solid #4c4c4d; */
+	padding: 10px 20px 0 20px;
+}
+
+.footer .gerviba span i {
+	font-size: 20px;
+	position: relative;
+	top: 4px;
+}
+
+.footer .gerviba span:first-of-type {
+	color: #6c6c6d;
+}
+
+.footer .gerviba span:nth-of-type(2) {
+	color: #af0000;
+}
+
+.footer .gerviba span a {
+	text-decoration: none;
+	color: #6c6c6d;
+}
+
+.footer .white {
+	filter: grayscale(1);
+	-webkit-filter: grayscale(1);
 }
 
 /** RED **/
