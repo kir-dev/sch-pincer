@@ -26,4 +26,29 @@ public class UserEntity implements Serializable {
     @Column
     private String room;
     
+    public UserEntity() {}
+
+    public UserEntity(String uid, String name, String email) {
+        super();
+        this.uid = uid;
+        this.name = name;
+        this.email = email;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getRoom() {
+        return room;
+    }
+    
 }

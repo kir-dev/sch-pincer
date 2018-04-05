@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:insert="MainLayout :: head">
+	<meta charset="UTF-8" /> 
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
+</head>
+<body>
+	<div class="header" th:replace="MainLayout :: header">
+		<span th:text="#{lang.header}">WEBSCHOP</span>
+		<nav>
+			<a href="index.html"	th:href="@{/}" 		 th:text="#{lang.nav.home}">Home</a>
+			<a href="circle.html" 	th:href="@{/circle}" th:text="#{lang.nav.circle}">Circles</a>
+			<a href="items.html" 	th:href="@{/items}"  th:text="#{lang.nav.items}">Items</a>
+			<a href="#login" 		th:href="@{/login}"  th:text="#{lang.nav.login}">Login</a>
+		</nav>
+	</div>
+	
+	<div class="left-menu" th:replace="MainLayout :: left-menu">
+		<a th:each="circle : ${circles}">
+			<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{${circle.logoUrl}}"  />
+			<span th:text="${circle.displayName}">Vödör</span>
+		</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_gift.svg" />Americano</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_graph_increase.svg" />Pizzásch</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_money.svg" />Gyros</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_safe.svg" />Kakas</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_sale.svg" />Lángosch</a>
+	</div>
+
+	<div class="content page">
+		<div class="highlighted">
+			<h2 th:text="${selectedCircle?.displayName}">N/A</h2>
+			
+			
+		</div>
+		
+		<div class="rewiews">
+			<div th:each="circle : ${circles}" th:object="${circle}" th:class="'article ' + *{cssClassName}" class="article orange">
+				<div class="picture border-colored">
+					<div class="overlay"></div>
+					<div class="image" style="background-image: url('http://wemagazin.com/assets/images/olaszgasztro1pizza.jpg')"
+							th:style="'background-image: url(\'' + *{backgroundUrl} + '\');'">
+					</div>
+				</div>
+				<div class="message">
+					<h3 th:text="*{displayName}">Pizzásch</h3>
+					<p>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+						Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
+						Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim 
+						luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat 
+						euismod ut eget erat.
+					</p>
+					<span class="colored">
+						<b>Következő nyitás:</b>
+						<em th:text="${#dates.format(circle.openings[0].dateStart, 'yyyy.MM.dd. HH:mm')}">2018.04.12. 18:00</em>
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div th:replace="MainLayout :: footer"></div>
+</body>
+</html>

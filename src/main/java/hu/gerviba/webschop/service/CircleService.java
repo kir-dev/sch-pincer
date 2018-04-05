@@ -31,4 +31,8 @@ public class CircleService {
         repo.save(circleEntity);
     }
     
+    public CircleEntity getOne(Long id) {
+        return repo.getOne(id);
+    }
+    
 }

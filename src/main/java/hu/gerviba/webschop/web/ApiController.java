@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import hu.gerviba.authsch.AuthSchAPI;
 import hu.gerviba.webschop.model.CircleEntity;
 import hu.gerviba.webschop.model.OpeningEntity;
 import hu.gerviba.webschop.service.CircleService;
@@ -30,6 +31,9 @@ public class ApiController {
     @Autowired
     private OpeningService openingService;
     
+    @Autowired
+    private AuthSchAPI authSch;
+    
     @GetMapping("/items")
     @ResponseBody
     public ResponseEntity<List<CircleEntity>> getAllAuctionItems() {
@@ -49,6 +53,12 @@ public class ApiController {
     public ResponseEntity<List<OpeningEntity>> getNextWeekOpenings() {
         List<OpeningEntity> page = openingService.findNextWeek();
         return new ResponseEntity<List<OpeningEntity>>(page, HttpStatus.OK);
+    }
+    
+    @GetMapping("/testlogin")
+    @ResponseBody
+    public String testlogin() {
+        return authSch.getApiUrlBase();
     }
     
 }

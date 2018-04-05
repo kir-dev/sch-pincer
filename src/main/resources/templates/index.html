@@ -1,21 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/">
-<head>
+<head th:insert="MainLayout :: head">
 	<meta charset="UTF-8" /> 
-	<title th:text="#{lang.header}">WebSCHop</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
-	
-	<meta name="theme-color" content="#4C4C4D">
-	<meta name="msapplication-navbutton-color" content="#4C4C4D" />
-	<meta name="apple-mobile-web-app-status-bar-style" content="#4C4C4D" />
-	<meta name="msapplication-tap-highlight" content="no">
-	<meta name="author" content="Szabó Gergely (Gerviba)"/>
-	<meta name="keywords" content="" 	th:content="#{lang.head.keywords}">
-	<meta name="description" content=""	th:content="#{lang.head.description}">
 </head>
 <body>
 	<div class="header" th:replace="MainLayout :: header">

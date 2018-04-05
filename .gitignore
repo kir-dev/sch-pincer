@@ -4,3 +4,5 @@
 target/
 .metadata/
 .dbeaver-data-sources.xml
+secret_notes
+*application-local.properties
