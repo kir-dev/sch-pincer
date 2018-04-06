@@ -21,7 +21,7 @@
 	
 	<div class="left-menu" th:replace="MainLayout :: left-menu">
 		<a th:each="circle : ${circles}">
-			<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{${circle.logoUrl}}"  />
+			<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{${circle.logoUrl}}" />
 			<span th:text="${circle.displayName}">Vödör</span>
 		</a>
 		<a th:remove="all"><img src="../static/icons/ecommerce_gift.svg" />Americano</a>
@@ -30,6 +30,17 @@
 		<a th:remove="all"><img src="../static/icons/ecommerce_safe.svg" />Kakas</a>
 		<a th:remove="all"><img src="../static/icons/ecommerce_sale.svg" />Lángosch</a>
 	</div>
+
+<!-- 	<div class="popup-bg"> -->
+<!-- 		<div class="popup orange"> -->
+<!-- 			<div class="picture border-colored" style="background-image: url('http://pizza-kerepes.hu/modules/homeslider/images/4104604561340eddb4f3276a8e8bfb68053acc79_oie_22135422i53WFiMn.jpg');"> -->
+<!-- 				<div class="overlay"></div> -->
+<!-- 				<div class="logo"> -->
+<!-- 					<img src="icons/ecommerce_bag_check.svg" /> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
 
 	<div class="content">
 		<div class="item-set">

@@ -9,7 +9,6 @@ import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import hu.gerviba.authsch.AuthSchAPI;
-import hu.gerviba.authsch.AuthSchResponseException;
 import hu.gerviba.authsch.response.AuthResponse;
 import hu.gerviba.authsch.response.ProfileDataResponse;
 import hu.gerviba.authsch.struct.Scope;
@@ -66,10 +64,10 @@ public class LoginController {
     }
 
     public Collection<GrantedAuthority> getAuthorities() {
-        //make everyone ROLE_USER
         Collection<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
         GrantedAuthority grantedAuthority = new GrantedAuthority() {
-            //anonymous inner type
+            private static final long serialVersionUID = -8093016144065421718L;
+
             public String getAuthority() {
                 return "ROLE_USER";
             }
