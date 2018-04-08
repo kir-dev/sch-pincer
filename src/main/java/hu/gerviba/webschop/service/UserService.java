@@ -3,14 +3,14 @@ package hu.gerviba.webschop.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import hu.gerviba.webschop.dao.UserRepositoriy;
+import hu.gerviba.webschop.dao.UserRepository;
 import hu.gerviba.webschop.model.UserEntity;
 
 @Service
 public class UserService {
 
     @Autowired
-    UserRepositoriy users;
+    UserRepository users;
     
     public UserEntity getById(String uid) {
         return users.getOne(uid);

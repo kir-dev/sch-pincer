@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import hu.gerviba.webschop.model.OpeningEntity;
 
 @Repository
-public interface OpeningRepositoriy extends JpaRepository<OpeningEntity, Long> {
+public interface OpeningRepository extends JpaRepository<OpeningEntity, Long> {
 
     List<OpeningEntity> findAllByOrderByDateStart();
     

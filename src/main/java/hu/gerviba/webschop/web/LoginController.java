@@ -43,11 +43,10 @@ public class LoginController {
         Authentication auth = new UsernamePasswordAuthenticationToken(code, state, getAuthorities());
         try {
             AuthResponse response = authSch.validateAuthentication(auth.getName());
-            System.out.println(response);
             ProfileDataResponse profile = authSch.getProfile(response.getAccessToken());
-            System.out.println(profile);
             
             if (users.exists(profile.getInternalId().toString())) {
+            	
             } else {
                 users.save(new UserEntity(profile.getInternalId().toString(), 
                         profile.getSurname() + " " + profile.getGivenName(), 

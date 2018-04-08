@@ -7,7 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import hu.gerviba.webschop.dao.OpeningRepositoriy;
+import hu.gerviba.webschop.dao.OpeningRepository;
 import hu.gerviba.webschop.model.OpeningEntity;
 
 @Service
@@ -15,7 +15,7 @@ import hu.gerviba.webschop.model.OpeningEntity;
 public class OpeningService {
     
     @Autowired
-    OpeningRepositoriy repo;
+    OpeningRepository repo;
 
     private static final long WEEK = 1000 * 60 * 60 * 24 * 7;
     

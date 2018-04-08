@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import hu.gerviba.webschop.dao.CircleRepositoriy;
+import hu.gerviba.webschop.dao.CircleRepository;
 import hu.gerviba.webschop.model.CircleEntity;
 
 @Service
@@ -17,7 +17,7 @@ import hu.gerviba.webschop.model.CircleEntity;
 public class CircleService {
 
     @Autowired
-    CircleRepositoriy repo;
+    CircleRepository repo;
     
     public Page<CircleEntity> findAll(Pageable pageable) {
         return repo.findAll(pageable);

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import hu.gerviba.webschop.model.CircleEntity;
 
 @Repository
-public interface CircleRepositoriy extends JpaRepository<CircleEntity, Long> {
+public interface CircleRepository extends JpaRepository<CircleEntity, Long> {
     
 }

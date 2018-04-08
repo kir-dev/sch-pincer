@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import hu.gerviba.webschop.model.UserEntity;
 
 @Repository
-public interface UserRepositoriy extends JpaRepository<UserEntity, String> {
+public interface UserRepository extends JpaRepository<UserEntity, String> {
 
 }

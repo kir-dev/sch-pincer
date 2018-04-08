@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import hu.gerviba.webschop.service.CircleService;
+import hu.gerviba.webschop.service.ItemService;
 import hu.gerviba.webschop.service.OpeningService;
 
 @Controller
@@ -22,6 +23,9 @@ public class MainController {
     @Autowired
     OpeningService openings;
     
+    @Autowired
+    ItemService items;
+    
     @GetMapping("/")
     public String root(Map<String, Object> model) {
         model.put("circles", circles.findAll());
@@ -32,6 +36,7 @@ public class MainController {
     @GetMapping("/items")
     public String items(Map<String, Object> model) {
         model.put("circles", circles.findAll());
+        model.put("items", items.findAll()); //TODO: Use AJAX
         return "items";
     }
     

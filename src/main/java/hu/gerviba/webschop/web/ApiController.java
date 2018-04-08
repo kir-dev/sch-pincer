@@ -7,11 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import hu.gerviba.authsch.AuthSchAPI;
 import hu.gerviba.webschop.model.CircleEntity;
+import hu.gerviba.webschop.model.ItemEntity;
 import hu.gerviba.webschop.model.OpeningEntity;
 import hu.gerviba.webschop.service.CircleService;
 import hu.gerviba.webschop.service.OpeningService;
@@ -59,6 +61,12 @@ public class ApiController {
     @ResponseBody
     public String testlogin() {
         return authSch.getApiUrlBase();
+    }
+    
+    @GetMapping("/item/{id}")
+    @ResponseBody
+    public ItemEntity getItem(@PathVariable Long id) {
+    	return null;
     }
     
 }

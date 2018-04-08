@@ -7,8 +7,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import hu.gerviba.webschop.model.CircleEntity;
+import hu.gerviba.webschop.model.ItemEntity;
 import hu.gerviba.webschop.model.OpeningEntity;
 import hu.gerviba.webschop.service.CircleService;
+import hu.gerviba.webschop.service.ItemService;
 import hu.gerviba.webschop.service.OpeningService;
 
 @Component
@@ -20,6 +22,9 @@ public class TestingConfig {
     
     @Autowired
     OpeningService openings;
+    
+    @Autowired
+    ItemService items;
     
     private static final String LONG_LOREM_IPSUM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \n" + 
             "Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.\n" + 
@@ -42,6 +47,8 @@ public class TestingConfig {
         
         openings.add(new OpeningEntity(1525370400000L, 1525392000000L, 1525330800000L, 1525348800000L, 
                 "demo/pizzasch-pr.jpg", "Jack pls mit írjak ide?", circle, 100, 20));
+        
+//        items.save(new ItemEntity("", "", "", "", ));
         
         circles.add(circle = new CircleEntity("Dzsájrosz", LONG_LOREM_IPSUM, LONG_LOREM_IPSUM_HOME, "green",
                 "demo/dzsajrosz-bg.jpg", "icons/ecommerce_gift.svg"));
