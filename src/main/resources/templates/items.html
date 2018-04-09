@@ -15,16 +15,16 @@
 </head>
 <body>
 
-	<div class="popup-bg inactive">
-		<div class="popup orange">
+	<div class="popup-bg inactive" id="popup">
+		<div class="popup" id="popup-window">
 			<section>
-				<div class="picture border-colored" style="background-image: url('http://pizza-kerepes.hu/modules/homeslider/images/4104604561340eddb4f3276a8e8bfb68053acc79_oie_22135422i53WFiMn.jpg');">
+				<div class="picture border-colored" id="popup-header">
 					<div class="overlay"></div>
 					<div class="logo">
 						<img src="icons/ecommerce_bag_check.svg" />
 					</div>
 				</div>
-				<h3>Ördög pizza</h3>
+				<h3 id="popup-title">Ördög pizza</h3>
 				<div class="body">
 					<form>
 						<label>Méret</label>
@@ -52,20 +52,20 @@
 						<input type="submit" class="colored border-colored" value="Add to cart"/>
 					</form>
 					<div class="info">
-						<div class="image" style="background-image:url('http://pizza-kerepes.hu/modules/homeslider/images/4104604561340eddb4f3276a8e8bfb68053acc79_oie_22135422i53WFiMn.jpg')">
+						<div class="image" id="popup-image" style="background-image:url('http://pizza-kerepes.hu/modules/homeslider/images/4104604561340eddb4f3276a8e8bfb68053acc79_oie_22135422i53WFiMn.jpg')">
 							<div class="overlay"></div>
 							<i class="material-icons">fullscreen</i>
 						</div>
-						<p>Jalapenos alap, csili, pick szalámi mittomén, izé</p>
+						<p id="popup-description">Jalapenos alap, csili, pick szalámi mittomén, izé</p>
 						<h5>Ára:</h5>
-						<span class="colored">800 JMF</span>
+						<span class="colored" id="popup-price">800 JMF</span>
 					</div>
 				</div>
 			</section>
 		</div>
 	</div>
 	
-	<div id="blur-section" class="blur-">
+	<div id="blur-section">
 		<div class="header" th:replace="MainLayout :: header">
 			<span th:text="#{lang.header}">WEBSCHOP</span>
 			<nav>

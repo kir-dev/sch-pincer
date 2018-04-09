@@ -24,11 +24,6 @@ import hu.gerviba.webschop.service.OpeningService;
 @RequestMapping("/api")
 public class ApiController {
 
-    // GET /api/items
-    // GET /api/items/{skipCount}
-    // GET /api/item/{itemId}
-    // GET /api/orders/{circleId}
-    
     @Autowired
     private CircleService circleService;
     
@@ -40,6 +35,12 @@ public class ApiController {
     
     @Autowired
     private AuthSchAPI authSch;
+    
+    @GetMapping("/item/{id}")
+    @ResponseBody
+    public ItemEntityDao getItem(@PathVariable Long id) {
+        return new ItemEntityDao(items.getOne(id));
+    }
     
     @GetMapping("/items")
     @ResponseBody
@@ -69,18 +70,6 @@ public class ApiController {
     public ResponseEntity<List<OpeningEntity>> getNextWeekOpenings() {
         List<OpeningEntity> page = openingService.findNextWeek();
         return new ResponseEntity<List<OpeningEntity>>(page, HttpStatus.OK);
-    }
-    
-    @GetMapping("/testlogin")
-    @ResponseBody
-    public String testlogin() {
-        return authSch.getApiUrlBase();
-    }
-    
-    @GetMapping("/item/{id}")
-    @ResponseBody
-    public ItemEntity getItem(@PathVariable Long id) {
-    	return null;
     }
     
 }

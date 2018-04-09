@@ -50,11 +50,35 @@ function formatItem(item) {
 	'						</tr>\n' +
 	'					</table>\n' +
 	'					<span>\n' +
-	'						<a href="#"><i class="material-icons">add_shopping_cart</i></a>\n' +
-	'						<a href="#"><i class="material-icons">assignment</i></a>\n' +
-	'						<a href="#" th:href="@{/circle/pizzas}">Pizzásch</a>\n' +
+	'						<a href="#" onclick="showPopup(' + item.id + '); return false"><i class="material-icons">add_shopping_cart</i></a>\n' +
+	'						<a href="#" onclick="showPopup(' + item.id + '); return false"><i class="material-icons">assignment</i></a>\n' +
+	'						<a href="' + URL_BASE + 'cdn/items/' + item.circleId + '">' + item.circleName + '</a>\n' +
 	'					</span>\n' +
 	'				</div>';
+}
+
+function showPopup(id) {
+	$.ajax({
+		dataType: "json",
+		url: URL_BASE + "api/item/" + id,
+		success: function(data) {
+			$("#popup-title").text(data.name);
+			$("#popup-header").css({"background-image": "url('" + URL_BASE + "cdn/items/" + data.imageName + "')"});
+			$("#popup-image").css({"background-image": "url('" + URL_BASE + "cdn/items/" + data.imageName + "')"});
+			$("#popup-description").text(data.description);
+			$("#popup-price").text(data.price + " JMF");
+			$("#popup-window").addClass(data.circleColor);
+			
+			$("#popup").removeClass("inactive");
+			$("#blur-section").addClass("blur");
+		}
+	});
+}
+
+function closePopup() {
+	$("#blur-section").removeClass("blur");
+	$("#popup").addClass("inactive");
+	$("#popup-window").attr("class", "popup");
 }
 
 $(document).ready(function() { appendNext(); });
@@ -63,4 +87,10 @@ $(window).scroll(function() {
     if ($(window).scrollTop() == $(document).height() - $(window).height() && !endReached) {
     	appendNext();
     }
+});
+
+$(window).click(function() {
+	if (event.target == $("#popup")[0]) {
+		closePopup();
+	}
 });
