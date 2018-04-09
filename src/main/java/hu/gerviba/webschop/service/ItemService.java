@@ -5,6 +5,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import hu.gerviba.webschop.dao.ItemRepository;
@@ -19,6 +20,14 @@ public class ItemService {
 	
 	public List<ItemEntity> findAll() {
 		return repo.findAll();
+	}
+	
+	public List<ItemEntity> findAll(int page) {
+	    return repo.findAll(PageRequest.of(page, 6)).getContent();
+	}
+	
+	public ItemEntity getOne(Long itemId) {
+	    return repo.getOne(itemId);
 	}
 	
     public void save(ItemEntity itemEntity) {

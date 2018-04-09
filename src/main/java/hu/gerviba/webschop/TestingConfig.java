@@ -48,22 +48,46 @@ public class TestingConfig {
         openings.add(new OpeningEntity(1525370400000L, 1525392000000L, 1525330800000L, 1525348800000L, 
                 "demo/pizzasch-pr.jpg", "Jack pls mit írjak ide?", circle, 100, 20));
         
-//        items.save(new ItemEntity("", "", "", "", ));
+        items.save(new ItemEntity("Ördög Pizza", circle, 
+                "Jalapeno szósz, Pick szalámi, bacon, pepperóni, mozzarella, lorem ipsum dolor sit amet", 
+                "Jalapeno szósz, Pick szalámi, bacon, pepperóni, mozzarella", 
+                "[{\"name\":\"__size\",\"values\":[\"32\",\"42\",\"64\"]}]", 800, true, "1.jpg"));
+        
+        items.save(new ItemEntity("Songoku Pizza", circle, 
+                "Paradicsomos alap, sonka, kukorica, friss gomba, mozzarella, lorem ipsum dolor sit amet",
+                "Paradicsomos alap, sonka, kukorica, friss gomba, mozzarella", 
+                "[{\"name\":\"__size\"}]", 800, true, "2.jpg"));
+        
+        items.save(new ItemEntity("Royal w/ Cheese Pizza", circle, 
+                "Bacon, sonka, paradicsom, mozzarella, sajtkrémes alap, lorem ipsum dolor sit amet", 
+                "Bacon, sonka, paradicsom, mozzarella, sajtkrémes alap", "[{\"name\":\"__size\"}]", 800, true, "3.jpg"));
         
         circles.add(circle = new CircleEntity("Dzsájrosz", LONG_LOREM_IPSUM, LONG_LOREM_IPSUM_HOME, "green",
                 "demo/dzsajrosz-bg.jpg", "icons/ecommerce_gift.svg"));
+
+        items.save(new ItemEntity("Dzsájrosz pitában", circle, 
+                "Pita, hagyma, saláta, paradicsom, szósz, lorem ipsum dolor sit amet", 
+                "Pita, hagyma, saláta, paradicsom, szósz", "[{\"name\":\"__size\"}]", 800, true, "5.jpg"));
         
         openings.add(new OpeningEntity(1525467600000L, 1525478400000L, 1525417200000L, 1525435200000L, 
                 "demo/dzsajrosz-pr.jpg", "Type your feeling here", circle, 100, 20));
         
         circles.add(circle = new CircleEntity("Americano", LONG_LOREM_IPSUM, LONG_LOREM_IPSUM_HOME, "blue", 
                 "demo/americano-bg.jpg", "icons/ecommerce_graph_increase.svg"));
+
+        items.save(new ItemEntity("Random Burger", circle, 
+                "Izé, hozé, bigyó és return 4, lorem ipsum dolor sit amet", 
+                "Izé, hozé, bigyó és return 4", "[{\"name\":\"__size\"}]", 600, true, "4.jpg"));
         
         openings.add(new OpeningEntity(1525284000000L, 1525305600000L, 1525244400000L, 1525262400000L, 
                 "demo/americano-pr.jpg", "Random moment cuccok", circle, 100, 20));
         
         circles.add(circle = new CircleEntity("Vödör", LONG_LOREM_IPSUM, LONG_LOREM_IPSUM_HOME, "purple", 
                 "demo/vodor-bg.jpg", "icons/ecommerce_money.svg"));
+        
+        items.save(new ItemEntity("Sültkrumpli", circle, 
+                "Izé, hozé, bigyó és 4, lorem ipsum dolor sit amet", 
+                "Izé, hozé, bigyó és 4", "[{\"name\":\"__size\"}]", 600, true, "8.jpg"));
         
         openings.add(new OpeningEntity(1525197600000L, 1525219200000L, 1525158000000L, 1525176000000L, 
                 "demo/dzsajrosz-pr.jpg", "Feeling típusú nyitás", circle, 100, 20));
@@ -73,12 +97,21 @@ public class TestingConfig {
         
         openings.add(new OpeningEntity(1525726800000L, 152573760021000L, 1525726800000L, 1525737600000L, 
                 "demo/kakas-pr.jpg", "Forradalmi nyitás", circle, 100, 20));
+
+        items.save(new ItemEntity("Sonkás melegszendvics", circle, 
+                "Sonka, sajt, hagyma, vaj, lorem ipsum dolor sit amet", 
+                "Sonka, sajt, hagyma, vaj", "[{\"name\":\"__size\"}]", 200, true, "6.jpg"));
         
         circles.add(circle = new CircleEntity("Lángosch", LONG_LOREM_IPSUM, LONG_LOREM_IPSUM_HOME, "yellow", 
                 "demo/langosch-bg.jpg", "icons/ecommerce_sale.svg"));
         
         openings.add(new OpeningEntity(1525716000000L, 1525737600000L, 1525676400000L, 1525694400000L, 
                 "demo/langosch-pr.jpg", "Tüzes lángos", circle, 100, 20));
+
+        items.save(new ItemEntity("Royal w/ Cheese Pizza", circle, 
+                "Bacon, sonka, paradicsom, mozzarella, sajtkrémes alap, lorem ipsum dolor sit amet", 
+                "Bacon, sonka, paradicsom, mozzarella, sajtkrémes alap", "[{\"name\":\"__size\"}]", 500, true, "7.jpg"));
+        
     }
     
 }

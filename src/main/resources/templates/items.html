@@ -1,35 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/">
-<head th:insert="MainLayout :: head">
-	<meta charset="UTF-8" /> 
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
+<head>
+	<meta charset="UTF-8" th:remove="all"/> 
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" th:remove="all"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" th:remove="all"/>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet" th:remove="all">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" th:remove="all">
+	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" th:remove="all"/>
+	<object th:include="MainLayout :: head" th:remove="tag"></object>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" 
+		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" 
+		crossorigin="anonymous"></script>
+	<script src="../static/js/items.js" th:src="@{/js/items.js}"></script>
 </head>
 <body>
-	<div class="header" th:replace="MainLayout :: header">
-		<span th:text="#{lang.header}">WEBSCHOP</span>
-		<nav>
-			<a href="index.html"	th:href="@{/}" 		 th:text="#{lang.nav.home}">Home</a>
-			<a href="circle.html" 	th:href="@{/circle}" th:text="#{lang.nav.circle}">Circles</a>
-			<a href="items.html" 	th:href="@{/items}"  th:text="#{lang.nav.items}">Items</a>
-			<a href="#login" 		th:href="@{/login}"  th:text="#{lang.nav.login}">Login</a>
-		</nav>
-	</div>
-	
-	<div class="left-menu" th:replace="MainLayout :: left-menu">
-		<a th:each="circle : ${circles}">
-			<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{${circle.logoUrl}}" />
-			<span th:text="${circle.displayName}">Vödör</span>
-		</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_gift.svg" />Americano</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_graph_increase.svg" />Pizzásch</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_money.svg" />Gyros</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_safe.svg" />Kakas</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_sale.svg" />Lángosch</a>
-	</div>
 
 	<div class="popup-bg inactive">
 		<div class="popup orange">
@@ -58,17 +42,20 @@
 						</select>
 						<label>Időablak</label>
 						<select >
-							<option>18:00 - 18:30 (20)</option>
-							<option>18:30 - 19:00 (16)</option>
-							<option>19:00 - 19:30 (20)</option>
-							<option>19:30 - 20:00 (20)</option>
+							<option>18:00 - 18:30 (20 db)</option>
+							<option>18:30 - 19:00 (16 db)</option>
+							<option>19:00 - 19:30 (20 db)</option>
+							<option>19:30 - 20:00 (20 db)</option>
 						</select>
 						<label>Megjegyzés</label>
 						<input type="text" name="comment" />
 						<input type="submit" class="colored border-colored" value="Add to cart"/>
 					</form>
 					<div class="info">
-						<img src="http://pizza-kerepes.hu/modules/homeslider/images/4104604561340eddb4f3276a8e8bfb68053acc79_oie_22135422i53WFiMn.jpg" />
+						<div class="image" style="background-image:url('http://pizza-kerepes.hu/modules/homeslider/images/4104604561340eddb4f3276a8e8bfb68053acc79_oie_22135422i53WFiMn.jpg')">
+							<div class="overlay"></div>
+							<i class="material-icons">fullscreen</i>
+						</div>
 						<p>Jalapenos alap, csili, pick szalámi mittomén, izé</p>
 						<h5>Ára:</h5>
 						<span class="colored">800 JMF</span>
@@ -78,223 +65,119 @@
 		</div>
 	</div>
 	
-	<div class="content">
-		<div class="item-set">
-			<div class="item orange">
-				<div class="picture" style="background-image: url('http://pizza-kerepes.hu/modules/homeslider/images/4104604561340eddb4f3276a8e8bfb68053acc79_oie_22135422i53WFiMn.jpg');">
-					<div class="overlay"></div>
-				</div>
-				<h3>Ördög Pizza</h3>
-				<table>
-					<tr>
-						<td>Feltét:</td>
-						<td>Jalapeno szósz, Pick szalámi, bacon, pepperóni, mozzarella</td>
-					</tr>
-					<tr>
-						<td>Méret:</td>
-						<td>32</td>
-					</tr>
-					<tr>
-						<td>Csípősség:</td>
-						<td>Perem</td>
-					</tr>
-					<tr>
-						<td>Ár:</td>
-						<td>800 JMF</td>
-					</tr>
-				</table>
-				<span>
-					<a href="#"><i class="material-icons">add_shopping_cart</i></a>
-					<a href="#"><i class="material-icons">assignment</i></a>
-					<a href="" th:href="@{/circle/pizzas}">Pizzásch</a>
-				</span>
-			</div>
-			
-			<div class="item orange">
-				<div class="picture" style="background-image: url('http://kep.index.hu/1/0/1770/17701/177013/17701396_f88fa84c634099a3df6fcd65708aa953_wm.jpg');">
-					<div class="overlay"></div>
-				</div>
-				<h3>Songoku Pizza</h3>
-				<table>
-					<tr>
-						<td>Feltét:</td>
-						<td>Paradicsomos alap, sonka, kukorica, friss gomba, mozzarella</td>
-					</tr>
-					<tr>
-						<td>Méret:</td>
-						<td>32</td>
-					</tr>
-					<tr>
-						<td>Ár:</td>
-						<td>800 JMF</td>
-					</tr>
-				</table>
-				<span>
-					<a href="#"><i class="material-icons">add_shopping_cart</i></a>
-					<a href="#"><i class="material-icons">assignment</i></a>
-					<a href="" th:href="@{/circle/pizzas}">Pizzásch</a>
-				</span>
-			</div>
-			
-			<div class="item orange">
-				<div class="picture" style="background-image: url('http://www.mindmegette.hu/images/184/O/crop_201703031449_kics_shutterstock_103855208.jpg');">
-					<div class="overlay"></div>
-				</div>
-				<h3>Royal w/ Cheese Pizza</h3>
-				<table>
-					<tr>
-						<td>Feltét:</td>
-						<td>Bacon, sonka, paradicsom, mozzarella, sajtkrémes alap</td>
-					</tr>
-					<tr>
-						<td>Méret:</td>
-						<td>32</td>
-					</tr>
-					<tr>
-						<td>Ár:</td>
-						<td>800 JMF</td>
-					</tr>
-				</table>
-				<span>
-					<a href="#"><i class="material-icons">add_shopping_cart</i></a>
-					<a href="#"><i class="material-icons">assignment</i></a>
-					<a href="" th:href="@{/circle/pizzas}">Pizzásch</a>
-				</span>
-			</div>
-			
-			<div class="item blue">
-				<div class="picture" style="background-image: url('http://macibufe.hu/shop_seopic/49622/H75/H75.jpg?time=1508774279');">
-					<div class="overlay"></div>
-				</div>
-				<h3>Random Burger</h3>
-				<table>
-					<tr>
-						<td>Tartalom:</td>
-						<td>Izé, hozé, bigyó és return 4</td>
-					</tr>
-					<tr>
-						<td>Méret:</td>
-						<td>közepes</td>
-					</tr>
-					<tr>
-						<td>Ár:</td>
-						<td>600 JMF</td>
-					</tr>
-				</table>
-				<span>
-					<a href="#"><i class="material-icons">add_shopping_cart</i></a>
-					<a href="#"><i class="material-icons">assignment</i></a>
-					<a href="" th:href="@{/circle/pizzas}">Americano</a>
-				</span>
-			</div>
-			
-			<div class="item green">
-				<div class="picture" style="background-image: url('https://static01.nyt.com/images/2017/06/11/magazine/11eat/11mag-11eat-t_CA0-articleLarge.jpg');">
-					<div class="overlay"></div>
-				</div>
-				<h3>Dzsájrosz pitában</h3>
-				<table>
-					<tr>
-						<td>Tartalom:</td>
-						<td>Pita, hagyma, saláta, paradicsom, szósz</td>
-					</tr>
-					<tr>
-						<td>Méret:</td>
-						<td>pita</td>
-					</tr>
-					<tr>
-						<td>Ár:</td>
-						<td>500 JMF</td>
-					</tr>
-				</table>
-				<span>
-					<a href="#"><i class="material-icons">add_shopping_cart</i></a>
-					<a href="#"><i class="material-icons">assignment</i></a>
-					<a href="" th:href="@{/circle/pizzas}">Dzsájrosz</a>
-				</span>
-			</div>
-						
-			<div class="item red">
-				<div class="picture" style="background-image: url('http://2.bp.blogspot.com/-JPKdHv8h450/T00mCaME2yI/AAAAAAAAAqE/riXWEJVy5Ug/s1600/P1040276.JPG');">
-					<div class="overlay"></div>
-				</div>
-				<h3>Sonkás melegszendvics</h3>
-				<table>
-					<tr>
-						<td>Tartalom:</td>
-						<td>Sonka, sajt, hagyma, vaj</td>
-					</tr>
-					<tr>
-						<td>Méret:</td>
-						<td>normál</td>
-					</tr>
-					<tr>
-						<td>Ár:</td>
-						<td>200 JMF</td>
-					</tr>
-				</table>
-				<span>
-					<a href="#"><i class="material-icons">add_shopping_cart</i></a>
-					<a href="#"><i class="material-icons">assignment</i></a>
-					<a href="" th:href="@{/circle/pizzas}">Kakas</a>
-				</span>
-			</div>
-			
-			<div class="item yellow">
-				<div class="picture" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTy2lfee4HtsVxPl4cXLlSZJ4JMsXWwLZLDBSwb3o-DyugHcuGe');">
-					<div class="overlay"></div>
-				</div>
-				<h3>Lángos</h3>
-				<table>
-					<tr>
-						<td>Tartalom:</td>
-						<td>Pita, hagyma, saláta, paradicsom, szósz</td>
-					</tr>
-					<tr>
-						<td>Méret:</td>
-						<td>pita</td>
-					</tr>
-					<tr>
-						<td>Ár:</td>
-						<td>500 JMF</td>
-					</tr>
-				</table>
-				<span>
-					<a href="#"><i class="material-icons">add_shopping_cart</i></a>
-					<a href="#"><i class="material-icons">assignment</i></a>
-					<a href="" th:href="@{/circle/pizzas}">Lángosch</a>
-				</span>
-			</div>
-			
-			<div class="item purple">
-				<div class="picture" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Fries_2.jpg/1200px-Fries_2.jpg');">
-					<div class="overlay"></div>
-				</div>
-				<h3>Sültkrumpli</h3>
-				<table>
-					<tr>
-						<td>Tartalom:</td>
-						<td>Izé, hozé, bigyó és 4</td>
-					</tr>
-					<tr>
-						<td>Méret:</td>
-						<td>közepes</td>
-					</tr>
-					<tr>
-						<td>Ár:</td>
-						<td>600 JMF</td>
-					</tr>
-				</table>
-				<span>
-					<a href="#"><i class="material-icons">add_shopping_cart</i></a>
-					<a href="#"><i class="material-icons">assignment</i></a>
-					<a href="" th:href="@{/circle/pizzas}">Vödör</a>
-				</span>
-			</div>
-						
+	<div id="blur-section" class="blur-">
+		<div class="header" th:replace="MainLayout :: header">
+			<span th:text="#{lang.header}">WEBSCHOP</span>
+			<nav>
+				<a href="index.html"	th:href="@{/}" 		 th:text="#{lang.nav.home}">Home</a>
+				<a href="circle.html" 	th:href="@{/circle}" th:text="#{lang.nav.circle}">Circles</a>
+				<a href="items.html" 	th:href="@{/items}"  th:text="#{lang.nav.items}">Items</a>
+				<a href="#login" 		th:href="@{/login}"  th:text="#{lang.nav.login}">Login</a>
+			</nav>
 		</div>
+		
+		<div class="left-menu" th:replace="MainLayout :: left-menu">
+			<a th:each="circle : ${circles}">
+				<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{${circle.logoUrl}}" />
+				<span th:text="${circle.displayName}">Vödör</span>
+			</a>
+			<a th:remove="all"><img src="../static/icons/ecommerce_gift.svg" />Americano</a>
+			<a th:remove="all"><img src="../static/icons/ecommerce_graph_increase.svg" />Pizzásch</a>
+			<a th:remove="all"><img src="../static/icons/ecommerce_money.svg" />Gyros</a>
+			<a th:remove="all"><img src="../static/icons/ecommerce_safe.svg" />Kakas</a>
+			<a th:remove="all"><img src="../static/icons/ecommerce_sale.svg" />Lángosch</a>
+		</div>
+		
+		<div class="content">
+			<div class="item-set" id="item-set" th:remove="body">
+				<div class="item orange">
+					<div class="picture" style="background-image: url('http://pizza-kerepes.hu/modules/homeslider/images/4104604561340eddb4f3276a8e8bfb68053acc79_oie_22135422i53WFiMn.jpg');">
+						<div class="overlay"></div>
+					</div>
+					<h3>Ördög Pizza</h3>
+					<table>
+						<tr>
+							<td>Feltét:</td>
+							<td>Jalapeno szósz, Pick szalámi, bacon, pepperóni, mozzarella</td>
+						</tr>
+						<tr>
+							<td>Méret:</td>
+							<td>32</td>
+						</tr>
+						<tr>
+							<td>Csípősség:</td>
+							<td>Perem</td>
+						</tr>
+						<tr>
+							<td>Ár:</td>
+							<td>800 JMF</td>
+						</tr>
+					</table>
+					<span>
+						<a href="#"><i class="material-icons">add_shopping_cart</i></a>
+						<a href="#"><i class="material-icons">assignment</i></a>
+						<a href="#" th:href="@{/circle/pizzas}">Pizzásch</a>
+					</span>
+				</div>
+				
+				<div class="item orange">
+					<div class="picture" style="background-image: url('http://kep.index.hu/1/0/1770/17701/177013/17701396_f88fa84c634099a3df6fcd65708aa953_wm.jpg');">
+						<div class="overlay"></div>
+					</div>
+					<h3>Songoku Pizza</h3>
+					<table>
+						<tr>
+							<td>Feltét:</td>
+							<td>Paradicsomos alap, sonka, kukorica, friss gomba, mozzarella</td>
+						</tr>
+						<tr>
+							<td>Méret:</td>
+							<td>32</td>
+						</tr>
+						<tr>
+							<td>Ár:</td>
+							<td>800 JMF</td>
+						</tr>
+					</table>
+					<span>
+						<a href="#"><i class="material-icons">add_shopping_cart</i></a>
+						<a href="#"><i class="material-icons">assignment</i></a>
+						<a href="#" th:href="@{/circle/pizzas}">Pizzásch</a>
+					</span>
+				</div>
+				
+				<div class="item orange">
+					<div class="picture" style="background-image: url('http://www.mindmegette.hu/images/184/O/crop_201703031449_kics_shutterstock_103855208.jpg');">
+						<div class="overlay"></div>
+					</div>
+					<h3>Royal w/ Cheese Pizza</h3>
+					<table>
+						<tr>
+							<td>Feltét:</td>
+							<td>Bacon, sonka, paradicsom, mozzarella, sajtkrémes alap</td>
+						</tr>
+						<tr>
+							<td>Méret:</td>
+							<td>32</td>
+						</tr>
+						<tr>
+							<td>Ár:</td>
+							<td>800 JMF</td>
+						</tr>
+					</table>
+					<span>
+						<a href="#"><i class="material-icons">add_shopping_cart</i></a>
+						<a href="#"><i class="material-icons">assignment</i></a>
+						<a href="#" th:href="@{/circle/pizzas}">Pizzásch</a>
+					</span>
+				</div>
+							
+			</div>
+			
+			<img src="image/loading.svg" height="80" width="80" id="loading" />
+			<span class="list-end" id="list-end">End of the list reached</span>
+		</div>
+		<div th:replace="MainLayout :: footer"></div>
 	</div>
-	
-	<div th:replace="MainLayout :: footer"></div>
 </body>
 </html>

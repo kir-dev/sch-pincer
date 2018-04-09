@@ -7,29 +7,29 @@
 	border: 0;
 }
 
-@font-face { 
-	font-family: 'Roboto-offline';
-	font-weight: 900;
-    src: url('../font/Roboto-Black-webfont.eot');
-    src: url('../font/Roboto-Black-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../font/Roboto-Black-webfont.woff2') format('woff2'),
-         url('../font/Roboto-Black-webfont.woff') format('woff'),
-         url('../font/Roboto-Black-webfont.ttf') format('truetype'),
-         url('../font/Roboto-Black-webfont.svg#robotolight') format('svg');
-    font-style: normal;
-}
+/* @font-face {  */
+/* 	font-family: 'Roboto-offline'; */
+/* 	font-weight: 900; */
+/*     src: url('../font/Roboto-Black-webfont.eot'); */
+/*     src: url('../font/Roboto-Black-webfont.eot?#iefix') format('embedded-opentype'), */
+/*          url('../font/Roboto-Black-webfont.woff2') format('woff2'), */
+/*          url('../font/Roboto-Black-webfont.woff') format('woff'), */
+/*          url('../font/Roboto-Black-webfont.ttf') format('truetype'), */
+/*          url('../font/Roboto-Black-webfont.svg#robotolight') format('svg'); */
+/*     font-style: normal; */
+/* } */
 
-@font-face { 
-	font-family: 'Roboto-offline';
-	font-weight: 300;
-    src: url('../font/Roboto-Light-webfont.eot');
-    src: url('../font/Roboto-Light-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../font/Roboto-Light-webfont.woff2') format('woff2'),
-         url('../font/Roboto-Light-webfont.woff') format('woff'),
-         url('../font/Roboto-Light-webfont.ttf') format('truetype'),
-         url('../font/Roboto-Light-webfont.svg#robotolight') format('svg');
-    font-style: normal;
-}
+/* @font-face {  */
+/* 	font-family: 'Roboto-offline'; */
+/* 	font-weight: 300; */
+/*     src: url('../font/Roboto-Light-webfont.eot'); */
+/*     src: url('../font/Roboto-Light-webfont.eot?#iefix') format('embedded-opentype'), */
+/*          url('../font/Roboto-Light-webfont.woff2') format('woff2'), */
+/*          url('../font/Roboto-Light-webfont.woff') format('woff'), */
+/*          url('../font/Roboto-Light-webfont.ttf') format('truetype'), */
+/*          url('../font/Roboto-Light-webfont.svg#robotolight') format('svg'); */
+/*     font-style: normal; */
+/* } */
 
 body {
 	font-family: 'Roboto', 'Roboto-offline', sans-serif;
@@ -50,6 +50,14 @@ input:focus,
 button:focus, 
 select:focus {
 	outline: 0;
+}
+
+.blur {
+	-webkit-filter: blur(2px);
+	-moz-filter: blur(2px);
+	-o-filter: blur(2px);
+	-ms-filter: blur(2px);
+	filter: blur(2px);
 }
 
 .header {
@@ -135,7 +143,8 @@ select:focus {
 	justify-content: center;
 	align-items: stretch;
 	align-content: stretch;
-	margin-top: 20px;
+	margin: 20px auto 0 auto;
+	max-width: 1400px;
 }
 
 .item {
@@ -235,6 +244,15 @@ select:focus {
 	float: right;
 	top: 2px;
 	position: relative;
+}
+
+.list-end {
+	color: #4c4c4d;
+	text-transform: uppercase;
+	font-size: 20px;
+	font-weight: 300;
+	display: none;
+	margin-top: 20px;
 }
 
 /** MAIN PAGE **/
@@ -693,18 +711,51 @@ select:focus {
 	padding-right: 20px;
 }
 
-.popup .info img {
-	max-width: 100%;
+.popup .image i {
+	color: #FFFFFF;
+	position: relative;
+	
+}
+
+.popup .info .image {
 	border-bottom: 4px solid #111111;
-	filter: brightness(100%);
-	transition: filter ease-out 0.3s;
 	cursor: pointer;
+	height: 128px;
+	background-size: cover;
+	background-position: center;
+	text-align: center;
 }
 
-.popup .info img:hover {
-	filter: brightness(50%);
+.popup .image .overlay {
+	cursor: pointer;
+	position: relative;
+	top: 0;
+	left: 0;
+	height: 128px;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0);
+	transition: all ease-out 0.3s;
 }
 
+.popup .image:hover .overlay {
+	background-color: rgba(0, 0, 0, 0.5);
+	-webkit-box-shadow: inset 0px 0px 109px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: inset 0px 0px 109px 0px rgba(0,0,0,0.75);
+	box-shadow: inset 0px 0px 109px 0px rgba(0,0,0,0.75);
+}
+
+.popup .image i {
+	position: relative;
+	top: -90px;
+	font-size: 64px;
+	opacity: 0;
+	transition: opacity ease-out 0.3s;
+}
+
+.popup .image:hover i {
+	opacity: 1;
+}
+	
 .popup .info p {
 	display: inline-block;
 	color: #FFFFFF;

@@ -12,6 +12,10 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(name = "items")
 public class ItemEntity implements Serializable {
@@ -25,13 +29,19 @@ public class ItemEntity implements Serializable {
 
     @Column
     private String name;
-
+    
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne(fetch = FetchType.LAZY)
     private CircleEntity circle;
 
     @Lob
     @Column
     private String description;
+
+    @Lob
+    @Column
+    private String ingredients;
     
     @Column
     private String detailsConfigJson;
@@ -42,19 +52,24 @@ public class ItemEntity implements Serializable {
     @Column
     private boolean orderable;
     
+    @Column
+    private String imageName;
+    
     public ItemEntity() {}
 
-	public ItemEntity(String name, CircleEntity circle, String description, String detailsConfigJson, 
-			int price, boolean orderable) {
+	public ItemEntity(String name, CircleEntity circle, String description, String ingredients, 
+	        String detailsConfigJson, int price, boolean orderable, String imageName) {
 		this.name = name;
 		this.circle = circle;
 		this.description = description;
+		this.ingredients = ingredients;
 		this.detailsConfigJson = detailsConfigJson;
 		this.price = price;
 		this.orderable = orderable;
+		this.imageName = imageName;
 	}
 
-	public Long getId() {
+    public Long getId() {
 		return id;
 	}
 
@@ -70,7 +85,11 @@ public class ItemEntity implements Serializable {
 		return description;
 	}
 
-	public String getDetailsConfigJson() {
+	public String getIngredients() {
+        return ingredients;
+    }
+
+    public String getDetailsConfigJson() {
 		return detailsConfigJson;
 	}
 
@@ -80,6 +99,10 @@ public class ItemEntity implements Serializable {
 
 	public boolean isOrderable() {
 		return orderable;
+	}
+	
+	public String getImageName() {
+	    return imageName;
 	}
     
 }

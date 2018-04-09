@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "webschop.external",
+  "type": "java.lang.String",
+  "description": "External files path, /cdn/** "
+}]}
