@@ -20,16 +20,19 @@
 	<div class="header" th:fragment="header">
 		<span th:text="#{lang.header}">WEBSCHOP</span>
 		<nav>
-			<a href="index.html"	th:href="@{/}" 		 th:text="#{lang.nav.home}">Home</a>
-			<a href="circle.html" 	th:href="@{/circle}" th:text="#{lang.nav.circle}">Circles</a>
-			<a href="items.html" 	th:href="@{/items}"  th:text="#{lang.nav.items}">Items</a>
-			<a href="#login" 		th:href="@{/login}"  th:text="#{lang.nav.login}">Login</a>
+			<a href="index.html"    th:href="@{/}"       th:text="#{lang.nav.home}">Home</a>
+			<a href="circle.html"   th:href="@{/circle}" th:text="#{lang.nav.circle}">Circles</a>
+			<a href="items.html"    th:href="@{/items}"  th:text="#{lang.nav.items}">Items</a>
+			<object th:if="${user} neq null" 
+					th:include="fragments/menu :: menu(${user})" 
+					th:remove="tag"></object>
+			<a th:if="${user} eq null" href="#login"    th:href="@{/login}"  th:text="#{lang.nav.login}">Login</a>
 		</nav>
 	</div>
 	
 	<div class="left-menu" th:fragment="left-menu">
 		<a th:each="circle : ${circles}">
-			<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{${circle.logoUrl}}" />
+			<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{/__${circle.logoUrl}__}" />
 			<span th:text="${circle.displayName}">Vödör</span>
 		</a>
 		<a th:remove="all"><img src="../static/icons/ecommerce_gift.svg" />Americano</a>

@@ -18,11 +18,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/static/**", "/", "/index", "/search/**", "/item/**", "/login").permitAll()
-                .antMatchers("/profile/**").hasRole("USER")
-                .antMatchers("/circle/admin/**").hasRole("LEADER")
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/loggedin").permitAll()
+                .antMatchers("/", "/index", "/circle", "/items", "/search/**", 
+                		"/item/**", "/items/**").permitAll()
+                .antMatchers("/loggedin", "/login").permitAll()
+                .antMatchers("/profile", "/profile/**").hasRole("USER")
+                .antMatchers("/configure/**").hasRole("LEADER")
+                .antMatchers("/admin", "/admin/**").hasRole("ADMIN")
             .and()
                 .formLogin()
                 .loginPage("/formlogin");

@@ -2,11 +2,14 @@ package hu.gerviba.webschop.web;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import hu.gerviba.webschop.model.UserEntity;
 import hu.gerviba.webschop.service.CircleService;
 import hu.gerviba.webschop.service.ItemService;
 import hu.gerviba.webschop.service.OpeningService;
@@ -24,16 +27,16 @@ public class MainController {
     ItemService items;
     
     @GetMapping("/")
-    public String root(Map<String, Object> model) {
+    public String root(HttpServletRequest request, Map<String, Object> model) {
         model.put("circles", circles.findAll());
         model.put("opener", openings.findAll().get(0));
+        model.put("user", getUser(request));
         return "index";
     }
     
     @GetMapping("/items")
     public String items(Map<String, Object> model) {
         model.put("circles", circles.findAll());
-        model.put("items", items.findAll()); //TODO: Use AJAX
         return "items";
     }
     
@@ -51,4 +54,8 @@ public class MainController {
         return "circle_profile";
     }
 
+    UserEntity getUser(HttpServletRequest request) {
+    	return (UserEntity) request.getSession().getAttribute("user");
+    }
+    
 }

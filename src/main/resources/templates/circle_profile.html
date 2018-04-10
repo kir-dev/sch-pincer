@@ -39,15 +39,15 @@
 		</div>
 		
 		<div class="rewiews">
-			<div th:each="circle : ${circles}" th:object="${circle}" th:class="'article ' + *{cssClassName}" class="article orange">
-				<div class="picture border-colored">
-					<div class="overlay"></div>
-					<div class="image" style="background-image: url('http://wemagazin.com/assets/images/olaszgasztro1pizza.jpg')"
-							th:style="'background-image: url(\'' + *{backgroundUrl} + '\');'">
-					</div>
-				</div>
+			<div th:each="review : ${reviews}" th:object="${review}" class="review">
 				<div class="message">
-					<h3 th:text="*{displayName}">Pizzásch</h3>
+					<div class="stars">
+						<span>Quality</span><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><br />
+						<span>Price</span><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star_border</i><i class="material-icons">star_border</i><br />
+						<span>Speed</span><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star_border</i><br />
+						<span>Over all</span><i class="material-icons">star<i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star_border</i></i>
+					</div>
+					<h3 th:text="*{userName}">Test User</h3>
 					<p>
 						Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
 						Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
@@ -55,10 +55,6 @@
 						luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat 
 						euismod ut eget erat.
 					</p>
-					<span class="colored">
-						<b>Következő nyitás:</b>
-						<em th:text="${#dates.format(circle.openings[0].dateStart, 'yyyy.MM.dd. HH:mm')}">2018.04.12. 18:00</em>
-					</span>
 				</div>
 			</div>
 		</div>

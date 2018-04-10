@@ -32,13 +32,12 @@ public class LoginController {
     private AuthSchAPI authSch;
 
     @Autowired
-    UserService users;
+    private UserService users;
     
     @GetMapping("/loggedin")
-    @ResponseBody
     public String loggedIn(@RequestParam String code, @RequestParam String state, HttpServletRequest request) {
-        if (!buildUnique(request).equals(state))
-            return "invalid-state";
+        if (!buildUniqueState(request).equals(state))
+            return "index?invalid-state";
 
         Authentication auth = new UsernamePasswordAuthenticationToken(code, state, getAuthorities());
         try {
@@ -46,11 +45,13 @@ public class LoginController {
             ProfileDataResponse profile = authSch.getProfile(response.getAccessToken());
             
             if (users.exists(profile.getInternalId().toString())) {
-            	
+            	request.getSession().setAttribute("user", users.getById(profile.getInternalId().toString()));
             } else {
-                users.save(new UserEntity(profile.getInternalId().toString(), 
+            	UserEntity user = new UserEntity(profile.getInternalId().toString(), 
                         profile.getSurname() + " " + profile.getGivenName(), 
-                        profile.getMail()));
+                        profile.getMail());
+                users.save(user);
+                request.getSession().setAttribute("user", user);
             }
             SecurityContextHolder.getContext().setAuthentication(auth);
             
@@ -59,7 +60,7 @@ public class LoginController {
             e.printStackTrace();
         }
         
-        return auth.isAuthenticated() ? "t" : "f";
+        return auth.isAuthenticated() ? "redirect:/" : "redirect:/?error";
     }
 
     public Collection<GrantedAuthority> getAuthorities() {
@@ -77,11 +78,11 @@ public class LoginController {
 
     @GetMapping("/login")
     public String items(HttpServletRequest request) {
-        return "redirect:" + authSch.generateLoginUrl(buildUnique(request),
+        return "redirect:" + authSch.generateLoginUrl(buildUniqueState(request),
                 Scope.BASIC, Scope.GIVEN_NAME, Scope.SURNAME, Scope.MAIL);
     }
 
-    static String buildUnique(HttpServletRequest request) {
+    static String buildUniqueState(HttpServletRequest request) {
         return hashString(request.getSession().getId()
                 + request.getLocalAddr()
                 + request.getLocalPort());
@@ -97,4 +98,11 @@ public class LoginController {
         return "error";
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+    	request.changeSessionId();
+    	request.removeAttribute("user");
+    	return "redirect:/?logged-out";
+    }
+    
 }

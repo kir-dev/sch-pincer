@@ -33,9 +33,6 @@ public class ApiController {
     @Autowired
     private ItemService items;
     
-    @Autowired
-    private AuthSchAPI authSch;
-    
     @GetMapping("/item/{id}")
     @ResponseBody
     public ItemEntityDao getItem(@PathVariable Long id) {
