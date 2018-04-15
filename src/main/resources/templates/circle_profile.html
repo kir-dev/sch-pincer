@@ -40,13 +40,13 @@
 		
 		<div class="rewiews">
 			<div th:each="review : ${reviews}" th:object="${review}" class="review">
+				<div class="stars">
+					<span>Quality</span><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><br />
+					<span>Price</span><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star_border</i><i class="material-icons">star_border</i><br />
+					<span>Speed</span><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star_border</i><br />
+					<span>Over all</span><i class="material-icons">star<i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star_border</i></i>
+				</div>
 				<div class="message">
-					<div class="stars">
-						<span>Quality</span><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><br />
-						<span>Price</span><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star_border</i><i class="material-icons">star_border</i><br />
-						<span>Speed</span><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star_border</i><br />
-						<span>Over all</span><i class="material-icons">star<i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star_border</i></i>
-					</div>
 					<h3 th:text="*{userName}">Test User</h3>
 					<p>
 						Lorem ipsum dolor sit amet, consectetur adipiscing elit. 

@@ -847,6 +847,47 @@ form input[type="submit"]:hover {
 	opacity: 0.5;
 }
 
+/** REVIEW **/
+
+.reviews {
+	
+}
+
+.review {
+	background-color: #4C4C4D;
+	border-bottom: 8px solid #383839;
+	color: #FFFFFF;
+	padding: 0 0 20px 40px;
+}
+
+.review .message p {
+	text-align: justify;
+	min-height: 112px;
+}
+
+.review .stars {
+	background-color: #111111;
+	float: right;
+	padding: 20px 20px 24px 20px;
+	text-align: right;
+	color: #6c6c6d;
+	vertical-align: top;
+	display: inline-block;
+	margin-left: 40px;
+}
+
+.review .stars i {
+	position: relative;
+	top: 4px;
+	color: #F4CF3B;
+}
+
+.review .stars span {
+	width: 80px;
+	display: inline-block;
+	text-align: left;
+}
+
 /** RED **/
 
 .article.red .picture {
