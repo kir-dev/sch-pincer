@@ -20,14 +20,59 @@ function appendNext() {
 	});
 }
 
+function searchSubmit() {
+	searchFor($("#search-input").val());
+}
+
+function searchFor(keyword) {
+	clearAll();
+	updateUrl(keyword);
+	$.ajax({
+		dataType : "json",
+		url : URL_BASE + "api/search/?q=" + keyword,
+		success : function(data) {
+			endReached = true;
+			if (data.length === 0) {
+				$("#loading").css({
+					display : "none"
+				});
+				$("#no-results").css({
+					display : "inline-block"
+				});
+				return;
+			}
+			for ( var item in data)
+				addItem(data[item]);
+			$("#list-end").css({
+				display : "inline-block"
+			});
+			$("#loading").css({
+				display : "none"
+			});
+		}
+	});
+}
+
+function updateUrl(keyword) {
+	History.pushState({
+		route : "/search/?q=" + urlencode keyword
+	}, document.title + ' ' + route, route);
+}
+
 function addItem(item) {
 	$("#item-set").append(formatItem(item));
+}
+
+function clearAll() {
+	$("#no-results").css({display: "none"});
+	$("#item-set").html("");
 }
 
 function formatItem(item) {
 	return '' + 
 	'				<div class="item ' + item.circleColor + '">\n' +
-	'					<div class="picture" style="background-image: url(\'' + URL_BASE + 'cdn/items/' + item.imageName + '\');">\n' +
+	'					<div class="picture" style="background-image: url(\'' 
+									+ URL_BASE + 'cdn/items/' + item.imageName + '\');">\n' +
 	'						<div class="overlay"></div>\n' +
 	'					</div>\n' +
 	'					<h3>' + item.name + '</h3>\n' +
@@ -50,8 +95,10 @@ function formatItem(item) {
 	'						</tr>\n' +
 	'					</table>\n' +
 	'					<span>\n' +
-	'						<a href="#" onclick="showPopup(' + item.id + '); return false"><i class="material-icons">add_shopping_cart</i></a>\n' +
-	'						<a href="#" onclick="showPopup(' + item.id + '); return false"><i class="material-icons">assignment</i></a>\n' +
+	'						<a href="#" onclick="showPopup(' + item.id + '); return false">' +
+							'<i class="material-icons">add_shopping_cart</i></a>\n' +
+	'						<a href="#" onclick="showPopup(' + item.id + '); return false">' + 
+							'<i class="material-icons">assignment</i></a>\n' +
 	'						<a href="' + URL_BASE + 'cdn/items/' + item.circleId + '">' + item.circleName + '</a>\n' +
 	'					</span>\n' +
 	'				</div>';
@@ -81,12 +128,12 @@ function closePopup() {
 	$("#popup-window").attr("class", "popup");
 }
 
-$(document).ready(function() { appendNext(); });
-
 $(window).scroll(function() {
-    if ($(window).scrollTop() == $(document).height() - $(window).height() && !endReached) {
-    	appendNext();
-    }
+	if ($(window).scrollTop() == $(document).height()
+			- $(window).height()
+			&& !endReached) {
+		appendNext();
+	}
 });
 
 $(window).click(function() {

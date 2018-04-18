@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import hu.gerviba.webschop.model.UserEntity;
 import hu.gerviba.webschop.service.CircleService;
@@ -37,6 +38,16 @@ public class MainController {
     @GetMapping("/items")
     public String items(Map<String, Object> model) {
         model.put("circles", circles.findAll());
+        model.put("searchMode", false);
+        return "items";
+    }
+
+    @GetMapping("/search")
+    public String search(@RequestParam(name = "q", defaultValue = "", required = false) String keyword, 
+    		Map<String, Object> model) {
+        model.put("circles", circles.findAll());
+        model.put("searchMode", true);
+        model.put("keyword", keyword);
         return "items";
     }
     

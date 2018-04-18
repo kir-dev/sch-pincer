@@ -12,10 +12,15 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.TermVector;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+@Indexed
 @Entity
 @Table(name = "items")
 public class ItemEntity implements Serializable {
@@ -27,6 +32,7 @@ public class ItemEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Field(termVector = TermVector.YES)
     @Column
     private String name;
     
@@ -36,6 +42,7 @@ public class ItemEntity implements Serializable {
     private CircleEntity circle;
 
     @Lob
+    @Field(termVector = TermVector.YES)
     @Column
     private String description;
 
@@ -45,6 +52,10 @@ public class ItemEntity implements Serializable {
     
     @Column
     private String detailsConfigJson;
+
+    @Field(termVector = TermVector.YES)
+    @Column
+    private String abcdef;
     
     @Column
     private int price; 
@@ -58,11 +69,12 @@ public class ItemEntity implements Serializable {
     public ItemEntity() {}
 
 	public ItemEntity(String name, CircleEntity circle, String description, String ingredients, 
-	        String detailsConfigJson, int price, boolean orderable, String imageName) {
+	        String keywords, String detailsConfigJson, int price, boolean orderable, String imageName) {
 		this.name = name;
 		this.circle = circle;
 		this.description = description;
 		this.ingredients = ingredients;
+		this.abcdef = keywords;
 		this.detailsConfigJson = detailsConfigJson;
 		this.price = price;
 		this.orderable = orderable;
@@ -91,6 +103,10 @@ public class ItemEntity implements Serializable {
 
     public String getDetailsConfigJson() {
 		return detailsConfigJson;
+	}
+
+	public String getKeywords() {
+		return abcdef;
 	}
 
 	public int getPrice() {

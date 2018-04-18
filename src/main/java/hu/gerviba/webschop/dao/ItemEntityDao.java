@@ -25,9 +25,16 @@ public class ItemEntityDao {
         this.price = base.getPrice();
         this.orderable = base.isOrderable(); // TODO: && base.getCircle() nextOpening inRange
         this.imageName = base.getImageName();
-        this.circleId = base.getCircle().getId();
-        this.circleName = base.getCircle().getDisplayName();
-        this.circleColor = base.getCircle().getCssClassName();
+        
+        if (base.getCircle() != null) {
+		    this.circleId = base.getCircle().getId();
+		    this.circleName = base.getCircle().getDisplayName();
+		    this.circleColor = base.getCircle().getCssClassName();
+        } else {
+		    this.circleId = 0L;
+		    this.circleName = "Not Attached";
+		    this.circleColor = "";
+        }
     }
 
     public Long getId() {

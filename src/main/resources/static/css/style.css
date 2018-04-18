@@ -255,6 +255,36 @@ select:focus {
 	margin-top: 20px;
 }
 
+.search {
+	margin: 0 80px 0 auto;
+	background-color: #383839;
+	max-width: 400px;
+}
+
+.search input[type="text"] {
+	background-color: transparent;
+	border: 0 !important;
+	margin: 0;
+	width: calc(100% - 72px);
+	display: inline-block;
+	padding: 8px 16px;
+	vertical-align: top;
+}
+
+.search i {
+	color: #FFFFFF;
+	z-index: 2000;
+	display: inline-block;
+	padding: 8px 4px;
+	vertical-align: top;
+	opacity: 1;
+	transition: opacity ease 0.2s;
+}
+
+.search i:hover {
+	opacity: 0.8;
+}
+
 /** MAIN PAGE **/
 
 .page {

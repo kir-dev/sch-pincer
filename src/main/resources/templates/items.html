@@ -12,6 +12,12 @@
 		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" 
 		crossorigin="anonymous"></script>
 	<script src="../static/js/items.js" th:src="@{/js/items.js}"></script>
+	<script th:if="${searchMode}" th:inline="javascript">
+		$(document).ready(function() { searchFor([[${keyword}]]); });
+	</script>
+	<script th:unless="${searchMode}">
+		$(document).ready(function() { appendNext(); });
+	</script>
 </head>
 <body>
 
@@ -21,7 +27,7 @@
 				<div class="picture border-colored" id="popup-header">
 					<div class="overlay"></div>
 					<div class="logo">
-						<img src="icons/ecommerce_bag_check.svg" />
+						<img src="icons/ecommerce_bag_check.svg" th:src="@{/icons/ecommerce_bag_check.svg}"/>
 					</div>
 				</div>
 				<h3 id="popup-title">Ördög pizza</h3>
@@ -89,6 +95,11 @@
 		</div>
 		
 		<div class="content">
+			<form class="search" action="#" th:action="@{/search/}" method="get" onsubmit="searchSubmit(); return false">
+				<input type="text" name="q" id="search-input" th:value="${keyword}" autocomplete="off" spellcheck="false" />
+				<i class="material-icons" onclick="searchSubmit(); return false">search</i>
+			</form>
+
 			<div class="item-set" id="item-set" th:remove="body">
 				<div class="item orange">
 					<div class="picture" style="background-image: url('http://pizza-kerepes.hu/modules/homeslider/images/4104604561340eddb4f3276a8e8bfb68053acc79_oie_22135422i53WFiMn.jpg');">
@@ -174,8 +185,9 @@
 							
 			</div>
 			
-			<img src="image/loading.svg" height="80" width="80" id="loading" />
+			<img src="image/loading.svg" th:src="@{/image/loading.svg}" height="80" width="80" id="loading" />
 			<span class="list-end" id="list-end">End of the list reached</span>
+			<span class="list-end" id="no-results">No results found</span>
 		</div>
 		<div th:replace="MainLayout :: footer"></div>
 	</div>
