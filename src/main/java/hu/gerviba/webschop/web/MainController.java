@@ -36,21 +36,15 @@ public class MainController {
     }
     
     @GetMapping("/items")
-    public String items(Map<String, Object> model) {
-        model.put("circles", circles.findAll());
-        model.put("searchMode", false);
-        return "items";
-    }
-
-    @GetMapping("/search")
-    public String search(@RequestParam(name = "q", defaultValue = "", required = false) String keyword, 
+    public String items(@RequestParam(name = "q", defaultValue = "", required = false) String keyword, 
     		Map<String, Object> model) {
-        model.put("circles", circles.findAll());
-        model.put("searchMode", true);
+
+    	model.put("circles", circles.findAll());
+        model.put("searchMode", !("".equals(keyword)));
         model.put("keyword", keyword);
         return "items";
     }
-    
+
     @GetMapping("/circle")
     public String circle(Map<String, Object> model) {
         model.put("circles", circles.findAll());

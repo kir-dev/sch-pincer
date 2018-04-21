@@ -1,5 +1,27 @@
-{"properties": [{
-  "name": "webschop.external",
-  "type": "java.lang.String",
-  "description": "External files path, /cdn/** "
-}]}
+{"properties": [
+  {
+    "name": "webschop.external",
+    "type": "java.lang.String",
+    "description": "External files path, /cdn/** "
+  },
+  {
+    "name": "search.distance",
+    "type": "int",
+    "description": "HibernateSerach fuzzy search distance"
+  },
+  {
+    "name": "search.nameBoost",
+    "type": "float",
+    "description": "Name match boost"
+  },
+  {
+    "name": "search.keywordBoost",
+    "type": "float",
+    "description": "Keyword match boost"
+  },
+  {
+    "name": "search.timeLimitSec",
+    "type": "int",
+    "description": "Timeout for search in secs"
+  }
+]}

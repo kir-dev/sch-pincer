@@ -167,6 +167,7 @@ select:focus {
 	background-position: center;
 	border-bottom: 4px solid #888888;
 	position: relative;
+	cursor: pointer;
 	transition: background-size ease-out 0.2s;
 }
 
@@ -267,7 +268,7 @@ select:focus {
 	margin: 0;
 	width: calc(100% - 72px);
 	display: inline-block;
-	padding: 8px 16px;
+	padding: 4px 16px 8px 16px;
 	vertical-align: top;
 }
 
@@ -275,7 +276,7 @@ select:focus {
 	color: #FFFFFF;
 	z-index: 2000;
 	display: inline-block;
-	padding: 8px 4px;
+	padding: 4px 4px 8px 4px;
 	vertical-align: top;
 	opacity: 1;
 	transition: opacity ease 0.2s;

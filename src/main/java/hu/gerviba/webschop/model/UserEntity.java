@@ -10,8 +10,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "users")
 public class UserEntity implements Serializable {
-    
-    private static final long serialVersionUID = 796312955720547481L;
 
     @Id
     @Column(unique = true)
@@ -50,5 +48,7 @@ public class UserEntity implements Serializable {
     public String getRoom() {
         return room;
     }
+    
+    private static final long serialVersionUID = 796312955720547481L;
     
 }

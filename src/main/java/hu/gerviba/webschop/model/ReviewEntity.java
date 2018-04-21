@@ -22,8 +22,6 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
 @Table(name = "reviews")
 public class ReviewEntity implements Serializable {
-    
-    private static final long serialVersionUID = 7823917697337423919L;
 
     @Id
     @Column
@@ -67,5 +65,7 @@ public class ReviewEntity implements Serializable {
     @Min(1)
     @Max(5)
     private int ratePrice;
+    
+    private static final long serialVersionUID = 7823917697337423919L;
     
 }

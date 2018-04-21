@@ -18,14 +18,13 @@ import org.hibernate.search.annotations.TermVector;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Indexed
 @Entity
 @Table(name = "items")
 public class ItemEntity implements Serializable {
-
-    private static final long serialVersionUID = -8174418379518262439L;
 
     @Id
     @Column
@@ -53,9 +52,10 @@ public class ItemEntity implements Serializable {
     @Column
     private String detailsConfigJson;
 
+    @JsonIgnore
     @Field(termVector = TermVector.YES)
     @Column
-    private String abcdef;
+    private String keywords;
     
     @Column
     private int price; 
@@ -74,7 +74,7 @@ public class ItemEntity implements Serializable {
 		this.circle = circle;
 		this.description = description;
 		this.ingredients = ingredients;
-		this.abcdef = keywords;
+		this.keywords = keywords;
 		this.detailsConfigJson = detailsConfigJson;
 		this.price = price;
 		this.orderable = orderable;
@@ -106,7 +106,7 @@ public class ItemEntity implements Serializable {
 	}
 
 	public String getKeywords() {
-		return abcdef;
+		return keywords;
 	}
 
 	public int getPrice() {
@@ -120,5 +120,7 @@ public class ItemEntity implements Serializable {
 	public String getImageName() {
 	    return imageName;
 	}
+	
+	private static final long serialVersionUID = -8174418379518262439L;
     
 }

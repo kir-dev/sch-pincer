@@ -25,6 +25,13 @@ function searchSubmit() {
 }
 
 function searchFor(keyword) {
+	if (keyword.length === 0) {
+		endReached = false;
+		page = 0;
+		appendNext();
+		return;
+	}
+		
 	clearAll();
 	updateUrl(keyword);
 	$.ajax({
@@ -54,9 +61,9 @@ function searchFor(keyword) {
 }
 
 function updateUrl(keyword) {
-	History.pushState({
-		route : "/search/?q=" + urlencode keyword
-	}, document.title + ' ' + route, route);
+	window.history.pushState({
+		route : "/items/?q=" + encodeURI(keyword)
+	}, document.title, "/items/?q=" + encodeURI(keyword));
 }
 
 function addItem(item) {
@@ -71,8 +78,9 @@ function clearAll() {
 function formatItem(item) {
 	return '' + 
 	'				<div class="item ' + item.circleColor + '">\n' +
-	'					<div class="picture" style="background-image: url(\'' 
-									+ URL_BASE + 'cdn/items/' + item.imageName + '\');">\n' +
+	'					<div class="picture" style="background-image: url(\'' +
+									URL_BASE + 'cdn/items/' + item.imageName + '\');" ' +
+									'onclick="showPopup(' + item.id + ')">\n' +
 	'						<div class="overlay"></div>\n' +
 	'					</div>\n' +
 	'					<h3>' + item.name + '</h3>\n' +

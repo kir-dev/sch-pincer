@@ -13,7 +13,7 @@
 		crossorigin="anonymous"></script>
 	<script src="../static/js/items.js" th:src="@{/js/items.js}"></script>
 	<script th:if="${searchMode}" th:inline="javascript">
-		$(document).ready(function() { searchFor([[${keyword}]]); });
+		$(document).ready(function() { searchFor([[${keyword}]]); if ([[${keyword}]].length === 0) appendNext(); });
 	</script>
 	<script th:unless="${searchMode}">
 		$(document).ready(function() { appendNext(); });
