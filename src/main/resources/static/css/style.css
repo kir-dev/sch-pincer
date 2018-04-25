@@ -114,6 +114,7 @@ select:focus {
 	opacity: 1;
 	transition: opacity ease 0.2s;
 	cursor: pointer;
+	color: #FFFFFF;
 }
 
 .left-menu a:hover {

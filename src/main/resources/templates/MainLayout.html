@@ -31,7 +31,7 @@
 	</div>
 	
 	<div class="left-menu" th:fragment="left-menu">
-		<a th:each="circle : ${circles}">
+		<a th:each="circle : ${circles}" th:href="@{/circle/__${circle.id}__}">
 			<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{/__${circle.logoUrl}__}" />
 			<span th:text="${circle.displayName}">Vödör</span>
 		</a>

@@ -56,7 +56,7 @@ public class HibernateSearchService {
 				.withPrefixLength(0)
 				.onField("name").boostedTo(nameBoost)
 				.andField("keywords").boostedTo(keywordBoost)
-				.matching(matchingString)
+				.matching(matchingString.trim())
 				.createQuery();
 		
 		@SuppressWarnings("unchecked")
@@ -68,7 +68,7 @@ public class HibernateSearchService {
 		
 		return results.stream()
         		.filter(x -> x != null && x.length > 1 && x[0] != null && ((float) x[1]) >= 0.5)
-        		.peek(x -> System.out.println(((ItemEntity) x[0]).getName() + "\t" + x[1])) //TODO: Remove this debug line
+//        		.peek(x -> System.out.println(((ItemEntity) x[0]).getName() + "\t" + x[1])) //TODO: Remove this debug line
         		.map(x -> x[0])
         		.distinct()
         		.map(x -> new ItemEntityDao((ItemEntity) x))
