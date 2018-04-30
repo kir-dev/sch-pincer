@@ -1,6 +1,7 @@
 package hu.gerviba.webschop.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -29,7 +30,17 @@ public class OpeningService {
                 System.currentTimeMillis() + WEEK);
     }
     
-    public void add(OpeningEntity opening) {
+    public void save(OpeningEntity opening) {
         repo.save(opening);
     }
+    
+    public OpeningEntity findNextOf(Long id) {
+        return repo.findByCircle_IdOrderByDateStart(id).orElse(null);
+    }
+    
+    public Long findNextStartDateOf(Long id) {
+        Optional<OpeningEntity> opening = repo.findByCircle_IdOrderByDateStart(id);
+        return opening.isPresent() ? opening.get().getDateStart() : null;
+    }
+    
 }

@@ -3,6 +3,7 @@ package hu.gerviba.webschop.model;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -45,19 +46,23 @@ public class CircleEntity implements Serializable {
     @Column(length = 255)
     @Size(max = 255)
     private String avgOpening;
+
+    @Column
+    private int founded;
     
     @Column
-    @OrderBy("name ASC")
-    @OneToMany(fetch = FetchType.LAZY)
+    @OrderBy("sort DESC")
+    @OneToMany(mappedBy = "circle", fetch = FetchType.LAZY)
     private List<CircleMemberEntity> members;
 
     @Column
-    @OneToMany(mappedBy="circle", fetch = FetchType.LAZY)
+    @OrderBy("date DESC")
+    @OneToMany(mappedBy = "circle", fetch = FetchType.LAZY)
     private List<ReviewEntity> reviews;
 
     @Column
     @OrderBy("dateStart ASC")
-    @OneToMany(mappedBy="circle", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "circle", fetch = FetchType.LAZY)
     private List<OpeningEntity> openings;
 
     @Column
@@ -86,114 +91,130 @@ public class CircleEntity implements Serializable {
     @Column
     @Min(0)
     @Max(10)
-    private int rateOverAll;
+    private float rateOverAll;
     
     @Column
     @Min(0)
     @Max(10)
-    private int rateSpeed;
+    private float rateSpeed;
     
     @Column
     @Min(0)
     @Max(10)
-    private int rateQuality;
+    private float rateQuality;
     
     @Column
     @Min(0)
     @Max(10)
-    private int ratePrice;
+    private float ratePrice;
+    
+    @Column
+    @Min(0)
+    private int rateingCount;
 
     public CircleEntity() {}
     
     public CircleEntity(@Size(min = 2, max = 32) String displayName, @Size(max = 1000) String description,
-            @Size(max = 1000) String homePageDescription, @Size(max = 30) String cssClassName, @Size(max = 255) String backgroundUrl, 
-            @Size(max = 255) String logoUrl) {
+            @Size(max = 1000) String homePageDescription, @Size(max = 30) String cssClassName, int founded,
+            @Size(max = 255) String backgroundUrl, @Size(max = 255) String logoUrl, 
+            @Size(max = 255) String avgOpening) {
+        
         this.displayName = displayName;
         this.description = description;
         this.homePageDescription = homePageDescription;
-        this.avgOpening = "";
+        this.founded = founded;
         this.homePageOrder = 0;
         this.cssClassName = cssClassName;
-        this.facebookUrl = "";
-        this.websiteUrl = "";
+        this.facebookUrl = "https://facebook.com/circle";
+        this.websiteUrl = "http://website.sch.bme.hu/";
+        this.avgOpening = avgOpening;
         this.backgroundUrl = backgroundUrl;
         this.logoUrl = logoUrl;
         this.rateOverAll = 5;
         this.rateSpeed = 3;
-        this.rateQuality = 2;
+        this.rateQuality = 2.35f;
         this.ratePrice = 5;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getHomePageDescription() {
-        return homePageDescription;
+        this.rateingCount = 105;
     }
 
     public String getAvgOpening() {
         return avgOpening;
     }
 
-    public List<CircleMemberEntity> getMembers() {
-        return members;
-    }
-
-    public List<ReviewEntity> getReviews() {
-        return reviews;
-    }
-
-    public List<OpeningEntity> getOpenings() {
-        return openings;
-    }
-
-    public int getHomePageOrder() {
-        return homePageOrder;
+    public String getBackgroundUrl() {
+        return backgroundUrl;
     }
 
     public String getCssClassName() {
         return cssClassName;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
     public String getFacebookUrl() {
         return facebookUrl;
     }
 
-    public String getWebsiteUrl() {
-        return websiteUrl;
+    public int getFounded() {
+        return founded;
     }
 
-    public String getBackgroundUrl() {
-        return backgroundUrl;
+    public String getHomePageDescription() {
+        return homePageDescription;
+    }
+
+    public int getHomePageOrder() {
+        return homePageOrder;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getLogoUrl() {
         return logoUrl;
     }
 
-    public int getRateOverAll() {
+    public List<CircleMemberEntity> getMembers() {
+        return members;
+    }
+
+    public List<OpeningEntity> getOpenings() {
+        return openings;
+    }
+
+    public int getRateingCount() {
+        return rateingCount;
+    }
+
+    public float getRateOverAll() {
         return rateOverAll;
     }
 
-    public int getRateSpeed() {
-        return rateSpeed;
+    public float getRatePrice() {
+        return ratePrice;
     }
 
-    public int getRateQuality() {
+    public float getRateQuality() {
         return rateQuality;
     }
 
-    public int getRatePrice() {
-        return ratePrice;
+    public float getRateSpeed() {
+        return rateSpeed;
+    }
+
+    public List<ReviewEntity> getReviews() {
+        return reviews;
+    }
+
+    public String getWebsiteUrl() {
+        return websiteUrl;
     }
     
 }

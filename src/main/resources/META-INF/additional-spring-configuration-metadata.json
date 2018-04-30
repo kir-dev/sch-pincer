@@ -10,18 +10,23 @@
     "description": "HibernateSerach fuzzy search distance"
   },
   {
-    "name": "search.nameBoost",
+    "name": "search.name-boost",
     "type": "float",
     "description": "Name match boost"
   },
   {
-    "name": "search.keywordBoost",
+    "name": "search.keyword-boost",
     "type": "float",
     "description": "Keyword match boost"
   },
   {
-    "name": "search.timeLimitSec",
+    "name": "search.time-limit-sec",
     "type": "int",
+    "description": "Timeout for search in secs"
+  },
+  {
+    "name": "search.min-matching",
+    "type": "float",
     "description": "Timeout for search in secs"
   }
 ]}

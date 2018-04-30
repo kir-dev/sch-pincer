@@ -21,4 +21,8 @@ public class ReviewService {
 		return repo.findAll();
 	}
 	
+	public void save(ReviewEntity review) {
+	    repo.save(review);
+	}
+	
 }

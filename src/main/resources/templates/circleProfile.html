@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="MainLayout :: head">
+	<meta charset="UTF-8" /> 
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
+</head>
+<body>
+	<div class="header" th:replace="MainLayout :: header">
+		<span th:text="#{lang.header}">WEBSCHOP</span>
+		<nav>
+			<a href="index.html"	th:href="@{/}" 		 th:text="#{lang.nav.home}">Home</a>
+			<a href="circle.html" 	th:href="@{/circle}" th:text="#{lang.nav.circle}">Circles</a>
+			<a href="items.html" 	th:href="@{/items}"  th:text="#{lang.nav.items}">Items</a>
+			<a href="#login" 		th:href="@{/login}"  th:text="#{lang.nav.login}">Login</a>
+		</nav>
+	</div>
+	
+	<div class="left-menu" th:replace="MainLayout :: left-menu">
+		<a th:each="circle : ${circles}">
+			<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{${circle.logoUrl}}" />
+			<span th:text="${circle.displayName}">Vödör</span>
+		</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_gift.svg" />Americano</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_graph_increase.svg" />Pizzásch</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_money.svg" />Gyros</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_safe.svg" />Kakas</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_sale.svg" />Lángosch</a>
+	</div>
+
+	<div class="orange" th:class="${selectedCircle?.cssClassName}">
+		<div class="circle-profile gradient" style="background-image: url('../static/demo/pizzasch-bg.jpg')"
+				th:style="'background-image: url(\'' + @{/__${selectedCircle?.backgroundUrl}__} + '\');'" >
+			<div class="overlay border-colored">
+				<h3 th:text="${selectedCircle?.displayName}">Pizzásch</h3>
+			</div>
+		</div>
+		<div class="circle-logo border-colored">
+			<div class="logo">
+				<img src="../static/icons/ecommerce_gift.svg" th:src="@{/__${selectedCircle?.logoUrl}__}" />
+			</div>
+		</div>
+		<div class="page content">
+			<div class="highlighted">
+				<h3 th:text="${selectedCircle?.displayName}">Pizzásch</h3>
+				<table class="circle-details">
+					<tr>
+						<td th:text="#{lang.profile.founded}">Founded</td>
+						<td th:text="${selectedCircle?.founded}">1998</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.profile.next-opening}">Next opening</td>
+						<td th:text="${#dates.format(nextOpening, '__#{lang.date-format}__')} ?: #{lang.profile.dateNotSet}">2018-05-12</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.profile.avg-opening}">Average opening</td>
+						<td th:text="${selectedCircle?.avgOpening}">Wednesday</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.profile.facebook}">Facebook</td>
+						<td><a href="#" target="_blank" th:href="${selectedCircle?.facebookUrl}" 
+							th:text="${selectedCircle} neq null ? #{lang.profile.open-url}">OPEN</a></td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.profile.website}">Website</td>
+						<td><a href="#" target="_blank" th:href="${selectedCircle?.websiteUrl}"
+							th:text="${selectedCircle} neq null ? #{lang.profile.open-url}">OPEN</a></td>
+					</tr>
+				</table>
+
+				<table class="circle-details">
+					<tr>
+						<td th:text="#{lang.profile.quality}">Quality</td>
+						<td class="no-icon-space">
+							<object th:include="fragments/stars :: stars(${selectedCircle?.rateQuality} ?: 1)" th:remove="tag"></object>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.profile.price}">Price</td>
+						<td class="no-icon-space">
+							<object th:include="fragments/stars :: stars(${selectedCircle?.ratePrice} ?: 1)" th:remove="tag"></object>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.profile.speed}">Speed</td>
+						<td class="no-icon-space">
+							<object th:include="fragments/stars :: stars(${selectedCircle?.rateSpeed} ?: 1)" th:remove="tag"></object>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.profile.over-all}">Over all</td>
+						<td class="no-icon-space">
+							<object th:include="fragments/stars :: stars(${selectedCircle?.rateOverAll} ?: 1)" th:remove="tag"></object>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.profile.ratings}">Ratings</td>
+						<td th:text="${selectedCircle?.rateingCount}">102</td>
+					</tr>
+				</table>
+			</div>
+
+			<div class="highlighted">
+				<h3 th:text="#{lang.profile.about-us}">About us</h3>
+				<p th:text="${selectedCircle?.description}">
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget pretium odio. Lorem ipsum dolor sit amet,
+					consectetur adipiscing elit. Nulla accumsan fermentum aliquet. Fusce id augue elit. Vivamus porta augue ac 
+					enim faucibus scelerisque. Integer ut molestie justo. Morbi dapibus metus ac quam aliquet imperdiet. 
+					Pellentesque id ante non ipsum ornare fermentum. Vestibulum sit amet tempor nibh. In mollis ornare hendrerit.
+					Suspendisse vel leo ut dolor hendrerit ornare. Mauris tristique urna enim. Donec eget ipsum in libero
+					hendrerit sagittis vel lacinia mauris. Aliquam vel mi et dolor venenatis vehicula in ut nibh.
+				</p>
+			</div>
+
+			<div class="highlighted">
+				<h3 th:text="#{lang.profile.members}">Members</h3>
+
+				<div class="member" th:each="member : ${selectedCircle?.members}" th:object="${member}">
+					<img src="https://i.imgur.com/9d7Q908.jpg" class="border-colored" height="100" width="100"
+							th:src="*{avatar}" />
+					<h4 th:text="*{name}">Putyin Dezső</h4>
+					<span th:text="*{rank}">Körvez</span>
+				</div>
+				
+			</div>
+			
+			<div class="reviews">
+				<h2 th:text="#{lang.profile.reviews}">Reviews</h2>
+
+				<div th:each="review : ${selectedCircle?.reviews}" th:object="${review}" class="review">
+					<div class="message">
+						<span th:text="${#dates.format(review.date, '__#{lang.date-short-format}__')}">2018-04-30</span>
+						<h3 th:text="*{userName}">Test User</h3>
+						<p th:text="*{review}">
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+							Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
+							Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim 
+							luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat 
+							euismod ut eget erat.
+						</p>
+					</div>
+					<div class="stars">
+						<span th:text="#{lang.profile.quality}">Quality</span>
+						<object th:include="fragments/stars :: stars(*{rateQuality} ?: 1)" th:remove="tag"></object><br />
+						<span th:text="#{lang.profile.price}">Price</span>
+						<object th:include="fragments/stars :: stars(*{ratePrice} ?: 1)" th:remove="tag"></object><br />
+						<span th:text="#{lang.profile.speed}">Speed</span>
+						<object th:include="fragments/stars :: stars(*{rateSpeed} ?: 1)" th:remove="tag"></object><br />
+						<span th:text="#{lang.profile.over-all}">Over all</span>
+						<object th:include="fragments/stars :: stars(*{rateOverAll} ?: 1)" th:remove="tag"></object><br />
+					</div>
+				</div>
+
+				<a href="#" class="page-button" th:href="@{/circle/__${selectedCircle?.id}__/review}" 
+						th:text="#{lang.profile.write-review}">Write your own</a>
+			</div>
+		</div>
+	</div>
+	
+	<div th:replace="MainLayout :: footer"></div>
+</body>
+</html>

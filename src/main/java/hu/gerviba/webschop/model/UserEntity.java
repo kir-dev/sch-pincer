@@ -24,13 +24,16 @@ public class UserEntity implements Serializable {
     @Column
     private String room;
     
+    @Column
+    private boolean sysadmin = false;
+    
     public UserEntity() {}
 
     public UserEntity(String uid, String name, String email) {
-        super();
         this.uid = uid;
         this.name = name;
         this.email = email;
+        this.sysadmin = false;
     }
 
     public String getUid() {
@@ -47,6 +50,10 @@ public class UserEntity implements Serializable {
 
     public String getRoom() {
         return room;
+    }
+    
+    public void setSysadmin(boolean sysadmin) {
+        this.sysadmin = sysadmin;
     }
     
     private static final long serialVersionUID = 796312955720547481L;

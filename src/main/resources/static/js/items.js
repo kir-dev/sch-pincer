@@ -3,6 +3,8 @@ var endReached = false;
 var URL_BASE = "/";
 
 function appendNext() {
+	if (page === 0)
+		clearAll();
 	$.ajax({
 		dataType: "json",
 		url: URL_BASE + "api/items/" + (page++),

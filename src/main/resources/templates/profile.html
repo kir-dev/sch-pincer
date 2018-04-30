@@ -31,35 +31,13 @@
 		<a th:remove="all"><img src="../static/icons/ecommerce_sale.svg" />Lángosch</a>
 	</div>
 
-	<div class="content page">
-		<div class="highlighted">
-			<h2 th:text="${selectedCircle?.displayName}">N/A</h2>
+	<div class="page content">
+		<div class="highlighted latest">
+			<h3 th:text="${user.name}">User Name</h3>
 			
-			
-		</div>
-		
-		<div class="rewiews">
-			<div th:each="review : ${reviews}" th:object="${review}" class="review">
-				<div class="stars">
-					<span>Quality</span><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><br />
-					<span>Price</span><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star_border</i><i class="material-icons">star_border</i><br />
-					<span>Speed</span><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star_border</i><br />
-					<span>Over all</span><i class="material-icons">star<i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star</i><i class="material-icons">star_border</i></i>
-				</div>
-				<div class="message">
-					<h3 th:text="*{userName}">Test User</h3>
-					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-						Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
-						Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim 
-						luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat 
-						euismod ut eget erat.
-					</p>
-				</div>
-			</div>
 		</div>
 	</div>
-	
+
 	<div th:replace="MainLayout :: footer"></div>
 </body>
 </html>

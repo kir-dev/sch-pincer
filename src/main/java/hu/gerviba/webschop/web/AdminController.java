@@ -26,5 +26,23 @@ public class AdminController {
 		model.put("circles", circles.findAll());
 		return "admin";
 	}
-	
+
+    @GetMapping("/circles/new")
+    public String adminAddCircle(Map<String, Object> model) {
+        model.put("circles", circles.findAll());
+        return "admin";
+    }
+
+    @GetMapping("/circles/edit")
+    public String adminEditCircle(Map<String, Object> model) {
+        model.put("circles", circles.findAll());
+        return "admin";
+    }
+
+    @GetMapping("/circles/delete")
+    public String adminDeleteCircle(Map<String, Object> model) {
+        model.put("circles", circles.findAll());
+        return "admin";
+    }
+    
 }

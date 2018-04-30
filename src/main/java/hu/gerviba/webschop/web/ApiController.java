@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import hu.gerviba.authsch.AuthSchAPI;
 import hu.gerviba.webschop.dao.ItemEntityDao;
 import hu.gerviba.webschop.model.ItemEntity;
 import hu.gerviba.webschop.model.OpeningEntity;

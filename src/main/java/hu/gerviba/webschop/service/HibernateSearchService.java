@@ -13,8 +13,6 @@ import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,14 +28,17 @@ public class HibernateSearchService {
 	@Value("${search.distance}")
 	private int distance = 2;
 
-	@Value("${search.nameBoost}")
+	@Value("${search.name-boost}")
 	private float nameBoost = 3F;
 
-	@Value("${search.keywordBoost}")
+	@Value("${search.keyword-boost}")
 	private float keywordBoost = 0.1F;
 
-	@Value("${search.timeLimitSec}")
+	@Value("${search.time-limit-sec}")
 	private int timeLimitSec = 1;
+	
+    @Value("${search.min-matching}")
+    private float minMatching = 0.5F;
 	
 	@Transactional
 	public List<ItemEntityDao> fuzzySearchItem(String matchingString) {
@@ -48,7 +49,7 @@ public class HibernateSearchService {
 				.buildQueryBuilder()
 				.forEntity(ItemEntity.class)
 				.get();
-		
+
 		Query query = queryBuilder
 				.keyword()
 				.fuzzy()
@@ -67,7 +68,7 @@ public class HibernateSearchService {
 				.getResultList();
 		
 		return results.stream()
-        		.filter(x -> x != null && x.length > 1 && x[0] != null && ((float) x[1]) >= 0.5)
+        		.filter(x -> x != null && x.length > 1 && x[0] != null && ((float) x[1]) >= minMatching)
 //        		.peek(x -> System.out.println(((ItemEntity) x[0]).getName() + "\t" + x[1])) //TODO: Remove this debug line
         		.map(x -> x[0])
         		.distinct()

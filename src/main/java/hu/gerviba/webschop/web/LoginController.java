@@ -5,6 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import hu.gerviba.authsch.AuthSchAPI;
 import hu.gerviba.authsch.response.AuthResponse;
@@ -39,7 +40,9 @@ public class LoginController {
         if (!buildUniqueState(request).equals(state))
             return "index?invalid-state";
 
-        Authentication auth = new UsernamePasswordAuthenticationToken(code, state, getAuthorities());
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        Authentication auth = new UsernamePasswordAuthenticationToken(code, state, authorities);
         try {
             AuthResponse response = authSch.validateAuthentication(auth.getName());
             ProfileDataResponse profile = authSch.getProfile(response.getAccessToken());
