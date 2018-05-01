@@ -21,12 +21,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/index", "/circle", "/items", "/search/**", 
                 		"/item/**", "/items/**").permitAll()
                 .antMatchers("/loggedin", "/login").permitAll()
+                .antMatchers("/api/**").permitAll()
                 .antMatchers("/profile", "/profile/**").hasRole("USER")
                 .antMatchers("/configure/**").hasRole("LEADER")
-                .antMatchers("/admin", "/admin/**").hasRole("ADMIN")
+//                .antMatchers("/admin", "/admin/**").hasRole("ADMIN")
+                .antMatchers("/admin", "/admin/**").hasRole("USER")
             .and()
                 .formLogin()
                 .loginPage("/formlogin");
+        http.csrf().ignoringAntMatchers("/api/**");
     }
 
     @Autowired

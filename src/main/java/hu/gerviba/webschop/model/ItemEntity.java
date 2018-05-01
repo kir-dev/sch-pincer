@@ -120,7 +120,7 @@ public class ItemEntity implements Serializable {
 	public String getImageName() {
 	    return imageName;
 	}
-	
-	private static final long serialVersionUID = -8174418379518262439L;
+
+    private static final long serialVersionUID = -8174418379518262439L;
     
 }

@@ -20,6 +20,7 @@ import hu.gerviba.webschop.dao.ItemEntityDao;
 import hu.gerviba.webschop.model.ItemEntity;
 
 @Service
+@Transactional
 public class HibernateSearchService {
 
 	@Autowired

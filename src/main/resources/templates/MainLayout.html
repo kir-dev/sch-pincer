@@ -23,10 +23,10 @@
 			<a href="index.html"    th:href="@{/}"       th:text="#{lang.nav.home}">Home</a>
 			<a href="circle.html"   th:href="@{/circle}" th:text="#{lang.nav.circle}">Circles</a>
 			<a href="items.html"    th:href="@{/items}"  th:text="#{lang.nav.items}">Items</a>
-			<object th:if="${user} neq null" 
+			<object th:if="${session.user} neq null" 
 					th:include="fragments/menu :: menu(${user})" 
 					th:remove="tag"></object>
-			<a th:if="${user} eq null" href="#login"    th:href="@{/login}"  th:text="#{lang.nav.login}">Login</a>
+			<a th:if="${session.user} eq null" href="#login"    th:href="@{/login}"  th:text="#{lang.nav.login}">Login</a>
 		</nav>
 	</div>
 	

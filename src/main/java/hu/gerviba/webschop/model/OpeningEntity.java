@@ -27,7 +27,10 @@ public class OpeningEntity implements Serializable {
     @Column
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
+    
+    @Column
+    private int timeIntervals;
+    
     @Column
     private Long dateStart;
     

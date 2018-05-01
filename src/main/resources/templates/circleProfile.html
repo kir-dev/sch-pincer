@@ -74,25 +74,25 @@
 				<table class="circle-details">
 					<tr>
 						<td th:text="#{lang.profile.quality}">Quality</td>
-						<td class="no-icon-space">
+						<td class="no-icon-space colored">
 							<object th:include="fragments/stars :: stars(${selectedCircle?.rateQuality} ?: 1)" th:remove="tag"></object>
 						</td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.profile.price}">Price</td>
-						<td class="no-icon-space">
+						<td class="no-icon-space colored">
 							<object th:include="fragments/stars :: stars(${selectedCircle?.ratePrice} ?: 1)" th:remove="tag"></object>
 						</td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.profile.speed}">Speed</td>
-						<td class="no-icon-space">
+						<td class="no-icon-space colored">
 							<object th:include="fragments/stars :: stars(${selectedCircle?.rateSpeed} ?: 1)" th:remove="tag"></object>
 						</td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.profile.over-all}">Over all</td>
-						<td class="no-icon-space">
+						<td class="no-icon-space colored">
 							<object th:include="fragments/stars :: stars(${selectedCircle?.rateOverAll} ?: 1)" th:remove="tag"></object>
 						</td>
 					</tr>
@@ -134,7 +134,7 @@
 					<div class="message">
 						<span th:text="${#dates.format(review.date, '__#{lang.date-short-format}__')}">2018-04-30</span>
 						<h3 th:text="*{userName}">Test User</h3>
-						<p th:text="*{review}">
+						<p th:utext="*{review}">
 							Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
 							Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
 							Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim 

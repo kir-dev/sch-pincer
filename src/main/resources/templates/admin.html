@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="MainLayout :: head">
+	<meta charset="UTF-8" /> 
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
+</head>
+<body>
+	<div class="header" th:replace="MainLayout :: header">
+		<span th:text="#{lang.header}">WEBSCHOP</span>
+		<nav>
+			<a href="index.html"	th:href="@{/}" 		 th:text="#{lang.nav.home}">Home</a>
+			<a href="circle.html" 	th:href="@{/circle}" th:text="#{lang.nav.circle}">Circles</a>
+			<a href="items.html" 	th:href="@{/items}"  th:text="#{lang.nav.items}">Items</a>
+			<a href="#login" 		th:href="@{/login}"  th:text="#{lang.nav.login}">Login</a>
+		</nav>
+	</div>
+	
+	<div class="left-menu" th:replace="MainLayout :: left-menu">
+		<a th:each="circle : ${circles}">
+			<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{${circle.logoUrl}}" />
+			<span th:text="${circle.displayName}">Vödör</span>
+		</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_gift.svg" />Americano</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_graph_increase.svg" />Pizzásch</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_money.svg" />Gyros</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_safe.svg" />Kakas</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_sale.svg" />Lángosch</a>
+	</div>
+
+	<div class="page content">
+		<div class="highlighted latest dashboard">
+			<div class="decoration admin">
+				<i class="material-icons main">dashboard</i>
+			</div>
+			<h3 th:text="#{lang.admin.title}" class="topless">Admin Dashboard</h3>
+			<table class="form">
+				<tr>
+					<th>Circles</th>
+					<th></th>
+				</tr>
+				<tr th:each="circle : ${circles}" th:object="${circle}">
+					<td th:text="*{displayName}">Pizzásch</td>
+					<td>
+						<a href="#" th:href="@{/admin/edit/__*{id}__}"><i class="material-icons">edit</i></a>
+						<a href="#" th:href="@{/admin/delete/__*{id}__}"><i class="material-icons">delete</i></a>
+					</td>
+				</tr>
+			</table>
+
+			<a class="button" href="#" th:href="@{/admin/new}" th:text="#{lang.admin.new-circle}">New circle</a>
+		</div>
+	</div>
+
+	<div th:replace="MainLayout :: footer"></div>
+</body>
+</html>

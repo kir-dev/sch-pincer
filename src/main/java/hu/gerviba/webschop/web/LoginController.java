@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,44 +38,42 @@ public class LoginController {
     public String loggedIn(@RequestParam String code, @RequestParam String state, HttpServletRequest request) {
         if (!buildUniqueState(request).equals(state))
             return "index?invalid-state";
-
-        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        Authentication auth = new UsernamePasswordAuthenticationToken(code, state, authorities);
+        
+        Authentication auth = null;
         try {
-            AuthResponse response = authSch.validateAuthentication(auth.getName());
+            AuthResponse response = authSch.validateAuthentication(code);
             ProfileDataResponse profile = authSch.getProfile(response.getAccessToken());
             
             if (users.exists(profile.getInternalId().toString())) {
-            	request.getSession().setAttribute("user", users.getById(profile.getInternalId().toString()));
+                UserEntity user = users.getById(profile.getInternalId().toString());
+            	request.getSession().setAttribute("user", user);
+                auth = new UsernamePasswordAuthenticationToken(code, state, getAuthorities(user));
             } else {
             	UserEntity user = new UserEntity(profile.getInternalId().toString(), 
                         profile.getSurname() + " " + profile.getGivenName(), 
                         profile.getMail());
                 users.save(user);
+                auth = new UsernamePasswordAuthenticationToken(code, state, getAuthorities(user));
                 request.getSession().setAttribute("user", user);
             }
             SecurityContextHolder.getContext().setAuthentication(auth);
             
         } catch (Exception e) {
-            auth.setAuthenticated(false);
+            if(auth != null)
+                auth.setAuthenticated(false);
             e.printStackTrace();
         }
         
-        return auth.isAuthenticated() ? "redirect:/" : "redirect:/?error";
+        return (auth != null && auth.isAuthenticated()) ? "redirect:/" : "redirect:/?error";
     }
 
-    public Collection<GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-        GrantedAuthority grantedAuthority = new GrantedAuthority() {
-            private static final long serialVersionUID = -8093016144065421718L;
-
-            public String getAuthority() {
-                return "ROLE_USER";
-            }
-        };
-        grantedAuthorities.add(grantedAuthority);
-        return grantedAuthorities;
+    private List<GrantedAuthority> getAuthorities(UserEntity user) {
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        if (user.isSysadmin())
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            
+        return authorities;
     }
 
     @GetMapping("/login")
@@ -103,8 +100,10 @@ public class LoginController {
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest request) {
-    	request.changeSessionId();
     	request.removeAttribute("user");
+    	request.getSession().removeAttribute("user");
+    	request.changeSessionId();
+//    	SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
     	return "redirect:/?logged-out";
     }
     

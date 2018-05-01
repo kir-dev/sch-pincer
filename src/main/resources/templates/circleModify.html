@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="MainLayout :: head">
+	<meta charset="UTF-8" /> 
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
+</head>
+<body>
+	<div class="header" th:replace="MainLayout :: header">
+		<span th:text="#{lang.header}">WEBSCHOP</span>
+		<nav>
+			<a href="index.html"	th:href="@{/}" 		 th:text="#{lang.nav.home}">Home</a>
+			<a href="circle.html" 	th:href="@{/circle}" th:text="#{lang.nav.circle}">Circles</a>
+			<a href="items.html" 	th:href="@{/items}"  th:text="#{lang.nav.items}">Items</a>
+			<a href="#login" 		th:href="@{/login}"  th:text="#{lang.nav.login}">Login</a>
+		</nav>
+	</div>
+	
+	<div class="left-menu" th:replace="MainLayout :: left-menu">
+		<a th:each="circle : ${circles}">
+			<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{${circle.logoUrl}}" />
+			<span th:text="${circle.displayName}">Vödör</span>
+		</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_gift.svg" />Americano</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_graph_increase.svg" />Pizzásch</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_money.svg" />Gyros</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_safe.svg" />Kakas</a>
+		<a th:remove="all"><img src="../static/icons/ecommerce_sale.svg" />Lángosch</a>
+	</div>
+
+	<div class="page content">
+		<div class="highlighted latest dashboard">
+			<div class="decoration admin">
+				<i class="material-icons main">tune</i>
+			</div>
+			<h3 th:text="#{lang.admin.title}" class="topless">Admin Dashboard</h3>
+			<form action="#" th:action="@{/admin/new}" th:object="${review}" method="post">
+				<input type="hidden" th:field="*{id}" />
+				<table class="form full-table" th:object="${circle}">
+					<tr>
+						<th>Name</th>
+						<th>Value</th>
+					</tr>
+					<tr>
+						<td th:text="#{lang.admin.circle.name}">Name</td>
+						<td><input type="text" th:field="*{displayName}" /></td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.admin.circle.name}">Description</td>
+						<td><textarea type="text" th:field="*{description}"></textarea></td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.admin.circle.name}">Introduction (home page)</td>
+						<td><textarea type="text" th:field="*{description}"></textarea></td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.admin.circle.name}">Average opening</td>
+						<td><input type="text" th:field="*{displayName}" /></td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.admin.circle.name}">Founded</td>
+						<td><input type="text" th:field="*{displayName}" /></td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.admin.circle.name}">Home page order</td>
+						<td><input type="text" th:field="*{displayName}" /></td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.admin.circle.name}">CSS class name</td>
+						<td><input type="text" th:field="*{displayName}" /></td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.admin.circle.name}">Website URL</td>
+						<td><input type="text" th:field="*{displayName}" /></td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.admin.circle.name}">Facebook URL</td>
+						<td><input type="text" th:field="*{displayName}" /></td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.admin.circle.name}">Logo</td>
+						<td><input type="file" th:field="*{displayName}" /></td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.admin.circle.name}">Background</td>
+						<td><input type="file" th:field="*{displayName}" /></td>
+					</tr>
+				</table>
+
+				<a class="button" href="#" th:href="@{/admin/new}" th:text="#{lang.admin.new-circle}">New circle</a>
+			</form>
+		</div>
+	</div>
+
+	<div th:replace="MainLayout :: footer"></div>
+</body>
+</html>

@@ -13,9 +13,22 @@
 		crossorigin="anonymous"></script>
 	<script src="../static/js/items.js" th:src="@{/js/items.js}"></script>
 	<script th:if="${searchMode}" th:inline="javascript">
-		$(document).ready(function() { searchFor([[${keyword}]]); if ([[${keyword}]].length === 0) appendNext(); });
+		var LANG = {
+			"size": /*[[ #{lang.items.custom-size} ]]*/ "size",
+			"currency": /*[[ #{lang.currency} ]]*/ "Ft"
+		};
+		var URL_BASE = /*[[ @{/} ]]*/ "/";
+		$(document).ready(function() { 
+			searchFor(/*[[ ${keyword} ]]*/ ""); 
+			if ((/*[[ ${keyword} ]]*/ "").length === 0) appendNext(); 
+		});
 	</script>
-	<script th:unless="${searchMode}">
+	<script th:unless="${searchMode}" th:inline="javascript">
+		var LANG = {
+			"size": /*[[ #{lang.items.custom-size} ]]*/ "size",
+			"currency": /*[[ #{lang.currency} ]]*/ "Ft"
+		};
+		var URL_BASE = /*[[ @{/} ]]*/ "/";
 		$(document).ready(function() { appendNext(); });
 	</script>
 </head>
@@ -32,38 +45,27 @@
 				</div>
 				<h3 id="popup-title">Ördög pizza</h3>
 				<div class="body">
-					<form>
-						<label>Méret</label>
-						<select >
-							<option>32</option>
-							<option>42</option>
-							<option>60</option>
+					<form onsubmit="buySelectedItem(); return false;" action="#" method="GET">
+						<ins id="popup-custom">
+						</ins>
+						<label th:text="#{lang.items.interval}">Time</label>
+						<select name="time">
+							<option value="0">18:00 - 18:30 (20 db)</option>
+							<option value="1">18:30 - 19:00 (16 db)</option>
+							<option value="2">19:00 - 19:30 (20 db)</option>
+							<option value="3">19:30 - 20:00 (20 db)</option>
 						</select>
-						<label>Csípősség</label>
-						<select >
-							<option>Nem csípős</option>
-							<option>Kicsit</option>
-							<option>Perem</option>
-							<option>!#@*</option>
-						</select>
-						<label>Időablak</label>
-						<select >
-							<option>18:00 - 18:30 (20 db)</option>
-							<option>18:30 - 19:00 (16 db)</option>
-							<option>19:00 - 19:30 (20 db)</option>
-							<option>19:30 - 20:00 (20 db)</option>
-						</select>
-						<label>Megjegyzés</label>
-						<input type="text" name="comment" />
-						<input type="submit" class="colored border-colored" value="Add to cart"/>
+						<label th:text="#{lang.items.comment}">Comment</label>
+						<input id="popup-comment" type="text" name="comment" autocomplete="off" />
+						<input type="submit" class="colored border-colored" value="Order" th:value="#{lang.items.buy}" />
 					</form>
 					<div class="info">
-						<div class="image" id="popup-image" style="background-image:url('http://pizza-kerepes.hu/modules/homeslider/images/4104604561340eddb4f3276a8e8bfb68053acc79_oie_22135422i53WFiMn.jpg')">
+						<div class="image" id="popup-image" style="background-image:url('../demo/pizzasch-bg.jpg')">
 							<div class="overlay"></div>
 							<i class="material-icons">fullscreen</i>
 						</div>
 						<p id="popup-description">Jalapenos alap, csili, pick szalámi mittomén, izé</p>
-						<h5>Ára:</h5>
+						<h5 th:text="#{lang.items.price}">Ára:</h5>
 						<span class="colored" id="popup-price">800 JMF</span>
 					</div>
 				</div>
@@ -102,7 +104,7 @@
 
 			<div class="item-set" id="item-set" th:remove="body">
 				<div class="item orange">
-					<div class="picture" style="background-image: url('http://pizza-kerepes.hu/modules/homeslider/images/4104604561340eddb4f3276a8e8bfb68053acc79_oie_22135422i53WFiMn.jpg');">
+					<div class="picture" style="background-image: url('../demo/pizzasch-bg.jpg');">
 						<div class="overlay"></div>
 					</div>
 					<h3>Ördög Pizza</h3>
@@ -132,7 +134,7 @@
 				</div>
 				
 				<div class="item orange">
-					<div class="picture" style="background-image: url('http://kep.index.hu/1/0/1770/17701/177013/17701396_f88fa84c634099a3df6fcd65708aa953_wm.jpg');">
+					<div class="picture" style="background-image: url('../demo/pizzasch-bg.jpg');">
 						<div class="overlay"></div>
 					</div>
 					<h3>Songoku Pizza</h3>
@@ -158,7 +160,7 @@
 				</div>
 				
 				<div class="item orange">
-					<div class="picture" style="background-image: url('http://www.mindmegette.hu/images/184/O/crop_201703031449_kics_shutterstock_103855208.jpg');">
+					<div class="picture" style="background-image: url('../demo/pizzasch-bg.jpg');">
 						<div class="overlay"></div>
 					</div>
 					<h3>Royal w/ Cheese Pizza</h3>
@@ -186,8 +188,8 @@
 			</div>
 			
 			<img src="image/loading.svg" th:src="@{/image/loading.svg}" height="80" width="80" id="loading" />
-			<span class="list-end" id="list-end">End of the list reached</span>
-			<span class="list-end" id="no-results">No results found</span>
+			<span class="list-end" id="list-end" th:text="#{lang.items.list-end}">End of the list reached</span>
+			<span class="list-end" id="no-results" th:text="#{lang.items.no-results}">No results found</span>
 		</div>
 		<div th:replace="MainLayout :: footer"></div>
 	</div>

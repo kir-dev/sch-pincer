@@ -33,7 +33,10 @@
 
 	<div class="page content">
 		<div class="highlighted latest">
-			<h3 th:text="#{lang.review.title}">Review</h3>
+			<div class="decoration rating">
+				<i class="material-icons main">star</i>
+			</div>
+			<h3 th:text="#{lang.review.title}" class="topless">Review</h3>
 			<form action="#" th:action="@{/circle/__${selectedCircle?.id}__/review}" th:object="${review}" method="post">
 				<table class="form">
 					<tr>

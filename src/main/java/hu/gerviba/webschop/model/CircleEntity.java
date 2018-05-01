@@ -3,7 +3,6 @@ package hu.gerviba.webschop.model;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,8 +21,6 @@ import javax.validation.constraints.Size;
 @Table(name = "circles")
 public class CircleEntity implements Serializable {
     
-    private static final long serialVersionUID = 2467081480963002976L;
-
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -217,4 +214,6 @@ public class CircleEntity implements Serializable {
         return websiteUrl;
     }
     
+    private static final long serialVersionUID = 2467081480963002976L;
+
 }

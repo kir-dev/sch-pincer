@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org/">
 	<body>	
 		<div th:fragment="menu(user)">
-			<a th:href="@{/profile}" th:text="${user?.name}">Test User</a>
+			<a th:href="@{/profile}" th:text="${session.user?.name}">Test User</a>
 		</div>
 	</body>
 </html>

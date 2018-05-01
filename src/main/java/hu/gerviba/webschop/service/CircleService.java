@@ -27,7 +27,7 @@ public class CircleService {
         return repo.findAll();
     }
 
-    public void add(CircleEntity circleEntity) {
+    public void save(CircleEntity circleEntity) {
         repo.save(circleEntity);
     }
     

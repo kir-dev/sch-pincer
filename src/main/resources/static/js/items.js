@@ -1,6 +1,6 @@
 var page = 0;
 var endReached = false;
-var URL_BASE = "/";
+var selectedItem = null;
 
 function appendNext() {
 	if (page === 0)
@@ -43,6 +43,9 @@ function searchFor(keyword) {
 			endReached = true;
 			if (data.length === 0) {
 				$("#loading").css({
+					display : "none"
+				});
+				$("#list-end").css({
 					display : "none"
 				});
 				$("#no-results").css({
@@ -91,17 +94,14 @@ function formatItem(item) {
 	'							<td>Feltét:</td>\n' +
 	'							<td>' + item.ingredients + '</td>\n' +
 	'						</tr>\n' +
-	'						<tr>\n' +
-	'							<td>Méret:</td>\n' +
-	'							<td>32</td>\n' +
-	'						</tr>\n' +
-	'						<tr>\n' +
-	'							<td>Csípősség:</td>\n' +
-	'							<td>Perem</td>\n' +
-	'						</tr>\n' +
+	appendCustom(item.detailsConfigJson) +
+	// '						<tr>\n' +
+	// '							<td>Csípősség:</td>\n' +
+	// '							<td>Perem</td>\n' +
+	// '						</tr>\n' +
 	'						<tr>\n' +
 	'							<td>Ár:</td>\n' +
-	'							<td>' + item.price + ' JMF</td>\n' +
+	'							<td>' + item.price + ' ' + LANG['currency'] + '</td>\n' +
 	'						</tr>\n' +
 	'					</table>\n' +
 	'					<span>\n' +
@@ -109,9 +109,43 @@ function formatItem(item) {
 							'<i class="material-icons">add_shopping_cart</i></a>\n' +
 	'						<a href="#" onclick="showPopup(' + item.id + '); return false">' + 
 							'<i class="material-icons">assignment</i></a>\n' +
-	'						<a href="' + URL_BASE + 'cdn/items/' + item.circleId + '">' + item.circleName + '</a>\n' +
+	'						<a href="' + URL_BASE + 'circle/' + item.circleId + '">' + item.circleName + '</a>\n' +
 	'					</span>\n' +
 	'				</div>';
+}
+
+function appendCustom(json) {
+	var custom = JSON.parse(json);
+
+	var result = "";
+	custom.forEach(element => {
+		if (element.values !== undefined) {
+			result += '' +
+			'                       <tr>\n' +
+			'							<td>' + LANG[element.name] + ':</td>\n' +
+			'							<td>' + element.values.join(", ") + '</td>\n' +
+			'						</tr>\n';
+		}
+	});
+	return result;
+}
+
+function generateCustom(json) {
+	var custom = JSON.parse(json);
+
+	var result = "";
+	custom.forEach(element => {
+		if (element.values !== undefined) {
+			result += '						<label>' + LANG[element.name] + '</label>\n' +
+			'						<select name="' + element.name + '">\n';
+			var optionId = 0;
+			element.values.forEach(option => {
+				result += '							<option value="' + (optionId++) + '">' + option + '</option>\n';
+			});
+			result += '						</select>\n';
+		}
+	});
+	return result;
 }
 
 function showPopup(id) {
@@ -123,11 +157,14 @@ function showPopup(id) {
 			$("#popup-header").css({"background-image": "url('" + URL_BASE + "cdn/items/" + data.imageName + "')"});
 			$("#popup-image").css({"background-image": "url('" + URL_BASE + "cdn/items/" + data.imageName + "')"});
 			$("#popup-description").text(data.description);
-			$("#popup-price").text(data.price + " JMF");
+			$("#popup-price").text(data.price + " " + LANG['currency']);
 			$("#popup-window").addClass(data.circleColor);
+			$("#popup-custom").html(generateCustom(data.detailsConfigJson));
+			$("#popup-comment").val("");
 			
 			$("#popup").removeClass("inactive");
 			$("#blur-section").addClass("blur");
+			selectedItem = data;
 		}
 	});
 }
@@ -136,11 +173,41 @@ function closePopup() {
 	$("#blur-section").removeClass("blur");
 	$("#popup").addClass("inactive");
 	$("#popup-window").attr("class", "popup");
+	selectedItem = null;
+}
+
+function packDetails() {
+	if (selectedItem === null)
+		return "{}";
+
+	var result = {};
+	var custom = JSON.parse(selectedItem.detailsConfigJson);
+	custom.forEach(element => {
+		result[element.name] = $("select[name='" + element.name + "']").val();
+	});
+
+	return JSON.stringify(result);
+}
+
+function buySelectedItem() {
+	$.post({
+		dataType: "text",
+		url: URL_BASE + "api/order",
+		data: {
+			id: selectedItem.id,
+			time: $("select[name='time']").val(),
+			comment: $("#popup-comment").val(),
+			detailsJson: packDetails()
+		}
+	}).done(function() {
+    	closePopup();
+	}).fail(function(e) {
+		console.error("Cannot send POST request.");
+	});
 }
 
 $(window).scroll(function() {
-	if ($(window).scrollTop() == $(document).height()
-			- $(window).height()
+	if ($(window).scrollTop() == $(document).height() - $(window).height()
 			&& !endReached) {
 		appendNext();
 	}
