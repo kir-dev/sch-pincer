@@ -6,5 +6,6 @@ WebSCHop
 
 ## Features
 
+- TODO: Upload specs
 - Automatic CSS minify (**TODO**: js?)
 - Auth.SCH support (http://auth.sch.bme.hu)
