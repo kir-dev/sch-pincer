@@ -17,8 +17,6 @@ import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import hu.gerviba.webschop.WebschopUtils;
-
 @Entity
 @Table(name = "reviews")
 public class ReviewEntity implements Serializable {
@@ -133,7 +131,7 @@ public class ReviewEntity implements Serializable {
     }
 
     public void setReview(String review) {
-        this.review = WebschopUtils.htmlEscape(review);
+        this.review = review;
     }
 
     public void setDate(long date) {

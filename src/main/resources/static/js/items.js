@@ -95,10 +95,6 @@ function formatItem(item) {
 	'							<td>' + item.ingredients + '</td>\n' +
 	'						</tr>\n' +
 	appendCustom(item.detailsConfigJson) +
-	// '						<tr>\n' +
-	// '							<td>Csípősség:</td>\n' +
-	// '							<td>Perem</td>\n' +
-	// '						</tr>\n' +
 	'						<tr>\n' +
 	'							<td>Ár:</td>\n' +
 	'							<td>' + item.price + ' ' + LANG['currency'] + '</td>\n' +
@@ -109,7 +105,7 @@ function formatItem(item) {
 							'<i class="material-icons">add_shopping_cart</i></a>\n' +
 	'						<a href="#" onclick="showPopup(' + item.id + '); return false">' + 
 							'<i class="material-icons">assignment</i></a>\n' +
-	'						<a href="' + URL_BASE + 'circle/' + item.circleId + '">' + item.circleName + '</a>\n' +
+	'						<a class="colored-light" href="' + URL_BASE + 'circle/' + item.circleId + '">' + item.circleName + '</a>\n' +
 	'					</span>\n' +
 	'				</div>';
 }
@@ -169,7 +165,8 @@ function showPopup(id) {
 	});
 }
 
-function closePopup() {
+function closePopup(purchased = false) {
+	if (!purchased)
 	$("#blur-section").removeClass("blur");
 	$("#popup").addClass("inactive");
 	$("#popup-window").attr("class", "popup");
@@ -200,10 +197,30 @@ function buySelectedItem() {
 			detailsJson: packDetails()
 		}
 	}).done(function() {
-    	closePopup();
+		closePopup(true);
+		doneOrder();
 	}).fail(function(e) {
 		console.error("Cannot send POST request.");
 	});
+}
+
+function doneOrder() {
+		$(".done").css({"display": "block"});
+	$(".done-circle").css({"background-size": "100%"});
+	setTimeout(() => {
+		$(".done-tick").css({"-webkit-clip-path": "polygon(0 0, 100% 0, 100% 100%, 0 100%)", 
+				"clip-path": "polygon(0 0, 100% 0, 100% 100%, 0 100%)"});
+	}, 100);
+	setTimeout(() => {
+		$(".done").css({"top": "20vh", "opacity": "0"});
+		$(".done-tick").css({"-webkit-clip-path": "polygon(0 0, 0 0, 0 100%, 0% 100%)", 
+				"clip-path": "polygon(0 0, 0 0, 0 100%, 0% 100%)"});
+		$("#blur-section").removeClass("blur");
+	}, 2000);
+	setTimeout(() => {
+		$(".done-circle").css({"background-size": "0%"});
+		$(".done").css({"top": "50vh", "opacity": "1", "display": "none"});
+	}, 3500);
 }
 
 $(window).scroll(function() {

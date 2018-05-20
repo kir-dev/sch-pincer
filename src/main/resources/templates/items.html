@@ -34,11 +34,17 @@
 </head>
 <body>
 
+	<div class="done">
+		<div class="done-circle"><div class="done-tick"></div></div><br />
+	</div>
+
 	<div class="popup-bg inactive" id="popup">
 		<div class="popup" id="popup-window">
 			<section>
 				<div class="picture border-colored" id="popup-header">
-					<div class="overlay"></div>
+					<div class="overlay">
+						<i class="material-icons">close</i>
+					</div>
 					<div class="logo">
 						<img src="icons/ecommerce_bag_check.svg" th:src="@{/icons/ecommerce_bag_check.svg}"/>
 					</div>
@@ -46,8 +52,7 @@
 				<h3 id="popup-title">Ördög pizza</h3>
 				<div class="body">
 					<form onsubmit="buySelectedItem(); return false;" action="#" method="GET">
-						<ins id="popup-custom">
-						</ins>
+						<ins id="popup-custom"></ins>
 						<label th:text="#{lang.items.interval}">Time</label>
 						<select name="time">
 							<option value="0">18:00 - 18:30 (20 db)</option>
@@ -57,7 +62,9 @@
 						</select>
 						<label th:text="#{lang.items.comment}">Comment</label>
 						<input id="popup-comment" type="text" name="comment" autocomplete="off" />
-						<input type="submit" class="colored border-colored" value="Order" th:value="#{lang.items.buy}" />
+						<input type="submit" class="colored-light" value="Order" 
+								th:value="#{lang.items.buy}" th:unless="${session.user} eq null" />
+						<em th:text="#{lang.items.loggedin}" th:if="${session.user} eq null">You need to be logged in to order</em>
 					</form>
 					<div class="info">
 						<div class="image" id="popup-image" style="background-image:url('../demo/pizzasch-bg.jpg')">
@@ -66,7 +73,7 @@
 						</div>
 						<p id="popup-description">Jalapenos alap, csili, pick szalámi mittomén, izé</p>
 						<h5 th:text="#{lang.items.price}">Ára:</h5>
-						<span class="colored" id="popup-price">800 JMF</span>
+						<span class="colored-light" id="popup-price">800 JMF</span>
 					</div>
 				</div>
 			</section>
@@ -97,10 +104,12 @@
 		</div>
 		
 		<div class="content">
-			<form class="search" action="#" th:action="@{/search/}" method="get" onsubmit="searchSubmit(); return false">
-				<input type="text" name="q" id="search-input" th:value="${keyword}" autocomplete="off" spellcheck="false" />
-				<i class="material-icons" onclick="searchSubmit(); return false">search</i>
-			</form>
+			<div class="search-container">
+				<form class="search" action="#" th:action="@{/search/}" method="get" onsubmit="searchSubmit(); return false">
+					<input type="text" name="q" id="search-input" th:value="${keyword}" autocomplete="off" spellcheck="false" />
+					<i class="material-icons" onclick="searchSubmit(); return false">search</i>
+				</form>
+			</div>
 
 			<div class="item-set" id="item-set" th:remove="body">
 				<div class="item orange">

@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin", "/admin/**").hasRole("USER")
             .and()
                 .formLogin()
-                .loginPage("/formlogin");
+                .loginPage("/login");
         http.csrf().ignoringAntMatchers("/api/**");
     }
 
@@ -43,4 +43,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         AuthSchAPI api = new AuthSchAPI();
         return api;
     }
+    
 }

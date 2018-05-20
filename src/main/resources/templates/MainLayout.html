@@ -20,19 +20,13 @@
 	<div class="header" th:fragment="header">
 		<span th:text="#{lang.header}">WEBSCHOP</span>
 		<nav>
-			<a href="index.html"    th:href="@{/}"       th:text="#{lang.nav.home}">Home</a>
-			<a href="circle.html"   th:href="@{/circle}" th:text="#{lang.nav.circle}">Circles</a>
-			<a href="items.html"    th:href="@{/items}"  th:text="#{lang.nav.items}">Items</a>
-			<object th:if="${session.user} neq null" 
-					th:include="fragments/menu :: menu(${user})" 
-					th:remove="tag"></object>
-			<a th:if="${session.user} eq null" href="#login"    th:href="@{/login}"  th:text="#{lang.nav.login}">Login</a>
+			<object th:include="fragments/menu :: menu(${user})" th:remove="tag"></object>
 		</nav>
 	</div>
 	
 	<div class="left-menu" th:fragment="left-menu">
 		<a th:each="circle : ${circles}" th:href="@{/circle/__${circle.id}__}">
-			<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{/__${circle.logoUrl}__}" />
+			<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{/__${circle.logoUrl}__}" width="80" height="80" />
 			<span th:text="${circle.displayName}">Vödör</span>
 		</a>
 		<a th:remove="all"><img src="../static/icons/ecommerce_gift.svg" />Americano</a>

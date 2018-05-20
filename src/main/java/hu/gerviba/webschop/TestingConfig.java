@@ -53,7 +53,7 @@ public class TestingConfig {
         CircleEntity circle;
         
         circles.save(circle = new CircleEntity("Pizzásch", LONG_LOREM_IPSUM, LONG_LOREM_IPSUM_HOME, "orange", 1991,
-                "demo/pizzasch-bg.jpg", "icons/ecommerce_bag_check.svg", "Szerda"));
+                "demo/pizzasch-bg.jpg", "icons/icon-pizzasch.svg", "Szerda"));
         
         openings.save(new OpeningEntity(1525370400000L, 1525392000000L, 1525330800000L, 1525348800000L, 
                 "demo/pizzasch-pr.jpg", "Jack pls mit írjak ide?", circle, 100, 20));
@@ -95,7 +95,7 @@ public class TestingConfig {
                 "[{\"name\":\"size\"}]", 800, true, "3.jpg"));
         
         circles.save(circle = new CircleEntity("Dzsájrosz", LONG_LOREM_IPSUM, LONG_LOREM_IPSUM_HOME, "green", 1995,
-                "demo/dzsajrosz-bg.jpg", "icons/ecommerce_gift.svg", "Csütörtök"));
+                "demo/dzsajrosz-bg.jpg", "icons/icon-dzsajrosz.svg", "Csütörtök"));
 
         items.save(new ItemEntity("Dzsájrosz pitában", circle, 
                 "Pita, hagyma, saláta, paradicsom, szósz, lorem ipsum dolor sit amet", 
@@ -107,7 +107,7 @@ public class TestingConfig {
                 "demo/dzsajrosz-pr.jpg", "Type your feeling here", circle, 100, 20));
         
         circles.save(circle = new CircleEntity("Americano", LONG_LOREM_IPSUM, LONG_LOREM_IPSUM_HOME, "blue",  2002,
-                "demo/americano-bg.jpg", "icons/ecommerce_graph_increase.svg", "Kedd"));
+                "demo/americano-bg.jpg", "icons/icon-americano.svg", "Kedd"));
 
         items.save(new ItemEntity("Random Burger", circle, 
                 "Izé, hozé, bigyó és return 4, lorem ipsum dolor sit amet", 
@@ -119,7 +119,7 @@ public class TestingConfig {
                 "demo/americano-pr.jpg", "Random moment cuccok", circle, 100, 20));
         
         circles.save(circle = new CircleEntity("Vödör", LONG_LOREM_IPSUM, LONG_LOREM_IPSUM_HOME, "purple",  2005,
-                "demo/vodor-bg.jpg", "icons/ecommerce_money.svg", "Hétfő"));
+                "demo/vodor-bg.jpg", "icons/icon-vodor.svg", "Hétfő"));
         
         items.save(new ItemEntity("Sültkrumpli", circle, 
                 "Izé, hozé, bigyó és 4, lorem ipsum dolor sit amet", 
@@ -131,7 +131,7 @@ public class TestingConfig {
                 "demo/dzsajrosz-pr.jpg", "Feeling típusú nyitás", circle, 100, 20));
         
         circles.save(circle = new CircleEntity("Kakas", LONG_LOREM_IPSUM, LONG_LOREM_IPSUM_HOME, "red", 1999,
-                "demo/kakas-bg.jpg", "icons/ecommerce_safe.svg", "Vasárnap"));
+                "demo/kakas-bg.jpg", "icons/icon-kakas.svg", "Vasárnap"));
         
         openings.save(new OpeningEntity(1525726800000L, 152573760021000L, 1525726800000L, 1525737600000L, 
                 "demo/kakas-pr.jpg", "Forradalmi nyitás", circle, 100, 20));
@@ -143,7 +143,7 @@ public class TestingConfig {
                 "[{\"name\":\"size\"}]", 200, true, "6.jpg"));
         
         circles.save(circle = new CircleEntity("Lángosch", LONG_LOREM_IPSUM, LONG_LOREM_IPSUM_HOME, "yellow",  1994,
-                "demo/langosch-bg.jpg", "icons/ecommerce_sale.svg", "Vasárnap (2 hetente)"));
+                "demo/langosch-bg.jpg", "icons/icon-langosch.svg", "Vasárnap (2 hetente)"));
         
         openings.save(new OpeningEntity(1525716000000L, 1525737600000L, 1525676400000L, 1525694400000L, 
                 "demo/langosch-pr.jpg", "Tüzes lángos", circle, 100, 20));

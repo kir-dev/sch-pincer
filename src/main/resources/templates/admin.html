@@ -37,21 +37,45 @@
 				<i class="material-icons main">dashboard</i>
 			</div>
 			<h3 th:text="#{lang.admin.title}" class="topless">Admin Dashboard</h3>
-			<table class="form">
+
+		</div>
+
+		<div class="highlighted dashboard">
+			<table class="form full-table">
 				<tr>
-					<th>Circles</th>
+					<th th:text="#{lang.admin.circle-list}">Circles</th>
 					<th></th>
 				</tr>
 				<tr th:each="circle : ${circles}" th:object="${circle}">
 					<td th:text="*{displayName}">Pizzásch</td>
 					<td>
-						<a href="#" th:href="@{/admin/edit/__*{id}__}"><i class="material-icons">edit</i></a>
-						<a href="#" th:href="@{/admin/delete/__*{id}__}"><i class="material-icons">delete</i></a>
+						<a href="#" th:href="@{/admin/circles/edit/__*{id}__}"><i class="material-icons">edit</i></a>
+						<a href="#" th:href="@{/admin/circles/delete/__*{id}__}"><i class="material-icons">delete</i></a>
 					</td>
 				</tr>
 			</table>
 
-			<a class="button" href="#" th:href="@{/admin/new}" th:text="#{lang.admin.new-circle}">New circle</a>
+			<a class="button" href="#" th:href="@{/admin/circles/new}" th:text="#{lang.admin.title-new}">New circle</a>
+		</div>
+
+		<div class="highlighted dashboard">
+			<table class="form full-table">
+				<tr>
+					<th th:text="#{lang.admin.rules-list}">Rules</th>
+					<th>Admin</th>
+					<th>Circles</th>
+				</tr>
+				<tr th:each="circle : ${circles}" th:object="${circle}">
+					<td>Pizzásch</td>
+					<td>Pizzásch</td>
+					<td>
+						<a href="#" th:href="@{/admin/circles/edit/__*{id}__}"><i class="material-icons">edit</i></a>
+						<a href="#" th:href="@{/admin/circles/delete/__*{id}__}"><i class="material-icons">delete</i></a>
+					</td>
+				</tr>
+			</table>
+
+			<a class="button" href="#" th:href="@{/admin/circles/new}" th:text="#{lang.admin.title-new}">New circle</a>
 		</div>
 	</div>
 

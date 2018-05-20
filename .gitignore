@@ -6,3 +6,6 @@ target/
 .dbeaver-data-sources.xml
 secret_notes
 *application-local.properties
+tmp/
+.application-path.properties
+.factorypath/

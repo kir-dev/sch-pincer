@@ -1,5 +1,8 @@
 package hu.gerviba.webschop.web;
 
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -132,6 +135,19 @@ public class ApiController {
             return "ACK"; //new ResponseEntity<String>("ACK", HttpStatus.OK);
         } catch (Exception e) {
             return "REJECT"; //new ResponseEntity<String>("BAD_REQUEST", HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+    //TODO: Has ROLE
+    @GetMapping("/user/id")
+    @ResponseBody
+    public String setRoom(HttpServletRequest request) {
+        try {
+            UserEntity user = WebschopUtils.getUser(request);
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            return String.format("%064x", new BigInteger(1, digest.digest(user.getUid().getBytes(StandardCharsets.UTF_8))));
+        } catch (Exception e) {
+            return "ERROR";
         }
     }
     

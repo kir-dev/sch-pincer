@@ -36,61 +36,60 @@
 			<div class="decoration admin">
 				<i class="material-icons main">tune</i>
 			</div>
-			<h3 th:text="#{lang.admin.title}" class="topless">Admin Dashboard</h3>
-			<form action="#" th:action="@{/admin/new}" th:object="${review}" method="post">
-				<input type="hidden" th:field="*{id}" />
+			<h3 th:text="#{lang.admin.title-__${mode}__}" class="topless">Modify Circle</h3>
+			<form action="#" th:action="@{/admin/circles/__${mode}__}" method="post" enctype="multipart/form-data">
 				<table class="form full-table" th:object="${circle}">
+					<input type="hidden" th:field="*{id}" />
 					<tr>
-						<th>Name</th>
+						<th>Property</th>
 						<th>Value</th>
 					</tr>
 					<tr>
 						<td th:text="#{lang.admin.circle.name}">Name</td>
-						<td><input type="text" th:field="*{displayName}" /></td>
+						<td><input type="text" th:field="*{displayName}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.admin.circle.name}">Description</td>
-						<td><textarea type="text" th:field="*{description}"></textarea></td>
+						<td th:text="#{lang.admin.circle.description}">Description</td>
+						<td><textarea th:field="*{description}"></textarea></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.admin.circle.name}">Introduction (home page)</td>
-						<td><textarea type="text" th:field="*{description}"></textarea></td>
+						<td th:text="#{lang.admin.circle.homePageDescription}">Introduction (home page)</td>
+						<td><textarea th:field="*{homePageDescription}"></textarea></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.admin.circle.name}">Average opening</td>
-						<td><input type="text" th:field="*{displayName}" /></td>
+						<td th:text="#{lang.admin.circle.avgOpening}">Average opening</td>
+						<td><input type="text" th:field="*{avgOpening}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.admin.circle.name}">Founded</td>
-						<td><input type="text" th:field="*{displayName}" /></td>
+						<td th:text="#{lang.admin.circle.founded}">Founded</td>
+						<td><input type="text" th:field="*{founded}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.admin.circle.name}">Home page order</td>
-						<td><input type="text" th:field="*{displayName}" /></td>
+						<td th:text="#{lang.admin.circle.homePageOrder}">Home page order</td>
+						<td><input type="text" th:field="*{homePageOrder}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.admin.circle.name}">CSS class name</td>
-						<td><input type="text" th:field="*{displayName}" /></td>
+						<td th:text="#{lang.admin.circle.cssClassName}">CSS class name</td>
+						<td><input type="text" th:field="*{cssClassName}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.admin.circle.name}">Website URL</td>
-						<td><input type="text" th:field="*{displayName}" /></td>
+						<td th:text="#{lang.admin.circle.websiteUrl}">Website URL</td>
+						<td><input type="text" th:field="*{websiteUrl}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.admin.circle.name}">Facebook URL</td>
-						<td><input type="text" th:field="*{displayName}" /></td>
+						<td th:text="#{lang.admin.circle.facebookUrl}">Facebook URL</td>
+						<td><input type="text" th:field="*{facebookUrl}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.admin.circle.name}">Logo</td>
-						<td><input type="file" th:field="*{displayName}" /></td>
+						<td th:text="#{lang.admin.circle.logo}">Logo</td>
+						<td><input type="file" name="logo"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.admin.circle.name}">Background</td>
-						<td><input type="file" th:field="*{displayName}" /></td>
+						<td th:text="#{lang.admin.circle.background}">Background</td>
+						<td><input type="file" name="background"/></td>
 					</tr>
 				</table>
-
-				<a class="button" href="#" th:href="@{/admin/new}" th:text="#{lang.admin.new-circle}">New circle</a>
+				<input class="button" type="submit" th:value="#{lang.admin.title-new}" /> 
 			</form>
 		</div>
 	</div>
