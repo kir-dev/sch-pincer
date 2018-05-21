@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+ 	<meta charset="UTF-8" /> 
+	<title th:text="#{lang.header}">WebSCHop</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
+	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
+	<meta name="theme-color" content="#4C4C4D">
+	<meta name="msapplication-navbutton-color" content="#4C4C4D" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="#4C4C4D" />
+	<meta name="msapplication-tap-highlight" content="no">
+    <meta name="author" content="Szabó Gergely (Gerviba)"/>
+    <style>
+        body {
+            color: #FFFFFF;
+        }
+        .dashboard table tr td:first-of-type {
+            vertical-align: top;
+        }
+        .dashboard table tr td:nth-of-type(2) {
+            text-align: left;
+            text-transform: none;
+            vertical-align: top;
+            top: 0;
+        }
+    </style>
+</head>
+<body class="dashboard">
+    <h3>Error Page</h3>
+    <table>
+        <tr>
+            <td>Date</td>
+            <td th:text="${timestamp}" />
+        </tr>
+        <tr>
+            <td>Path</td>
+            <td th:text="${path}" />
+        </tr>
+        <tr>
+            <td>Error</td>
+            <td th:text="${error}" />
+        </tr>
+        <tr>
+            <td>Status</td>
+            <td th:text="${status}" />
+        </tr>
+        <tr>
+            <td>Message</td>
+            <td th:text="${message}" />
+        </tr>
+        <tr>
+            <td>Exception</td>
+            <td th:text="${exception}" />
+        </tr>
+        <tr>
+            <td>Trace</td>
+            <td>
+                <pre th:text="${trace}" />
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>

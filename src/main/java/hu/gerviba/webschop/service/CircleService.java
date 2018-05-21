@@ -27,12 +27,20 @@ public class CircleService {
         return repo.findAll();
     }
 
+    public List<CircleEntity> findAllForMenu() {
+        return repo.findAllByOrderByHomePageOrder();
+    }
+
     public void save(CircleEntity circleEntity) {
         repo.save(circleEntity);
     }
     
     public CircleEntity getOne(Long id) {
         return repo.getOne(id);
+    }
+
+    public void delete(CircleEntity ce) {
+        repo.delete(ce);
     }
     
 }

@@ -53,7 +53,7 @@
 					</tr>
 					<tr>
 						<td th:text="#{lang.profile.next-opening}">Next opening</td>
-						<td th:text="${#dates.format(nextOpening, '__#{lang.date-format}__')} ?: #{lang.profile.dateNotSet}">2018-05-12</td>
+						<td th:text="${#dates.format(nextOpening, '__#{lang.date-format}__')} ?: #{lang.profile.date-not-set}">2018-05-12</td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.profile.avg-opening}">Average opening</td>
@@ -120,9 +120,9 @@
 
 				<div class="member" th:each="member : ${selectedCircle?.members}" th:object="${member}">
 					<img src="https://i.imgur.com/9d7Q908.jpg" class="border-colored" height="100" width="100"
-							th:src="*{avatar}" />
-					<h4 th:text="*{name}">Putyin Dezső</h4>
-					<span th:text="*{rank}">Körvez</span>
+							th:src="@{/__*{avatar}__}" />
+					<h4 th:text="*{name}">Full Name</h4>
+					<span th:text="*{rank}">Member</span>
 				</div>
 				
 			</div>

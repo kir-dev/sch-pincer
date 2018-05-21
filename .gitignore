@@ -9,3 +9,4 @@ secret_notes
 tmp/
 .application-path.properties
 .factorypath/
+test/

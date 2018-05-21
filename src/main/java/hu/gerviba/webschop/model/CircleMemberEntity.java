@@ -80,6 +80,26 @@ public class CircleMemberEntity implements Serializable {
         return sort;
     }
     
+    public void setCircle(CircleEntity circle) {
+        this.circle = circle;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setRank(String rank) {
+        this.rank = rank;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
+    }
+
     private static final long serialVersionUID = 3999912885341511614L;
     
 }

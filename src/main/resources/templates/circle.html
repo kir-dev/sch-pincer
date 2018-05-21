@@ -100,9 +100,12 @@
 						luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat 
 						euismod ut eget erat.
 					</p>
-					<span class="colored">
+					<span class="colored-light">
 						<b>Következő nyitás:</b>
-						<em th:text="${#dates.format(circle.openings[0].dateStart, #messages.msg('lang.date-format'))}">2018.04.12. 18:00</em>
+						<em th:if="${#lists.size(circle.openings) != 0}" class="border-colored"
+							th:text="${#dates.format(circle.openings[0].dateStart, #messages.msg('lang.date-format'))}">2018.04.12. 18:00</em>
+						<em th:unless="${#lists.size(circle.openings) != 0}" class="border-colored"
+							th:text="#{lang.profile.date-not-set}">2018.04.12. 18:00</em>
 					</span>
 				</div>
 			</div>

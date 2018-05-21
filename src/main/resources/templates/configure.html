@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="MainLayout :: head">
+	<meta charset="UTF-8" /> 
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
+</head>
+<body>
+	<div class="header" th:replace="MainLayout :: header">
+	</div>
+	
+	<div class="left-menu" th:replace="MainLayout :: left-menu">
+	</div>
+
+	<div class="page content">
+		<div class="highlighted latest dashboard">
+			<div class="decoration admin">
+				<i class="material-icons main">tune</i>
+			</div>
+            <h3 th:text="#{lang.configure.title}" class="topless">Leader Dashboard</h3>
+
+            <a class="button" href="#" th:href="@{/configure/__${circleId}__/edit}" 
+                    th:text="#{lang.configure.edit-circle}">Edit circle</a>
+		</div>
+
+		<div class="highlighted dashboard">
+			<table class="form full-table">
+				<tr>
+					<th th:text="#{lang.configure.opening-list}">Openings</th>
+					<th></th>
+				</tr>
+				<tr th:each="opening : ${circle.openings}" th:object="${opening}">
+					<td th:text="${#dates.format(circle.openings[0].dateStart, #messages.msg('lang.date-format'))}">2018.05.01. 00:00</td>
+					<td>
+						<a href="#" th:href="@{/configure/__${circleId}__/openings/delete/__*{id}__}"><i class="material-icons">delete</i></a>
+					</td>
+				</tr>
+			</table>
+
+            <a class="button" href="#" th:href="@{/configure/__${circleId}__/openings/new}" 
+                    th:text="#{lang.configure.title-opening}">New opening</a>
+		</div>
+
+		<div class="highlighted dashboard">
+			<table class="form full-table">
+				<tr>
+					<th th:text="#{lang.configure.item-list}">Items</th>
+					<th></th>
+				</tr>
+				<tr th:each="item : ${items}" th:object="${item}">
+					<td th:text="*{name}">Item name</td>
+					<td>
+                        <a href="#" th:href="@{/configure/__${circleId}__/items/edit/__*{id}__}"><i class="material-icons">edit</i></a>
+						<a href="#" th:href="@{/configure/__${circleId}__/items/delete/__*{id}__}"><i class="material-icons">delete</i></a>
+					</td>
+				</tr>
+			</table>
+
+            <a class="button" href="#" th:href="@{/configure/__${circleId}__/items/new}" 
+                    th:text="#{lang.configure.title-item}">New item</a>
+        </div>
+        
+        <div class="highlighted dashboard latest">
+			<table class="form full-table no-top-table">
+				<tr>
+					<th th:text="#{lang.configure.member-list}">Members</th>
+					<th></th>
+					<th></th>
+				</tr>
+				<tr th:each="member : ${circle.members}" th:object="${member}">
+					<td th:text="*{name}">Test Person</td>
+					<td th:text="*{rank}">Member</td>
+					<td>
+						<a href="#" th:href="@{/configure/__${circleId}__/members/delete/__*{id}__}"><i class="material-icons">delete</i></a>
+					</td>
+				</tr>
+			</table>
+
+            <a class="button" href="#" th:href="@{/configure/__${circleId}__/members/new}" 
+                    th:text="#{lang.configure.title-member}">New member</a>
+		</div>
+	</div>
+
+	<div th:replace="MainLayout :: footer"></div>
+</body>
+</html>

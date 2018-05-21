@@ -205,8 +205,10 @@ function buySelectedItem() {
 }
 
 function doneOrder() {
-		$(".done").css({"display": "block"});
-	$(".done-circle").css({"background-size": "100%"});
+	$(".done").css({"display": "block"});
+	setTimeout(() => {
+		$(".done-circle").css({"background-size": "100%"});
+	}, 10);
 	setTimeout(() => {
 		$(".done-tick").css({"-webkit-clip-path": "polygon(0 0, 100% 0, 100% 100%, 0 100%)", 
 				"clip-path": "polygon(0 0, 100% 0, 100% 100%, 0 100%)"});
@@ -218,7 +220,7 @@ function doneOrder() {
 		$("#blur-section").removeClass("blur");
 	}, 2000);
 	setTimeout(() => {
-		$(".done-circle").css({"background-size": "0%"});
+		$(".done-circle").css({"background-size": "0.1%"});
 		$(".done").css({"top": "50vh", "opacity": "1", "display": "none"});
 	}, 3500);
 }
@@ -232,6 +234,12 @@ $(window).scroll(function() {
 
 $(window).click(function() {
 	if (event.target == $("#popup")[0]) {
+		closePopup();
+	}
+});
+
+$(document).keyup(function (e) {
+	if (e.keyCode == 27) {
 		closePopup();
 	}
 });

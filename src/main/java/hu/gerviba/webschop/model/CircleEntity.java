@@ -49,17 +49,17 @@ public class CircleEntity implements Serializable {
     
     @Column
     @OrderBy("sort DESC")
-    @OneToMany(mappedBy = "circle", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "circle", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<CircleMemberEntity> members;
 
     @Column
     @OrderBy("date DESC")
-    @OneToMany(mappedBy = "circle", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "circle", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<ReviewEntity> reviews;
 
     @Column
     @OrderBy("dateStart ASC")
-    @OneToMany(mappedBy = "circle", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "circle", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<OpeningEntity> openings;
 
     @Column
@@ -132,6 +132,26 @@ public class CircleEntity implements Serializable {
         this.rateQuality = 2.35f;
         this.ratePrice = 5;
         this.rateingCount = 105;
+    }
+
+    public CircleEntity(CircleEntity copy) {
+        this.id = copy.id;
+        this.displayName = copy.displayName;
+        this.description = copy.description;
+        this.homePageDescription = copy.homePageDescription;
+        this.avgOpening = copy.avgOpening;
+        this.founded = copy.founded;
+        this.homePageOrder = copy.homePageOrder;
+        this.cssClassName = copy.cssClassName;
+        this.facebookUrl = copy.facebookUrl;
+        this.websiteUrl = copy.websiteUrl;
+        this.backgroundUrl = copy.backgroundUrl;
+        this.logoUrl = copy.logoUrl;
+        this.rateOverAll = copy.rateOverAll;
+        this.rateSpeed = copy.rateSpeed;
+        this.rateQuality = copy.rateQuality;
+        this.ratePrice = copy.ratePrice;
+        this.rateingCount = copy.rateingCount;
     }
 
     public String getAvgOpening() {
@@ -214,6 +234,81 @@ public class CircleEntity implements Serializable {
         return websiteUrl;
     }
     
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setHomePageDescription(String homePageDescription) {
+        this.homePageDescription = homePageDescription;
+    }
+
+    public void setAvgOpening(String avgOpening) {
+        this.avgOpening = avgOpening;
+    }
+
+    public void setFounded(int founded) {
+        this.founded = founded;
+    }
+
+    public void setHomePageOrder(int homePageOrder) {
+        this.homePageOrder = homePageOrder;
+    }
+
+    public void setCssClassName(String cssClassName) {
+        this.cssClassName = cssClassName;
+    }
+
+    public void setFacebookUrl(String facebookUrl) {
+        this.facebookUrl = facebookUrl;
+    }
+
+    public void setWebsiteUrl(String websiteUrl) {
+        this.websiteUrl = websiteUrl;
+    }
+
+    public void setBackgroundUrl(String backgroundUrl) {
+        this.backgroundUrl = backgroundUrl;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
+    }
+
+    public void setRateOverAll(float rateOverAll) {
+        this.rateOverAll = rateOverAll;
+    }
+
+    public void setRateSpeed(float rateSpeed) {
+        this.rateSpeed = rateSpeed;
+    }
+
+    public void setRateQuality(float rateQuality) {
+        this.rateQuality = rateQuality;
+    }
+
+    public void setRatePrice(float ratePrice) {
+        this.ratePrice = ratePrice;
+    }
+
+    public void setRateingCount(int rateingCount) {
+        this.rateingCount = rateingCount;
+    }
+
     private static final long serialVersionUID = 2467081480963002976L;
 
+    @Override
+    public String toString() {
+        return "CircleEntity [id=" + id + ", displayName=" + displayName + ", description=" + description
+                + ", homePageDescription=" + homePageDescription + ", avgOpening=" + avgOpening + ", founded=" + founded
+                + ", members=" + members + ", reviews=" + reviews + ", openings=" + openings + ", homePageOrder="
+                + homePageOrder + ", cssClassName=" + cssClassName + ", facebookUrl=" + facebookUrl + ", websiteUrl="
+                + websiteUrl + ", backgroundUrl=" + backgroundUrl + ", logoUrl=" + logoUrl + ", rateOverAll=" + rateOverAll
+                + ", rateSpeed=" + rateSpeed + ", rateQuality=" + rateQuality + ", ratePrice=" + ratePrice
+                + ", rateingCount=" + rateingCount + "]";
+    }
+    
 }

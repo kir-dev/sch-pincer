@@ -14,6 +14,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+import hu.gerviba.webschop.web.ControllerUtil;
+
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
@@ -51,6 +53,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/cdn/**")
                 .addResourceLocations("file:" + uploadPath);
+    }
+    
+    @Bean
+    public ControllerUtil controllerUtil() {
+        return new ControllerUtil();
     }
 
 }

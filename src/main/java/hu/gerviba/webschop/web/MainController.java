@@ -1,5 +1,6 @@
 package hu.gerviba.webschop.web;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,8 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import hu.gerviba.webschop.WebschopUtils;
 import hu.gerviba.webschop.model.CircleEntity;
+import hu.gerviba.webschop.model.OpeningEntity;
 import hu.gerviba.webschop.model.ReviewEntity;
 import hu.gerviba.webschop.service.CircleService;
 import hu.gerviba.webschop.service.ItemService;
@@ -38,12 +39,16 @@ public class MainController {
     ReviewService reviews;
     
     @Autowired
-    private OrderService orders;
+    OrderService orders;
+
+    @Autowired
+    ControllerUtil util;
     
     @GetMapping("/")
     public String root(Map<String, Object> model) {
-        model.put("circles", circles.findAll());
-        model.put("opener", openings.findAll().get(0));
+        model.put("circles", circles.findAllForMenu());
+        List<OpeningEntity> opens = openings.findAll();
+        model.put("opener", opens.size() > 0 ? opens.get(0) : null);
         return "index";
     }
     
@@ -51,7 +56,8 @@ public class MainController {
     public String items(@RequestParam(name = "q", defaultValue = "", required = false) String keyword, 
     		Map<String, Object> model) {
 
-    	model.put("circles", circles.findAll());
+    	
+        model.put("circles", circles.findAllForMenu());
         model.put("searchMode", !("".equals(keyword)));
         model.put("keyword", keyword);
         return "items";
@@ -59,7 +65,8 @@ public class MainController {
 
     @GetMapping("/circle")
     public String circle(Map<String, Object> model) {
-        model.put("circles", circles.findAll());
+        
+        model.put("circles", circles.findAllForMenu());
         model.put("openings", openings.findAll()); //TODO: nextWeek
         return "circle";
     }
@@ -68,7 +75,8 @@ public class MainController {
     public String circleSpecific(@PathVariable Long circleId, 
             Map<String, Object> model) {
         
-        model.put("circles", circles.findAll());
+        
+        model.put("circles", circles.findAllForMenu());
         model.put("selectedCircle", circles.getOne(circleId));
         model.put("nextOpening", openings.findNextStartDateOf(circleId));
         return "circleProfile";
@@ -82,7 +90,8 @@ public class MainController {
         model.put("selectedCircle", circle);
         model.put("review", new ReviewEntity(circle));
 
-        model.put("circles", circles.findAll());
+        
+        model.put("circles", circles.findAllForMenu());
         return "circleReview";
     }   
     
@@ -91,22 +100,33 @@ public class MainController {
     public String circleRate(HttpServletRequest request, @PathVariable Long circleId, 
             @ModelAttribute ReviewEntity review, Map<String, Object> model) {
         
-        review.setUserName(WebschopUtils.getUser(request).getName());
+        review.setUserName(util.getUser(request).getName());
         review.setDate(System.currentTimeMillis());
         review.setCircle(circles.getOne(circleId));
-        System.out.println(review.getReview());
         reviews.save(review);
         
-        model.put("circles", circles.findAll());
-        model.put("selectedCircle", circles.getOne(circleId));
+        List<ReviewEntity> allReviews = reviews.findAll(circleId);
+        CircleEntity ce = circles.getOne(circleId);
+        ce.setRateingCount(allReviews.size());
+        ce.setRateOverAll((float) allReviews.stream().mapToDouble(x -> x.getRateOverAll()).average().orElse(1));
+        ce.setRatePrice((float) allReviews.stream().mapToDouble(x -> x.getRatePrice()).average().orElse(1));
+        ce.setRateQuality((float) allReviews.stream().mapToDouble(x -> x.getRateQuality()).average().orElse(1));
+        ce.setRateSpeed((float) allReviews.stream().mapToDouble(x -> x.getRateSpeed()).average().orElse(1));
+        
+        circles.save(ce);
+        
+        
+        model.put("circles", circles.findAllForMenu());
+        model.put("selectedCircle", ce);
         return "redirect:/circle/" + circleId + "/";
     }
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/profile")
     public String profile(HttpServletRequest request, Map<String, Object> model) {
-        model.put("orders", orders.findAll(WebschopUtils.getUser(request).getUid()));
-        model.put("circles", circles.findAll());
+        model.put("orders", orders.findAll(util.getUser(request).getUid()));
+        
+        model.put("circles", circles.findAllForMenu());
         return "profile";
     }
     

@@ -34,6 +34,12 @@ ins {
 	text-decoration: none;
 }
 
+input[type="checkbox"] {
+	-webkit-appearance: checkbox;
+	-moz-appearance: checkbox;
+	appearance: checkbox;
+}
+
 input:focus, 
 button:focus, 
 select:focus,
@@ -572,6 +578,15 @@ a {
 	vertical-align: top;
 }
 
+.circles .article .message span em {
+	background-color: #111111;
+	display: inline-block;
+	border-radius: 3px;
+	padding: 8px 16px;
+	border-left: 4px solid #888888;
+	margin-left: 8px;
+}
+
 .member {
 	display: inline-block;
 	padding: 0 20px 40px 20px;
@@ -903,7 +918,7 @@ a {
 	margin-left: -150px;
 	margin-top: -150px;
 	opacity: 1;
-	transition: all ease-out 0.4s; 
+	transition: top ease-out 0.4s, opacity ease-out 0.4s; 
 	display: none;
 }
 
@@ -915,7 +930,7 @@ a {
 	top: 0;
 	z-index: 67001;
 	background-position: center;
-	background-size: 0;
+	background-size: 0.1%;
 	background-repeat: no-repeat;
 	transition: all cubic-bezier(.08,1.44,.91,1.22) 0.3s; 
 }
@@ -1144,6 +1159,10 @@ form input[type="submit"]:hover {
 	font-size: 24px;
 }
 
+.prompt p {
+	text-align: center;
+}
+
 .dashboard .button,
 .page-button {
 	display: inline-block;
@@ -1154,7 +1173,7 @@ form input[type="submit"]:hover {
 	background-color: #242425;
 	text-decoration: none;
 	margin: 40px 0;
-	transition: all ease 0.2s;
+	transition: color ease 0.2s, background-color ease 0.2s;
 }
 
 .dashboard .button:hover,
@@ -1369,6 +1388,7 @@ textarea {
 	max-width: 100% !important;
 }
 
+.prompt table,
 .dashboard table,
 .orders {
 	border-spacing: 0;
@@ -1381,6 +1401,7 @@ textarea {
 	text-transform: none;
 }
 
+.prompt table th,
 .dashboard table th,
 .orders th {
 	border-bottom: 2px solid #888888;
@@ -1389,12 +1410,14 @@ textarea {
 	padding: 6px 14px;
 }
 
+.prompt table td,
 .dashboard table td,
 .orders td {
 	text-align: left;
 	padding: 12px 14px !important;
 }
 
+.prompt table tr:nth-of-type(2n+1),
 .dashboard table tr:nth-of-type(2n+1),
 .orders tr:nth-of-type(2n+1) {
 	background-color: #3f3f40;
@@ -1602,6 +1625,40 @@ textarea {
 	55px 55px 0 #242425, 56px 56px 0 #242425, 57px 57px 0 #242425, 58px 58px 0 #242425, 59px 59px 0 #242425,
 	60px 60px 0 #242425, 61px 61px 0 #242425, 62px 62px 0 #242425, 63px 63px 0 #242425, 64px 64px 0 #242425,
 	65px 65px 0 #242425, 66px 66px 0 #242425, 67px 67px 0 #242425, 68px 68px 0 #242425, 69px 69px 0 #242425;
+}
+
+.decoration.warning {
+	background-color: #383839;
+}
+
+.decoration.warning .main {
+	color: #bf0000;
+	background-color: #4C4C4D;
+	border-color: #111111;
+	font-size: 160px;
+	line-height: 1.2;
+	text-shadow: 1px 1px 0 #242425, 2px 2px 0 #242425, 3px 3px 0 #242425, 4px 4px 0 #242425,
+	 5px  5px 0 #242425,  6px  6px 0 #242425,  7px  7px 0 #242425,  8px  8px 0 #242425,  9px  9px 0 #242425, 
+	10px 10px 0 #242425, 11px 11px 0 #242425, 12px 12px 0 #242425, 13px 13px 0 #242425, 14px 14px 0 #242425, 
+	15px 15px 0 #242425, 16px 16px 0 #242425, 17px 17px 0 #242425, 18px 18px 0 #242425, 19px 19px 0 #242425, 
+	20px 20px 0 #242425, 21px 21px 0 #242425, 22px 22px 0 #242425, 23px 23px 0 #242425, 24px 24px 0 #242425,
+	25px 25px 0 #242425, 26px 26px 0 #242425, 27px 27px 0 #242425, 28px 28px 0 #242425, 29px 29px 0 #242425,
+	30px 30px 0 #242425, 31px 31px 0 #242425, 32px 32px 0 #242425, 33px 33px 0 #242425, 34px 34px 0 #242425,
+	35px 35px 0 #242425, 36px 36px 0 #242425, 37px 37px 0 #242425, 38px 38px 0 #242425, 39px 39px 0 #242425,
+	40px 40px 0 #242425, 41px 41px 0 #242425, 42px 42px 0 #242425, 43px 43px 0 #242425, 44px 44px 0 #242425,
+	45px 45px 0 #242425, 46px 46px 0 #242425, 47px 47px 0 #242425, 48px 48px 0 #242425, 49px 49px 0 #242425,
+	50px 50px 0 #242425, 51px 51px 0 #242425, 52px 52px 0 #242425, 53px 53px 0 #242425, 54px 54px 0 #242425,
+	55px 55px 0 #242425, 56px 56px 0 #242425, 57px 57px 0 #242425, 58px 58px 0 #242425, 59px 59px 0 #242425,
+	60px 60px 0 #242425, 61px 61px 0 #242425, 62px 62px 0 #242425, 63px 63px 0 #242425, 64px 64px 0 #242425,
+	65px 65px 0 #242425, 66px 66px 0 #242425, 67px 67px 0 #242425, 68px 68px 0 #242425, 69px 69px 0 #242425;
+}
+
+.no-top-table tr td:nth-of-type(2) {
+	top: 0 !important;
+}
+
+.no-top-table tr td:nth-of-type(3) i {
+	top: -2px !important;
 }
 
 /** RED **/

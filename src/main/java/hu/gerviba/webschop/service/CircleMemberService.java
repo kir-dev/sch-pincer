@@ -13,14 +13,22 @@ import hu.gerviba.webschop.model.CircleMemberEntity;
 public class CircleMemberService {
 
     @Autowired
-    CircleMemberRepository members;
+    CircleMemberRepository repo;
     
     public CircleMemberEntity getById(Long id) {
-        return members.getOne(id);
+        return repo.getOne(id);
     }
     
     public void save(CircleMemberEntity member) {
-        members.save(member);
+        repo.save(member);
+    }
+
+    public CircleMemberEntity getOne(Long memberId) {
+        return repo.getOne(memberId);
+    }
+
+    public void delete(CircleMemberEntity cme) {
+        repo.delete(cme);
     }
     
 }

@@ -58,15 +58,15 @@ public class TestingConfig {
         openings.save(new OpeningEntity(1525370400000L, 1525392000000L, 1525330800000L, 1525348800000L, 
                 "demo/pizzasch-pr.jpg", "Jack pls mit írjak ide?", circle, 100, 20));
         
-        circleMembers.save(new CircleMemberEntity(circle, "Putyin Dezső", "Körvez", "https://i.imgur.com/9d7Q908.jpg", 10));
-        circleMembers.save(new CircleMemberEntity(circle, "Test Elek", "Tag", "https://i.imgur.com/9d7Q908.jpg", 0));
-        circleMembers.save(new CircleMemberEntity(circle, "Valaki Név", "Gazdaságis", "https://i.imgur.com/9d7Q908.jpg", 5));
-        circleMembers.save(new CircleMemberEntity(circle, "Putyin János", "Tag", "https://i.imgur.com/9d7Q908.jpg", 0));
-        circleMembers.save(new CircleMemberEntity(circle, "Putyin Péter", "Tag", "https://i.imgur.com/9d7Q908.jpg", 0));
-        circleMembers.save(new CircleMemberEntity(circle, "Putyin Filip", "Tag", "https://i.imgur.com/9d7Q908.jpg", 0));
-        circleMembers.save(new CircleMemberEntity(circle, "Putyin Sándor", "Tag", "https://i.imgur.com/9d7Q908.jpg", 0));
-        circleMembers.save(new CircleMemberEntity(circle, "Putyin József", "Tag", "https://i.imgur.com/9d7Q908.jpg", 0));
-        circleMembers.save(new CircleMemberEntity(circle, "Putyin Attila", "Tag", "https://i.imgur.com/9d7Q908.jpg", 0));
+        circleMembers.save(new CircleMemberEntity(circle, "Valami Dezső", "Körvez", "demo/profile-pic-1.jpg", 10));
+        circleMembers.save(new CircleMemberEntity(circle, "Test Elek", "Tag", "demo/profile-pic-1.jpg", 0));
+        circleMembers.save(new CircleMemberEntity(circle, "Lány Név", "Gazdaságis", "demo/profile-pic-2.jpg", 5));
+        circleMembers.save(new CircleMemberEntity(circle, "Valami János", "Tag", "demo/profile-pic-1.jpg", 0));
+        circleMembers.save(new CircleMemberEntity(circle, "Valami Péter", "Tag", "demo/profile-pic-1.jpg", 0));
+        circleMembers.save(new CircleMemberEntity(circle, "Valami Bogi", "Tag", "demo/profile-pic-2.jpg", 0));
+        circleMembers.save(new CircleMemberEntity(circle, "Valami Sándor", "Tag", "demo/profile-pic-1.jpg", 0));
+        circleMembers.save(new CircleMemberEntity(circle, "Valami József", "Tag", "demo/profile-pic-1.jpg", 0));
+        circleMembers.save(new CircleMemberEntity(circle, "Valami Attila", "Tag", "demo/profile-pic-1.jpg", 0));
         
         reviews.save(new ReviewEntity(circle, "Szabó Gergely", LONG_LOREM_IPSUM, 
                 System.currentTimeMillis(), 5, 3, 5, 5));

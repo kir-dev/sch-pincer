@@ -36,7 +36,7 @@
 			<div class="decoration admin">
 				<i class="material-icons main">tune</i>
 			</div>
-			<h3 th:text="#{lang.admin.title-circle-__${mode}__}" class="topless">Modify Circle</h3>
+			<h3 th:text="#{lang.configure.title-opening}" class="topless">Modify Opening</h3>
 			<form action="#" th:action="${adminMode} ? @{/admin/circles/__${mode}__} : @{/configure/edit}" method="post" enctype="multipart/form-data">
 				<table class="form full-table" th:object="${circle}">
 					<input type="hidden" name="circleId" th:value="*{id}" />
@@ -89,7 +89,7 @@
 						<td><input type="file" name="background"/></td>
 					</tr>
 				</table>
-				<input class="button" type="submit" th:value="#{lang.admin.title-circle-__${mode}__}" /> 
+				<input class="button" type="submit" th:value="#{lang.admin.title-__${mode}__}" /> 
 			</form>
 		</div>
 	</div>

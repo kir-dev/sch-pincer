@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import hu.gerviba.webschop.WebschopUtils;
 import hu.gerviba.webschop.dao.ItemEntityDao;
 import hu.gerviba.webschop.model.CircleEntity;
 import hu.gerviba.webschop.model.ItemEntity;
@@ -52,6 +51,9 @@ public class ApiController {
     
     @Autowired
     private OrderService orders;
+    
+    @Autowired
+    private ControllerUtil util;
     
     private static final long HALF_HOUR = 1000 * 60 * 30;
     private final SimpleDateFormat DATE = new SimpleDateFormat("HH:mm"); 
@@ -107,7 +109,7 @@ public class ApiController {
             @RequestParam(required = true) String comment,
             @RequestParam(required = true) String detailsJson) {
         
-        UserEntity user = WebschopUtils.getUser(request);
+        UserEntity user = util.getUser(request);
         OrderEntity order = new OrderEntity(user.getUid(), comment, detailsJson, user.getRoom());
         order.setIntervalId(time);
         ItemEntity item = items.getOne(id);
@@ -129,7 +131,7 @@ public class ApiController {
     @ResponseBody
     public String setRoom(HttpServletRequest request, @RequestParam(required = true) int room) {
         try {
-            UserEntity user = WebschopUtils.getUser(request);
+            UserEntity user = util.getUser(request);
             user.setRoom(room);
             users.save(user);
             return "ACK"; //new ResponseEntity<String>("ACK", HttpStatus.OK);
@@ -143,7 +145,7 @@ public class ApiController {
     @ResponseBody
     public String setRoom(HttpServletRequest request) {
         try {
-            UserEntity user = WebschopUtils.getUser(request);
+            UserEntity user = util.getUser(request);
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             return String.format("%064x", new BigInteger(1, digest.digest(user.getUid().getBytes(StandardCharsets.UTF_8))));
         } catch (Exception e) {
@@ -156,7 +158,7 @@ public class ApiController {
     public ResponseEntity<String> deleteOrder(HttpServletRequest request, @RequestParam(required = true) long id) {
         try {
             OrderEntity order = orders.getOne(id);
-            if (!order.getUserId().equals(WebschopUtils.getUser(request).getUid()))
+            if (!order.getUserId().equals(util.getUser(request).getUid()))
                 return new ResponseEntity<String>("BAD_REQUEST", HttpStatus.BAD_REQUEST);
             order.setStatus(OrderStatus.CANCELLED);
             orders.save(order);

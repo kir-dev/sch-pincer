@@ -122,5 +122,45 @@ public class ItemEntity implements Serializable {
 	}
 
     private static final long serialVersionUID = -8174418379518262439L;
+
+    public void setDetailsJsonConfig(String json) {
+        this.detailsConfigJson = json;
+    }
+    
+    public void setOrderable(boolean orderable) {
+        this.orderable = orderable;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCircle(CircleEntity circle) {
+        this.circle = circle;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setIngredients(String ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public void setDetailsConfigJson(String detailsConfigJson) {
+        this.detailsConfigJson = detailsConfigJson;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
     
 }

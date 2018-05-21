@@ -24,5 +24,9 @@ public class ReviewService {
 	public void save(ReviewEntity review) {
 	    repo.save(review);
 	}
+
+    public List<ReviewEntity> findAll(Long circleId) {
+        return repo.findAllByCircle_Id(circleId);
+    }
 	
 }

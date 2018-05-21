@@ -33,5 +33,9 @@ public class ItemService {
     public void save(ItemEntity itemEntity) {
         repo.save(itemEntity);
     }
+
+    public List<ItemEntity> findAllByCircle(Long circleId) {
+        return repo.findAllByCircle_Id(circleId);
+    }
 	
 }

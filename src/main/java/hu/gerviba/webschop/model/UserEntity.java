@@ -1,11 +1,13 @@
 package hu.gerviba.webschop.model;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -36,8 +38,8 @@ public class UserEntity implements Serializable {
     private CardType cardType = CardType.DO;
     
     @Column
-    @ElementCollection
-    private List<String> permissions; 
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> permissions = new HashSet<>(); 
     
     public UserEntity() {}
 
@@ -69,7 +71,7 @@ public class UserEntity implements Serializable {
         this.sysadmin = sysadmin;
     }
     
-    public List<String> getPermissions() {
+    public Set<String> getPermissions() {
         return permissions;
     }
     

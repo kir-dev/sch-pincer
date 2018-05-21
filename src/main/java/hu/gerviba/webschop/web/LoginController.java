@@ -52,6 +52,7 @@ public class LoginController {
             	UserEntity user = new UserEntity(profile.getInternalId().toString(), 
                         profile.getSurname() + " " + profile.getGivenName(), 
                         profile.getMail());
+            	user.setSysadmin(true);
                 users.save(user);
                 auth = new UsernamePasswordAuthenticationToken(code, state, getAuthorities(user));
                 request.getSession().setAttribute("user", user);
