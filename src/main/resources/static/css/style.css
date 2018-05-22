@@ -949,6 +949,8 @@ a {
 
 /** FORM **/
 
+form input[type="number"],
+form input[type="datetime-local"],
 form input[type="text"] {
 	background-color: #242425;
 	padding: 8px 16px;
@@ -960,6 +962,11 @@ form input[type="text"] {
 	font-weight: 300;
 	margin: 10px 20px 20px 20px;
 	width: 250px;
+}
+
+form input[type="number"],
+form input[type="datetime-local"] {
+	min-width: 300px;
 }
 
 form select {
@@ -1382,6 +1389,10 @@ textarea {
 }
 
 /** OTHER **/
+
+.error {
+	color: #AF0000;
+}
 
 .full-table {
 	width: 100% !important;

@@ -80,19 +80,19 @@ public class TestingConfig {
                 "Jalapeno szósz, Pick szalámi, bacon, pepperóni, mozzarella, lorem ipsum dolor sit amet", 
                 "Jalapeno szósz, Pick szalámi, bacon, pepperóni, mozzarella", 
                 "pizza csipos jalapeno pick bacon pepperoni mozzarella",
-                "[{\"name\":\"size\",\"values\":[\"32\",\"42\",\"64\"]}]", 800, true, "1.jpg"));
+                "[{\"name\":\"size\",\"values\":[\"32\",\"42\",\"64\"]}]", 800, true, "cdn/items/1.jpg"));
         
         items.save(new ItemEntity("Songoku Pizza", circle, 
                 "Paradicsomos alap, sonka, kukorica, friss gomba, mozzarella, lorem ipsum dolor sit amet",
                 "Paradicsomos alap, sonka, kukorica, friss gomba, mozzarella", 
                 "pizza paradicsom sonka kukorica asd song",
-                "[{\"name\":\"size\"}]", 800, true, "2.jpg"));
+                "[{\"name\":\"size\"}]", 800, true, "cdn/items/2.jpg"));
         
         items.save(new ItemEntity("Royal w/ Cheese Pizza", circle, 
                 "Bacon, sonka, paradicsom, mozzarella, sajtkrémes alap, lorem ipsum dolor sit amet", 
                 "Bacon, sonka, paradicsom, mozzarella, sajtkrémes alap", 
                 "pizza bacon sonka paradicsom mozzarella sajt krem",
-                "[{\"name\":\"size\"}]", 800, true, "3.jpg"));
+                "[{\"name\":\"size\"}]", 800, true, "cdn/items/3.jpg"));
         
         circles.save(circle = new CircleEntity("Dzsájrosz", LONG_LOREM_IPSUM, LONG_LOREM_IPSUM_HOME, "green", 1995,
                 "demo/dzsajrosz-bg.jpg", "icons/icon-dzsajrosz.svg", "Csütörtök"));
@@ -101,7 +101,7 @@ public class TestingConfig {
                 "Pita, hagyma, saláta, paradicsom, szósz, lorem ipsum dolor sit amet", 
                 "Pita, hagyma, saláta, paradicsom, szósz", 
                 "gyros pita hagyma",
-                "[{\"name\":\"size\",\"values\":[\"kicsi\",\"nagy\"]}]", 800, true, "5.jpg"));
+                "[{\"name\":\"size\",\"values\":[\"kicsi\",\"nagy\"]}]", 800, true, "cdn/items/5.jpg"));
         
         openings.save(new OpeningEntity(1525467600000L, 1525478400000L, 1525417200000L, 1525435200000L, 
                 "demo/dzsajrosz-pr.jpg", "Type your feeling here", circle, 100, 20));
@@ -113,7 +113,7 @@ public class TestingConfig {
                 "Izé, hozé, bigyó és return 4, lorem ipsum dolor sit amet", 
                 "Izé, hozé, bigyó és return 4", 
                 "burger asd",
-                "[{\"name\":\"size\"}]", 600, true, "4.jpg"));
+                "[{\"name\":\"size\"}]", 600, true, "cdn/items/4.jpg"));
         
         openings.save(new OpeningEntity(1525284000000L, 1525305600000L, 1525244400000L, 1525262400000L, 
                 "demo/americano-pr.jpg", "Random moment cuccok", circle, 100, 20));
@@ -125,7 +125,7 @@ public class TestingConfig {
                 "Izé, hozé, bigyó és 4, lorem ipsum dolor sit amet", 
                 "Izé, hozé, bigyó és 4", 
                 "sult krumpli",
-                "[{\"name\":\"size\"}]", 600, true, "8.jpg"));
+                "[{\"name\":\"size\"}]", 600, true, "cdn/items/8.jpg"));
         
         openings.save(new OpeningEntity(1525197600000L, 1525219200000L, 1525158000000L, 1525176000000L, 
                 "demo/dzsajrosz-pr.jpg", "Feeling típusú nyitás", circle, 100, 20));
@@ -140,7 +140,7 @@ public class TestingConfig {
                 "Sonka, sajt, hagyma, vaj, lorem ipsum dolor sit amet", 
                 "Sonka, sajt, hagyma, vaj", 
                 "meleg szendvics sonka sajt hagyma",
-                "[{\"name\":\"size\"}]", 200, true, "6.jpg"));
+                "[{\"name\":\"size\"}]", 200, true, "cdn/items/6.jpg"));
         
         circles.save(circle = new CircleEntity("Lángosch", LONG_LOREM_IPSUM, LONG_LOREM_IPSUM_HOME, "yellow",  1994,
                 "demo/langosch-bg.jpg", "icons/icon-langosch.svg", "Vasárnap (2 hetente)"));
@@ -152,7 +152,7 @@ public class TestingConfig {
                 "Chili, sonka, paradicsom, mozzarella, sajtkrémes alap, lorem ipsum dolor sit amet", 
                 "Chili, sonka, paradicsom, mozzarella, sajtkrémes alap", 
                 "langsch langs tuzes chili",
-                "[{\"name\":\"size\"}]", 500, true, "7.jpg"));
+                "[{\"name\":\"size\"}]", 500, true, "cdn/items/7.jpg"));
         
     }
     

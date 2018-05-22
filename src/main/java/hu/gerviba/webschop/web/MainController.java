@@ -56,7 +56,6 @@ public class MainController {
     public String items(@RequestParam(name = "q", defaultValue = "", required = false) String keyword, 
     		Map<String, Object> model) {
 
-    	
         model.put("circles", circles.findAllForMenu());
         model.put("searchMode", !("".equals(keyword)));
         model.put("keyword", keyword);
@@ -65,7 +64,6 @@ public class MainController {
 
     @GetMapping("/circle")
     public String circle(Map<String, Object> model) {
-        
         model.put("circles", circles.findAllForMenu());
         model.put("openings", openings.findAll()); //TODO: nextWeek
         return "circle";
@@ -74,7 +72,6 @@ public class MainController {
     @GetMapping("/circle/{circleId}")
     public String circleSpecific(@PathVariable Long circleId, 
             Map<String, Object> model) {
-        
         
         model.put("circles", circles.findAllForMenu());
         model.put("selectedCircle", circles.getOne(circleId));
@@ -89,8 +86,6 @@ public class MainController {
         CircleEntity circle = circles.getOne(circleId);
         model.put("selectedCircle", circle);
         model.put("review", new ReviewEntity(circle));
-
-        
         model.put("circles", circles.findAllForMenu());
         return "circleReview";
     }   
@@ -115,17 +110,14 @@ public class MainController {
         
         circles.save(ce);
         
-        
         model.put("circles", circles.findAllForMenu());
         model.put("selectedCircle", ce);
         return "redirect:/circle/" + circleId + "/";
     }
 
-    @PreAuthorize("hasRole('USER')")
     @GetMapping("/profile")
     public String profile(HttpServletRequest request, Map<String, Object> model) {
         model.put("orders", orders.findAll(util.getUser(request).getUid()));
-        
         model.put("circles", circles.findAllForMenu());
         return "profile";
     }

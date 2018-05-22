@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import hu.gerviba.webschop.dao.OpeningRepository;
 import hu.gerviba.webschop.model.OpeningEntity;
@@ -35,12 +36,20 @@ public class OpeningService {
     }
     
     public OpeningEntity findNextOf(Long id) {
-        return repo.findByCircle_IdOrderByDateStart(id).orElse(null);
+        return repo.findFirstByCircle_IdOrderByDateStart(id).orElse(null);
     }
     
     public Long findNextStartDateOf(Long id) {
-        Optional<OpeningEntity> opening = repo.findByCircle_IdOrderByDateStart(id);
+        Optional<OpeningEntity> opening = repo.findFirstByCircle_IdOrderByDateStart(id);
         return opening.isPresent() ? opening.get().getDateStart() : null;
+    }
+
+    public OpeningEntity getOne(Long openingId) {
+        return repo.getOne(openingId);
+    }
+
+    public void delete(OpeningEntity oe) {
+        repo.delete(oe);
     }
     
 }

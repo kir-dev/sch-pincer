@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="MainLayout :: head">
+	<meta charset="UTF-8" /> 
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
+</head>
+<body>
+	<div class="header" th:replace="MainLayout :: header">
+	</div>
+	
+	<div class="left-menu" th:replace="MainLayout :: left-menu">
+	</div>
+
+	<div class="page content">
+
+		<div class="highlighted latest">
+			<h3 th:text="#{lang.profile.orders}">Orders</h3>
+			<table class="orders full-table">
+				<tr>
+					<th th:text="#{lang.profile.orders-username}">Username</th>
+					<th th:text="#{lang.profile.orders-name}">Name</th>
+					<th th:text="#{lang.profile.orders-status}">Status</th>
+					<th th:text="#{lang.profile.orders-time}">Time</th>
+					<th th:text="#{lang.profile.orders-room}">Room</th>
+					<th th:text="#{lang.profile.orders-price}">Price</th>
+					<th th:text="#{lang.profile.orders-comment}">Comment</th>
+				</tr>
+				<tr th:each="order : ${orders}" th:object="${order}">
+					<td th:text="*{userName}">Test name</td>
+					<td th:text="*{name}">Ördög pizza</td>
+					<td>
+						<i class="material-icons" th:if="${#strings.equals(order.status, 'SHIPPED')}" 
+								th:title="#{lang.profile.status-shipped}">done</i>
+						<i class="material-icons" th:if="${#strings.equals(order.status, 'INTERPRETED')}"
+								th:title="#{lang.profile.status-interpreted}">local_shipping</i>
+						<i class="material-icons" th:if="${#strings.equals(order.status, 'ACCEPTED')}"
+								th:title="#{lang.profile.status-accepted}">shopping_cart</i>
+						<i class="material-icons" th:if="${#strings.equals(order.status, 'CANCELLED')}"
+								th:title="#{lang.profile.status-cancelled}">do_not_disturb</i>
+					</td>
+					<td th:text="${#dates.format(order.date, '__#{lang.date-short-format}__')} + ' ' + *{intervalMessage}">
+						10:00 - 10:30
+					</td>
+					<td th:text="*{room}">SCH 1037</td>
+					<td th:text="*{price} + ' ' + #{lang.currency}">800 JMF</td>
+					<td th:text="*{comment}" class="comment">Csípjen papa</td>
+				</tr>
+			</table>
+			<span th:if="${#lists.isEmpty(orders)}" class="note" th:text="#{lang.profile.no-orders}">You have no orders yet</span>
+		</div>
+	</div>
+
+	<div th:replace="MainLayout :: footer"></div>
+</body>
+</html>

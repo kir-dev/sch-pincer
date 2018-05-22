@@ -52,7 +52,7 @@ public class LoginController {
             	UserEntity user = new UserEntity(profile.getInternalId().toString(), 
                         profile.getSurname() + " " + profile.getGivenName(), 
                         profile.getMail());
-            	user.setSysadmin(true);
+//            	user.setSysadmin(true);
                 users.save(user);
                 auth = new UsernamePasswordAuthenticationToken(code, state, getAuthorities(user));
                 request.getSession().setAttribute("user", user);
@@ -71,9 +71,13 @@ public class LoginController {
     private List<GrantedAuthority> getAuthorities(UserEntity user) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        if (user.isSysadmin())
+        if (user.isSysadmin()) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-            
+            authorities.add(new SimpleGrantedAuthority("ROLE_LEADER"));
+        }
+        if (user.getPermissions().contains("ROLE_LEADER"))
+            authorities.add(new SimpleGrantedAuthority("ROLE_LEADER"));
+        
         return authorities;
     }
 

@@ -12,4 +12,6 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
     List<OrderEntity> findAllByUserIdOrderByDateDesc(String userId);
 
+    List<OrderEntity> findAllByOpeningId(Long openingId);
+
 }

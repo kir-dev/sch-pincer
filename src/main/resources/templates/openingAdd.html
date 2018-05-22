@@ -37,59 +37,46 @@
 				<i class="material-icons main">tune</i>
 			</div>
 			<h3 th:text="#{lang.configure.title-opening}" class="topless">Modify Opening</h3>
-			<form action="#" th:action="${adminMode} ? @{/admin/circles/__${mode}__} : @{/configure/edit}" method="post" enctype="multipart/form-data">
-				<table class="form full-table" th:object="${circle}">
-					<input type="hidden" name="circleId" th:value="*{id}" />
+			<form action="#" th:action="@{/configure/__${circleId}__/openings/new}" method="post" enctype="multipart/form-data">
+				<table class="form full-table" th:object="${opening}">
 					<tr>
 						<th th:text="#{lang.modify.property}">Property</th>
 						<th th:text="#{lang.modify.value}">Value</th>
 					</tr>
 					<tr>
-						<td th:text="#{lang.admin.circle.name}">Name</td>
-						<td><input type="text" th:field="*{displayName}"/></td>
+						<td th:text="#{lang.configure.opening.feeling}">Feeling</td>
+						<td><input type="text" th:field="*{feeling}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.admin.circle.description}">Description</td>
-						<td><textarea th:field="*{description}"></textarea></td>
+						<td th:text="#{lang.configure.opening.date-start}">Start date</td>
+						<td><input type="datetime-local" th:field="*{dateStart}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.admin.circle.homePageDescription}">Introduction (home page)</td>
-						<td><textarea th:field="*{homePageDescription}"></textarea></td>
+						<td th:text="#{lang.configure.opening.date-end}">Date end</td>
+						<td><input type="datetime-local" th:field="*{dateEnd}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.admin.circle.avgOpening}">Average opening</td>
-						<td><input type="text" th:field="*{avgOpening}"/></td>
+						<td th:text="#{lang.configure.opening.order-start}">Order date</td>
+						<td><input type="datetime-local" th:field="*{orderStart}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.admin.circle.founded}">Founded</td>
-						<td><input type="text" th:field="*{founded}"/></td>
-					</tr>
-					<tr th:if="${adminMode}">
-						<td th:text="#{lang.admin.circle.homePageOrder}">Home page order</td>
-						<td><input type="text" th:field="*{homePageOrder}"/></td>
-					</tr>
-					<tr th:if="${adminMode}">
-						<td th:text="#{lang.admin.circle.cssClassName}">CSS class name</td>
-						<td><input type="text" th:field="*{cssClassName}"/></td>
+						<td th:text="#{lang.configure.opening.order-end}">Order end</td>
+						<td><input type="datetime-local" th:field="*{orderEnd}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.admin.circle.websiteUrl}">Website URL</td>
-						<td><input type="text" th:field="*{websiteUrl}"/></td>
+						<td th:text="#{lang.configure.opening.order-max}">Order end</td>
+						<td><input type="number" th:field="*{maxOrder}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.admin.circle.facebookUrl}">Facebook URL</td>
-						<td><input type="text" th:field="*{facebookUrl}"/></td>
+						<td th:text="#{lang.configure.opening.order-max-per}">Order end</td>
+						<td><input type="number" th:field="*{maxOrderPerHalfHour}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.admin.circle.logo}">Logo</td>
-						<td><input type="file" name="logo"/></td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.admin.circle.background}">Background</td>
-						<td><input type="file" name="background"/></td>
+						<td th:text="#{lang.configure.opening.pr}">PR picture</td>
+						<td><input type="file" name="prFile"/></td>
 					</tr>
 				</table>
-				<input class="button" type="submit" th:value="#{lang.admin.title-__${mode}__}" /> 
+				<input class="button" type="submit" th:value="#{lang.configure.title-opening}" /> 
 			</form>
 		</div>
 	</div>

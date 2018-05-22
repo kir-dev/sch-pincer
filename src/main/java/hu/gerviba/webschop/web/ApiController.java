@@ -1,8 +1,5 @@
 package hu.gerviba.webschop.web;
 
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -100,7 +97,7 @@ public class ApiController {
         List<CircleEntity> page = circles.findAll();
         return new ResponseEntity<List<CircleEntity>>(page, HttpStatus.OK);
     }
-    
+
     @PostMapping("/order")
     @ResponseBody
     public ResponseEntity<String> newOrder(HttpServletRequest request,
@@ -110,11 +107,12 @@ public class ApiController {
             @RequestParam(required = true) String detailsJson) {
         
         UserEntity user = util.getUser(request);
-        OrderEntity order = new OrderEntity(user.getUid(), comment, detailsJson, user.getRoom());
+        OrderEntity order = new OrderEntity(user.getUid(), user.getName(), comment, detailsJson, user.getRoom());
         order.setIntervalId(time);
         ItemEntity item = items.getOne(id);
         order.setName(item.getName());
         order.setPrice(item.getPrice());
+        order.setOpeningId(openings.findNextOf(item.getCircle().getId()).getId());
         OpeningEntity current = openings.findNextOf(item.getCircle().getId());
         
         long intervalStart = current.getDateStart() + HALF_HOUR * time;
@@ -126,7 +124,7 @@ public class ApiController {
         
         return new ResponseEntity<String>("ACK", HttpStatus.OK);
     }
-    
+
     @PostMapping("/user/room")
     @ResponseBody
     public String setRoom(HttpServletRequest request, @RequestParam(required = true) int room) {
@@ -140,20 +138,18 @@ public class ApiController {
         }
     }
     
-    //TODO: Has ROLE
     @GetMapping("/user/id")
     @ResponseBody
     public String setRoom(HttpServletRequest request) {
         try {
-            UserEntity user = util.getUser(request);
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            return String.format("%064x", new BigInteger(1, digest.digest(user.getUid().getBytes(StandardCharsets.UTF_8))));
+            return util.sha256(util.getUser(request).getUid());
         } catch (Exception e) {
             return "ERROR";
         }
     }
     
-    @PostMapping("/order/delete") //TODO: DELETE-el nem engedte a jquery
+    //TODO: DELETE-el nem engedte a jquery
+    @PostMapping("/order/delete")
     @ResponseBody
     public ResponseEntity<String> deleteOrder(HttpServletRequest request, @RequestParam(required = true) long id) {
         try {

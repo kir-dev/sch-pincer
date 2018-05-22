@@ -46,39 +46,57 @@
 					</tr>
 					<tr>
 						<td th:text="#{lang.admin.circle.name}">Name</td>
-						<td><input type="text" th:field="*{displayName}"/></td>
+						<td><input type="text" th:field="*{displayName}" maxlength="32"/>
+							<span class="error" th:if="${#fields.hasErrors('displayName')}" th:errors="*{displayName}"></span>
+						</td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.admin.circle.description}">Description</td>
-						<td><textarea th:field="*{description}"></textarea></td>
+						<td><textarea th:field="*{description}"></textarea>
+							<span class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
+						</td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.admin.circle.homePageDescription}">Introduction (home page)</td>
-						<td><textarea th:field="*{homePageDescription}"></textarea></td>
+						<td><textarea th:field="*{homePageDescription}"></textarea>
+							<span class="error" th:if="${#fields.hasErrors('homePageDescription')}" th:errors="*{homePageDescription}"></span>
+						</td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.admin.circle.avgOpening}">Average opening</td>
-						<td><input type="text" th:field="*{avgOpening}"/></td>
+						<td><input type="text" th:field="*{avgOpening}" maxlength="255"/>
+							<span class="error" th:if="${#fields.hasErrors('avgOpening')}" th:errors="*{avgOpening}"></span>
+						</td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.admin.circle.founded}">Founded</td>
-						<td><input type="text" th:field="*{founded}"/></td>
+						<td><input type="text" th:field="*{founded}"/>
+							<span class="error" th:if="${#fields.hasErrors('founded')}" th:errors="*{founded}"></span>
+						</td>
 					</tr>
 					<tr th:if="${adminMode}">
 						<td th:text="#{lang.admin.circle.homePageOrder}">Home page order</td>
-						<td><input type="text" th:field="*{homePageOrder}"/></td>
+						<td><input type="text" th:field="*{homePageOrder}" maxlength="255"/>
+							<span class="error" th:if="${#fields.hasErrors('homePageOrder')}" th:errors="*{homePageOrder}"></span>
+						</td>
 					</tr>
 					<tr th:if="${adminMode}">
 						<td th:text="#{lang.admin.circle.cssClassName}">CSS class name</td>
-						<td><input type="text" th:field="*{cssClassName}"/></td>
+						<td><input type="text" th:field="*{cssClassName}" maxlength="30"/>
+							<span class="error" th:if="${#fields.hasErrors('cssClassName')}" th:errors="*{cssClassName}"></span>
+						</td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.admin.circle.websiteUrl}">Website URL</td>
-						<td><input type="text" th:field="*{websiteUrl}"/></td>
+						<td><input type="text" th:field="*{websiteUrl}" maxlength="255"/>
+							<span class="error" th:if="${#fields.hasErrors('websiteUrl')}" th:errors="*{websiteUrl}"></span>
+						</td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.admin.circle.facebookUrl}">Facebook URL</td>
-						<td><input type="text" th:field="*{facebookUrl}"/></td>
+						<td><input type="text" th:field="*{facebookUrl}" maxlength="255"/>
+							<span class="error" th:if="${#fields.hasErrors('facebookUrl')}" th:errors="*{facebookUrl}"></span>
+						</td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.admin.circle.logo}">Logo</td>

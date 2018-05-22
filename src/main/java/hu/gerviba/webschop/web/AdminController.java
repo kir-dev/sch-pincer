@@ -1,7 +1,10 @@
 package hu.gerviba.webschop.web;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -9,15 +12,21 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import hu.gerviba.webschop.dao.RoleEntryDao;
 import hu.gerviba.webschop.model.CircleEntity;
+import hu.gerviba.webschop.model.UserEntity;
 import hu.gerviba.webschop.service.CircleService;
+import hu.gerviba.webschop.service.ItemService;
+import hu.gerviba.webschop.service.UserService;
 
 @Controller
 @PreAuthorize("hasRole('ADMIN')")
@@ -26,6 +35,12 @@ public class AdminController {
 
     @Autowired
     CircleService circles;
+
+    @Autowired
+    ItemService items;
+
+    @Autowired
+    UserService users;
     
     @Autowired
     ControllerUtil util;
@@ -33,6 +48,20 @@ public class AdminController {
 	@GetMapping("/")
 	public String adminRoot(Map<String, Object> model) {
         model.put("circles", circles.findAllForMenu());
+        List<RoleEntryDao> roles = users.findAll().stream()
+//                .filter(x -> x.isSysadmin() || (x.getPermissions() != null && x.getPermissions().size() > 0))
+//                .map(x -> { System.out.println("# " + x); return x;} )
+                .map(x -> {
+                    try {
+                        return new RoleEntryDao(util.sha256(x.getUid()), x);
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                })
+                .filter(x -> x != null)
+                .collect(Collectors.toList());
+        model.put("roles", roles);
 		return "admin";
 	}
 
@@ -84,10 +113,24 @@ public class AdminController {
     }
 
     @PostMapping("/circles/edit")
-    public String adminEditCircle(@Valid CircleEntity circle, 
+    public String adminEditCircle(@ModelAttribute CircleEntity circle, 
             @RequestParam Long circleId,
             @RequestParam(required = false) MultipartFile logo,
-            @RequestParam(required = false) MultipartFile background) {
+            @RequestParam(required = false) MultipartFile background,
+            BindingResult bindingResult, Map<String, Object> model) {
+        
+        System.out.println("dsadsadasdasdasdsd");
+        if (bindingResult.hasErrors()) {
+            System.out.println("asd");
+            model.put("circles", circles.findAllForMenu());
+            System.out.println("asd");
+            model.put("mode", "edit");
+            model.put("adminMode", true);
+            System.out.println("asd");
+            model.put("circle", circle);
+            System.out.println("asd");
+            return "circleModify";
+        }
         
         CircleEntity original = circles.getOne(circleId);
         
@@ -127,8 +170,41 @@ public class AdminController {
 
     //TODO: hashPermission, remove items
     @PostMapping("/circles/delete/{circleId}/confirm")
-    public String adminDeleteCircleConfirm(@PathVariable Long circleId, Map<String, Object> model) {
+    public String adminDeleteCircleConfirm(@PathVariable Long circleId) {
+        items.deleteByCircle(circleId);
         circles.delete(circles.getOne(circleId));
+        return "redirect:/admin/";
+    }
+    
+    @GetMapping("/roles/edit/{uidHash}")
+    public String editRoles(@PathVariable String uidHash, Map<String, Object> model) {
+        model.put("circles", circles.findAllForMenu());
+        model.put("uidHash", uidHash);
+        UserEntity user = users.getByUidHash(uidHash);
+        model.put("name", user.getName());
+        model.put("sysadmin", user.isSysadmin());
+        model.put("roles", String.join(", ", user.getPermissions()));
+        return "userModify";
+    }
+
+    @PostMapping("/roles/edit/")
+    public String editRoles(@RequestParam String uidHash,
+            @RequestParam String roles,
+            @RequestParam(required = false, defaultValue = "false") boolean sysadmin) {
+        
+        UserEntity user = users.getByUidHash(uidHash);
+        user.setSysadmin(sysadmin);
+        user.getPermissions().clear();
+        for (String role : roles.split(",")) {
+            role = role.trim().toUpperCase();
+            if (role.startsWith("CIRCLE_"))
+                user.getPermissions().add(role);
+        }
+        if (user.getPermissions().size() > 0)
+            user.getPermissions().add("ROLE_LEADER");
+        
+        users.save(user);
+        
         return "redirect:/admin/";
     }
     

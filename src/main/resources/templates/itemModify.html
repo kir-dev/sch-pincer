@@ -37,7 +37,7 @@
 				<i class="material-icons main">tune</i>
 			</div>
 			<h3 th:text="#{lang.configure.title-item-__${mode}__}" class="topless">Modify Item</h3>
-			<form action="#" th:action="@{/admin/circles/__${mode}__}" method="post" enctype="multipart/form-data">
+			<form action="#" th:action="@{/configure/__${circleId}__/items/__${mode}__}" method="post" enctype="multipart/form-data">
 				<table class="form full-table" th:object="${item}">
 					<input type="hidden" name="itemId" th:value="*{id}" />
 					<tr>
@@ -74,7 +74,7 @@
 					</tr>
 					<tr>
 						<td th:text="#{lang.configure.item.image}">Image</td>
-						<td><input type="file" name="image"/></td>
+						<td><input type="file" name="imageFile"/></td>
 					</tr>
 				</table>
 				<input class="button" type="submit" th:value="#{lang.configure.title-item-__${mode}__}" /> 

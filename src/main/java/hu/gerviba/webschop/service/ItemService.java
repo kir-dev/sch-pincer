@@ -37,5 +37,13 @@ public class ItemService {
     public List<ItemEntity> findAllByCircle(Long circleId) {
         return repo.findAllByCircle_Id(circleId);
     }
+
+    public void delete(ItemEntity ie) {
+        repo.delete(ie);
+    }
 	
+    public void deleteByCircle(Long circleId) {
+        repo.deleteByCircle_Id(circleId);
+    }
+    
 }

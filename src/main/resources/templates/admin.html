@@ -45,21 +45,22 @@
 		<div class="highlighted dashboard latest">
 			<table class="form full-table">
 				<tr>
-					<th th:text="#{lang.admin.rules-list}">Rules</th>
-					<th>Admin</th>
-					<th>Circles</th>
+					<th th:text="#{lang.admin.roles-list}">Rules</th>
+					<th th:text="#{lang.admin.roles.uid}">UID</th>
+					<th th:text="#{lang.admin.roles-admin}">Admin</th>
+					<th th:text="#{lang.admin.roles-permissions}">Permissions</th>
+					<th></th>
 				</tr>
-				<tr th:each="circle : ${circles}" th:object="${circle}">
-					<td>Pizzásch</td>
-					<td>Pizzásch</td>
+				<tr th:each="role : ${roles}" th:object="${role}">
+					<td th:text="*{name}">Test Name</td>
+					<td th:text="*{uidHash}">XYZ</td>
+					<td th:text="*{sysadmin} ? #{lang.yes} : #{lang.no}">No</td>
+					<td th:text="*{permissions}"></td>
 					<td>
-						<a href="#" th:href="@{/admin/circles/edit/__*{id}__}"><i class="material-icons">edit</i></a>
-						<a href="#" th:href="@{/admin/circles/delete/__*{id}__}"><i class="material-icons">delete</i></a>
+                        <a href="#" th:href="@{/admin/roles/edit/__*{uidHash}__}"><i class="material-icons">edit</i></a>
 					</td>
 				</tr>
 			</table>
-
-			<a class="button" href="#" th:href="@{/admin/circles/new}" th:text="#{lang.admin.title-circle-new}">New circle</a>
 		</div>
 	</div>
 

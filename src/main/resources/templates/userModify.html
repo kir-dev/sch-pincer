@@ -18,30 +18,30 @@
 	<div class="page content">
 		<div class="highlighted latest prompt">
 			<div class="decoration admin">
-				<i class="material-icons main">how_to_reg</i>
+				<i class="material-icons main">security</i>
 			</div>
-			<h3 th:text="#{lang.configure.title-member}" class="topless">Prompt text comes here?</h3>
-			<form action="#" th:action="@{/configure/__${circleId}__/members/new}" method="post" enctype="multipart/form-data">
-				<table class="form full-table" th:object="${member}">
-					<input type="hidden" th:field="*{id}" />
+			<h3 th:text="#{lang.admin.title-roles}" class="topless">Prompt text comes here?</h3>
+            <form action="#" th:action="@{/admin/roles/edit/}" method="post">
+				<table class="form full-table">
+					<input type="hidden" name="uidHash" th:value="${uidHash}" />
 					<tr>
 						<th th:text="#{lang.modify.property}">Property</th>
 						<th th:text="#{lang.modify.value}">Value</th>
 					</tr>
 					<tr>
-						<td th:text="#{lang.configure.member.name}">Name</td>
-						<td><input type="text" th:field="*{name}"/></td>
+						<td th:text="#{lang.admin.roles.name}">Name</td>
+						<td><input type="text" name="name" th:value="${name}" disabled/></td>
 					</tr>
+                    <tr>
+                        <td th:text="#{lang.admin.roles.sysadmin}">SysAdmin</td>
+                        <td><input type="checkbox" name="sysadmin" th:checked="${sysadmin}"/></td>
+                    </tr>
 					<tr>
-						<td th:text="#{lang.configure.member.rank}">Rank</td>
-						<td><input type="text" th:field="*{rank}"/></td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.configure.member.profile}">Profile</td>
-						<td><input type="file" name="avatarFile"/></td>
+						<td th:text="#{lang.admin.roles.roles}">Rank</td>
+						<td><input type="text" name="roles" th:value="${roles}"/></td>
 					</tr>
 				</table>
-				<input class="button" type="submit" th:value="#{lang.configure.title-member}" /> 
+				<input class="button" type="submit" th:value="#{lang.admin.title-roles}" /> 
 			</form>
 		</div>
 	</div>

@@ -135,23 +135,23 @@ public class CircleEntity implements Serializable {
     }
 
     public CircleEntity(CircleEntity copy) {
-        this.id = copy.id;
-        this.displayName = copy.displayName;
-        this.description = copy.description;
-        this.homePageDescription = copy.homePageDescription;
-        this.avgOpening = copy.avgOpening;
-        this.founded = copy.founded;
-        this.homePageOrder = copy.homePageOrder;
-        this.cssClassName = copy.cssClassName;
-        this.facebookUrl = copy.facebookUrl;
-        this.websiteUrl = copy.websiteUrl;
-        this.backgroundUrl = copy.backgroundUrl;
-        this.logoUrl = copy.logoUrl;
-        this.rateOverAll = copy.rateOverAll;
-        this.rateSpeed = copy.rateSpeed;
-        this.rateQuality = copy.rateQuality;
-        this.ratePrice = copy.ratePrice;
-        this.rateingCount = copy.rateingCount;
+        this.id = copy.getId();
+        this.displayName = copy.getDisplayName();
+        this.description = copy.getDescription();
+        this.homePageDescription = copy.getHomePageDescription();
+        this.avgOpening = copy.getAvgOpening();
+        this.founded = copy.getFounded();
+        this.homePageOrder = copy.getHomePageOrder();
+        this.cssClassName = copy.getCssClassName();
+        this.facebookUrl = copy.getFacebookUrl();
+        this.websiteUrl = copy.getWebsiteUrl();
+        this.backgroundUrl = copy.getBackgroundUrl();
+        this.logoUrl = copy.getLogoUrl();
+        this.rateOverAll = copy.getRateOverAll();
+        this.rateSpeed = copy.getRateSpeed();
+        this.rateQuality = copy.getRateQuality();
+        this.ratePrice = copy.getRatePrice();
+        this.rateingCount = copy.getRateingCount();
     }
 
     public String getAvgOpening() {

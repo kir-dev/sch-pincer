@@ -57,11 +57,11 @@ public class OpeningEntity implements Serializable {
 
     @Column
     @Min(0)
-    int maxOrder;
+    private int maxOrder;
 
     @Column
     @Min(0)
-    int maxOrderPerHalfHour;
+    private int maxOrderPerHalfHour;
 
     public OpeningEntity() {}
 
@@ -116,6 +116,46 @@ public class OpeningEntity implements Serializable {
 
     public int getMaxOrderPerHalfHour() {
         return maxOrderPerHalfHour;
+    }
+
+    public void setTimeIntervals(int timeIntervals) {
+        this.timeIntervals = timeIntervals;
+    }
+
+    public void setDateStart(Long dateStart) {
+        this.dateStart = dateStart;
+    }
+
+    public void setDateEnd(Long dateEnd) {
+        this.dateEnd = dateEnd;
+    }
+
+    public void setOrderStart(Long orderStart) {
+        this.orderStart = orderStart;
+    }
+
+    public void setOrderEnd(Long orderEnd) {
+        this.orderEnd = orderEnd;
+    }
+
+    public void setPrUrl(String prUrl) {
+        this.prUrl = prUrl;
+    }
+
+    public void setFeeling(String feeling) {
+        this.feeling = feeling;
+    }
+
+    public void setCircle(CircleEntity circle) {
+        this.circle = circle;
+    }
+
+    public void setMaxOrder(int maxOrder) {
+        this.maxOrder = maxOrder;
+    }
+
+    public void setMaxOrderPerHalfHour(int maxOrderPerHalfHour) {
+        this.maxOrderPerHalfHour = maxOrderPerHalfHour;
     }
     
 }

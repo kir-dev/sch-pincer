@@ -23,8 +23,14 @@ public class OrderEntity implements Serializable {
     private Long id;
     
     @Column
-    private String userId;
+    private Long openingId;
     
+    @Column
+    private String userId;
+
+    @Column
+    private String userName;
+
     @Column
     @Enumerated(EnumType.ORDINAL)
     private OrderStatus status;
@@ -57,15 +63,16 @@ public class OrderEntity implements Serializable {
     
     public OrderEntity() {}
     
-    public OrderEntity(String userId, String comment, String detailsJson, String room) {
+    public OrderEntity(String userId, String userName, String comment, String detailsJson, String room) {
         this.userId = userId;
         this.status = OrderStatus.ACCEPTED;
         this.comment = comment;
         this.detailsJson = detailsJson;
         this.room = room;
+        this.userName = userName;
     }
     
-    public OrderEntity(String userId, OrderStatus status, String name, String detailsJson, int intervalId,
+    public OrderEntity(String userId, String userName, OrderStatus status, String name, String detailsJson, int intervalId,
             String intervalMessage, long date, String room, int price) {
 
         this.userId = userId;
@@ -77,6 +84,7 @@ public class OrderEntity implements Serializable {
         this.date = date;
         this.room = room;
         this.price = price;
+        this.userName = userName;
     }
 
     public Long getId() {
@@ -147,5 +155,21 @@ public class OrderEntity implements Serializable {
         this.date = date;
     }
 
+    public Long getOpeningId() {
+        return openingId;
+    }
+
+    public void setOpeningId(Long openingId) {
+        this.openingId = openingId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+    
     private static final long serialVersionUID = -6321437469997930825L;
 }

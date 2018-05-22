@@ -28,5 +28,9 @@ public class OrderService {
     public OrderEntity getOne(Long id) {
         return repo.getOne(id);
     }
+
+    public List<OrderEntity> findAllByOpening(Long openingId) {
+        return repo.findAllByOpeningId(openingId);
+    }
     
 }

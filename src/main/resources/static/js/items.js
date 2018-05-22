@@ -84,7 +84,7 @@ function formatItem(item) {
 	return '' + 
 	'				<div class="item ' + item.circleColor + '">\n' +
 	'					<div class="picture" style="background-image: url(\'' +
-									URL_BASE + 'cdn/items/' + item.imageName + '\');" ' +
+									URL_BASE + item.imageName + '\');" ' +
 									'onclick="showPopup(' + item.id + ')">\n' +
 	'						<div class="overlay"></div>\n' +
 	'					</div>\n' +
@@ -150,8 +150,8 @@ function showPopup(id) {
 		url: URL_BASE + "api/item/" + id,
 		success: function(data) {
 			$("#popup-title").text(data.name);
-			$("#popup-header").css({"background-image": "url('" + URL_BASE + "cdn/items/" + data.imageName + "')"});
-			$("#popup-image").css({"background-image": "url('" + URL_BASE + "cdn/items/" + data.imageName + "')"});
+			$("#popup-header").css({"background-image": "url('" + URL_BASE + data.imageName + "')"});
+			$("#popup-image").css({"background-image": "url('" + URL_BASE + data.imageName + "')"});
 			$("#popup-description").text(data.description);
 			$("#popup-price").text(data.price + " " + LANG['currency']);
 			$("#popup-window").addClass(data.circleColor);

@@ -15,13 +15,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import hu.gerviba.webschop.dao.OpeningEntityDao;
 import hu.gerviba.webschop.model.CircleEntity;
 import hu.gerviba.webschop.model.CircleMemberEntity;
 import hu.gerviba.webschop.model.ItemEntity;
+import hu.gerviba.webschop.model.OpeningEntity;
 import hu.gerviba.webschop.model.UserEntity;
 import hu.gerviba.webschop.service.CircleMemberService;
 import hu.gerviba.webschop.service.CircleService;
 import hu.gerviba.webschop.service.ItemService;
+import hu.gerviba.webschop.service.OpeningService;
+import hu.gerviba.webschop.service.OrderService;
 
 @Controller
 public class ConfigureController {
@@ -36,6 +40,12 @@ public class ConfigureController {
     ItemService items;
 
     @Autowired
+    OpeningService openings;
+
+    @Autowired
+    OrderService orders;
+    
+    @Autowired
     ControllerUtil util;
     
     @GetMapping("/configure")
@@ -44,9 +54,6 @@ public class ConfigureController {
         model.put("circles", all);
         
         UserEntity user = util.getUser(request);
-        System.out.println("# " + user);
-        System.out.println("# " + user.getPermissions());
-        System.out.println("# " + user.isSysadmin());
         List<CircleEntity> editable = all.stream()
                 .filter(x -> x != null)
                 .filter(x -> user.isSysadmin() || user.getPermissions().contains("CIRCLE_" + x.getId()))
@@ -75,7 +82,11 @@ public class ConfigureController {
     @PostMapping("/configure/{circleId}/members/new")
     public String newMember(@PathVariable Long circleId,
             @Valid CircleMemberEntity cme,
-            @RequestParam MultipartFile avatarFile) {
+            @RequestParam MultipartFile avatarFile,
+            HttpServletRequest request) {
+        
+        if (util.cannotEditCircle(circleId, request))
+            return "redirect:/configure/" + circleId + "?error";
         
         CircleEntity circle = circles.getOne(circleId);
         cme.setCircle(circle);
@@ -97,14 +108,17 @@ public class ConfigureController {
         model.put("topic", "member");
         model.put("arg", members.getOne(memberId).getName());
         model.put("ok", "configure/" + circleId + "/members/delete/" + memberId + "/confirm");
-        model.put("cancel", "admin/");
+        model.put("cancel", "configure/" + circleId);
         return "prompt";
     }
 
     //TODO: hashPermission CHECK IF THE MEMBER IS ON OTHER CIRCLE
     @PostMapping("/configure/{circleId}/members/delete/{memberId}/confirm")
     public String deleteMemberConfirm(@PathVariable Long circleId, @PathVariable Long memberId,
-            Map<String, Object> model) {
+            Map<String, Object> model, HttpServletRequest request) {
+        
+        if (util.cannotEditCircle(circleId, request))
+            return "redirect:/configure/" + circleId + "?error";
         
         CircleMemberEntity cme = members.getOne(memberId);
         if (cme.getCircle().getId() == circleId)
@@ -114,7 +128,7 @@ public class ConfigureController {
     }
     
     @GetMapping("/configure/{circleId}/edit")
-    public String adminEditCircle(@PathVariable Long circleId, Map<String, Object> model) {
+    public String editCircle(@PathVariable Long circleId, Map<String, Object> model) {
         model.put("circles", circles.findAllForMenu());
         model.put("mode", "edit");
         model.put("adminMode", false);
@@ -123,10 +137,14 @@ public class ConfigureController {
     }
 
     @PostMapping("/configure/edit")
-    public String adminEditCircle(@Valid CircleEntity circle, 
+    public String editCircle(@Valid CircleEntity circle, 
             @RequestParam Long circleId,
             @RequestParam(required = false) MultipartFile logo,
-            @RequestParam(required = false) MultipartFile background) {
+            @RequestParam(required = false) MultipartFile background,
+            HttpServletRequest request) {
+        
+        if (util.cannotEditCircle(circleId, request))
+            return "redirect:/configure/" + circleId + "?error";
         
         CircleEntity original = circles.getOne(circleId);
         
@@ -155,9 +173,10 @@ public class ConfigureController {
     public String newItem(@PathVariable Long circleId, Map<String, Object> model) {
         model.put("circles", circles.findAllForMenu());
         model.put("circleId", circleId);
+        model.put("itemId", -1);
         model.put("mode", "new");
         ItemEntity ie = new ItemEntity();
-        ie.setDetailsJsonConfig("[{\"name\":\"size\",\"values\":[\"1\",\"2\",\"3\"]}]");
+        ie.setDetailsConfigJson("[{\"name\":\"size\",\"values\":[\"1\",\"2\",\"3\"]}]");
         ie.setOrderable(true);
         model.put("item", ie);
         return "itemModify";
@@ -166,7 +185,11 @@ public class ConfigureController {
     @PostMapping("/configure/{circleId}/items/new")
     public String newItem(@PathVariable Long circleId,
             @Valid ItemEntity ie,
-            @RequestParam MultipartFile imageFile) {
+            @RequestParam MultipartFile imageFile,
+            HttpServletRequest request) {
+        
+        if (util.cannotEditCircle(circleId, request))
+            return "redirect:/configure/" + circleId + "?error";
         
         CircleEntity circle = circles.getOne(circleId);
         ie.setCircle(circle);
@@ -179,5 +202,141 @@ public class ConfigureController {
         return "redirect:/configure/" + circleId;
     }
     
+    @GetMapping("/configure/{circleId}/items/edit/{itemId}")
+    public String editItem(@PathVariable Long itemId, 
+            @PathVariable Long circleId, Map<String, Object> model) {
+        
+        model.put("circles", circles.findAllForMenu());
+        model.put("mode", "edit");
+        model.put("item", new ItemEntity(items.getOne(itemId)));
+        return "itemModify";
+    }
+
+    @PostMapping("/configure/{circleId}/items/edit")
+    public String editItem(@PathVariable Long circleId,
+            @Valid ItemEntity item, 
+            @RequestParam Long itemId,
+            @RequestParam(required = false) MultipartFile imageFile,
+            HttpServletRequest request) {
+        
+        if (util.cannotEditCircle(circleId, request))
+            return "redirect:/configure/" + circleId + "?error";
+        
+        ItemEntity original = items.getOne(itemId);
+        
+        original.setDescription(item.getDescription());
+        original.setDetailsConfigJson(item.getDetailsConfigJson());
+        original.setIngredients(item.getIngredients());
+        original.setKeywords(item.getKeywords());
+        original.setName(item.getName());
+        original.setOrderable(item.isOrderable());
+        original.setPrice(item.getPrice());
+        
+        String file = util.uploadFile("items", imageFile);
+        if (file != null)
+            original.setImageName("cdn/items/" + file);
+        
+        items.save(original);
+        
+        return "redirect:/configure/" + circleId;
+    }
     
+    @GetMapping("/configure/{circleId}/items/delete/{itemId}")
+    public String deleteItem(@PathVariable Long circleId, @PathVariable Long itemId, 
+            Map<String, Object> model) {
+        
+        model.put("circles", circles.findAllForMenu());
+        model.put("topic", "member");
+        model.put("arg", items.getOne(itemId).getName());
+        model.put("ok", "configure/" + circleId + "/items/delete/" + itemId + "/confirm");
+        model.put("cancel", "configure/" + circleId);
+        return "prompt";
+    }
+
+    @PostMapping("/configure/{circleId}/items/delete/{itemId}/confirm")
+    public String deleteItemConfirm(@PathVariable Long circleId, @PathVariable Long itemId,
+            HttpServletRequest request) {
+        
+        if (util.cannotEditCircle(circleId, request))
+            return "redirect:/configure/" + circleId + "?error";
+        
+        ItemEntity ie = items.getOne(itemId);
+        if (ie.getCircle().getId() == circleId)
+            items.delete(ie);
+        
+        return "redirect:/configure/" + circleId;
+    }
+    
+    @GetMapping("/configure/{circleId}/openings/new")
+    public String newOpening(@PathVariable Long circleId, Map<String, Object> model) {
+        model.put("circles", circles.findAllForMenu());
+        model.put("circleId", circleId);
+        model.put("opening", new OpeningEntityDao());
+        return "openingAdd";
+    }
+    
+    @PostMapping("/configure/{circleId}/openings/new")
+    public String newOpening(@PathVariable Long circleId,
+            OpeningEntityDao oed,
+            @RequestParam MultipartFile prFile,
+            HttpServletRequest request) {
+        
+        if (util.cannotEditCircle(circleId, request))
+            return "redirect:/configure/" + circleId + "?error";
+        
+        OpeningEntity eo = new OpeningEntity();
+        eo.setFeeling(oed.getFeeling());
+        eo.setCircle(circles.getOne(circleId));
+        eo.setDateStart(util.parseDate(oed.getDateStart()));
+        eo.setDateEnd(util.parseDate(oed.getDateEnd()));
+        eo.setOrderStart(util.parseDate(oed.getOrderStart()));
+        eo.setOrderEnd(util.parseDate(oed.getOrderEnd()));
+        eo.setTimeIntervals(oed.getTimeIntervals());
+        eo.setMaxOrder(oed.getMaxOrder());
+        eo.setMaxOrderPerHalfHour(oed.getMaxOrderPerHalfHour());
+        
+        String file = util.uploadFile("pr", prFile);
+        eo.setPrUrl(file == null ? "image/blank-pr.jpg" : "cdn/pr/" + file);
+        
+        openings.save(eo);
+        return "redirect:/configure/" + circleId;
+    }
+    
+    @GetMapping("/configure/{circleId}/openings/delete/{openingId}")
+    public String deleteOpening(@PathVariable Long circleId, @PathVariable Long openingId, 
+            Map<String, Object> model) {
+        
+        model.put("circles", circles.findAllForMenu());
+        model.put("topic", "opening");
+        model.put("arg", util.formatDate(openings.getOne(openingId).getDateStart()));
+        model.put("ok", "configure/" + circleId + "/openings/delete/" + openingId + "/confirm");
+        model.put("cancel", "configure/" + circleId);
+        return "prompt";
+    }
+
+    @PostMapping("/configure/{circleId}/openings/delete/{openingId}/confirm")
+    public String deleteOpeningConfirm(@PathVariable Long circleId, @PathVariable Long openingId,
+            HttpServletRequest request) {
+        
+        if (util.cannotEditCircle(circleId, request))
+            return "redirect:/configure/" + circleId + "?error";
+        
+        OpeningEntity ie = openings.getOne(openingId);
+        if (ie.getCircle().getId() == circleId)
+            openings.delete(ie);
+        
+        return "redirect:/configure/" + circleId;
+    }
+    
+    @GetMapping("/configure/{circleId}/openings/show/{openingId}")
+    public String showOpenings(@PathVariable Long circleId, @PathVariable Long openingId, 
+            HttpServletRequest request, Map<String, Object> model) {
+        
+        if (util.cannotEditCircle(circleId, request))
+            return "redirect:/configure/" + circleId + "?error";
+        
+        model.put("circles", circles.findAllForMenu());
+        model.put("orders", orders.findAllByOpening(openingId));
+        return "openingShow";
+    }
 }

@@ -81,6 +81,18 @@ public class ItemEntity implements Serializable {
 		this.imageName = imageName;
 	}
 
+    public ItemEntity(ItemEntity copy) {
+        this.id = copy.getId();
+        this.name = copy.getName();
+        this.description = copy.getDescription();
+        this.ingredients = copy.getIngredients();
+        this.detailsConfigJson = copy.getDetailsConfigJson();
+        this.keywords = copy.getKeywords();
+        this.price = copy.getPrice();
+        this.orderable = copy.isOrderable();
+        this.imageName = copy.getImageName();
+    }
+    
     public Long getId() {
 		return id;
 	}
@@ -123,10 +135,6 @@ public class ItemEntity implements Serializable {
 
     private static final long serialVersionUID = -8174418379518262439L;
 
-    public void setDetailsJsonConfig(String json) {
-        this.detailsConfigJson = json;
-    }
-    
     public void setOrderable(boolean orderable) {
         this.orderable = orderable;
     }
@@ -161,6 +169,13 @@ public class ItemEntity implements Serializable {
 
     public void setImageName(String imageName) {
         this.imageName = imageName;
+    }
+
+    @Override
+    public String toString() {
+        return "ItemEntity [id=" + id + ", name=" + name + ", circle=" + circle + ", description=" + description
+                + ", ingredients=" + ingredients + ", detailsConfigJson=" + detailsConfigJson + ", keywords=" + keywords
+                + ", price=" + price + ", orderable=" + orderable + ", imageName=" + imageName + "]";
     }
     
 }

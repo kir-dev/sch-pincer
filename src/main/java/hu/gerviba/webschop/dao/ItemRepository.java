@@ -12,4 +12,6 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
 
     List<ItemEntity> findAllByCircle_Id(Long circleId);
 
+    void deleteByCircle_Id(Long circleId);
+
 }
