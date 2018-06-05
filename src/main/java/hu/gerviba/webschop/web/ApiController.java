@@ -9,13 +9,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import hu.gerviba.webschop.dao.ItemEntityDao;
 import hu.gerviba.webschop.model.CircleEntity;
@@ -29,9 +29,12 @@ import hu.gerviba.webschop.service.ItemService;
 import hu.gerviba.webschop.service.OpeningService;
 import hu.gerviba.webschop.service.OrderService;
 import hu.gerviba.webschop.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
-@Controller
+@RestController
 @RequestMapping("/api")
+@Api(value="onlinestore", description="RestAPI")
 public class ApiController {
 
     @Autowired
@@ -55,19 +58,22 @@ public class ApiController {
     private static final long HALF_HOUR = 1000 * 60 * 30;
     private final SimpleDateFormat DATE = new SimpleDateFormat("HH:mm"); 
     
+    @ApiOperation("Item info")
     @GetMapping("/item/{id}")
     @ResponseBody
     public ItemEntityDao getItem(@PathVariable Long id) {
         return new ItemEntityDao(items.getOne(id));
     }
-    
+
+    @ApiOperation("List of items")
     @GetMapping("/items")
     @ResponseBody
     public ResponseEntity<List<ItemEntity>> getAllItems() {
         List<ItemEntity> list = items.findAll();
         return new ResponseEntity<List<ItemEntity>>(list, HttpStatus.OK);
     }
-    
+
+    @ApiOperation("Page of items")
     @GetMapping("/items/{page}")
     @ResponseBody
     public ResponseEntity<List<ItemEntityDao>> getItems(@PathVariable int page) {
@@ -76,7 +82,8 @@ public class ApiController {
                 .collect(Collectors.toList());
         return new ResponseEntity<List<ItemEntityDao>>(list, HttpStatus.OK);
     }
-    
+
+    @ApiOperation("List of openings")
     @GetMapping("/openings")
     @ResponseBody
     public ResponseEntity<List<OpeningEntity>> getAllOpenings() {
@@ -84,13 +91,15 @@ public class ApiController {
         return new ResponseEntity<List<OpeningEntity>>(page, HttpStatus.OK);
     }
 
+    @ApiOperation("List of openings (next week period)")
     @GetMapping("/openings/week")
     @ResponseBody
     public ResponseEntity<List<OpeningEntity>> getNextWeekOpenings() {
         List<OpeningEntity> page = openings.findNextWeek();
         return new ResponseEntity<List<OpeningEntity>>(page, HttpStatus.OK);
     }
-    
+
+    @ApiOperation("List of circles")
     @GetMapping("/circles")
     @ResponseBody
     public ResponseEntity<List<CircleEntity>> getAllCircles() {
@@ -98,6 +107,7 @@ public class ApiController {
         return new ResponseEntity<List<CircleEntity>>(page, HttpStatus.OK);
     }
 
+    @ApiOperation("New order")
     @PostMapping("/order")
     @ResponseBody
     public ResponseEntity<String> newOrder(HttpServletRequest request,
@@ -125,6 +135,7 @@ public class ApiController {
         return new ResponseEntity<String>("ACK", HttpStatus.OK);
     }
 
+    @ApiOperation("Set room code")
     @PostMapping("/user/room")
     @ResponseBody
     public String setRoom(HttpServletRequest request, @RequestParam(required = true) int room) {
@@ -137,7 +148,8 @@ public class ApiController {
             return "REJECT"; //new ResponseEntity<String>("BAD_REQUEST", HttpStatus.BAD_REQUEST);
         }
     }
-    
+
+    @ApiOperation("Hased user id")
     @GetMapping("/user/id")
     @ResponseBody
     public String setRoom(HttpServletRequest request) {
@@ -149,6 +161,7 @@ public class ApiController {
     }
     
     //TODO: DELETE-el nem engedte a jquery
+    @ApiOperation("Delete order")
     @PostMapping("/order/delete")
     @ResponseBody
     public ResponseEntity<String> deleteOrder(HttpServletRequest request, @RequestParam(required = true) long id) {

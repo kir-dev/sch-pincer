@@ -22,8 +22,10 @@ import hu.gerviba.webschop.service.ItemService;
 import hu.gerviba.webschop.service.OpeningService;
 import hu.gerviba.webschop.service.OrderService;
 import hu.gerviba.webschop.service.ReviewService;
+import io.swagger.annotations.Api;
 
 @Controller
+@Api(value="onlinestore", description="Pages for Users and Guests")
 public class MainController {
 
     @Autowired

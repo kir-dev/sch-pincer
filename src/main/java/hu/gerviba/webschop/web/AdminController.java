@@ -27,10 +27,12 @@ import hu.gerviba.webschop.model.UserEntity;
 import hu.gerviba.webschop.service.CircleService;
 import hu.gerviba.webschop.service.ItemService;
 import hu.gerviba.webschop.service.UserService;
+import io.swagger.annotations.Api;
 
 @Controller
 @PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/admin")
+@Api(value="onlinestore", description="Admin pages")
 public class AdminController {
 
     @Autowired
@@ -49,8 +51,6 @@ public class AdminController {
 	public String adminRoot(Map<String, Object> model) {
         model.put("circles", circles.findAllForMenu());
         List<RoleEntryDao> roles = users.findAll().stream()
-//                .filter(x -> x.isSysadmin() || (x.getPermissions() != null && x.getPermissions().size() > 0))
-//                .map(x -> { System.out.println("# " + x); return x;} )
                 .map(x -> {
                     try {
                         return new RoleEntryDao(util.sha256(x.getUid()), x);
@@ -157,7 +157,6 @@ public class AdminController {
         return "redirect:/admin/";
     }
     
-    //TODO: hashPermission
     @GetMapping("/circles/delete/{circleId}")
     public String adminDeleteCircle(@PathVariable Long circleId, Map<String, Object> model) {
         model.put("circles", circles.findAllForMenu());
@@ -168,9 +167,13 @@ public class AdminController {
         return "prompt";
     }
 
-    //TODO: hashPermission, remove items
     @PostMapping("/circles/delete/{circleId}/confirm")
-    public String adminDeleteCircleConfirm(@PathVariable Long circleId) {
+    public String adminDeleteCircleConfirm(@PathVariable Long circleId, 
+            HttpServletRequest request) {
+        
+//        if (!util.getUser(request).isSysadmin())
+//            return "redirect:/admin/?error";
+        
         items.deleteByCircle(circleId);
         circles.delete(circles.getOne(circleId));
         return "redirect:/admin/";

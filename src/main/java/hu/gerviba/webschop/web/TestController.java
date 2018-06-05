@@ -17,15 +17,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import hu.gerviba.webschop.model.UserEntity;
 import hu.gerviba.webschop.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 //@Profile("test")
 @RequestMapping("/test/")
 @Controller
+@Api(value="onlinestore", description="Test pages for proviledges")
 public class TestController {
 
     @Autowired
     private UserService users;
-    
+
+    @ApiOperation("Login as a simple user")
     @GetMapping("/login/simple")
     public String loginSimpleUser(HttpServletRequest request) {
         Authentication auth = null;
@@ -65,7 +69,8 @@ public class TestController {
         
         return authorities;
     }
-    
+
+    @ApiOperation("Login as a circle leader")
     @GetMapping("/login/leader")
     public String loginLeader(HttpServletRequest request) {
         Authentication auth = null;
@@ -95,6 +100,7 @@ public class TestController {
         return (auth != null && auth.isAuthenticated()) ? "redirect:/" : "redirect:/?error";
     }
 
+    @ApiOperation("Login as an admin")
     @GetMapping("/login/admin")
     public String loginAdmin(HttpServletRequest request) {
         Authentication auth = null;

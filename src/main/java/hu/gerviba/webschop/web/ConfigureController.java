@@ -26,8 +26,10 @@ import hu.gerviba.webschop.service.CircleService;
 import hu.gerviba.webschop.service.ItemService;
 import hu.gerviba.webschop.service.OpeningService;
 import hu.gerviba.webschop.service.OrderService;
+import io.swagger.annotations.Api;
 
 @Controller
+@Api(value="onlinestore", description="Circle leader pages")
 public class ConfigureController {
 
     @Autowired
