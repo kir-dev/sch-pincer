@@ -28,5 +28,5 @@ WebSCHop
 
 - Open: `/swagger-ui.html`
 
-![DB](https://raw.githubusercontent.com/Gerviba/webschop/tree/master/db_schema.png)
+![DB](https://raw.githubusercontent.com/Gerviba/webschop/master/db_schema.png)
 
