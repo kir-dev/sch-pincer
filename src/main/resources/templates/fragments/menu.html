@@ -11,12 +11,14 @@
 			</a>
 			</object>
 
-			<a href="index.html"    th:href="@{/}"       th:text="#{lang.nav.home}">Home</a>
-			<a href="circle.html"   th:href="@{/circle}" th:text="#{lang.nav.circle}">Circles</a>
-			<a href="items.html"    th:href="@{/items}"  th:text="#{lang.nav.items}">Items</a>
+			<a href="index.html"    th:href="@{/}"       th:text="#{lang.nav.home}" class="long">Home</a>
+			<a href="circle.html"   th:href="@{/circle}" th:text="#{lang.nav.circle}" class="long">Circles</a>
+			<a href="items.html"    th:href="@{/items}"  th:text="#{lang.nav.items}" class="long">Items</a>
 
-			<a th:if="${session.user} neq null" th:href="@{/profile}" th:text="${session.user?.name}">Test User</a>
-			<a th:if="${session.user} eq null" href="#login" th:href="@{/login}" th:text="#{lang.nav.login}">Login</a>
+			<a th:if="${session.user} neq null" th:href="@{/profile}" th:text="${session.user?.name}" class="long">Test User</a>
+			<a th:if="${session.user} eq null" href="#login" th:href="@{/login}" th:text="#{lang.nav.login}" class="long">Login</a>
+			
+			<a href="#" class="icon short" onclick="document.getElementById('site-menu').style.display = 'block'"><i class="material-icons">menu</i></a>
 		</div>
 	</body>
 </html>
