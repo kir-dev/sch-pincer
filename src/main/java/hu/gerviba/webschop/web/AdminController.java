@@ -113,22 +113,18 @@ public class AdminController {
     }
 
     @PostMapping("/circles/edit")
-    public String adminEditCircle(@ModelAttribute CircleEntity circle, 
+    public String adminEditCircle(@ModelAttribute @Valid CircleEntity circle, 
+    		BindingResult bindingResult,
             @RequestParam Long circleId,
             @RequestParam(required = false) MultipartFile logo,
             @RequestParam(required = false) MultipartFile background,
-            BindingResult bindingResult, Map<String, Object> model) {
+            Map<String, Object> model) {
         
-        System.out.println("dsadsadasdasdasdsd");
         if (bindingResult.hasErrors()) {
-            System.out.println("asd");
             model.put("circles", circles.findAllForMenu());
-            System.out.println("asd");
             model.put("mode", "edit");
             model.put("adminMode", true);
-            System.out.println("asd");
             model.put("circle", circle);
-            System.out.println("asd");
             return "circleModify";
         }
         
