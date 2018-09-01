@@ -26,16 +26,29 @@ function searchSubmit() {
 	searchFor($("#search-input").val());
 }
 
+function showLoading() {
+	$("#loading").css({
+		display : "inline-block"
+	});
+	$("#list-end").css({
+		display : "none"
+	});
+}
+
 function searchFor(keyword) {
 	if (keyword.length === 0) {
 		endReached = false;
 		page = 0;
 		appendNext();
+		showLoading();
+		updateUrl(null);
 		return;
 	}
 		
 	clearAll();
 	updateUrl(keyword);
+	showLoading();
+	
 	$.ajax({
 		dataType : "json",
 		url : URL_BASE + "api/search/?q=" + keyword,
@@ -66,9 +79,15 @@ function searchFor(keyword) {
 }
 
 function updateUrl(keyword) {
-	window.history.pushState({
-		route : "/items/?q=" + encodeURI(keyword)
-	}, document.title, "/items/?q=" + encodeURI(keyword));
+	if (keyword == null) {
+		window.history.pushState({
+			route : "/items/"
+		}, document.title, "/items/");		
+	} else {
+		window.history.pushState({
+			route : "/items/?q=" + encodeURI(keyword)
+		}, document.title, "/items/?q=" + encodeURI(keyword));
+	}
 }
 
 function addItem(item) {

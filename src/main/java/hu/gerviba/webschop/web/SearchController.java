@@ -12,13 +12,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import hu.gerviba.webschop.dao.ItemEntityDao;
 import hu.gerviba.webschop.service.HibernateSearchService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Controller
+@Api(value="onlinestore", description="Search RestAPI")
 public class SearchController {
 
 	@Autowired
     private HibernateSearchService searchservice;
 
+    @ApiOperation("Search query")
     @GetMapping(value = "/api/search")
     @ResponseBody
     public ResponseEntity<List<ItemEntityDao>> search(@RequestParam(value = "q") String search) {

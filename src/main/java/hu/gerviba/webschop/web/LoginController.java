@@ -24,8 +24,11 @@ import hu.gerviba.authsch.response.ProfileDataResponse;
 import hu.gerviba.authsch.struct.Scope;
 import hu.gerviba.webschop.model.UserEntity;
 import hu.gerviba.webschop.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Controller
+@Api(value="onlinestore", description="Custom OAuth2")
 public class LoginController {
 
     @Autowired
@@ -34,6 +37,7 @@ public class LoginController {
     @Autowired
     private UserService users;
     
+    @ApiOperation("Login re-entry point")
     @GetMapping("/loggedin")
     public String loggedIn(@RequestParam String code, @RequestParam String state, HttpServletRequest request) {
         if (!buildUniqueState(request).equals(state))
@@ -81,6 +85,7 @@ public class LoginController {
         return authorities;
     }
 
+    @ApiOperation("Redirection to the auth provider")
     @GetMapping("/login")
     public String items(HttpServletRequest request) {
         return "redirect:" + authSch.generateLoginUrl(buildUniqueState(request),
@@ -103,6 +108,7 @@ public class LoginController {
         return "error";
     }
 
+    @ApiOperation("Logout user")
     @GetMapping("/logout")
     public String logout(HttpServletRequest request) {
     	request.removeAttribute("user");

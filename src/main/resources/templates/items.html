@@ -51,6 +51,15 @@
 				</div>
 				<h3 id="popup-title">Ördög pizza</h3>
 				<div class="body">
+					<div class="info">
+						<div class="image" id="popup-image" style="background-image:url('../demo/pizzasch-bg.jpg')">
+							<div class="overlay"></div>
+							<i class="material-icons">fullscreen</i>
+						</div>
+						<p id="popup-description">Jalapenos alap, csili, pick szalámi mittomén, izé</p><br />
+						<h5 th:text="#{lang.items.price}">Ára:</h5>
+						<span class="colored-light" id="popup-price">800 JMF</span>
+					</div>
 					<form onsubmit="buySelectedItem(); return false;" action="#" method="GET">
 						<ins id="popup-custom"></ins>
 						<label th:text="#{lang.items.interval}">Time</label>
@@ -66,15 +75,6 @@
 								th:value="#{lang.items.buy}" th:unless="${session.user} eq null" />
 						<em th:text="#{lang.items.loggedin}" th:if="${session.user} eq null">You need to be logged in to order</em>
 					</form>
-					<div class="info">
-						<div class="image" id="popup-image" style="background-image:url('../demo/pizzasch-bg.jpg')">
-							<div class="overlay"></div>
-							<i class="material-icons">fullscreen</i>
-						</div>
-						<p id="popup-description">Jalapenos alap, csili, pick szalámi mittomén, izé</p><br />
-						<h5 th:text="#{lang.items.price}">Ára:</h5>
-						<span class="colored-light" id="popup-price">800 JMF</span>
-					</div>
 				</div>
 			</section>
 		</div>
@@ -105,6 +105,10 @@
 		
 		<div class="content">
 			<div class="search-container">
+				<a href=""><i class="material-icons">turned_in</i>&nbsp;<span>Minden termék</span></a>
+				<a href=""><i class="material-icons">local_mall</i>&nbsp;<span>Rendelhető</span></a>
+				<a href=""><i class="material-icons">calendar_today</i>&nbsp;<span>Holnap rendelhető</span></a>
+
 				<form class="search" action="#" th:action="@{/search/}" method="get" onsubmit="searchSubmit(); return false">
 					<input type="text" name="q" id="search-input" th:value="${keyword}" autocomplete="off" spellcheck="false" />
 					<i class="material-icons" onclick="searchSubmit(); return false">search</i>
