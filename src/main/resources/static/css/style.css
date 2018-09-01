@@ -727,10 +727,18 @@ a {
 	background-color: #4c4c4d;
 	overflow: scroll;
 	border-bottom: 8px solid #383839;
+	top: 0;
+	position: absolute;
 }
 
 .popup section {
 	position: relative;
+	overflow-x: hidden;
+	max-height: 100vh;
+}
+
+.popup popup-scroll-child {
+	scroll-y: scroll;
 }
 
 .popup .picture {
@@ -2107,6 +2115,10 @@ textarea {
 @media only screen and (min-height: 580px) {
 	.main-article .picture span {
 		margin: 350px 0 0 0;
+	}
+	
+	.popup {
+		position: static;
 	}
 }
 
