@@ -150,7 +150,7 @@ a {
 	text-align: left;
 	flex: 0 0 auto;
 	margin: 20px;
-	animation-name: displayItem;
+	animation-name: animFadeFromTop;
     animation-duration: 0.2s;
     animation-iteration-count: 1;
 }
@@ -516,10 +516,6 @@ a {
 	text-transform: uppercase;
 }
 
-.highlighted table.circles-table td:nth-of-type(4) {
-	text-align: left;
-}
-
 .highlighted p {
 	padding: 0 40px 40px 40px;
 	text-align: justify;
@@ -554,6 +550,25 @@ a {
 	padding: 20px 0 0 40px;
 	text-transform: uppercase;
 	color: #888888;
+}
+
+.circles-table td {
+	display: inline-block;
+}
+
+.circles-table .arrow {
+	display: none;
+}
+
+.circles-table tr {
+	display: block;
+	margin-bottom: 20px;
+}
+
+.circles-table td.date,
+.circles-table td.feeling {
+	display: block;
+	text-align: center;
 }
 
 .circles .article span b {
@@ -1405,6 +1420,7 @@ textarea {
 .full-table {
 	width: 100% !important;
 	max-width: 100% !important;
+	overflow-x: auto;
 }
 
 .prompt table,
@@ -2054,6 +2070,11 @@ textarea {
 	font-size: 36px;
 }
 
+.uid {
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+}
+
 /** MEDIA **/
 
 @media only screen and (min-width: 400px) {
@@ -2159,18 +2180,37 @@ textarea {
 		display: -webkit-flex;
 		display: flex;
 	}
+	
+	.circles-table td,
+	.circles-table td.date,
+	.circles-table td.feeling {
+		display: table-cell;
+	}
+	
+	.circles-table td.feeling {
+		text-align: left;
+	}
+	
+	.circles-table tr {
+		display: table-row;
+	}
 }
 	
 @media only screen and (min-width: 900px) {
 	.header nav .short {
 		display: none;
 	}
+	
 	.header nav a.long {
 		display: inline-block;
 	}
+	
+	.circles-table .arrow {
+		display: table-cell;
+	}
 }
 	
-@media only screen and (min-width: 1024px) {
+@media only screen and (min-width: 1025px) {
 	.left-menu {
 		display: block;
 		background-color: #111111;
@@ -2274,7 +2314,7 @@ textarea {
 	}
 }
 
-@keyframes displayItem {
+@keyframes animGrow {
   from {
   	transform: scale(0);
     -webkit-transform: scale(0);
@@ -2296,7 +2336,7 @@ textarea {
   }
 }
 
-@keyframes displayItem2 {
+@keyframes animFadeFromLeft {
   from {
   	opacity: 0;
   	transform: translateX(-40px) ;
@@ -2307,4 +2347,42 @@ textarea {
   	transform: translateX(0);
     -webkit-transform: translateX(0);
   }
+}
+
+@keyframes animFadeFromTop {
+  from {
+  	opacity: 0;
+  	transform: translateY(-40px) ;
+    -webkit-transform: translateY(-40px);
+  }
+  to {
+  	opacity: 1;
+  	transform: translateY(0);
+    -webkit-transform: translateY(0);
+  }
+}
+
+/*.decoration i {
+	animation-name: displayItem;
+    animation-duration: 0.2s;
+    animation-iteration-count: 1;
+}*/
+
+.holder {
+	animation-name: animFadeFromTop;
+    animation-duration: 0.6s;
+    animation-iteration-count: 1;
+}
+
+.popup {
+	animation-name: animGrow;
+    animation-duration: 0.2s;
+    animation-iteration-count: 1;
+}
+
+.highlighted,
+.article {
+	animation-name: animFadeFromLeft;
+    animation-duration: 0.2s;
+    animation-iteration-count: 1;
 }

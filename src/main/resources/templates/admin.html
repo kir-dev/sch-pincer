@@ -53,7 +53,7 @@
 				</tr>
 				<tr th:each="role : ${roles}" th:object="${role}">
 					<td th:text="*{name}">Test Name</td>
-					<td th:text="*{uidHash}">XYZ</td>
+					<td th:text="*{uidHash}" class="uid">XYZ</td>
 					<td th:text="*{sysadmin} ? #{lang.yes} : #{lang.no}">No</td>
 					<td th:text="*{permissions}"></td>
 					<td>
