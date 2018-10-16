@@ -38,22 +38,22 @@ import io.swagger.annotations.ApiOperation;
 public class ApiController {
 
     @Autowired
-    private CircleService circles;
+    CircleService circles;
     
     @Autowired
-    private OpeningService openings;
+    OpeningService openings;
 
     @Autowired
-    private ItemService items;
+    ItemService items;
     
     @Autowired
-    private UserService users;
+    UserService users;
     
     @Autowired
-    private OrderService orders;
+    OrderService orders;
     
     @Autowired
-    private ControllerUtil util;
+    ControllerUtil util;
     
     private static final long HALF_HOUR = 1000 * 60 * 30;
     private final SimpleDateFormat DATE = new SimpleDateFormat("HH:mm"); 

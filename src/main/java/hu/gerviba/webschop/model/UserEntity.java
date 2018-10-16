@@ -13,9 +13,15 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Proxy;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name = "users")
 @Proxy(lazy = false)
+@Data
+@NoArgsConstructor
+@SuppressWarnings("serial")
 public class UserEntity implements Serializable {
 
     @Id
@@ -40,8 +46,6 @@ public class UserEntity implements Serializable {
     @Column
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> permissions = new HashSet<>(); 
-    
-    public UserEntity() {}
 
     public UserEntity(String uid, String name, String email) {
         this.uid = uid;
@@ -50,43 +54,9 @@ public class UserEntity implements Serializable {
         this.sysadmin = false;
         this.cardType = CardType.DO;
     }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getRoom() {
-        return room;
-    }
-    
-    public void setSysadmin(boolean sysadmin) {
-        this.sysadmin = sysadmin;
-    }
-    
-    public Set<String> getPermissions() {
-        return permissions;
-    }
-    
-    public CardType getCardType() {
-        return cardType;
-    }
     
     public void setRoom(int room) {
         this.room = "SCH " + room;
     }
-    
-    public boolean isSysadmin() {
-        return sysadmin;
-    }
-
-    private static final long serialVersionUID = 796312955720547481L;
     
 }

@@ -17,8 +17,14 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name = "circles")
+@Data
+@NoArgsConstructor
+@SuppressWarnings("serial")
 public class CircleEntity implements Serializable {
     
     @Id
@@ -108,8 +114,6 @@ public class CircleEntity implements Serializable {
     @Column
     @Min(0)
     private int rateingCount;
-
-    public CircleEntity() {}
     
     public CircleEntity(@Size(min = 2, max = 32) String displayName, @Size(max = 1000) String description,
             @Size(max = 1000) String homePageDescription, @Size(max = 30) String cssClassName, int founded,
@@ -152,163 +156,6 @@ public class CircleEntity implements Serializable {
         this.rateQuality = copy.getRateQuality();
         this.ratePrice = copy.getRatePrice();
         this.rateingCount = copy.getRateingCount();
-    }
-
-    public String getAvgOpening() {
-        return avgOpening;
-    }
-
-    public String getBackgroundUrl() {
-        return backgroundUrl;
-    }
-
-    public String getCssClassName() {
-        return cssClassName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public String getFacebookUrl() {
-        return facebookUrl;
-    }
-
-    public int getFounded() {
-        return founded;
-    }
-
-    public String getHomePageDescription() {
-        return homePageDescription;
-    }
-
-    public int getHomePageOrder() {
-        return homePageOrder;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getLogoUrl() {
-        return logoUrl;
-    }
-
-    public List<CircleMemberEntity> getMembers() {
-        return members;
-    }
-
-    public List<OpeningEntity> getOpenings() {
-        return openings;
-    }
-
-    public int getRateingCount() {
-        return rateingCount;
-    }
-
-    public float getRateOverAll() {
-        return rateOverAll;
-    }
-
-    public float getRatePrice() {
-        return ratePrice;
-    }
-
-    public float getRateQuality() {
-        return rateQuality;
-    }
-
-    public float getRateSpeed() {
-        return rateSpeed;
-    }
-
-    public List<ReviewEntity> getReviews() {
-        return reviews;
-    }
-
-    public String getWebsiteUrl() {
-        return websiteUrl;
-    }
-    
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setHomePageDescription(String homePageDescription) {
-        this.homePageDescription = homePageDescription;
-    }
-
-    public void setAvgOpening(String avgOpening) {
-        this.avgOpening = avgOpening;
-    }
-
-    public void setFounded(int founded) {
-        this.founded = founded;
-    }
-
-    public void setHomePageOrder(int homePageOrder) {
-        this.homePageOrder = homePageOrder;
-    }
-
-    public void setCssClassName(String cssClassName) {
-        this.cssClassName = cssClassName;
-    }
-
-    public void setFacebookUrl(String facebookUrl) {
-        this.facebookUrl = facebookUrl;
-    }
-
-    public void setWebsiteUrl(String websiteUrl) {
-        this.websiteUrl = websiteUrl;
-    }
-
-    public void setBackgroundUrl(String backgroundUrl) {
-        this.backgroundUrl = backgroundUrl;
-    }
-
-    public void setLogoUrl(String logoUrl) {
-        this.logoUrl = logoUrl;
-    }
-
-    public void setRateOverAll(float rateOverAll) {
-        this.rateOverAll = rateOverAll;
-    }
-
-    public void setRateSpeed(float rateSpeed) {
-        this.rateSpeed = rateSpeed;
-    }
-
-    public void setRateQuality(float rateQuality) {
-        this.rateQuality = rateQuality;
-    }
-
-    public void setRatePrice(float ratePrice) {
-        this.ratePrice = ratePrice;
-    }
-
-    public void setRateingCount(int rateingCount) {
-        this.rateingCount = rateingCount;
-    }
-
-    private static final long serialVersionUID = 2467081480963002976L;
-
-    @Override
-    public String toString() {
-        return "CircleEntity [id=" + id + ", displayName=" + displayName + ", description=" + description
-                + ", homePageDescription=" + homePageDescription + ", avgOpening=" + avgOpening + ", founded=" + founded
-                + ", members=" + members + ", reviews=" + reviews + ", openings=" + openings + ", homePageOrder="
-                + homePageOrder + ", cssClassName=" + cssClassName + ", facebookUrl=" + facebookUrl + ", websiteUrl="
-                + websiteUrl + ", backgroundUrl=" + backgroundUrl + ", logoUrl=" + logoUrl + ", rateOverAll=" + rateOverAll
-                + ", rateSpeed=" + rateSpeed + ", rateQuality=" + rateQuality + ", ratePrice=" + ratePrice
-                + ", rateingCount=" + rateingCount + "]";
     }
     
 }

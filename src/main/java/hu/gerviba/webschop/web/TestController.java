@@ -20,6 +20,7 @@ import hu.gerviba.webschop.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+// TODO: Make it available only on test env
 //@Profile("test")
 @RequestMapping("/test/")
 @Controller
@@ -27,7 +28,7 @@ import io.swagger.annotations.ApiOperation;
 public class TestController {
 
     @Autowired
-    private UserService users;
+    UserService users;
 
     @ApiOperation("Login as a simple user")
     @GetMapping("/login/simple")

@@ -25,7 +25,7 @@ public class ControllerUtil {
     public ControllerUtil() {}
     
     @Value("${webschop.external}")
-    private String uploadPath = "/etc/webschop/external/";
+    String uploadPath = "/etc/webschop/external/";
     
     public String uploadFile(String target, MultipartFile logo) {
         if (logo.isEmpty() || logo.getContentType() == null)

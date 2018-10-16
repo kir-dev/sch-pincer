@@ -17,12 +17,16 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name = "openings")
+@Data
+@NoArgsConstructor
+@SuppressWarnings("serial")
 public class OpeningEntity implements Serializable {
     
-    private static final long serialVersionUID = -5055415932299248831L;
-
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -63,8 +67,6 @@ public class OpeningEntity implements Serializable {
     @Min(0)
     private int maxOrderPerHalfHour;
 
-    public OpeningEntity() {}
-
     public OpeningEntity(Long dateStart, Long dateEnd, Long orderStart, Long orderEnd, String prUrl,
             String feeling, CircleEntity circle, int maxOrder, int maxOrderPerHalfHour) {
         this.dateStart = dateStart;
@@ -75,86 +77,6 @@ public class OpeningEntity implements Serializable {
         this.feeling = feeling;
         this.circle = circle;
         this.maxOrder = maxOrder;
-        this.maxOrderPerHalfHour = maxOrderPerHalfHour;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Long getDateStart() {
-        return dateStart;
-    }
-
-    public Long getDateEnd() {
-        return dateEnd;
-    }
-
-    public Long getOrderStart() {
-        return orderStart;
-    }
-
-    public Long getOrderEnd() {
-        return orderEnd;
-    }
-
-    public String getPrUrl() {
-        return prUrl;
-    }
-
-    public String getFeeling() {
-        return feeling;
-    }
-
-    public CircleEntity getCircle() {
-        return circle;
-    }
-
-    public int getMaxOrder() {
-        return maxOrder;
-    }
-
-    public int getMaxOrderPerHalfHour() {
-        return maxOrderPerHalfHour;
-    }
-
-    public void setTimeIntervals(int timeIntervals) {
-        this.timeIntervals = timeIntervals;
-    }
-
-    public void setDateStart(Long dateStart) {
-        this.dateStart = dateStart;
-    }
-
-    public void setDateEnd(Long dateEnd) {
-        this.dateEnd = dateEnd;
-    }
-
-    public void setOrderStart(Long orderStart) {
-        this.orderStart = orderStart;
-    }
-
-    public void setOrderEnd(Long orderEnd) {
-        this.orderEnd = orderEnd;
-    }
-
-    public void setPrUrl(String prUrl) {
-        this.prUrl = prUrl;
-    }
-
-    public void setFeeling(String feeling) {
-        this.feeling = feeling;
-    }
-
-    public void setCircle(CircleEntity circle) {
-        this.circle = circle;
-    }
-
-    public void setMaxOrder(int maxOrder) {
-        this.maxOrder = maxOrder;
-    }
-
-    public void setMaxOrderPerHalfHour(int maxOrderPerHalfHour) {
         this.maxOrderPerHalfHour = maxOrderPerHalfHour;
     }
     

@@ -1,7 +1,9 @@
 package hu.gerviba.webschop.dao;
 
 import hu.gerviba.webschop.model.ItemEntity;
+import lombok.Data;
 
+@Data
 public class ItemEntityDao {
 
     private final Long id;
@@ -35,50 +37,6 @@ public class ItemEntityDao {
 		    this.circleName = "Not Attached";
 		    this.circleColor = "";
         }
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getIngredients() {
-        return ingredients;
-    }
-
-    public String getDetailsConfigJson() {
-        return detailsConfigJson;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public boolean isOrderable() {
-        return orderable;
-    }
-
-    public String getImageName() {
-        return imageName;
-    }
-
-    public Long getCircleId() {
-        return circleId;
-    }
-
-    public String getCircleName() {
-        return circleName;
-    }
-
-    public String getCircleColor() {
-        return circleColor;
     }
     
 }

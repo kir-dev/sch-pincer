@@ -16,8 +16,14 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name = "circleMembers")
+@Data
+@NoArgsConstructor
+@SuppressWarnings("serial")
 public class CircleMemberEntity implements Serializable {
 
     @Id
@@ -44,8 +50,6 @@ public class CircleMemberEntity implements Serializable {
     @Column
     private int sort;
 
-    public CircleMemberEntity() {}
-    
     public CircleMemberEntity(CircleEntity circle, @Size(max = 64) String name, @Size(max = 64) String rank, 
             String avatar, int sort) {
         
@@ -55,51 +59,5 @@ public class CircleMemberEntity implements Serializable {
         this.avatar = avatar;
         this.sort = sort;
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public CircleEntity getCircle() {
-        return circle;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getRank() {
-        return rank;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public int getSort() {
-        return sort;
-    }
-    
-    public void setCircle(CircleEntity circle) {
-        this.circle = circle;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setRank(String rank) {
-        this.rank = rank;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public void setSort(int sort) {
-        this.sort = sort;
-    }
-
-    private static final long serialVersionUID = 3999912885341511614L;
     
 }

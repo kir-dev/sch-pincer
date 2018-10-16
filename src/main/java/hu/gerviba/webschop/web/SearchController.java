@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiOperation;
 public class SearchController {
 
 	@Autowired
-    private HibernateSearchService searchservice;
+    HibernateSearchService searchservice;
 
     @ApiOperation("Search query")
     @GetMapping(value = "/api/search")

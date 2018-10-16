@@ -1,12 +1,21 @@
 package hu.gerviba.webschop.dao;
 
 import hu.gerviba.webschop.model.UserEntity;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
+@ToString
+@EqualsAndHashCode
 public class RoleEntryDao {
 
+    @Getter
     private final String uidHash;
+    @Getter
     private final String name;
+    @Getter
     private final boolean sysadmin;
+    @Getter
     private String permissions; 
     
     public RoleEntryDao(String uidHashed, UserEntity ue) {
@@ -17,20 +26,4 @@ public class RoleEntryDao {
                 ? "-" : String.join(", ", ue.getPermissions());
     }
 
-    public String getUidHash() {
-        return uidHash;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean isSysadmin() {
-        return sysadmin;
-    }
-
-    public String getPermissions() {
-        return permissions;
-    }
-    
 }

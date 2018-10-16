@@ -21,9 +21,15 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Indexed
 @Entity
 @Table(name = "items")
+@Data
+@NoArgsConstructor
+@SuppressWarnings("serial")
 public class ItemEntity implements Serializable {
 
     @Id
@@ -65,8 +71,6 @@ public class ItemEntity implements Serializable {
     
     @Column
     private String imageName;
-    
-    public ItemEntity() {}
 
 	public ItemEntity(String name, CircleEntity circle, String description, String ingredients, 
 	        String keywords, String detailsConfigJson, int price, boolean orderable, String imageName) {
@@ -91,91 +95,6 @@ public class ItemEntity implements Serializable {
         this.price = copy.getPrice();
         this.orderable = copy.isOrderable();
         this.imageName = copy.getImageName();
-    }
-    
-    public Long getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public CircleEntity getCircle() {
-		return circle;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public String getIngredients() {
-        return ingredients;
-    }
-
-    public String getDetailsConfigJson() {
-		return detailsConfigJson;
-	}
-
-	public String getKeywords() {
-		return keywords;
-	}
-
-	public int getPrice() {
-		return price;
-	}
-
-	public boolean isOrderable() {
-		return orderable;
-	}
-	
-	public String getImageName() {
-	    return imageName;
-	}
-
-    private static final long serialVersionUID = -8174418379518262439L;
-
-    public void setOrderable(boolean orderable) {
-        this.orderable = orderable;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setCircle(CircleEntity circle) {
-        this.circle = circle;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setIngredients(String ingredients) {
-        this.ingredients = ingredients;
-    }
-
-    public void setDetailsConfigJson(String detailsConfigJson) {
-        this.detailsConfigJson = detailsConfigJson;
-    }
-
-    public void setKeywords(String keywords) {
-        this.keywords = keywords;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
-    }
-
-    @Override
-    public String toString() {
-        return "ItemEntity [id=" + id + ", name=" + name + ", circle=" + circle + ", description=" + description
-                + ", ingredients=" + ingredients + ", detailsConfigJson=" + detailsConfigJson + ", keywords=" + keywords
-                + ", price=" + price + ", orderable=" + orderable + ", imageName=" + imageName + "]";
     }
     
 }

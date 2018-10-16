@@ -32,10 +32,10 @@ import io.swagger.annotations.ApiOperation;
 public class LoginController {
 
     @Autowired
-    private AuthSchAPI authSch;
+    AuthSchAPI authSch;
 
     @Autowired
-    private UserService users;
+    UserService users;
     
     @ApiOperation("Login re-entry point")
     @GetMapping("/loggedin")

@@ -13,8 +13,14 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name = "orders")
+@Data
+@NoArgsConstructor
+@SuppressWarnings("serial")
 public class OrderEntity implements Serializable {
 
     @Id
@@ -61,8 +67,6 @@ public class OrderEntity implements Serializable {
     @Column
     private int price;
     
-    public OrderEntity() {}
-    
     public OrderEntity(String userId, String userName, String comment, String detailsJson, String room) {
         this.userId = userId;
         this.status = OrderStatus.ACCEPTED;
@@ -87,89 +91,4 @@ public class OrderEntity implements Serializable {
         this.userName = userName;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDetailsJson() {
-        return detailsJson;
-    }
-
-    public int getIntervalId() {
-        return intervalId;
-    }
-
-    public String getIntervalMessage() {
-        return intervalMessage;
-    }
-
-    public long getDate() {
-        return date;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setIntervalId(int intervalId) {
-        this.intervalId = intervalId;
-    }
-
-    public void setIntervalMessage(String intervalMessage) {
-        this.intervalMessage = intervalMessage;
-    }
-    
-    public String getRoom() {
-        return room;
-    }
-    
-    public int getPrice() {
-        return price;
-    }
-    
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-    public void setPrice(int price) {
-        this.price = price;
-    }
-    
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
-    
-    public void setDate(long date) {
-        this.date = date;
-    }
-
-    public Long getOpeningId() {
-        return openingId;
-    }
-
-    public void setOpeningId(Long openingId) {
-        this.openingId = openingId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-    
-    private static final long serialVersionUID = -6321437469997930825L;
 }
