@@ -19,10 +19,10 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "circleMembers")
 @Data
+@Entity
 @NoArgsConstructor
+@Table(name = "circleMembers")
 @SuppressWarnings("serial")
 public class CircleMemberEntity implements Serializable {
 

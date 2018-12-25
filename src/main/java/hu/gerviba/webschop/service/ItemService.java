@@ -19,11 +19,11 @@ public class ItemService {
 	ItemRepository repo;
 	
 	public List<ItemEntity> findAll() {
-		return repo.findAll();
+		return repo.findAllByVisibleTrue();
 	}
 	
 	public List<ItemEntity> findAll(int page) {
-	    return repo.findAll(PageRequest.of(page, 6)).getContent();
+	    return repo.findAllByVisibleTrue(PageRequest.of(page, 6)).getContent();
 	}
 	
 	public ItemEntity getOne(Long itemId) {

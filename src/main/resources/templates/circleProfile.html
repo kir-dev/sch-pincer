@@ -70,37 +70,6 @@
 							th:text="${selectedCircle} neq null ? #{lang.profile.open-url}">OPEN</a></td>
 					</tr>
 				</table>
-
-				<table class="circle-details">
-					<tr>
-						<td th:text="#{lang.profile.quality}">Quality</td>
-						<td class="no-icon-space colored-light">
-							<object th:include="fragments/stars :: stars(${selectedCircle?.rateQuality} ?: 1)" th:remove="tag"></object>
-						</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.profile.price}">Price</td>
-						<td class="no-icon-space colored-light">
-							<object th:include="fragments/stars :: stars(${selectedCircle?.ratePrice} ?: 1)" th:remove="tag"></object>
-						</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.profile.speed}">Speed</td>
-						<td class="no-icon-space colored-light">
-							<object th:include="fragments/stars :: stars(${selectedCircle?.rateSpeed} ?: 1)" th:remove="tag"></object>
-						</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.profile.over-all}">Over all</td>
-						<td class="no-icon-space colored-light">
-							<object th:include="fragments/stars :: stars(${selectedCircle?.rateOverAll} ?: 1)" th:remove="tag"></object>
-						</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.profile.ratings}">Ratings</td>
-						<td th:text="${selectedCircle?.rateingCount}">102</td>
-					</tr>
-				</table>
 			</div>
 
 			<div class="highlighted">
@@ -115,7 +84,7 @@
 				</p>
 			</div>
 
-			<div class="highlighted">
+			<div class="highlighted latest">
 				<h3 th:text="#{lang.profile.members}">Members</h3>
 
 				<div class="member" th:each="member : ${selectedCircle?.members}" th:object="${member}">
@@ -125,37 +94,6 @@
 					<span th:text="*{rank}">Member</span>
 				</div>
 				
-			</div>
-			
-			<div class="reviews">
-				<h2 th:text="#{lang.profile.reviews}">Reviews</h2>
-
-				<div th:each="review : ${selectedCircle?.reviews}" th:object="${review}" class="review">
-					<div class="message">
-						<span th:text="${#dates.format(review.date, '__#{lang.date-short-format}__')}">2018-04-30</span>
-						<h3 th:text="*{userName}">Test User</h3>
-						<p th:text="*{review}">
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-							Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
-							Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim 
-							luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat 
-							euismod ut eget erat.
-						</p>
-					</div>
-					<div class="stars">
-						<span th:text="#{lang.profile.quality}">Quality</span>
-						<object th:include="fragments/stars :: stars(*{rateQuality} ?: 1)" th:remove="tag"></object><br />
-						<span th:text="#{lang.profile.price}">Price</span>
-						<object th:include="fragments/stars :: stars(*{ratePrice} ?: 1)" th:remove="tag"></object><br />
-						<span th:text="#{lang.profile.speed}">Speed</span>
-						<object th:include="fragments/stars :: stars(*{rateSpeed} ?: 1)" th:remove="tag"></object><br />
-						<span th:text="#{lang.profile.over-all}">Over all</span>
-						<object th:include="fragments/stars :: stars(*{rateOverAll} ?: 1)" th:remove="tag"></object><br />
-					</div>
-				</div>
-
-				<a href="#" class="page-button" th:href="@{/circle/__${selectedCircle?.id}__/review}" 
-						th:text="#{lang.profile.write-review}">Write your own</a>
 			</div>
 		</div>
 	</div>

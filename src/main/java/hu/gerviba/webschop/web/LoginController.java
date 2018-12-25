@@ -56,7 +56,6 @@ public class LoginController {
             	UserEntity user = new UserEntity(profile.getInternalId().toString(), 
                         profile.getSurname() + " " + profile.getGivenName(), 
                         profile.getMail());
-//            	user.setSysadmin(true);
                 users.save(user);
                 auth = new UsernamePasswordAuthenticationToken(code, state, getAuthorities(user));
                 request.getSession().setAttribute("user", user);
@@ -89,7 +88,7 @@ public class LoginController {
     @GetMapping("/login")
     public String items(HttpServletRequest request) {
         return "redirect:" + authSch.generateLoginUrl(buildUniqueState(request),
-                Scope.BASIC, Scope.GIVEN_NAME, Scope.SURNAME, Scope.MAIL);
+                Scope.BASIC, Scope.GIVEN_NAME, Scope.SURNAME, Scope.MAIL, Scope.ENTRANTS);
     }
 
     static String buildUniqueState(HttpServletRequest request) {
@@ -114,7 +113,6 @@ public class LoginController {
     	request.removeAttribute("user");
     	request.getSession().removeAttribute("user");
     	request.changeSessionId();
-//    	SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
     	return "redirect:/?logged-out";
     }
     

@@ -20,10 +20,10 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "openings")
 @Data
+@Entity
 @NoArgsConstructor
+@Table(name = "openings")
 @SuppressWarnings("serial")
 public class OpeningEntity implements Serializable {
     

@@ -179,7 +179,8 @@ public class ConfigureController {
         model.put("mode", "new");
         ItemEntity ie = new ItemEntity();
         ie.setDetailsConfigJson("[{\"name\":\"size\",\"values\":[\"1\",\"2\",\"3\"]}]");
-        ie.setOrderable(true);
+        ie.setOrderable(false);
+        ie.setVisible(true);
         model.put("item", ie);
         return "itemModify";
     }
@@ -232,6 +233,7 @@ public class ConfigureController {
         original.setKeywords(item.getKeywords());
         original.setName(item.getName());
         original.setOrderable(item.isOrderable());
+        original.setVisible(item.isVisible());
         original.setPrice(item.getPrice());
         
         String file = util.uploadFile("items", imageFile);

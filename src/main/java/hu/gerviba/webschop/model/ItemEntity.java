@@ -24,11 +24,11 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Indexed
-@Entity
-@Table(name = "items")
 @Data
+@Entity
+@Indexed
 @NoArgsConstructor
+@Table(name = "items")
 @SuppressWarnings("serial")
 public class ItemEntity implements Serializable {
 
@@ -68,12 +68,16 @@ public class ItemEntity implements Serializable {
     
     @Column
     private boolean orderable;
+
+    @Column
+    private boolean visible;
     
     @Column
     private String imageName;
 
 	public ItemEntity(String name, CircleEntity circle, String description, String ingredients, 
-	        String keywords, String detailsConfigJson, int price, boolean orderable, String imageName) {
+	        String keywords, String detailsConfigJson, int price, boolean orderable, boolean visible, 
+	        String imageName) {
 		this.name = name;
 		this.circle = circle;
 		this.description = description;
@@ -82,6 +86,7 @@ public class ItemEntity implements Serializable {
 		this.detailsConfigJson = detailsConfigJson;
 		this.price = price;
 		this.orderable = orderable;
+		this.visible = visible;
 		this.imageName = imageName;
 	}
 
@@ -94,6 +99,7 @@ public class ItemEntity implements Serializable {
         this.keywords = copy.getKeywords();
         this.price = copy.getPrice();
         this.orderable = copy.isOrderable();
+        this.visible = copy.isVisible();
         this.imageName = copy.getImageName();
     }
     

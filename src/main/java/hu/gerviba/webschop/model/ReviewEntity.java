@@ -20,10 +20,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "reviews")
 @Data
+@Entity
 @NoArgsConstructor
+@Table(name = "reviews")
 @SuppressWarnings("serial")
 public class ReviewEntity implements Serializable {
 

@@ -20,11 +20,13 @@ import hu.gerviba.webschop.dao.ItemEntityDao;
 import hu.gerviba.webschop.model.ItemEntity;
 
 @Service
-@Transactional
 public class HibernateSearchService {
 
 	@Autowired
 	EntityManager entityManager;
+
+    @Autowired
+    ItemService items;
 	
 	@Value("${search.distance}")
 	private int distance = 2;
@@ -43,6 +45,12 @@ public class HibernateSearchService {
 	
 	@Transactional
 	public List<ItemEntityDao> fuzzySearchItem(String matchingString) {
+		matchingString = matchingString.trim();
+		if (matchingString.length() < 3)
+			return items.findAll().stream()
+	                .map(item -> new ItemEntityDao(item))
+	                .collect(Collectors.toList());
+		
 		FullTextEntityManager fullTextEntityManager =
 				Search.getFullTextEntityManager(entityManager);
 		 
@@ -58,7 +66,7 @@ public class HibernateSearchService {
 				.withPrefixLength(0)
 				.onField("name").boostedTo(nameBoost)
 				.andField("keywords").boostedTo(keywordBoost)
-				.matching(matchingString.trim())
+				.matching(matchingString)
 				.createQuery();
 		
 		@SuppressWarnings("unchecked")

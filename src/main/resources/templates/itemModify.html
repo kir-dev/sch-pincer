@@ -69,8 +69,22 @@
 						<td><input type="text" th:field="*{price}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.configure.item.orderable}">CSS class name</td>
-						<td><input type="checkbox" th:field="*{orderable}" /></td>
+						<td th:text="#{lang.configure.item.orderable}">Orderable</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="orderable" th:checked="*{orderable}">
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.configure.item.visible}">Visible</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="visible" th:checked="*{visible}">
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.configure.item.image}">Image</td>

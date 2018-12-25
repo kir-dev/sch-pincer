@@ -16,11 +16,11 @@ import org.hibernate.annotations.Proxy;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @Entity
+@NoArgsConstructor
 @Table(name = "users")
 @Proxy(lazy = false)
-@Data
-@NoArgsConstructor
 @SuppressWarnings("serial")
 public class UserEntity implements Serializable {
 

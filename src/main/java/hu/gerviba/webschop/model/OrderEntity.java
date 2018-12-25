@@ -16,10 +16,10 @@ import javax.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "orders")
 @Data
+@Entity
 @NoArgsConstructor
+@Table(name = "orders")
 @SuppressWarnings("serial")
 public class OrderEntity implements Serializable {
 

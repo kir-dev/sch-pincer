@@ -20,10 +20,10 @@ import javax.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "circles")
 @Data
+@Entity
 @NoArgsConstructor
+@Table(name = "circles")
 @SuppressWarnings("serial")
 public class CircleEntity implements Serializable {
     
