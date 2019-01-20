@@ -3,8 +3,8 @@
  | | | |   __| __ -|__   |   --|     |  |  |   __|
  |_____|_____|_____|_____|_____|__|__|_____|__|
   :: WEBSCHOP ::              Startup completed
-  Author: Szabo Gergely
-  Github: https://github.com/Gerviba/webschop
+  Author:      Szabo Gergely
+  Github:      https://github.com/Gerviba/webschop
   Profiles:    ${spring.profiles.active}
   Spring Boot:${spring-boot.formatted-version}
   

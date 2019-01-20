@@ -48,7 +48,7 @@
 						<td><input type="text" th:field="*{feeling}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.configure.opening.date-start}">Start date</td>
+						<td th:text="#{lang.configure.opening.date-start}">Date start</td>
 						<td><input type="datetime-local" th:field="*{dateStart}"/></td>
 					</tr>
 					<tr>
@@ -56,7 +56,7 @@
 						<td><input type="datetime-local" th:field="*{dateEnd}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.configure.opening.order-start}">Order date</td>
+						<td th:text="#{lang.configure.opening.order-start}">Order start</td>
 						<td><input type="datetime-local" th:field="*{orderStart}"/></td>
 					</tr>
 					<tr>
@@ -64,12 +64,16 @@
 						<td><input type="datetime-local" th:field="*{orderEnd}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.configure.opening.order-max}">Order end</td>
+						<td th:text="#{lang.configure.opening.order-max}">Order max</td>
 						<td><input type="number" th:field="*{maxOrder}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.configure.opening.order-max-per}">Order end</td>
-						<td><input type="number" th:field="*{maxOrderPerHalfHour}"/></td>
+						<td th:text="#{lang.configure.opening.order-max-per}">Order max per interval</td>
+						<td><input type="number" th:field="*{maxOrderPerInterval}"/></td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.configure.opening.order-max-per}">Interval length</td>
+						<td><input type="number" th:field="*{intervalLength}"/></td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.configure.opening.pr}">PR picture</td>

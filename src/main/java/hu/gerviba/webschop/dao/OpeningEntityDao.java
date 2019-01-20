@@ -14,6 +14,7 @@ public class OpeningEntityDao {
     private String orderEnd;
     private String feeling;
     private int maxOrder = 120;
-    private int maxOrderPerHalfHour = 30;
+    private int maxOrderPerInterval = 15;
+    private int intervalLength = 30;
     
 }

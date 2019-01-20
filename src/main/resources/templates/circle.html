@@ -32,8 +32,15 @@
 	</div>
 
 	<div class="content page">
+		<div class="highlighted bright">
+			<h2 th:text="#{lang.circle.title}">Szolgáltató Reszort</h2>
+			<h3 th:text="#{lang.circle.sub-title}">A Schönherz szolgálatában 2004 óta</h3>
+		
+			<p th:utext="#{lang.circle.description}">Lorem ipsum dolor sit amet</p>
+		</div>
+		
 		<div class="highlighted">
-			<h2>Következő nyitások</h2>
+			<h2 th:text="#{lang.circle.next-openings}">Következő nyitások</h2>
 			
 			<table class="circles-table">
 				<tr th:each="opening : ${openings}" th:object="${opening}" th:class="*{circle.cssClassName}" class="purple">
@@ -83,6 +90,8 @@
 			</table>
 		</div>
 		
+		<h2 th:text="#{lang.circle.circles}" class="naked-title">Köreink</h2>
+		
 		<div class="circles">
 			<div th:each="circle : ${circles}" th:object="${circle}" th:class="'article ' + *{cssClassName}" class="article orange">
 				<div class="picture border-colored">
@@ -93,19 +102,19 @@
 				</div>
 				<div class="message">
 					<h3 th:text="*{displayName}">Pizzásch</h3>
-					<p>
+					<p th:text="*{description}">
 						Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
 						Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
 						Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim 
 						luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat 
 						euismod ut eget erat.
 					</p>
-					<span class="colored-light">
+					<span class="colored-white">
 						<b>Következő nyitás:</b>
 						<em th:if="${#lists.size(circle.openings) != 0}" class="border-colored"
 							th:text="${#dates.format(circle.openings[0].dateStart, #messages.msg('lang.date-format'))}">2018.04.12. 18:00</em>
 						<em th:unless="${#lists.size(circle.openings) != 0}" class="border-colored"
-							th:text="#{lang.profile.date-not-set}">2018.04.12. 18:00</em>
+							th:text="#{lang.profile.date-not-set}">Nincs beütemezve</em>
 					</span>
 				</div>
 			</div>

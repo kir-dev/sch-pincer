@@ -114,6 +114,12 @@ public class CircleEntity implements Serializable {
     @Column
     @Min(0)
     private int rateingCount;
+
+    @Column
+    private String webhookNewOrderUrl;
+
+    @Column
+    private String webhookOrderDoneUrl;
     
     public CircleEntity(@Size(min = 2, max = 32) String displayName, @Size(max = 1000) String description,
             @Size(max = 1000) String homePageDescription, @Size(max = 30) String cssClassName, int founded,

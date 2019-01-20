@@ -65,10 +65,15 @@ public class OpeningEntity implements Serializable {
 
     @Column
     @Min(0)
-    private int maxOrderPerHalfHour;
+    private int maxOrderPerInterval;
+    
+    @Column
+    @Min(0)
+    private int intervalLength;
 
     public OpeningEntity(Long dateStart, Long dateEnd, Long orderStart, Long orderEnd, String prUrl,
-            String feeling, CircleEntity circle, int maxOrder, int maxOrderPerHalfHour) {
+            String feeling, CircleEntity circle, int maxOrder, int maxOrderPerInterval,
+            int intervalLength) {
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
         this.orderStart = orderStart;
@@ -77,7 +82,8 @@ public class OpeningEntity implements Serializable {
         this.feeling = feeling;
         this.circle = circle;
         this.maxOrder = maxOrder;
-        this.maxOrderPerHalfHour = maxOrderPerHalfHour;
+        this.maxOrderPerInterval = maxOrderPerInterval;
+        this.intervalLength = intervalLength;
     }
     
 }

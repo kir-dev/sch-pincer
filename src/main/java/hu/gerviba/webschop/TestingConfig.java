@@ -52,11 +52,18 @@ public class TestingConfig {
     public void insertDbData() {
         CircleEntity circle;
         
-        circles.save(circle = new CircleEntity("Pizzásch", LONG_LOREM_IPSUM, LONG_LOREM_IPSUM_HOME, "orange", 1991,
+        circles.save(circle = new CircleEntity("Pizzásch", 
+                "Szerda esténként az éhes kollégistákat szolgáljuk ki helybe sütött pizzáinkkal, amelyeket a "
+                    + "FoodEX szállít a szobáikba. Emellett gyakran megfordulunk Gólyabálokon, bulikon, "
+                    + "villanykaros és külsős rendezvényeken is.", 
+                "Szerda esténként az éhes kollégistákat szolgáljuk ki helybe sütött pizzáinkkal, amelyeket a "
+                    + "FoodEX szállít a szobáikba. Emellett gyakran megfordulunk Gólyabálokon, bulikon, "
+                    + "villanykaros és külsős rendezvényeken is.", 
+                "orange", 1991,
                 "demo/pizzasch-bg.jpg", "icons/icon-pizzasch.svg", "Szerda"));
         
         openings.save(new OpeningEntity(1525370400000L, 1525392000000L, 1525330800000L, 1525348800000L, 
-                "demo/pizzasch-pr.jpg", "Jack pls mit írjak ide?", circle, 100, 20));
+                "demo/pizzasch-pr.jpg", "Jack pls mit írjak ide?", circle, 100, 20, 30));
         
         circleMembers.save(new CircleMemberEntity(circle, "Valami Dezső", "Körvez", "demo/profile-pic-1.jpg", 10));
         circleMembers.save(new CircleMemberEntity(circle, "Test Elek", "Tag", "demo/profile-pic-1.jpg", 0));
@@ -94,7 +101,28 @@ public class TestingConfig {
                 "pizza bacon sonka paradicsom mozzarella sajt krem",
                 "[{\"name\":\"size\"}]", 800, true, true, "cdn/items/3.jpg"));
         
-        circles.save(circle = new CircleEntity("Dzsájrosz", LONG_LOREM_IPSUM, LONG_LOREM_IPSUM_HOME, "green", 1995,
+        circles.save(circle = new CircleEntity("Dzsájrosz", 
+                "Egyszer egy angol szóbelin valaki benyögte, hogy dzsájroszt reggelizett... "
+                    + "biztos nem közülünk volt valaki ;) Kicsit késõbb történt, valamikor '12-ben, "
+                    + "hogy a TTNY koli B404 gólya lakói sokszor fõztek szintvacsorákat, "
+                    + "készítettek rengeteg palacsintát, tejberizst, de egyszer úgy döntöttek,"
+                    + " hogy tartanak egy szintgyrost... Majd egy másodikat... Olyan nagy sikere volt ezeknek, "
+                    + "hogy többen javasolták, csináljuk kicsit komolyabban és legyünk kajás kör. "
+                    + "De mi legyen a nevünk? Ezeregyszáz sok sajttal? GyroTTNYoSCH? "
+                    + "Valahogy feljött a dzsájrosz-sztori és mindenkit megnyert. "
+                    + "2015 tavaszán megalakult a kör és azóta a Schönherzben tömi "
+                    + "meg Dzsájrosszal az ottlakók hasát.",
+                "Egyszer egy angol szóbelin valaki benyögte, hogy dzsájroszt reggelizett... "
+                    + "biztos nem közülünk volt valaki ;) Kicsit késõbb történt, valamikor '12-ben, "
+                    + "hogy a TTNY koli B404 gólya lakói sokszor fõztek szintvacsorákat, "
+                    + "készítettek rengeteg palacsintát, tejberizst, de egyszer úgy döntöttek, "
+                    + "hogy tartanak egy szintgyrost... Majd egy másodikat... Olyan nagy sikere volt ezeknek,"
+                    + "hogy többen javasolták, csináljuk kicsit komolyabban és legyünk kajás kör. "
+                    + "De mi legyen a nevünk? Ezeregyszáz sok sajttal? GyroTTNYoSCH? "
+                    + "Valahogy feljött a dzsájrosz-sztori és mindenkit megnyert. "
+                    + "2015 tavaszán megalakult a kör és azóta a Schönherzben tömi "
+                    + "meg Dzsájrosszal az ottlakók hasát.", 
+                "green", 1995,
                 "demo/dzsajrosz-bg.jpg", "icons/icon-dzsajrosz.svg", "Csütörtök"));
 
         items.save(new ItemEntity("Dzsájrosz pitában", circle, 
@@ -104,9 +132,20 @@ public class TestingConfig {
                 "[{\"name\":\"size\",\"values\":[\"kicsi\",\"nagy\"]}]", 800, true, true, "cdn/items/5.jpg"));
         
         openings.save(new OpeningEntity(1525467600000L, 1525478400000L, 1525417200000L, 1525435200000L, 
-                "demo/dzsajrosz-pr.jpg", "Type your feeling here", circle, 100, 20));
+                "demo/dzsajrosz-pr.jpg", "Type your feeling here", circle, 100, 20, 20));
         
-        circles.save(circle = new CircleEntity("Americano", LONG_LOREM_IPSUM, LONG_LOREM_IPSUM_HOME, "blue",  2002,
+        circles.save(circle = new CircleEntity("Americano", 
+                "A kört 2011 tavaszán alapították kék és fekete gólyák. A célunk az volt, hogy minőségi húsból "
+                    + "készített hamburgert és amerikai hot-dogot készítsünk a kollégisták számára. A húspogácsát "
+                    + "mi magunk készítjük marha- és disznóhúsból, minőségben messze lekörözi az utcán kapható "
+                    + "gagyihúsos hamburgereket. Emellé jön a szintén saját speckó szószunk, melytől a hús még "
+                    + "inkább elolvad a szádban.Hetente kedd esténként nyitunk a -1.-en a nagykonyhában. ", 
+                "A kört 2011 tavaszán alapították kék és fekete gólyák. A célunk az volt, hogy minőségi húsból "
+                    + "készített hamburgert és amerikai hot-dogot készítsünk a kollégisták számára. A húspogácsát "
+                    + "mi magunk készítjük marha- és disznóhúsból, minőségben messze lekörözi az utcán kapható "
+                    + "gagyihúsos hamburgereket. Emellé jön a szintén saját speckó szószunk, melytől a hús még "
+                    + "inkább elolvad a szádban. Hetente kedd esténként nyitunk a -1.-en a nagykonyhában. ", 
+                "blue",  2002,
                 "demo/americano-bg.jpg", "icons/icon-americano.svg", "Kedd"));
 
         items.save(new ItemEntity("Random Burger", circle, 
@@ -116,9 +155,16 @@ public class TestingConfig {
                 "[{\"name\":\"size\"}]", 600, true, true, "cdn/items/4.jpg"));
         
         openings.save(new OpeningEntity(1525284000000L, 1525305600000L, 1525244400000L, 1525262400000L, 
-                "demo/americano-pr.jpg", "Random moment cuccok", circle, 100, 20));
+                "demo/americano-pr.jpg", "Random moment cuccok", circle, 100, 20, 10));
         
-        circles.save(circle = new CircleEntity("Vödör", LONG_LOREM_IPSUM, LONG_LOREM_IPSUM_HOME, "purple",  2005,
+        circles.save(circle = new CircleEntity("Vödör", 
+                "A kör tagjai hétfő esténként krumplipucolóikkal és fritőzeikkel felszerelkezve nekiülnek és jó "
+                    + "hangulatban megsütnek ~100 kg krumplit az éhes kollégisták nagy örömére. Akik szeretik a "
+                    + "hazai, igazi „anyasütötte” krumpli ízét, azokat sok szeretettel várja hétfő esténként a Vödörkör.", 
+                "A kör tagjai hétfő esténként krumplipucolóikkal és fritőzeikkel felszerelkezve nekiülnek és jó "
+                    + "hangulatban megsütnek ~100 kg krumplit az éhes kollégisták nagy örömére. Akik szeretik a "
+                    + "hazai, igazi „anyasütötte” krumpli ízét, azokat sok szeretettel várja hétfő esténként a Vödörkör.", 
+                "purple",  2005,
                 "demo/vodor-bg.jpg", "icons/icon-vodor.svg", "Hétfő"));
         
         items.save(new ItemEntity("Sültkrumpli", circle, 
@@ -128,13 +174,24 @@ public class TestingConfig {
                 "[{\"name\":\"size\"}]", 600, true, true, "cdn/items/8.jpg"));
         
         openings.save(new OpeningEntity(1525197600000L, 1525219200000L, 1525158000000L, 1525176000000L, 
-                "demo/dzsajrosz-pr.jpg", "Feeling típusú nyitás", circle, 100, 20));
+                "demo/dzsajrosz-pr.jpg", "Feeling típusú nyitás", circle, 100, 20, 60));
         
-        circles.save(circle = new CircleEntity("Kakas", LONG_LOREM_IPSUM, LONG_LOREM_IPSUM_HOME, "red", 1999,
+        circles.save(circle = new CircleEntity("Kakas", 
+                "A Vörös Kakas Fogadó finom melegszendvicsekkel és alkoholos valamint alkoholmentes innivalóval "
+                    + "várja a vendégeit szinte minden vasárnap este 9 órától egészen akár kora reggelig. "
+                    + "Munkánkkal igyekszünk mindig jó hangulatú vasárnap estéket teremteni nem csak magunk, "
+                    + "hanem vendégeink számára is. Jól mutatja ezt immár 23 éve tartó töretlen sikerességünk "
+                    + "és a félévenkénti 10 feletti nyitásaink száma is.", 
+                "A Vörös Kakas Fogadó finom melegszendvicsekkel és alkoholos valamint alkoholmentes innivalóval "
+                    + "várja a vendégeit szinte minden vasárnap este 9 órától egészen akár kora reggelig. "
+                    + "Munkánkkal igyekszünk mindig jó hangulatú vasárnap estéket teremteni nem csak magunk, "
+                    + "hanem vendégeink számára is. Jól mutatja ezt immár 23 éve tartó töretlen sikerességünk "
+                    + "és a félévenkénti 10 feletti nyitásaink száma is.", 
+                "red", 1999,
                 "demo/kakas-bg.jpg", "icons/icon-kakas.svg", "Vasárnap"));
         
         openings.save(new OpeningEntity(1525726800000L, 152573760021000L, 1525726800000L, 1525737600000L, 
-                "demo/kakas-pr.jpg", "Forradalmi nyitás", circle, 100, 20));
+                "demo/kakas-pr.jpg", "Forradalmi nyitás", circle, 100, 20, 30));
 
         items.save(new ItemEntity("Sonkás melegszendvics", circle, 
                 "Sonka, sajt, hagyma, vaj, lorem ipsum dolor sit amet", 
@@ -142,11 +199,28 @@ public class TestingConfig {
                 "meleg szendvics sonka sajt hagyma",
                 "[{\"name\":\"size\"}]", 200, true, true, "cdn/items/6.jpg"));
         
-        circles.save(circle = new CircleEntity("Lángosch", LONG_LOREM_IPSUM, LONG_LOREM_IPSUM_HOME, "yellow",  1994,
+        circles.save(circle = new CircleEntity("Lángosch", 
+                "A LángoSCH egy éve kezdte pályafutását a 18. emeleti konyhában. Azóta próbáljuk megidézni "
+                    + "a strandok kellemes feelingjét kéthetente vasárnap a kollégiumban, eredeti házi recept "
+                    + "alapján készült lángosainkkal. Habár az állandó kínálat már kialakult, a kísérletezéstől "
+                    + "sem riadunk vissza és friss kör lévén bármilyen újdonságra vevők vagyunk. Klasszikus "
+                    + "lángosok mellett a nutellás lángos bármely variációja megtalálható étlapunkon, egy alkalommal "
+                    + "pedig extra bundáskenyeret is csináltunk már. Nyáron már közvetlenül a Balaton partján "
+                    + "állítottuk fel sütödénket a villanykarosoknak. Itt a helyed, ha szeretnél tagja lenni egy "
+                    + "frissen alakult körnek és egy mindenre nyitott csapatnak!", 
+                "A LángoSCH egy éve kezdte pályafutását a 18. emeleti konyhában. Azóta próbáljuk megidézni "
+                    + "a strandok kellemes feelingjét kéthetente vasárnap a kollégiumban, eredeti házi recept "
+                    + "alapján készült lángosainkkal. Habár az állandó kínálat már kialakult, a kísérletezéstől "
+                    + "sem riadunk vissza és friss kör lévén bármilyen újdonságra vevők vagyunk. Klasszikus "
+                    + "lángosok mellett a nutellás lángos bármely variációja megtalálható étlapunkon, egy alkalommal "
+                    + "pedig extra bundáskenyeret is csináltunk már. Nyáron már közvetlenül a Balaton partján "
+                    + "állítottuk fel sütödénket a villanykarosoknak. Itt a helyed, ha szeretnél tagja lenni egy "
+                    + "frissen alakult körnek és egy mindenre nyitott csapatnak!", 
+                "yellow",  1994,
                 "demo/langosch-bg.jpg", "icons/icon-langosch.svg", "Vasárnap (2 hetente)"));
         
         openings.save(new OpeningEntity(1525716000000L, 1525737600000L, 1525676400000L, 1525694400000L, 
-                "demo/langosch-pr.jpg", "Tüzes lángos", circle, 100, 20));
+                "demo/langosch-pr.jpg", "Tüzes lángos", circle, 100, 20, 30));
 
         items.save(new ItemEntity("Tüzes lángos", circle, 
                 "Chili, sonka, paradicsom, mozzarella, sajtkrémes alap, lorem ipsum dolor sit amet", 

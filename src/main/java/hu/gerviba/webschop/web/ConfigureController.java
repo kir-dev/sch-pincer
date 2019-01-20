@@ -297,7 +297,8 @@ public class ConfigureController {
         eo.setOrderEnd(util.parseDate(oed.getOrderEnd()));
         eo.setTimeIntervals(oed.getTimeIntervals());
         eo.setMaxOrder(oed.getMaxOrder());
-        eo.setMaxOrderPerHalfHour(oed.getMaxOrderPerHalfHour());
+        eo.setMaxOrderPerInterval(oed.getMaxOrderPerInterval());
+        eo.setIntervalLength(oed.getIntervalLength());
         
         String file = util.uploadFile("pr", prFile);
         eo.setPrUrl(file == null ? "image/blank-pr.jpg" : "cdn/pr/" + file);
