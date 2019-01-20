@@ -14,3 +14,9 @@ test/
 WEBSCHOP-DOCS.html
 docs.md
 src/main/resources/static/image/gm_szoporoller.jpg
+.idea/
+*.jar
+docker/
+graphics/
+*.iml
+
