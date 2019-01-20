@@ -10,3 +10,7 @@ tmp/
 .application-path.properties
 .factorypath/
 test/
+.factorypath
+WEBSCHOP-DOCS.html
+docs.md
+src/main/resources/static/image/gm_szoporoller.jpg
