@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "items")
 @SuppressWarnings("serial")
-public class Interval implements Serializable {
+public class IntervalEntity implements Serializable {
 
     @Id
     @GeneratedValue
@@ -30,6 +30,9 @@ public class Interval implements Serializable {
     private String name;
     
     @Column
-    private int maxItemCount;
+    private int normalItemCount;
+    
+    @Column
+    private int extraItemCount;
     
 }

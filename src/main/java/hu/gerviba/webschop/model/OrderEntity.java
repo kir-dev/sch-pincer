@@ -67,6 +67,9 @@ public class OrderEntity implements Serializable {
     @Column
     private int price;
     
+    @Column
+    private String extra = "";
+    
     public OrderEntity(String userId, String userName, String comment, String detailsJson, String room) {
         this.userId = userId;
         this.status = OrderStatus.ACCEPTED;

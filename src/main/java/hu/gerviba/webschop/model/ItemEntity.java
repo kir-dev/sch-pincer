@@ -54,7 +54,8 @@ public class ItemEntity implements Serializable {
     @Lob
     @Column
     private String ingredients;
-    
+
+    @Lob
     @Column
     private String detailsConfigJson;
 

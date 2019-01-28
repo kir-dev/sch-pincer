@@ -1,5 +1,6 @@
 package hu.gerviba.webschop.web;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import hu.gerviba.webschop.dao.ItemEntityDao;
 import hu.gerviba.webschop.model.CircleEntity;
 import hu.gerviba.webschop.model.ItemEntity;
@@ -29,6 +33,7 @@ import hu.gerviba.webschop.service.ItemService;
 import hu.gerviba.webschop.service.OpeningService;
 import hu.gerviba.webschop.service.OrderService;
 import hu.gerviba.webschop.service.UserService;
+import hu.gerviba.webschop.web.comonent.CustomComponentType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -114,16 +119,18 @@ public class ApiController {
             @RequestParam(required = true) Long id,
             @RequestParam(required = true) int time,
             @RequestParam(required = true) String comment,
-            @RequestParam(required = true) String detailsJson) {
+            @RequestParam(required = true) String detailsJson) throws Exception {
         
         UserEntity user = util.getUser(request);
         OrderEntity order = new OrderEntity(user.getUid(), user.getName(), comment, detailsJson, user.getRoom());
         order.setIntervalId(time);
         ItemEntity item = items.getOne(id);
         order.setName(item.getName());
-        order.setPrice(item.getPrice());
+        CustomComponentType.calculateExtra(detailsJson, order, item);
         order.setOpeningId(openings.findNextOf(item.getCircle().getId()).getId());
         OpeningEntity current = openings.findNextOf(item.getCircle().getId());
+        
+        // TODO: Check if can order
         
         long intervalStart = current.getDateStart() + HALF_HOUR * time;
         long intervalEnd = current.getDateStart() + HALF_HOUR * (time + 1);
@@ -160,10 +167,9 @@ public class ApiController {
         }
     }
     
-    //TODO: DELETE-el nem engedte a jquery
-    @ApiOperation("Delete order")
-    @PostMapping("/order/delete")
-    @ResponseBody
+//    @ApiOperation("Delete order")
+//    @PostMapping("/order/delete")
+//    @ResponseBody
     public ResponseEntity<String> deleteOrder(HttpServletRequest request, @RequestParam(required = true) long id) {
         try {
             OrderEntity order = orders.getOne(id);

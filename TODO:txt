@@ -1,0 +1,12 @@
+TODO:
+- Ha nincs szoba, nem lehet rendelni (front, backend)
+- Ha nincs nyitás nem lehet rendelni (front, backend)
+- Max kaja / nyitás
+- Max extra kaja / nyitás
+- Max kaja / kaja típus / nyitás
+- JMF kalkulátor (+front, backend)
+- PDF export with themes
+- Rendelés felvétel admin oldalról
++ Rendelés lezárása admin oldalról
++ Rendelés törlése ne legyen (+front, +backend)
+- Foodex menü

@@ -18,7 +18,7 @@ object {
 body {
 	font-family: 'Roboto', 'Roboto-offline', sans-serif;
 	background-color: #242425;
-}
+cc}
 
 input, button {
 	-webkit-appearance: none;
@@ -460,6 +460,7 @@ a {
     color: #FFFFFF;
     margin-top: 40px;
     font-weight: 300;
+    padding-bottom: 0 !important;
 }
 
 .highlighted h2 {
@@ -471,6 +472,7 @@ a {
 }
 
 .highlighted h3 {
+	color: #FFFFFF !important;
 	text-transform: uppercase;
 	padding: 20px 0 20px 0;
 	font-size: 24px;
@@ -480,7 +482,7 @@ a {
 
 .highlighted table {
 	margin: 40px auto;
-	border-spacing: 0 8px;	
+	border-spacing: 0 8px;
 }
 
 .highlighted table a {
@@ -548,7 +550,7 @@ a {
 
 .bright h3 {
 	font-size: 20px;
-	color: #4c4c4d;
+	color: #4c4c4d !important;
 	border: 0;
 }
 
@@ -1038,6 +1040,82 @@ form select {
 	width: 282px;
 }
 
+form .checkcontainer {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  padding-bottom: 4px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 18px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-weight: normal;
+}
+
+form .checkcontainer input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+form .checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #383839;
+}
+
+form .checkcontainer:hover input ~ .checkmark {
+  background-color: #242425;
+}
+
+form .checkcontainer input:checked ~ .checkmark {
+  background-color: #111111;
+}
+
+form .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+form .checkcontainer input:checked ~ .checkmark:after {
+  display: block;
+}
+
+form .checkcontainer .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+form span.comment {
+	position: relative;
+	top: -10px;
+	padding: 0 20px 10px 20px;
+	color: #888888;
+	display: block;
+	text-align: center;
+}
+
+form .component {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
 form label:first-of-type {
 	margin-top: 0;
 } 
@@ -1046,7 +1124,7 @@ form label {
 	display: block;
 	color: #FFFFFF;
 	font-family: 'Roboto', 'Roboto-offline', sans-serif;
-	margin: 10px 20px 0 30px;
+	margin: 0 20px 0 30px;
 	font-size: 20px;
 	text-transform: uppercase;
 	font-weight: 900;
@@ -2352,51 +2430,51 @@ textarea {
 }
 
 @keyframes animGrow {
-  from {
-  	transform: scale(0);
-    -webkit-transform: scale(0);
-  }
-  to {
-  	transform: scale(1);
-    -webkit-transform: scale(1);
-  }
+	from {
+		transform: scale(0);
+		-webkit-transform: scale(0);
+	}
+	to {
+		transform: scale(1);
+		-webkit-transform: scale(1);
+	}
 }
 
 @keyframes displayItem1 {
-  from {
-  	transform: rotate3d(0, 1, 0, 90deg);
-    -webkit-transform: rotate3d(0, 1, 0, 90deg);
-  }
-  to {
-  	transform: rotate3d(0, 1, 0, 0deg);
-    -webkit-transform: rotate3d(0, 1, 0, 0deg);
-  }
+	from {
+		transform: rotate3d(0, 1, 0, 90deg);
+		-webkit-transform: rotate3d(0, 1, 0, 90deg);
+	}
+	to {
+		transform: rotate3d(0, 1, 0, 0deg);
+		-webkit-transform: rotate3d(0, 1, 0, 0deg);
+	}
 }
 
 @keyframes animFadeFromLeft {
-  from {
-  	opacity: 0;
-  	transform: translateX(-40px) ;
-    -webkit-transform: translateX(-40px);
-  }
-  to {
-  	opacity: 1;
-  	transform: translateX(0);
-    -webkit-transform: translateX(0);
-  }
+	from {
+		opacity: 0;
+		transform: translateX(-40px) ;
+		-webkit-transform: translateX(-40px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+		-webkit-transform: translateX(0);
+	}
 }
 
 @keyframes animFadeFromTop {
-  from {
-  	opacity: 0;
-  	transform: translateY(-40px) ;
-    -webkit-transform: translateY(-40px);
-  }
-  to {
-  	opacity: 1;
-  	transform: translateY(0);
-    -webkit-transform: translateY(0);
-  }
+	from {
+		opacity: 0;
+		transform: translateY(-40px) ;
+		-webkit-transform: translateY(-40px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+		-webkit-transform: translateY(0);
+	}
 }
 
 /*.decoration i {

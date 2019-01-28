@@ -5,4 +5,11 @@ public enum OrderStatus {
     INTERPRETED,
     SHIPPED,
     CANCELLED;
+
+    public static OrderStatus get(String status) {
+        for (OrderStatus os : values())
+            if (os.name().equalsIgnoreCase(status))
+                return os;
+        return null;
+    }
 }

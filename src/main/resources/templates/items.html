@@ -15,6 +15,15 @@
 	<script th:if="${searchMode}" th:inline="javascript">
 		var LANG = {
 			"size": /*[[ #{lang.items.custom-size} ]]*/ "size",
+			"sauce": /*[[ #{lang.items.custom-sauce} ]]*/ "Sauce",
+			"extra": /*[[ #{lang.items.custom-extra} ]]*/ "Extra",
+			"contain": /*[[ #{lang.items.custom-contain} ]]*/ "Contain",
+			"type": /*[[ #{lang.items.custom-type} ]]*/ "Type",
+			"potato": /*[[ #{lang.items.custom-potato} ]]*/ "Potato",
+			"panzo": /*[[ #{lang.items.custom-panzo} ]]*/ "Panzo",
+			"price": /*[[ #{lang.items.price} ]]*/ "Price",
+			"pieces": /*[[ #{lang.items.pieces} ]]*/ "pieces",
+			"ingred": /*[[ #{lang.items.ingredients} ]]*/ "Ingredients",
 			"currency": /*[[ #{lang.currency} ]]*/ "Ft"
 		};
 		var URL_BASE = /*[[ @{/} ]]*/ "/";
@@ -26,6 +35,15 @@
 	<script th:unless="${searchMode}" th:inline="javascript">
 		var LANG = {
 			"size": /*[[ #{lang.items.custom-size} ]]*/ "size",
+			"sauce": /*[[ #{lang.items.custom-sauce} ]]*/ "Sauce",
+			"extra": /*[[ #{lang.items.custom-extra} ]]*/ "Extra",
+			"contain": /*[[ #{lang.items.custom-contain} ]]*/ "Contain",
+			"type": /*[[ #{lang.items.custom-type} ]]*/ "Type",
+			"potato": /*[[ #{lang.items.custom-potato} ]]*/ "Potato",
+			"panzo": /*[[ #{lang.items.custom-panzo} ]]*/ "Panzo",
+			"price": /*[[ #{lang.items.price} ]]*/ "Price",
+			"pieces": /*[[ #{lang.items.pieces} ]]*/ "pieces",
+			"ingred": /*[[ #{lang.items.ingredients} ]]*/ "Ingredients",
 			"currency": /*[[ #{lang.currency} ]]*/ "Ft"
 		};
 		var URL_BASE = /*[[ @{/} ]]*/ "/";
@@ -61,7 +79,7 @@
 							<h5 th:text="#{lang.items.price}">Ára:</h5>
 							<span class="colored-light" id="popup-price">800 JMF</span>
 						</div>
-						<form onsubmit="buySelectedItem(); return false;" action="#" method="GET">
+						<form onsubmit="buySelectedItem(); return false;" action="#" method="GET" class="form-order">
 							<ins id="popup-custom"></ins>
 							<label th:text="#{lang.items.interval}">Time</label>
 							<select name="time">

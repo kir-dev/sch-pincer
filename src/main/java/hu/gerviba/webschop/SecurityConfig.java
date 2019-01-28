@@ -23,13 +23,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/loggedin", "/login").permitAll()
                 .antMatchers("/api/**").permitAll()
                 .antMatchers("/profile", "/profile/**").hasRole("USER")
-                .antMatchers("/configure/**").hasRole("LEADER")
+                .antMatchers("/configure/**").hasAnyRole("LEADER", "ADMIN")
                 .antMatchers("/admin", "/admin/**").hasRole("ADMIN")
                 .antMatchers("/admin", "/admin/**").hasRole("USER")
             .and()
                 .formLogin()
                 .loginPage("/login");
-        http.csrf().ignoringAntMatchers("/api/**");
+        http.csrf().ignoringAntMatchers("/api/**", "/configure/order/update");
     }
 
     @Autowired

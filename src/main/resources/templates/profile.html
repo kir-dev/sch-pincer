@@ -91,9 +91,9 @@
 						<i class="material-icons" th:if="${#strings.equals(order.status, 'CANCELLED')}"
 								th:title="#{lang.profile.status-cancelled}">do_not_disturb</i>
 
-						<a href="#" th:onclick="'cancelItem(' + ${order.id} + '); return false'" th:if="${#strings.equals(order.status, 'ACCEPTED')}">
-							<i class="material-icons">delete</i>
-						</a>
+<!-- 						<a href="#" th:onclick="'cancelItem(' + ${order.id} + '); return false'" th:if="${#strings.equals(order.status, 'ACCEPTED')}"> -->
+<!-- 							<i class="material-icons">delete</i> -->
+<!-- 						</a> -->
 					</td>
 					<td th:text="${#dates.format(order.date, '__#{lang.date-short-format}__')} + ' ' + *{intervalMessage}">
 						10:00 - 10:30

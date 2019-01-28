@@ -30,3 +30,18 @@ WebSCHop
 
 ![DB](https://raw.githubusercontent.com/Gerviba/webschop/master/db_schema.png)
 
+## Additinal docs
+
+### Item settings json
+
+```json
+{
+    "type": "EXTRA_SELECT",          // Can be: EXTRA_SELECT, EXTRA_CHECKBOX, AMERICANO_EXTRA
+    "name": "size",                  // Can be: size, sauce, contain, extra, potato, panzo, type
+    "values": ["value1", "value2"],  // Value names
+    "prices": [0, 200],              // Additional prices for each value
+    "_display": "Display text",      // Display text in search menu (optional, default: values->join) {pieces} => db
+    "_hide": true,                   // Hide from search menu (optional, default: false)
+    "_comment" : "Lorem ipsum"       // Text below the input field
+}
+```

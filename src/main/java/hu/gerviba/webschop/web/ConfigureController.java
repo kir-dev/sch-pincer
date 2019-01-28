@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import hu.gerviba.webschop.dao.OpeningEntityDao;
@@ -20,6 +21,7 @@ import hu.gerviba.webschop.model.CircleEntity;
 import hu.gerviba.webschop.model.CircleMemberEntity;
 import hu.gerviba.webschop.model.ItemEntity;
 import hu.gerviba.webschop.model.OpeningEntity;
+import hu.gerviba.webschop.model.OrderStatus;
 import hu.gerviba.webschop.model.UserEntity;
 import hu.gerviba.webschop.service.CircleMemberService;
 import hu.gerviba.webschop.service.CircleService;
@@ -178,7 +180,7 @@ public class ConfigureController {
         model.put("itemId", -1);
         model.put("mode", "new");
         ItemEntity ie = new ItemEntity();
-        ie.setDetailsConfigJson("[{\"name\":\"size\",\"values\":[\"1\",\"2\",\"3\"]}]");
+        ie.setDetailsConfigJson("[]");
         ie.setOrderable(false);
         ie.setVisible(true);
         model.put("item", ie);
@@ -343,5 +345,24 @@ public class ConfigureController {
         model.put("circles", circles.findAllForMenu());
         model.put("orders", orders.findAllByOpening(openingId));
         return "openingShow";
+    }
+    
+    @PostMapping("/configure/order/update")
+    @ResponseBody
+    public String updateOrder(@RequestParam Long id,
+            @RequestParam String status,
+            HttpServletRequest request) {
+        System.out.println(id + " " + status);
+        Long circleId = orders.getCircleIdByOrderId(id);
+        if (util.cannotEditCircle(circleId, request))
+            return "NO PERMISSION";
+        
+        OrderStatus os = OrderStatus.get(status);
+        if (os == null)
+            return "INVALID STATUS";
+            
+        orders.updateOrder(id, os);
+        
+        return "redirect:/configure/" + circleId;
     }
 }

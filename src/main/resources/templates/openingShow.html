@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/">
-<head th:replace="MainLayout :: head">
-	<meta charset="UTF-8" /> 
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
+<head>
+	<meta charset="UTF-8" th:remove="all"/> 
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" th:remove="all"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" th:remove="all"/>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet" th:remove="all">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" th:remove="all">
+	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" th:remove="all"/>
+	<object th:include="MainLayout :: head" th:remove="tag"></object>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" 
+		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" 
+		crossorigin="anonymous"></script>
+	<script src="../static/js/profile.js" th:src="@{/js/profile.js}"></script>
+	<script src="../static/js/admin.js" th:src="@{/js/admin.js}"></script>
+	<script th:inline="javascript">
+		var URL_BASE = /*[[ @{/} ]]*/ "/";
+	</script>
 </head>
 <body>
 	<div class="header" th:replace="MainLayout :: header">
@@ -23,15 +32,21 @@
 				<tr>
 					<th th:text="#{lang.profile.orders-username}">Username</th>
 					<th th:text="#{lang.profile.orders-name}">Name</th>
-					<th th:text="#{lang.profile.orders-status}">Status</th>
 					<th th:text="#{lang.profile.orders-time}">Time</th>
 					<th th:text="#{lang.profile.orders-room}">Room</th>
 					<th th:text="#{lang.profile.orders-price}">Price</th>
 					<th th:text="#{lang.profile.orders-comment}">Comment</th>
+					<th th:text="#{lang.profile.orders-status}">Status</th>
 				</tr>
 				<tr th:each="order : ${orders}" th:object="${order}">
 					<td th:text="*{userName}">Test name</td>
 					<td th:text="*{name}">Ördög pizza</td>
+					<td th:text="${#dates.format(order.date, '__#{lang.date-short-format}__')} + ' ' + *{intervalMessage}">
+						10:00 - 10:30
+					</td>
+					<td th:text="*{room}">SCH 1037</td>
+					<td th:text="*{price} + ' ' + #{lang.currency}">800 JMF</td>
+					<td th:text="*{comment}" class="comment">Csípjen papa</td>
 					<td>
 						<i class="material-icons" th:if="${#strings.equals(order.status, 'SHIPPED')}" 
 								th:title="#{lang.profile.status-shipped}">done</i>
@@ -41,13 +56,19 @@
 								th:title="#{lang.profile.status-accepted}">shopping_cart</i>
 						<i class="material-icons" th:if="${#strings.equals(order.status, 'CANCELLED')}"
 								th:title="#{lang.profile.status-cancelled}">do_not_disturb</i>
+								
+						|
+								
+						<a href="#" th:onclick="'updateItem(' + ${order.id} + ', \'INTERPRETED\'); return false'" th:unless="${#strings.equals(order.status, 'SHIPPED')}">
+							<i class="material-icons" th:title="#{lang.configure.orders.working}">restaurant_menu</i>
+						</a>
+						<a href="#" th:onclick="'updateItem(' + ${order.id} + ', \'SHIPPED\'); return false'" th:unless="${#strings.equals(order.status, 'SHIPPED')}">
+							<i class="material-icons" th:title="#{lang.configure.orders.shipped}">local_shipping</i>
+						</a>
+						<a href="#" th:onclick="'updateItem(' + ${order.id} + ', \'CANCELLED\'); return false'" th:unless="${#strings.equals(order.status, 'CANCELLED')}">
+							<i class="material-icons" th:title="#{lang.configure.orders.cancel}">delete_forever</i>
+						</a>
 					</td>
-					<td th:text="${#dates.format(order.date, '__#{lang.date-short-format}__')} + ' ' + *{intervalMessage}">
-						10:00 - 10:30
-					</td>
-					<td th:text="*{room}">SCH 1037</td>
-					<td th:text="*{price} + ' ' + #{lang.currency}">800 JMF</td>
-					<td th:text="*{comment}" class="comment">Csípjen papa</td>
 				</tr>
 			</table>
 			<span th:if="${#lists.isEmpty(orders)}" class="note" th:text="#{lang.orders.no-orders}">There are no orders yet</span>

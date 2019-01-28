@@ -87,19 +87,22 @@ public class TestingConfig {
                 "Jalapeno szósz, Pick szalámi, bacon, pepperóni, mozzarella, lorem ipsum dolor sit amet", 
                 "Jalapeno szósz, Pick szalámi, bacon, pepperóni, mozzarella", 
                 "pizza csipos jalapeno pick bacon pepperoni mozzarella",
-                "[{\"name\":\"size\",\"values\":[\"32\",\"42\",\"64\"]}]", 800, true, true, "cdn/items/1.jpg"));
+                "[{\"type\":\"EXTRA_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]",
+                800, true, true, "cdn/items/1.jpg"));
         
         items.save(new ItemEntity("Songoku Pizza", circle, 
                 "Paradicsomos alap, sonka, kukorica, friss gomba, mozzarella, lorem ipsum dolor sit amet",
                 "Paradicsomos alap, sonka, kukorica, friss gomba, mozzarella", 
                 "pizza paradicsom sonka kukorica asd song",
-                "[{\"name\":\"size\"}]", 800, true, true, "cdn/items/2.jpg"));
+                "[{\"type\":\"EXTRA_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]",
+                800, true, true, "cdn/items/2.jpg"));
         
         items.save(new ItemEntity("Royal w/ Cheese Pizza", circle, 
                 "Bacon, sonka, paradicsom, mozzarella, sajtkrémes alap, lorem ipsum dolor sit amet", 
                 "Bacon, sonka, paradicsom, mozzarella, sajtkrémes alap", 
                 "pizza bacon sonka paradicsom mozzarella sajt krem",
-                "[{\"name\":\"size\"}]", 800, true, true, "cdn/items/3.jpg"));
+                "[{\"type\":\"EXTRA_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]", 
+                800, true, true, "cdn/items/3.jpg"));
         
         circles.save(circle = new CircleEntity("Dzsájrosz", 
                 "Egyszer egy angol szóbelin valaki benyögte, hogy dzsájroszt reggelizett... "
@@ -129,7 +132,10 @@ public class TestingConfig {
                 "Pita, hagyma, saláta, paradicsom, szósz, lorem ipsum dolor sit amet", 
                 "Pita, hagyma, saláta, paradicsom, szósz", 
                 "gyros pita hagyma",
-                "[{\"name\":\"size\",\"values\":[\"kicsi\",\"nagy\"]}]", 800, true, true, "cdn/items/5.jpg"));
+                "[{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"contain\",\"_hide\":true,\"values\":[\"Hadzsma-csípős\",\"Mindenet is\"],\"prices\":[0,200]},"
+                + "{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"sauce\",\"values\":[\"Fehér mártást szeretem\",\"Nem félem a csípőset\",\"Basszon oda\"],\"prices\":[0,0,100]},"
+                + "{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"extra\",\"values\":[\"+Hagyma\",\"+Sajt\",\"+Jalapeño\"],\"prices\":[50,50,50]}]", 
+                800, true, true, "cdn/items/5.jpg"));
         
         openings.save(new OpeningEntity(1525467600000L, 1525478400000L, 1525417200000L, 1525435200000L, 
                 "demo/dzsajrosz-pr.jpg", "Type your feeling here", circle, 100, 20, 20));
@@ -152,7 +158,8 @@ public class TestingConfig {
                 "Izé, hozé, bigyó és return 4, lorem ipsum dolor sit amet", 
                 "Izé, hozé, bigyó és return 4", 
                 "burger asd",
-                "[{\"name\":\"size\"}]", 600, true, true, "cdn/items/4.jpg"));
+                "[{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"sauce\",\"values\":[\"Ketchup\",\"Majonéz\",\"Mustár\"],\"prices\":[0,50,150]}]", 
+                600, true, true, "cdn/items/4.jpg"));
         
         openings.save(new OpeningEntity(1525284000000L, 1525305600000L, 1525244400000L, 1525262400000L, 
                 "demo/americano-pr.jpg", "Random moment cuccok", circle, 100, 20, 10));
@@ -167,11 +174,13 @@ public class TestingConfig {
                 "purple",  2005,
                 "demo/vodor-bg.jpg", "icons/icon-vodor.svg", "Hétfő"));
         
-        items.save(new ItemEntity("Sültkrumpli", circle, 
+        items.save(new ItemEntity("Vödör", circle, 
                 "Izé, hozé, bigyó és 4, lorem ipsum dolor sit amet", 
                 "Izé, hozé, bigyó és 4", 
                 "sult krumpli",
-                "[{\"name\":\"size\"}]", 600, true, true, "cdn/items/8.jpg"));
+                "[{\"type\":\"EXTRA_SELECT\",\"name\":\"potato\",\"_display\":\"1-6 {pieces}\",\"values\":[\"1 krumpli\",\"2 krumpli\",\"3 krumpli\",\"4 krumpli\",\"5 krumpli\",\"6 krumpli\"],\"prices\":[0,400,800,1200,1600,2000]}," + 
+                "{\"type\":\"EXTRA_SELECT\",\"name\":\"panzo\",\"_display\":\"0-6 {pieces}\",\"values\":[\"Nem kérek\",\"1 panzo\",\"2 panzo\",\"3 panzo\",\"4 panzo\",\"5 panzo\",\"6 panzo\"],\"prices\":[0,200,400,600,800,1000,1200]}]", 
+                600, true, true, "cdn/items/8.jpg"));
         
         openings.save(new OpeningEntity(1525197600000L, 1525219200000L, 1525158000000L, 1525176000000L, 
                 "demo/dzsajrosz-pr.jpg", "Feeling típusú nyitás", circle, 100, 20, 60));
