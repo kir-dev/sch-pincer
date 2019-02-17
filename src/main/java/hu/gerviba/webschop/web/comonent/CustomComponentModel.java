@@ -14,6 +14,7 @@ public class CustomComponentModel {
 	private String _display;
 	private boolean _hide;
 	private String _comment;
+    private boolean _extra;
 	
     @Data
     public static class CustomComponentModelList {

@@ -18,7 +18,7 @@ object {
 body {
 	font-family: 'Roboto', 'Roboto-offline', sans-serif;
 	background-color: #242425;
-cc}
+}
 
 input, button {
 	-webkit-appearance: none;
@@ -261,13 +261,13 @@ a {
 	margin: 0 5px;
 	display: inline-block;
 	padding: 8px 10px;
+	border-radius: 8px;
 	transition: background-color ease 0.2s, color ease 0.2s;
 }
 
 .search-container a:hover {
 	background-color: #111111;
 	color: #F4CF3B;
-	border-radius: 8px;
 }
 
 .search-container a i,
@@ -289,7 +289,7 @@ a {
 	margin: 0;
 	width: calc(100% - 72px);
 	display: inline-block;
-	padding: 4px 16px 8px 16px;
+	padding: 8px 16px 8px 16px;
 	vertical-align: top;
 }
 
@@ -297,7 +297,7 @@ a {
 	color: #FFFFFF;
 	z-index: 2000;
 	display: inline-block;
-	padding: 4px 4px 8px 4px;
+	padding: 8px 4px 8px 4px;
 	vertical-align: top;
 	opacity: 1;
 	transition: opacity ease 0.2s;
@@ -882,12 +882,11 @@ a {
 .popup .image i {
 	color: #FFFFFF;
 	position: relative;
-	
 }
 
 .popup .info .image {
 	border-bottom: 4px solid #111111;
-	cursor: pointer;
+/* 	cursor: pointer; */
 	height: 128px;
 	background-size: cover;
 	background-position: center;
@@ -895,7 +894,7 @@ a {
 }
 
 .popup .image .overlay {
-	cursor: pointer;
+/* 	cursor: pointer; */
 	position: relative;
 	top: 0;
 	left: 0;
@@ -905,12 +904,12 @@ a {
 	transition: all ease-out 0.3s;
 }
 
-.popup .image:hover .overlay {
-	background-color: rgba(0, 0, 0, 0.5);
-	-webkit-box-shadow: inset 0px 0px 109px 0px rgba(0,0,0,0.75);
-	-moz-box-shadow: inset 0px 0px 109px 0px rgba(0,0,0,0.75);
-	box-shadow: inset 0px 0px 109px 0px rgba(0,0,0,0.75);
-}
+/* .popup .image:hover .overlay { */
+/* 	background-color: rgba(0, 0, 0, 0.5); */
+/* 	-webkit-box-shadow: inset 0px 0px 109px 0px rgba(0,0,0,0.75); */
+/* 	-moz-box-shadow: inset 0px 0px 109px 0px rgba(0,0,0,0.75); */
+/* 	box-shadow: inset 0px 0px 109px 0px rgba(0,0,0,0.75); */
+/* } */
 
 .popup .image i {
 	position: relative;
@@ -920,9 +919,9 @@ a {
 	transition: opacity ease-out 0.3s;
 }
 
-.popup .image:hover i {
-	opacity: 1;
-}
+/* .popup .image:hover i { */
+/* 	opacity: 1; */
+/* } */
 	
 .popup .info p {
 	display: inline-block;
@@ -964,6 +963,23 @@ a {
 
 .inactive {
 	display: none;
+}
+
+.messagebox {
+	background-color: #b52601;
+	border-bottom: 4px solid #841c01;
+	display: inline-block;
+	position: fixed;
+	z-index: 68000;
+	padding: 16px 24px;
+	color: #FFFFFF;
+	cursor: pointer;
+	width: 100%;
+	top: 20px;
+}
+
+.messagebox span {
+	color: rgba(255,255,255,0.5);
 }
 
 .done {
@@ -2204,6 +2220,11 @@ textarea {
 	.item:hover .picture {
 		background-size: 120% auto;
 	}
+	.messagebox {
+		left: calc(50vw - 200px);
+		max-width: 352px;
+	}
+	
 }
 	
 @media only screen and (min-width: 450px) {
@@ -2414,6 +2435,10 @@ textarea {
 	
 	.footer {
 		padding-left: 140px;
+	}
+	
+	.messagebox {
+		left: calc(50vw - 183px);
 	}
 }
 	

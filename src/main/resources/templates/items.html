@@ -11,44 +11,9 @@
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" 
 		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" 
 		crossorigin="anonymous"></script>
+	<link rel="manifest" href="/manifest.json">
 	<script src="../static/js/items.js" th:src="@{/js/items.js}"></script>
-	<script th:if="${searchMode}" th:inline="javascript">
-		var LANG = {
-			"size": /*[[ #{lang.items.custom-size} ]]*/ "size",
-			"sauce": /*[[ #{lang.items.custom-sauce} ]]*/ "Sauce",
-			"extra": /*[[ #{lang.items.custom-extra} ]]*/ "Extra",
-			"contain": /*[[ #{lang.items.custom-contain} ]]*/ "Contain",
-			"type": /*[[ #{lang.items.custom-type} ]]*/ "Type",
-			"potato": /*[[ #{lang.items.custom-potato} ]]*/ "Potato",
-			"panzo": /*[[ #{lang.items.custom-panzo} ]]*/ "Panzo",
-			"price": /*[[ #{lang.items.price} ]]*/ "Price",
-			"pieces": /*[[ #{lang.items.pieces} ]]*/ "pieces",
-			"ingred": /*[[ #{lang.items.ingredients} ]]*/ "Ingredients",
-			"currency": /*[[ #{lang.currency} ]]*/ "Ft"
-		};
-		var URL_BASE = /*[[ @{/} ]]*/ "/";
-		$(document).ready(function() { 
-			searchFor(/*[[ ${keyword} ]]*/ ""); 
-			if ((/*[[ ${keyword} ]]*/ "").length === 0) appendNext(); 
-		});
-	</script>
-	<script th:unless="${searchMode}" th:inline="javascript">
-		var LANG = {
-			"size": /*[[ #{lang.items.custom-size} ]]*/ "size",
-			"sauce": /*[[ #{lang.items.custom-sauce} ]]*/ "Sauce",
-			"extra": /*[[ #{lang.items.custom-extra} ]]*/ "Extra",
-			"contain": /*[[ #{lang.items.custom-contain} ]]*/ "Contain",
-			"type": /*[[ #{lang.items.custom-type} ]]*/ "Type",
-			"potato": /*[[ #{lang.items.custom-potato} ]]*/ "Potato",
-			"panzo": /*[[ #{lang.items.custom-panzo} ]]*/ "Panzo",
-			"price": /*[[ #{lang.items.price} ]]*/ "Price",
-			"pieces": /*[[ #{lang.items.pieces} ]]*/ "pieces",
-			"ingred": /*[[ #{lang.items.ingredients} ]]*/ "Ingredients",
-			"currency": /*[[ #{lang.currency} ]]*/ "Ft"
-		};
-		var URL_BASE = /*[[ @{/} ]]*/ "/";
-		$(document).ready(function() { appendNext(); });
-	</script>
+	<object th:include="fragments/lang :: script" th:remove="tag"></object>
 </head>
 <body>
 
@@ -56,6 +21,11 @@
 		<div class="done-circle"><div class="done-tick"></div></div><br />
 	</div>
 
+	<div class="messagebox" onclick="closeMessageBox()" style="display: none">
+		<p id="messagebox-text">This is the message to set.</p>
+		<span th:text="#{lang.msgbox.close-messagebox}">Click here to close</span>
+	</div>
+	
 	<div class="popup-bg inactive" id="popup">
 		<div class="popup" id="popup-window">
 			<section>
@@ -81,18 +51,28 @@
 						</div>
 						<form onsubmit="buySelectedItem(); return false;" action="#" method="GET" class="form-order">
 							<ins id="popup-custom"></ins>
-							<label th:text="#{lang.items.interval}">Time</label>
-							<select name="time">
-								<option value="0">18:00 - 18:30 (20 db)</option>
-								<option value="1">18:30 - 19:00 (16 db)</option>
-								<option value="2">19:00 - 19:30 (20 db)</option>
-								<option value="3">19:30 - 20:00 (20 db)</option>
-							</select>
-							<label th:text="#{lang.items.comment}">Comment</label>
-							<input id="popup-comment" type="text" name="comment" autocomplete="off" />
-							<input type="submit" class="colored-light" value="Order" 
-									th:value="#{lang.items.buy}" th:unless="${session.user} eq null" />
-							<em th:text="#{lang.items.loggedin}" th:if="${session.user} eq null">You need to be logged in to order</em>
+							<div id="popup-orderable-block">
+								<label th:text="#{lang.items.interval}">Time</label>
+								<select name="time" id="popup-timewindows">
+									<option value="0">18:00 - 18:30 (20 db)</option>
+									<option value="1">18:30 - 19:00 (16 db)</option>
+									<option value="2">19:00 - 19:30 (20 db)</option>
+									<option value="3">19:30 - 20:00 (20 db)</option>
+								</select>
+								<label th:text="#{lang.items.comment}">Comment</label>
+								<input id="popup-comment" type="text" name="comment" autocomplete="off" />
+								<input type="submit" class="colored-light" value="Order" 
+										th:value="#{lang.items.buy}" th:unless="${session.user} eq null" />
+							</div>
+							<em th:text="#{lang.items.loggedin}" th:if="${session.user} eq null">
+								You need to be logged in to order
+							</em>
+							<em th:text="#{lang.msgbox.already-closed}" th:unless="${session.user} eq null" id="popup-not-orderable" style="display: none">
+								Not orderable right now
+							</em>
+							<em th:text="#{lang.items.personally-orderable}" style="display: none" id="popup-perosnally">
+								This item is orderable only personally
+							</em>
 						</form>
 					</div>
 				</div>
@@ -125,9 +105,9 @@
 		
 		<div class="content">
 			<div class="search-container">
-				<a href=""><i class="material-icons">turned_in</i>&nbsp;<span>Minden termék</span></a>
-				<a href=""><i class="material-icons">local_mall</i>&nbsp;<span>Rendelhető</span></a>
-				<a href=""><i class="material-icons">calendar_today</i>&nbsp;<span>Holnap rendelhető</span></a>
+				<a th:href="@{/items/}"><i class="material-icons">turned_in</i>&nbsp;<span>Minden termék</span></a>
+				<a th:href="@{/items/?today}"><i class="material-icons">local_mall</i>&nbsp;<span>Rendelhető</span></a>
+				<a th:href="@{/items/?tomorrow}"><i class="material-icons">calendar_today</i>&nbsp;<span>Holnap rendelhető</span></a>
 
 				<form class="search" action="#" th:action="@{/search/}" method="get" onsubmit="searchSubmit(); return false">
 					<input type="text" name="q" id="search-input" th:value="${keyword}" autocomplete="off" spellcheck="false" />

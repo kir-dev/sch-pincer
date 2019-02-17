@@ -1,5 +1,7 @@
 package hu.gerviba.webschop;
 
+import java.time.Instant;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +64,14 @@ public class TestingConfig {
                 "orange", 1991,
                 "demo/pizzasch-bg.jpg", "icons/icon-pizzasch.svg", "Szerda"));
         
-        openings.save(new OpeningEntity(1525370400000L, 1525392000000L, 1525330800000L, 1525348800000L, 
-                "demo/pizzasch-pr.jpg", "Jack pls mit írjak ide?", circle, 100, 20, 30));
+        OpeningEntity opening;
+//        Original:
+//        openings.save(opening = new OpeningEntity(convert(3, 18, 0), convert(4, 0, 0), convert(3, 0, 0), convert(3, 18, 0), 
+//                "demo/pizzasch-pr.jpg", "Jack pls mit írjak ide?", circle, 100, 20, 2, 30));
+        openings.save(opening = new OpeningEntity(convert(3, 18, 0), convert(4, 0, 0), fromNow(0), fromNow(10), 
+                "demo/pizzasch-pr.jpg", "Jack pls mit írjak ide?", circle, 100, 20, 2, 30));
+        opening.generateTimeWindows(openings);
+        openings.save(opening);
         
         circleMembers.save(new CircleMemberEntity(circle, "Valami Dezső", "Körvez", "demo/profile-pic-1.jpg", 10));
         circleMembers.save(new CircleMemberEntity(circle, "Test Elek", "Tag", "demo/profile-pic-1.jpg", 0));
@@ -87,22 +95,22 @@ public class TestingConfig {
                 "Jalapeno szósz, Pick szalámi, bacon, pepperóni, mozzarella, lorem ipsum dolor sit amet", 
                 "Jalapeno szósz, Pick szalámi, bacon, pepperóni, mozzarella", 
                 "pizza csipos jalapeno pick bacon pepperoni mozzarella",
-                "[{\"type\":\"EXTRA_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]",
-                800, true, true, "cdn/items/1.jpg"));
+                "[{\"type\":\"EXTRA_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\",\"_extra\":true}]",
+                800, true, true, false, true, false, "cdn/items/1.jpg"));
         
         items.save(new ItemEntity("Songoku Pizza", circle, 
                 "Paradicsomos alap, sonka, kukorica, friss gomba, mozzarella, lorem ipsum dolor sit amet",
                 "Paradicsomos alap, sonka, kukorica, friss gomba, mozzarella", 
                 "pizza paradicsom sonka kukorica asd song",
-                "[{\"type\":\"EXTRA_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]",
-                800, true, true, "cdn/items/2.jpg"));
+                "[{\"type\":\"EXTRA_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\",\"_extra\":true}]",
+                800, true, true, false, true, false, "cdn/items/2.jpg"));
         
         items.save(new ItemEntity("Royal w/ Cheese Pizza", circle, 
                 "Bacon, sonka, paradicsom, mozzarella, sajtkrémes alap, lorem ipsum dolor sit amet", 
                 "Bacon, sonka, paradicsom, mozzarella, sajtkrémes alap", 
                 "pizza bacon sonka paradicsom mozzarella sajt krem",
-                "[{\"type\":\"EXTRA_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]", 
-                800, true, true, "cdn/items/3.jpg"));
+                "[{\"type\":\"EXTRA_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\",\"_extra\":true}]", 
+                800, true, true, false, true, false, "cdn/items/3.jpg"));
         
         circles.save(circle = new CircleEntity("Dzsájrosz", 
                 "Egyszer egy angol szóbelin valaki benyögte, hogy dzsájroszt reggelizett... "
@@ -135,10 +143,12 @@ public class TestingConfig {
                 "[{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"contain\",\"_hide\":true,\"values\":[\"Hadzsma-csípős\",\"Mindenet is\"],\"prices\":[0,200]},"
                 + "{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"sauce\",\"values\":[\"Fehér mártást szeretem\",\"Nem félem a csípőset\",\"Basszon oda\"],\"prices\":[0,0,100]},"
                 + "{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"extra\",\"values\":[\"+Hagyma\",\"+Sajt\",\"+Jalapeño\"],\"prices\":[50,50,50]}]", 
-                800, true, true, "cdn/items/5.jpg"));
+                800, true, true, false, true, false, "cdn/items/5.jpg"));
         
-        openings.save(new OpeningEntity(1525467600000L, 1525478400000L, 1525417200000L, 1525435200000L, 
-                "demo/dzsajrosz-pr.jpg", "Type your feeling here", circle, 100, 20, 20));
+        openings.save(opening = new OpeningEntity(convert(4, 18, 0), convert(4, 23, 0), convert(4, 0, 0), convert(4, 18, 0), 
+                "demo/dzsajrosz-pr.jpg", "Type your feeling here", circle, 2, 1, 0, 20));
+        opening.generateTimeWindows(openings);
+        openings.save(opening);
         
         circles.save(circle = new CircleEntity("Americano", 
                 "A kört 2011 tavaszán alapították kék és fekete gólyák. A célunk az volt, hogy minőségi húsból "
@@ -159,10 +169,12 @@ public class TestingConfig {
                 "Izé, hozé, bigyó és return 4", 
                 "burger asd",
                 "[{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"sauce\",\"values\":[\"Ketchup\",\"Majonéz\",\"Mustár\"],\"prices\":[0,50,150]}]", 
-                600, true, true, "cdn/items/4.jpg"));
+                600, true, true, false, true, false, "cdn/items/4.jpg"));
         
-        openings.save(new OpeningEntity(1525284000000L, 1525305600000L, 1525244400000L, 1525262400000L, 
-                "demo/americano-pr.jpg", "Random moment cuccok", circle, 100, 20, 10));
+        openings.save(opening = new OpeningEntity(convert(2, 16, 0), convert(2, 20, 0), convert(2, 0, 0), convert(2, 14, 0), 
+                "demo/americano-pr.jpg", "Random moment cuccok", circle, 100, 20, 0, 10));
+        opening.generateTimeWindows(openings);
+        openings.save(opening);
         
         circles.save(circle = new CircleEntity("Vödör", 
                 "A kör tagjai hétfő esténként krumplipucolóikkal és fritőzeikkel felszerelkezve nekiülnek és jó "
@@ -180,10 +192,12 @@ public class TestingConfig {
                 "sult krumpli",
                 "[{\"type\":\"EXTRA_SELECT\",\"name\":\"potato\",\"_display\":\"1-6 {pieces}\",\"values\":[\"1 krumpli\",\"2 krumpli\",\"3 krumpli\",\"4 krumpli\",\"5 krumpli\",\"6 krumpli\"],\"prices\":[0,400,800,1200,1600,2000]}," + 
                 "{\"type\":\"EXTRA_SELECT\",\"name\":\"panzo\",\"_display\":\"0-6 {pieces}\",\"values\":[\"Nem kérek\",\"1 panzo\",\"2 panzo\",\"3 panzo\",\"4 panzo\",\"5 panzo\",\"6 panzo\"],\"prices\":[0,200,400,600,800,1000,1200]}]", 
-                600, true, true, "cdn/items/8.jpg"));
+                600, true, true, false, true, false, "cdn/items/8.jpg"));
         
-        openings.save(new OpeningEntity(1525197600000L, 1525219200000L, 1525158000000L, 1525176000000L, 
-                "demo/dzsajrosz-pr.jpg", "Feeling típusú nyitás", circle, 100, 20, 60));
+        openings.save(opening = new OpeningEntity(convert(1, 18, 0), convert(2, 0, 0), convert(1, 0, 0), convert(3, 18, 0), 
+                "demo/dzsajrosz-pr.jpg", "Feeling típusú nyitás", circle, 100, 120, 0, 6 * 60));
+        opening.generateTimeWindows(openings);
+        openings.save(opening);
         
         circles.save(circle = new CircleEntity("Kakas", 
                 "A Vörös Kakas Fogadó finom melegszendvicsekkel és alkoholos valamint alkoholmentes innivalóval "
@@ -199,14 +213,17 @@ public class TestingConfig {
                 "red", 1999,
                 "demo/kakas-bg.jpg", "icons/icon-kakas.svg", "Vasárnap"));
         
-        openings.save(new OpeningEntity(1525726800000L, 152573760021000L, 1525726800000L, 1525737600000L, 
-                "demo/kakas-pr.jpg", "Forradalmi nyitás", circle, 100, 20, 30));
+        openings.save(opening = new OpeningEntity(convert(7, 20, 0), convert(8, 0, 0), convert(7, 20, 0), convert(7, 20, 0), 
+                "demo/kakas-pr.jpg", "Forradalmi nyitás", circle, 100, 20, 0, 0));
+        opening.generateTimeWindows(openings);
+        openings.save(opening);
 
         items.save(new ItemEntity("Sonkás melegszendvics", circle, 
                 "Sonka, sajt, hagyma, vaj, lorem ipsum dolor sit amet", 
                 "Sonka, sajt, hagyma, vaj", 
                 "meleg szendvics sonka sajt hagyma",
-                "[{\"name\":\"size\"}]", 200, true, true, "cdn/items/6.jpg"));
+                "[{\"name\":\"size\"}]", 
+                200, true, true, false, true, true, "cdn/items/6.jpg"));
         
         circles.save(circle = new CircleEntity("Lángosch", 
                 "A LángoSCH egy éve kezdte pályafutását a 18. emeleti konyhában. Azóta próbáljuk megidézni "
@@ -228,15 +245,34 @@ public class TestingConfig {
                 "yellow",  1994,
                 "demo/langosch-bg.jpg", "icons/icon-langosch.svg", "Vasárnap (2 hetente)"));
         
-        openings.save(new OpeningEntity(1525716000000L, 1525737600000L, 1525676400000L, 1525694400000L, 
-                "demo/langosch-pr.jpg", "Tüzes lángos", circle, 100, 20, 30));
+        openings.save(opening = new OpeningEntity(convert(7, 18, 0), convert(8, 0, 0), convert(7, 0, 0), convert(7, 18, 0), 
+                "demo/langosch-pr.jpg", "Tüzes lángos", circle, 100, 20, 0, 30));
+        opening.generateTimeWindows(openings);
+        openings.save(opening);
 
         items.save(new ItemEntity("Tüzes lángos", circle, 
                 "Chili, sonka, paradicsom, mozzarella, sajtkrémes alap, lorem ipsum dolor sit amet", 
                 "Chili, sonka, paradicsom, mozzarella, sajtkrémes alap", 
                 "langsch langs tuzes chili",
-                "[{\"name\":\"size\"}]", 500, true, true, "cdn/items/7.jpg"));
+                "[{\"name\":\"size\"}]", 
+                500, true, true, false, true, false, "cdn/items/7.jpg"));
         
+    }
+
+    private long convert(int day, int hh, int mm) {
+        final int month = 2;
+        final int weekStart = 18 - 1;
+        hh -= 1;
+        if (hh < 0) {
+            hh += 24;
+            day -= 1;
+        }
+        return Instant.parse(String.format("2019-%02d-%02dT%02d:%02d:00Z", 
+                month, weekStart + day, hh, mm)).toEpochMilli();
+    }
+    
+    private long fromNow(int minutes) {
+        return System.currentTimeMillis() + minutes * 60000;
     }
     
 }

@@ -1,6 +1,8 @@
 package hu.gerviba.webschop.service;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -9,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import hu.gerviba.webschop.dao.ItemRepository;
+import hu.gerviba.webschop.dao.OpeningRepository;
 import hu.gerviba.webschop.model.ItemEntity;
 
 @Service
@@ -17,13 +20,19 @@ public class ItemService {
 
 	@Autowired
 	ItemRepository repo;
+
+    @Autowired
+    OpeningRepository openingRepo;
 	
-	public List<ItemEntity> findAll() {
+    private static final int DAY_IN_MILLIS  = 24 * 60 * 60 * 1000;
+    private static final int HOUR6_IN_MILLIS  = 6 * 60 * 60 * 1000;
+
+    public List<ItemEntity> findAll() {
 		return repo.findAllByVisibleTrue();
 	}
 	
 	public List<ItemEntity> findAll(int page) {
-	    return repo.findAllByVisibleTrue(PageRequest.of(page, 6)).getContent();
+	    return repo.findAllByVisibleTrueAndVisibleInAllTrue(PageRequest.of(page, 6)).getContent();
 	}
 	
 	public ItemEntity getOne(Long itemId) {
@@ -44,6 +53,36 @@ public class ItemService {
 	
     public void deleteByCircle(Long circleId) {
         repo.deleteByCircle_Id(circleId);
+    }
+
+    public List<ItemEntity> findAllByOrerableNow() {
+        List<Long> circles = openingRepo.findAllByOrderStartLessThanAndOrderEndGreaterThan(
+                    System.currentTimeMillis(),
+                    System.currentTimeMillis())
+                .stream()
+                .map(opening -> opening.getCircle().getId())
+                .collect(Collectors.toList());
+        return repo.findAllByCircle_IdIn(circles);
+    }
+    
+    public List<ItemEntity> findAllByOrerableTomorrow() {
+        long time1 = getJustDateFrom(System.currentTimeMillis() + DAY_IN_MILLIS);
+        long time2 = time1 + DAY_IN_MILLIS + HOUR6_IN_MILLIS;
+        List<Long> circles = openingRepo.findAllByOrderStartGreaterThanAndOrderStartLessThan(time1, time2)
+                .stream()
+                .map(opening -> opening.getCircle().getId())
+                .collect(Collectors.toList());
+        return repo.findAllByCircle_IdIn(circles);
+    }
+    
+    public static long getJustDateFrom(long millis) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(millis);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        return c.getTimeInMillis();
     }
     
 }

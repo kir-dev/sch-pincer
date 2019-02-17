@@ -5,14 +5,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Objects;
 
 import hu.gerviba.webschop.model.ItemEntity;
 import hu.gerviba.webschop.model.OrderEntity;
@@ -60,9 +58,9 @@ public enum CustomComponentType {
         
         @Override
         public List<String> processMessage(CustomComponentAnswer cca, OrderEntity oe, CustomComponentModel ccm) {
-            List<String> result = new ArrayList<>();
+            List<String> result = new ArrayList<>(ccm.getValues());
             for (int index : cca.getSelected())
-                result.add(ccm.getValues().get(index));
+                result.removeIf(x -> x.equals(ccm.getValues().get(index)));
             return result;
         }
 	}, // Checkbox (a negáltja jelenik meg a pdf-en)
@@ -74,23 +72,25 @@ public enum CustomComponentType {
 	},
 	;
 	
-	public void applyChanges(OrderEntity order, String sentValue) {}
-
 	public int processPrices(CustomComponentAnswer cca, OrderEntity oe, CustomComponentModel ccm) {
 	    return 0;
 	}
 
     public List<String> processMessage(CustomComponentAnswer cca, OrderEntity oe, CustomComponentModel ccm) {
-        return null;
+        return new ArrayList<>(0);
     }
     
 	private static ObjectMapper mapper = new ObjectMapper();
 	private static Map<String, CustomComponentType> types = Stream.of(values())
 	        .collect(Collectors.toMap(CustomComponentType::name, x -> x));
 	
-    public static void calculateExtra(String detailsJson, OrderEntity order, ItemEntity ie) throws JsonParseException, JsonMappingException, IOException {
+    public static void calculateExtra(String detailsJson, OrderEntity order, ItemEntity ie) 
+            throws JsonParseException, JsonMappingException, IOException {
+        
         CustomComponentAnswerList answers = mapper.readValue(detailsJson.getBytes(), CustomComponentAnswerList.class);
-        CustomComponentModelList models = mapper.readValue(ie.getDetailsConfigJson().getBytes(), CustomComponentModelList.class);
+        CustomComponentModelList models = mapper.readValue(
+                ("{\"models\":" + ie.getDetailsConfigJson() + "}").getBytes(), 
+                CustomComponentModelList.class);
         Map<String, CustomComponentModel> mapped = models.getModels().stream()
                 .collect(Collectors.toMap(CustomComponentModel::getName, x -> x));
         
@@ -101,13 +101,8 @@ public enum CustomComponentType {
             extraString.addAll(types.getOrDefault(answer.getType(), UNKNOWN).processMessage(answer, order, mapped.get(answer.getName())));
         }
         
-        order.setPrice(extraPrice);
+        order.setPrice(ie.getPrice() + extraPrice);
         order.setExtra(extraString.stream().filter(x -> x != null).collect(Collectors.joining(", ")));
     }
 
-    public static String calculateExtraMessages(String detailsJson) {
-        // TODO Auto-generated method stub
-        return null;
-    };
-	
 }

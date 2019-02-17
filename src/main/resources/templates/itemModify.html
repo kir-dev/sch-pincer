@@ -87,6 +87,33 @@
 						</td>
 					</tr>
 					<tr>
+						<td th:text="#{lang.configure.item.service}">Service</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="service" th:checked="*{service}">
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.configure.item.visible-in-all}">Visible in all</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="visibleInAll" th:checked="*{visibleInAll}">
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.configure.item.only-perosnally-orderable}">Only personally orderable</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="personallyOrderable" th:checked="*{personallyOrderable}">
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
 						<td th:text="#{lang.configure.item.image}">Image</td>
 						<td><input type="file" name="imageFile"/></td>
 					</tr>

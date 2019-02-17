@@ -72,12 +72,25 @@ public class ItemEntity implements Serializable {
 
     @Column
     private boolean visible;
+
+    @Column
+    private boolean service;
+    
+    @Column
+    private boolean visibleInAll;
+    
+    @Column
+    private boolean personallyOrderable;
     
     @Column
     private String imageName;
 
+    @Column
+    private int flag;
+    
 	public ItemEntity(String name, CircleEntity circle, String description, String ingredients, 
 	        String keywords, String detailsConfigJson, int price, boolean orderable, boolean visible, 
+	        boolean service, boolean visibleInAll, boolean personallyOrderable,
 	        String imageName) {
 		this.name = name;
 		this.circle = circle;
@@ -88,7 +101,11 @@ public class ItemEntity implements Serializable {
 		this.price = price;
 		this.orderable = orderable;
 		this.visible = visible;
+		this.service = service;
+		this.visibleInAll = visibleInAll;
+		this.personallyOrderable = personallyOrderable;
 		this.imageName = imageName;
+		this.flag = 0;
 	}
 
     public ItemEntity(ItemEntity copy) {

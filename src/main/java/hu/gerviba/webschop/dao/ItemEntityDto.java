@@ -1,11 +1,17 @@
 package hu.gerviba.webschop.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import hu.gerviba.webschop.model.ItemEntity;
+import hu.gerviba.webschop.model.ItemOrderableStatus;
+import hu.gerviba.webschop.model.OpeningEntity;
+import hu.gerviba.webschop.model.TimeWindowEntity;
 import lombok.Data;
 
 @Data
-public class ItemEntityDao {
-
+public class ItemEntityDto {
+    
     private final Long id;
     private final String name;
     private final String description;
@@ -13,20 +19,30 @@ public class ItemEntityDao {
     private final String detailsConfigJson;
     private final int price; 
     private final boolean orderable;
+    private final boolean service;
+    private final boolean personallyOrderable;
     private final String imageName;
     private final Long circleId;
     private final String circleName;
     private final String circleColor;
+    private final long nextOpeningDate;
+    private final List<TimeWindowEntity> timeWindows;
+    private final ItemOrderableStatus orderStatus;
     
-    public ItemEntityDao(ItemEntity base) {
+    public ItemEntityDto(ItemEntity base, OpeningEntity opening) {
         this.id = base.getId();
         this.name = base.getName();
         this.description = base.getDescription();
         this.ingredients = base.getIngredients();
         this.detailsConfigJson = base.getDetailsConfigJson();
         this.price = base.getPrice();
-        this.orderable = base.isOrderable(); // TODO: && base.getCircle() nextOpening inRange
+        this.orderable = base.isOrderable() && opening.isInInterval(System.currentTimeMillis());
+        this.service = base.isService();
+        this.personallyOrderable = base.isPersonallyOrderable();
         this.imageName = base.getImageName();
+        this.nextOpeningDate = opening == null ? 0 : opening.getDateStart();
+        this.timeWindows = opening == null ? new ArrayList<>() : opening.getTimeWindows();
+        this.orderStatus = ItemOrderableStatus.OK;
         
         if (base.getCircle() != null) {
 		    this.circleId = base.getCircle().getId();

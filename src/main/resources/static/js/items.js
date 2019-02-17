@@ -5,21 +5,58 @@ var selectedItem = null;
 function appendNext() {
     if (page === 0)
         clearAll();
+    	
+//    $.ajax({
+//        dataType: "json",
+//        url: URL_BASE + "api/items/" + (page++),
+//        success: function(data) {
+//            if (data.length === 0) {
+//                endReached = true;
+//                $("#loading").css({display: "none"});
+//                $("#list-end").css({display: "inline-block"});
+//                return;
+//            }
+//            for (var item in data)
+//                addItem(data[item]);
+//            $("#loading").css({display: "none"});
+//        }
+//    });
+    
     $.ajax({
-        dataType: "json",
-        url: URL_BASE + "api/items/" + (page++),
-        success: function(data) {
+        dataType : "json",
+        url : URL_BASE + "api/items/" + getFilter("/"),
+        success : function(data) {
+            endReached = true;
             if (data.length === 0) {
-                endReached = true;
-                $("#loading").css({display: "none"});
-                $("#list-end").css({display: "inline-block"});
+                $("#loading").css({
+                    display : "none"
+                });
+                $("#list-end").css({
+                    display : "none"
+                });
+                $("#no-results").css({
+                    display : "inline-block"
+                });
                 return;
             }
             for (var item in data)
                 addItem(data[item]);
-            $("#loading").css({display: "none"});
+            $("#list-end").css({
+                display : "inline-block"
+            });
+            $("#loading").css({
+                display : "none"
+            });
         }
     });
+}
+
+function getFilter(separator) {
+	if (location.search.includes("?today"))
+		return "today" + separator;
+	if (location.search.includes("?tomorrow"))
+		return "tomorrow" + separator;
+	return "";
 }
 
 function searchSubmit() {
@@ -66,7 +103,7 @@ function searchFor(keyword) {
                 });
                 return;
             }
-            for ( var item in data)
+            for (var item in data)
                 addItem(data[item]);
             $("#list-end").css({
                 display : "inline-block"
@@ -81,8 +118,8 @@ function searchFor(keyword) {
 function updateUrl(keyword) {
     if (keyword == null) {
         window.history.pushState({
-            route : "/items/"
-        }, document.title, "/items/");        
+            route : "/items/" + getFilter("")
+        }, document.title, "/items/" + getFilter(""));        
     } else {
         window.history.pushState({
             route : "/items/?q=" + encodeURI(keyword)
@@ -155,14 +192,25 @@ function generateCustom(json) {
     let result = "";
     custom.forEach(element => {
         if (element.values !== undefined) {
-            if (element.type === "EXTRA_SELECT")
+            if (element.type === "EXTRA_SELECT") {
                 result += generateExtraSelect(element);
-            else if (element.type === "EXTRA_CHECKBOX")
+            } else if (element.type === "EXTRA_CHECKBOX") {
                 result += generateExtraCheckbox(element);
-            else if (element.type === "AMERICANO_EXTRA")
+            } else if (element.type === "AMERICANO_EXTRA") {
                 result += generateExtraCheckbox(element);
-            else
+            } else {
                 result += 'UNKNOWN TYPE: ' + element.type;
+            }
+        }
+    });
+    return result;
+}
+
+function generateTimes(timeWindows) {
+    let result = "";
+    timeWindows.forEach(element => {
+        if (element.name !== undefined) {
+            result += `<option value="${element.id}">${element.name} (${element.normalItemCount}${LANG.pieces})</option>`;
         }
     });
     return result;
@@ -235,7 +283,11 @@ function showPopup(id) {
             $("#popup-price").attr("data-base", data.price);
             $("#popup-window").addClass(data.circleColor);
             $("#popup-custom").html(generateCustom(data.detailsConfigJson));
+            $("#popup-timewindows").html(generateTimes(data.timeWindows));
             $("#popup-comment").val("");
+            $("#popup-orderable-block").css({display: data.orderable && !data.perosnallyOrderable ? "block" : "none"});
+            $("#popup-not-orderable").css({display: data.orderable || data.personallyOrderable ? "none" : "block"});
+            $("#popup-perosnally").css({display: data.personallyOrderable ? "block" : "none"});
             
             $("#popup").removeClass("inactive");
             $("#blur-section").addClass("blur");
@@ -254,15 +306,45 @@ function closePopup(purchased = false) {
 
 function packDetails() {
     if (selectedItem === null)
-        return "{}";
+        return "{answers: []}";
 
-    var result = {};
-    var custom = JSON.parse(selectedItem.detailsConfigJson);
+    let result = [];
+    let custom = JSON.parse(selectedItem.detailsConfigJson);
     custom.forEach(element => {
-        result[element.name] = $("select[name='" + element.name + "']").val();
+        if (element.values !== undefined) {
+            if (element.type === "EXTRA_SELECT") {
+                result.push({
+            		type: "EXTRA_SELECT",
+            		name: element.name,
+            		selected: [$(`select[name='${element.name}']`).val()]
+            	});
+            } else if (element.type === "EXTRA_CHECKBOX") {
+                result.push({
+            		type: "EXTRA_CHECKBOX",
+            		name: element.name,
+                	selected: getCheckboxChecked(element.name, element.values.length)
+                });
+            } else if (element.type === "AMERICANO_EXTRA") {
+                result.push({
+            		type: "AMERICANO_EXTRA",
+            		name: element.name,
+                	selected: getCheckboxChecked(element.name, element.values.length)
+                });
+            }
+        }
     });
 
-    return JSON.stringify(result);
+    return JSON.stringify({answers: result});
+}
+
+function getCheckboxChecked(name, count) {
+	let result = [];
+	for (let i = 0; i < count; i++) {
+		if ($(`input[name=${name}_${i}]`).is(':checked')){
+			result.push(Number(i));
+		}
+	}
+	return result;
 }
 
 function buySelectedItem() {
@@ -275,10 +357,26 @@ function buySelectedItem() {
             comment: $("#popup-comment").val(),
             detailsJson: packDetails()
         }
-    }).done(function() {
-        closePopup(true);
-        doneOrder();
+    }).done(function(data) {
+    	if (data === "ACK") {
+	        closePopup(true);
+	        doneOrder();
+	    } else if (data === "INTERNAL_ERROR") {
+	    	showMessageBox(LANG.internal);
+	    } else if (data === "OVERALL_MAX_REACHED") {
+	    	showMessageBox(LANG.orderFull);
+	    } else if (data === "MAX_REACHED") {
+	    	showMessageBox(LANG.intervalFull);
+	    } else if (data === "NO_ORDERING") {
+	    	showMessageBox(LANG.alreadyClosed);
+	    } else if (data === "NO_ROOM_SET") {
+	    	showMessageBox(LANG.noRoom);
+	    } else {
+	    	showMessageBox(data);
+	    }
+	    
     }).fail(function(e) {
+    	showMessageBox(LANG.noInternetConnection);
         console.error("Cannot send POST request.");
     });
 }
@@ -302,6 +400,15 @@ function doneOrder() {
         $(".done-circle").css({"background-size": "0.1%"});
         $(".done").css({"top": "50vh", "opacity": "1", "display": "none"});
     }, 3500);
+}
+
+function closeMessageBox() {
+	$(".messagebox").css({display: "none"});
+}
+
+function showMessageBox(message) {
+	$("#messagebox-text").text(message);
+	$(".messagebox").css({display: "inline-block"});
 }
 
 $(window).scroll(function() {

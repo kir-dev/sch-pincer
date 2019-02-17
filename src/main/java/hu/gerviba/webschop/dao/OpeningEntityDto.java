@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class OpeningEntityDao {
+public class OpeningEntityDto {
     
     private int timeIntervals = 4;
     private String dateStart;
@@ -15,6 +15,7 @@ public class OpeningEntityDao {
     private String feeling;
     private int maxOrder = 120;
     private int maxOrderPerInterval = 15;
+    private int maxExtraPerInterval = 2;
     private int intervalLength = 30;
     
 }

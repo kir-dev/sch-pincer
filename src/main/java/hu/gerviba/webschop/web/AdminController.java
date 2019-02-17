@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import hu.gerviba.webschop.dao.RoleEntryDao;
+import hu.gerviba.webschop.dao.RoleEntryDto;
 import hu.gerviba.webschop.model.CircleEntity;
 import hu.gerviba.webschop.model.UserEntity;
 import hu.gerviba.webschop.service.CircleService;
@@ -50,10 +50,10 @@ public class AdminController {
 	@GetMapping("/")
 	public String adminRoot(Map<String, Object> model) {
         model.put("circles", circles.findAllForMenu());
-        List<RoleEntryDao> roles = users.findAll().stream()
+        List<RoleEntryDto> roles = users.findAll().stream()
                 .map(x -> {
                     try {
-                        return new RoleEntryDao(util.sha256(x.getUid()), x);
+                        return new RoleEntryDto(util.sha256(x.getUid()), x);
                     } catch (NoSuchAlgorithmException e) {
                         e.printStackTrace();
                     }

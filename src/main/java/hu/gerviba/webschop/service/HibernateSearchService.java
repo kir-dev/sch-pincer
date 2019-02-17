@@ -1,6 +1,8 @@
 package hu.gerviba.webschop.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -16,8 +18,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import hu.gerviba.webschop.dao.ItemEntityDao;
+import hu.gerviba.webschop.dao.ItemEntityDto;
 import hu.gerviba.webschop.model.ItemEntity;
+import hu.gerviba.webschop.model.OpeningEntity;
 
 @Service
 public class HibernateSearchService {
@@ -27,6 +30,9 @@ public class HibernateSearchService {
 
     @Autowired
     ItemService items;
+    
+    @Autowired
+    OpeningService openings;
 	
 	@Value("${search.distance}")
 	private int distance = 2;
@@ -44,11 +50,12 @@ public class HibernateSearchService {
     private float minMatching = 0.5F;
 	
 	@Transactional
-	public List<ItemEntityDao> fuzzySearchItem(String matchingString) {
+	public List<ItemEntityDto> fuzzySearchItem(String matchingString) {
+        Map<Long, OpeningEntity> cache = new HashMap<>();
 		matchingString = matchingString.trim();
 		if (matchingString.length() < 3)
 			return items.findAll().stream()
-	                .map(item -> new ItemEntityDao(item))
+	                .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(item.getCircle().getId(), (i) -> openings.findNextOf(i))))
 	                .collect(Collectors.toList());
 		
 		FullTextEntityManager fullTextEntityManager =
@@ -81,7 +88,8 @@ public class HibernateSearchService {
 //        		.peek(x -> System.out.println(((ItemEntity) x[0]).getName() + "\t" + x[1])) //TODO: Remove this debug line
         		.map(x -> x[0])
         		.distinct()
-        		.map(x -> new ItemEntityDao((ItemEntity) x))
+        		.map(x -> new ItemEntityDto((ItemEntity) x, 
+        		        cache.computeIfAbsent(((ItemEntity) x).getCircle().getId(), (i) -> openings.findNextOf(i))))
         		.collect(Collectors.toList());
 	}
 

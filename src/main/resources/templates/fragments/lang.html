@@ -1,0 +1,55 @@
+<html xmlns:th="http://www.thymeleaf.org/">
+<head>	
+	<object th:fragment="script">
+	<script th:if="${searchMode}" th:inline="javascript">
+		var LANG = {
+			"size": /*[[ #{lang.items.custom-size} ]]*/ "size",
+			"sauce": /*[[ #{lang.items.custom-sauce} ]]*/ "Sauce",
+			"extra": /*[[ #{lang.items.custom-extra} ]]*/ "Extra",
+			"contain": /*[[ #{lang.items.custom-contain} ]]*/ "Contain",
+			"type": /*[[ #{lang.items.custom-type} ]]*/ "Type",
+			"potato": /*[[ #{lang.items.custom-potato} ]]*/ "Potato",
+			"panzo": /*[[ #{lang.items.custom-panzo} ]]*/ "Panzo",
+			"price": /*[[ #{lang.items.price} ]]*/ "Price",
+			"pieces": /*[[ #{lang.items.pieces} ]]*/ "pieces",
+			"ingred": /*[[ #{lang.items.ingredients} ]]*/ "Ingredients",
+			"intervalFull": /*[[ #{lang.msgbox.interval-full} ]]*/ "This time window is full",
+			"orderFull": /*[[ #{lang.msgbox.order-full} ]]*/ "This time window is full",
+			"alreadyClosed": /*[[ #{lang.msgbox.already-closed} ]]*/ "There is currently no ordering period",
+			"noRoom": /*[[ #{lang.msgbox.no-room} ]]*/ "You haven't set your room",
+			"internal": /*[[ #{lang.msgbox.internal} ]]*/ "Internal server error occurred",
+			"noInternetConnection": /*[[ #{lang.msgbox.no-internet-connection} ]]*/ "No internet connection",
+			"currency": /*[[ #{lang.currency} ]]*/ "Ft"
+		};
+		var URL_BASE = /*[[ @{/} ]]*/ "/";
+		$(document).ready(function() { 
+			searchFor(/*[[ ${keyword} ]]*/ ""); 
+			if ((/*[[ ${keyword} ]]*/ "").length === 0) appendNext(); 
+		});
+	</script>
+	<script th:unless="${searchMode}" th:inline="javascript">
+		var LANG = {
+			"size": /*[[ #{lang.items.custom-size} ]]*/ "size",
+			"sauce": /*[[ #{lang.items.custom-sauce} ]]*/ "Sauce",
+			"extra": /*[[ #{lang.items.custom-extra} ]]*/ "Extra",
+			"contain": /*[[ #{lang.items.custom-contain} ]]*/ "Contain",
+			"type": /*[[ #{lang.items.custom-type} ]]*/ "Type",
+			"potato": /*[[ #{lang.items.custom-potato} ]]*/ "Potato",
+			"panzo": /*[[ #{lang.items.custom-panzo} ]]*/ "Panzo",
+			"price": /*[[ #{lang.items.price} ]]*/ "Price",
+			"pieces": /*[[ #{lang.items.pieces} ]]*/ "pieces",
+			"ingred": /*[[ #{lang.items.ingredients} ]]*/ "Ingredients",
+			"intervalFull": /*[[ #{lang.msgbox.interval-full} ]]*/ "This time window is full",
+			"orderFull": /*[[ #{lang.msgbox.order-full} ]]*/ "This time window is full",
+			"alreadyClosed": /*[[ #{lang.msgbox.already-closed} ]]*/ "There is currently no ordering period",
+			"noRoom": /*[[ #{lang.msgbox.no-room} ]]*/ "You haven't set your room",
+			"internal": /*[[ #{lang.msgbox.internal} ]]*/ "Internal server error occurred",
+			"noInternetConnection": /*[[ #{lang.msgbox.no-internet-connection} ]]*/ "No internet connection",
+			"currency": /*[[ #{lang.currency} ]]*/ "Ft"
+		};
+		var URL_BASE = /*[[ @{/} ]]*/ "/";
+		$(document).ready(function() { appendNext(); });
+	</script>
+	</object>
+</head>
+</html>

@@ -16,8 +16,12 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
     
     List<ItemEntity> findAllByVisibleTrue();
     
-    Page<ItemEntity> findAllByVisibleTrue(Pageable page);
+    List<ItemEntity> findAllByVisibleTrueAndVisibleInAllTrue();
+    
+    Page<ItemEntity> findAllByVisibleTrueAndVisibleInAllTrue(Pageable page);
 
     void deleteByCircle_Id(Long circleId);
+
+    List<ItemEntity> findAllByCircle_IdIn(List<Long> circles);
 
 }

@@ -49,7 +49,7 @@ public class OrderEntity implements Serializable {
     private String detailsJson;
 
     @Column
-    private int intervalId;
+    private long intervalId;
     
     @Column
     private String intervalMessage;

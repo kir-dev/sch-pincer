@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import hu.gerviba.webschop.dao.ItemEntityDao;
+import hu.gerviba.webschop.dao.ItemEntityDto;
 import hu.gerviba.webschop.service.HibernateSearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,9 +25,9 @@ public class SearchController {
     @ApiOperation("Search query")
     @GetMapping(value = "/api/search")
     @ResponseBody
-    public ResponseEntity<List<ItemEntityDao>> search(@RequestParam(value = "q") String search) {
+    public ResponseEntity<List<ItemEntityDto>> search(@RequestParam(value = "q") String search) {
         try {
-        	return new ResponseEntity<List<ItemEntityDao>>(searchservice.fuzzySearchItem(search), HttpStatus.OK);
+        	return new ResponseEntity<List<ItemEntityDto>>(searchservice.fuzzySearchItem(search), HttpStatus.OK);
         } catch (Exception ex) {
         	ex.printStackTrace();
         }

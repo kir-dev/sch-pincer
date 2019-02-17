@@ -15,6 +15,10 @@ public interface OpeningRepository extends JpaRepository<OpeningEntity, Long> {
     
     List<OpeningEntity> findAllByDateEndGreaterThanAndDateEndLessThanOrderByDateStart(long now, long weekFromNow);
     
-    Optional<OpeningEntity> findFirstByCircle_IdOrderByDateStart(Long circle);
+    List<OpeningEntity> findAllByOrderStartGreaterThanAndOrderStartLessThan(long time1, long time2);
     
+    Optional<OpeningEntity> findFirstByCircle_IdOrderByDateStart(Long circle);
+
+    List<OpeningEntity> findAllByOrderStartLessThanAndOrderEndGreaterThan(long currentTime1, long currentTime2);
+
 }

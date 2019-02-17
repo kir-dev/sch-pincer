@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import hu.gerviba.webschop.dao.OpeningEntityDao;
+import hu.gerviba.webschop.dao.OpeningEntityDto;
 import hu.gerviba.webschop.model.CircleEntity;
 import hu.gerviba.webschop.model.CircleMemberEntity;
 import hu.gerviba.webschop.model.ItemEntity;
@@ -183,6 +183,9 @@ public class ConfigureController {
         ie.setDetailsConfigJson("[]");
         ie.setOrderable(false);
         ie.setVisible(true);
+        ie.setService(false);
+        ie.setVisibleInAll(true);
+        ie.setPersonallyOrderable(false);
         model.put("item", ie);
         return "itemModify";
     }
@@ -237,6 +240,9 @@ public class ConfigureController {
         original.setOrderable(item.isOrderable());
         original.setVisible(item.isVisible());
         original.setPrice(item.getPrice());
+        original.setPersonallyOrderable(item.isPersonallyOrderable());
+        original.setService(item.isService());
+        original.setVisibleInAll(item.isVisibleInAll());
         
         String file = util.uploadFile("items", imageFile);
         if (file != null)
@@ -277,13 +283,13 @@ public class ConfigureController {
     public String newOpening(@PathVariable Long circleId, Map<String, Object> model) {
         model.put("circles", circles.findAllForMenu());
         model.put("circleId", circleId);
-        model.put("opening", new OpeningEntityDao());
+        model.put("opening", new OpeningEntityDto());
         return "openingAdd";
     }
     
     @PostMapping("/configure/{circleId}/openings/new")
     public String newOpening(@PathVariable Long circleId,
-            OpeningEntityDao oed,
+            OpeningEntityDto oed,
             @RequestParam MultipartFile prFile,
             HttpServletRequest request) {
         
@@ -300,12 +306,16 @@ public class ConfigureController {
         eo.setTimeIntervals(oed.getTimeIntervals());
         eo.setMaxOrder(oed.getMaxOrder());
         eo.setMaxOrderPerInterval(oed.getMaxOrderPerInterval());
+        eo.setMaxExtraPerInterval(oed.getMaxExtraPerInterval());
         eo.setIntervalLength(oed.getIntervalLength());
         
         String file = util.uploadFile("pr", prFile);
         eo.setPrUrl(file == null ? "image/blank-pr.jpg" : "cdn/pr/" + file);
         
         openings.save(eo);
+        eo.generateTimeWindows(openings);
+        openings.save(eo);
+        
         return "redirect:/configure/" + circleId;
     }
     

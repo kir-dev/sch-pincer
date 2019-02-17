@@ -1,12 +1,21 @@
 TODO:
-- Ha nincs szoba, nem lehet rendelni (front, backend)
-- Ha nincs nyitás nem lehet rendelni (front, backend)
-- Max kaja / nyitás
-- Max extra kaja / nyitás
-- Max kaja / kaja típus / nyitás
-- JMF kalkulátor (+front, backend)
-- PDF export with themes
-- Rendelés felvétel admin oldalról
++ Ha nincs szoba, nem lehet rendelni (+front, +backend)
++ Ha nincs nyitás nem lehet rendelni (+front, +backend)
++ Max kaja / nyitás
++ Max kaja / kaja típus / nyitás
++ JMF kalkulátor (+front, +backend)
 + Rendelés lezárása admin oldalról
 + Rendelés törlése ne legyen (+front, +backend)
++ Egy időablak bug
++ Csak akkor látszik a rendelés ha rendelhető (rendelés ikon)
++ Termékek szűrő
++ no more pages-es betöltés vagy gomb lehetőség
+
+- Max extra kaja / idősáv
+- - Termékek körökhöz
+- - Service
+- PDF export with themes
+- Rendelés felvétel admin oldalról
 - Foodex menü
+- endpointok neveit megváltoztatni
+- - alias endpointok a köröknek

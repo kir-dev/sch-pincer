@@ -7,7 +7,7 @@ import lombok.ToString;
 
 @ToString
 @EqualsAndHashCode
-public class RoleEntryDao {
+public class RoleEntryDto {
 
     @Getter
     private final String uidHash;
@@ -18,7 +18,7 @@ public class RoleEntryDao {
     @Getter
     private String permissions; 
     
-    public RoleEntryDao(String uidHashed, UserEntity ue) {
+    public RoleEntryDto(String uidHashed, UserEntity ue) {
         this.uidHash = uidHashed;
         this.name = ue.getName();
         this.sysadmin = ue.isSysadmin();

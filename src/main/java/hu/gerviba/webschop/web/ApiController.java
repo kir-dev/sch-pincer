@@ -1,8 +1,8 @@
 package hu.gerviba.webschop.web;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-
-import hu.gerviba.webschop.dao.ItemEntityDao;
+import hu.gerviba.webschop.dao.ItemEntityDto;
 import hu.gerviba.webschop.model.CircleEntity;
 import hu.gerviba.webschop.model.ItemEntity;
 import hu.gerviba.webschop.model.OpeningEntity;
@@ -33,7 +30,6 @@ import hu.gerviba.webschop.service.ItemService;
 import hu.gerviba.webschop.service.OpeningService;
 import hu.gerviba.webschop.service.OrderService;
 import hu.gerviba.webschop.service.UserService;
-import hu.gerviba.webschop.web.comonent.CustomComponentType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -60,32 +56,62 @@ public class ApiController {
     @Autowired
     ControllerUtil util;
     
-    private static final long HALF_HOUR = 1000 * 60 * 30;
-    private final SimpleDateFormat DATE = new SimpleDateFormat("HH:mm"); 
+    private static final int DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
     
     @ApiOperation("Item info")
     @GetMapping("/item/{id}")
     @ResponseBody
-    public ItemEntityDao getItem(@PathVariable Long id) {
-        return new ItemEntityDao(items.getOne(id));
+    public ItemEntityDto getItem(@PathVariable Long id) {
+        ItemEntity item = items.getOne(id);
+        return new ItemEntityDto(item, openings.findNextOf(item.getCircle().getId()));
     }
 
     @ApiOperation("List of items")
     @GetMapping("/items")
     @ResponseBody
-    public ResponseEntity<List<ItemEntity>> getAllItems() {
-        List<ItemEntity> list = items.findAll();
-        return new ResponseEntity<List<ItemEntity>>(list, HttpStatus.OK);
+    public ResponseEntity<List<ItemEntityDto>> getAllItems() {
+        Map<Long, OpeningEntity> cache = new HashMap<>();
+        List<ItemEntityDto> list = items.findAll().stream()
+                .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(item.getCircle().getId(), (i) -> openings.findNextOf(i))))
+                .collect(Collectors.toList());
+        
+        return new ResponseEntity<List<ItemEntityDto>>(list, HttpStatus.OK);
+    }
+
+    @ApiOperation("List of items orderable today")
+    @GetMapping("/items/today")
+    @ResponseBody
+    public ResponseEntity<List<ItemEntityDto>> getAllItemsToday() {
+        Map<Long, OpeningEntity> cache = new HashMap<>();
+        List<ItemEntityDto> list = items.findAllByOrerableNow().stream()
+                .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(item.getCircle().getId(), (i) -> openings.findNextOf(i))))
+                .collect(Collectors.toList());
+                
+        return new ResponseEntity<List<ItemEntityDto>>(list, HttpStatus.OK);
+    }
+
+    @ApiOperation("List of items orderable tomorrow")
+    @GetMapping("/items/tomorrow")
+    @ResponseBody
+    public ResponseEntity<List<ItemEntityDto>> getAllItemsTomorrow() {
+        Map<Long, OpeningEntity> cache = new HashMap<>();
+        List<ItemEntityDto> list = items.findAllByOrerableTomorrow().stream()
+                .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(item.getCircle().getId(), (i) -> openings.findNextOf(i))))
+                .collect(Collectors.toList());
+        
+        return new ResponseEntity<List<ItemEntityDto>>(list, HttpStatus.OK);
     }
 
     @ApiOperation("Page of items")
     @GetMapping("/items/{page}")
     @ResponseBody
-    public ResponseEntity<List<ItemEntityDao>> getItems(@PathVariable int page) {
-        List<ItemEntityDao> list = items.findAll(page).stream()
-                .map(item -> new ItemEntityDao(item))
+    public ResponseEntity<List<ItemEntityDto>> getItems(@PathVariable int page) {
+        Map<Long, OpeningEntity> cache = new HashMap<>();
+        List<ItemEntityDto> list = items.findAll(page).stream()
+                .map(item -> new ItemEntityDto(item, 
+                        cache.computeIfAbsent(item.getCircle().getId(), (i) -> openings.findNextOf(i))))
                 .collect(Collectors.toList());
-        return new ResponseEntity<List<ItemEntityDao>>(list, HttpStatus.OK);
+        return new ResponseEntity<List<ItemEntityDto>>(list, HttpStatus.OK);
     }
 
     @ApiOperation("List of openings")
@@ -121,25 +147,7 @@ public class ApiController {
             @RequestParam(required = true) String comment,
             @RequestParam(required = true) String detailsJson) throws Exception {
         
-        UserEntity user = util.getUser(request);
-        OrderEntity order = new OrderEntity(user.getUid(), user.getName(), comment, detailsJson, user.getRoom());
-        order.setIntervalId(time);
-        ItemEntity item = items.getOne(id);
-        order.setName(item.getName());
-        CustomComponentType.calculateExtra(detailsJson, order, item);
-        order.setOpeningId(openings.findNextOf(item.getCircle().getId()).getId());
-        OpeningEntity current = openings.findNextOf(item.getCircle().getId());
-        
-        // TODO: Check if can order
-        
-        long intervalStart = current.getDateStart() + HALF_HOUR * time;
-        long intervalEnd = current.getDateStart() + HALF_HOUR * (time + 1);
-        order.setDate(intervalStart);
-        order.setIntervalMessage(DATE.format(intervalStart) + " - " + DATE.format(intervalEnd));
-        
-        orders.save(order);
-        
-        return new ResponseEntity<String>("ACK", HttpStatus.OK);
+        return orders.makeOrder(request, id, time, comment, detailsJson);
     }
 
     @ApiOperation("Set room code")
@@ -150,9 +158,9 @@ public class ApiController {
             UserEntity user = util.getUser(request);
             user.setRoom(room);
             users.save(user);
-            return "ACK"; //new ResponseEntity<String>("ACK", HttpStatus.OK);
+            return "ACK";
         } catch (Exception e) {
-            return "REJECT"; //new ResponseEntity<String>("BAD_REQUEST", HttpStatus.BAD_REQUEST);
+            return "REJECT";
         }
     }
 

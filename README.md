@@ -42,6 +42,7 @@ WebSCHop
     "prices": [0, 200],              // Additional prices for each value
     "_display": "Display text",      // Display text in search menu (optional, default: values->join) {pieces} => db
     "_hide": true,                   // Hide from search menu (optional, default: false)
-    "_comment" : "Lorem ipsum"       // Text below the input field
+    "_comment" : "Lorem ipsum",      // Text below the input field (optional, default: empty string)
+    "_extra" : false                 // If true the item will be notified as 'extra'. (optional, default: false)
 }
 ```

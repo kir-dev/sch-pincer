@@ -47,7 +47,7 @@
 					<td class="border-colored">
 						<a href="#" th:text="*{circle.displayName}" th:href="@{/circle/__*{circle.id}__/}">Vödör</a>
 					</td>
-					<td th:text="#{lang.weekday-__${#dates.dayOfWeek(opening.dateStart)}__}">Hetfő</td>
+					<td th:text="#{lang.weekday-__${#dates.dayOfWeekNameShort(opening.dateStart)}__}">Hetfő</td>
 					<td class="date" th:text="${#dates.format(opening.dateStart, '__#{lang.date-opening-format}__')}">18:00 (18-04-09)</td>
 					<td class="feeling" th:text="*{feeling}">Lorem ispsum dolor sit amet.</td>
 					<td class="arrow"><a href="#" th:href="@{/circle/__*{circle.id}__/}"><i class="material-icons">navigate_next</i></a></td>
