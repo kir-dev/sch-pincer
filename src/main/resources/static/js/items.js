@@ -52,8 +52,8 @@ function appendNext() {
 }
 
 function getFilter(separator) {
-	if (location.search.includes("?today"))
-		return "today" + separator;
+	if (location.search.includes("?now"))
+		return "now" + separator;
 	if (location.search.includes("?tomorrow"))
 		return "tomorrow" + separator;
 	return "";
@@ -161,7 +161,7 @@ ${appendCustom(item.detailsConfigJson)}
                         <a href="#" onclick="showPopup(${item.id}); return false">
                         <i class="material-icons">local_mall</i></a>
                         `}
-                        <a class="colored-light" href="${URL_BASE}circle/${item.circleId}">${item.circleName}</a>
+                        <a class="colored-light" href="${URL_BASE}circle/${item.circleAlias}">${item.circleName}</a>
                     </span>
                 </div>`;
 }
@@ -288,6 +288,7 @@ function showPopup(id) {
             $("#popup-orderable-block").css({display: data.orderable && !data.perosnallyOrderable ? "block" : "none"});
             $("#popup-not-orderable").css({display: data.orderable || data.personallyOrderable ? "none" : "block"});
             $("#popup-perosnally").css({display: data.personallyOrderable ? "block" : "none"});
+            $("#popup-timewindows").css({display: data.timeWindows.length > 1 ? "block" : "none"});
             
             $("#popup").removeClass("inactive");
             $("#blur-section").addClass("blur");

@@ -56,9 +56,10 @@ public class ItemService {
     }
 
     public List<ItemEntity> findAllByOrerableNow() {
+        long time = System.currentTimeMillis();
         List<Long> circles = openingRepo.findAllByOrderStartLessThanAndOrderEndGreaterThan(
-                    System.currentTimeMillis(),
-                    System.currentTimeMillis())
+                    time,
+                    time)
                 .stream()
                 .map(opening -> opening.getCircle().getId())
                 .collect(Collectors.toList());
@@ -66,7 +67,7 @@ public class ItemService {
     }
     
     public List<ItemEntity> findAllByOrerableTomorrow() {
-        long time1 = getJustDateFrom(System.currentTimeMillis() + DAY_IN_MILLIS);
+        long time1 = getJustDateFrom(System.currentTimeMillis()) + DAY_IN_MILLIS;
         long time2 = time1 + DAY_IN_MILLIS + HOUR6_IN_MILLIS;
         List<Long> circles = openingRepo.findAllByOrderStartGreaterThanAndOrderStartLessThan(time1, time2)
                 .stream()

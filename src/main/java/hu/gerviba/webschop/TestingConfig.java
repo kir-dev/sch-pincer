@@ -62,14 +62,15 @@ public class TestingConfig {
                     + "FoodEX szállít a szobáikba. Emellett gyakran megfordulunk Gólyabálokon, bulikon, "
                     + "villanykaros és külsős rendezvényeken is.", 
                 "orange", 1991,
-                "demo/pizzasch-bg.jpg", "icons/icon-pizzasch.svg", "Szerda"));
+                "demo/pizzasch-bg.jpg", "icons/icon-pizzasch.svg", "Szerda", "pizzasch"));
         
         OpeningEntity opening;
 //        Original:
-//        openings.save(opening = new OpeningEntity(convert(3, 18, 0), convert(4, 0, 0), convert(3, 0, 0), convert(3, 18, 0), 
+        openings.save(opening = new OpeningEntity(convert(3, 18, 0), convert(4, 0, 0), convert(3, 0, 0), convert(3, 18, 0), 
+                "demo/pizzasch-pr.jpg", "Ez egy Pizzásch nyitás. Ez a szöveg program sch-ra lesz exportálva.", 
+                 "Jack pls mit írjak ide?", circle, 100, 20, 2, 30));
+//        openings.save(opening = new OpeningEntity(convert(3, 18, 0), convert(4, 0, 0), fromNow(0), fromNow(10), 
 //                "demo/pizzasch-pr.jpg", "Jack pls mit írjak ide?", circle, 100, 20, 2, 30));
-        openings.save(opening = new OpeningEntity(convert(3, 18, 0), convert(4, 0, 0), fromNow(0), fromNow(10), 
-                "demo/pizzasch-pr.jpg", "Jack pls mit írjak ide?", circle, 100, 20, 2, 30));
         opening.generateTimeWindows(openings);
         openings.save(opening);
         
@@ -134,19 +135,49 @@ public class TestingConfig {
                     + "2015 tavaszán megalakult a kör és azóta a Schönherzben tömi "
                     + "meg Dzsájrosszal az ottlakók hasát.", 
                 "green", 1995,
-                "demo/dzsajrosz-bg.jpg", "icons/icon-dzsajrosz.svg", "Csütörtök"));
+                "demo/dzsajrosz-bg.jpg", "icons/icon-dzsajrosz.svg", "Csütörtök", "dzsajrosz"));
 
-        items.save(new ItemEntity("Dzsájrosz pitában", circle, 
-                "Pita, hagyma, saláta, paradicsom, szósz, lorem ipsum dolor sit amet", 
-                "Pita, hagyma, saláta, paradicsom, szósz", 
-                "gyros pita hagyma",
-                "[{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"contain\",\"_hide\":true,\"values\":[\"Hadzsma-csípős\",\"Mindenet is\"],\"prices\":[0,200]},"
-                + "{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"sauce\",\"values\":[\"Fehér mártást szeretem\",\"Nem félem a csípőset\",\"Basszon oda\"],\"prices\":[0,0,100]},"
-                + "{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"extra\",\"values\":[\"+Hagyma\",\"+Sajt\",\"+Jalapeño\"],\"prices\":[50,50,50]}]", 
-                800, true, true, false, true, false, "cdn/items/5.jpg"));
+        items.save(new ItemEntity("Normál gyros tál", circle, 
+                "hasábkrumpli, husi, zöldségek, öntet", 
+                "Hasábkrumpli, husi, zöldségek, öntet", 
+                "gyros tál dzsájrosz dzsajrosz tal",
+                "[{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"onion\",\"_hide\":true,\"values\":[\"Lilahagyma\",\"Pirított hagyma\"],\"prices\":[0,0],\"aliases\":[\"LH\",\"PH\"]},{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"sauce\",\"_hide\":true,\"values\":[\"Sima\",\"Foghagymás\",\"Csípős\"],\"prices\":[0,0,0],\"aliases\":[\"SIMA\",\"FH\",\"CSÍP\"]},{\"type\":\"EXTRA_SELECT\",\"name\":\"cheese\",\"_hide\":true,\"values\":[\"Nem kérek\",\"Extra sajt\",\"Dupla sajt\"],\"prices\":[0,100,200],\"aliases\":[\"NE\",\"EXTRA x1\",\"Extra x2\"]},{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"extra\",\"_hide\":true,\"values\":[\"Extra hús\",\"Extra csípős\"],\"prices\":[200,50],\"aliases\":[\"HÚS\",\"CSÍP\"],\"_comment\":\"Extra csípős: mindenféle különleges esszenciát bevetve egyenesen a pokolból\"}]", 
+                900, true, true, false, true, false, "cdn/items/5.jpg"));
         
-        openings.save(opening = new OpeningEntity(convert(4, 18, 0), convert(4, 23, 0), convert(4, 0, 0), convert(4, 18, 0), 
-                "demo/dzsajrosz-pr.jpg", "Type your feeling here", circle, 2, 1, 0, 20));
+        items.save(new ItemEntity("Gyros tortillában", circle, 
+                "30 cm-es tortilla, husi, zöldségek, öntet", 
+                "30 cm-es tortilla, husi, zöldségek, öntet", 
+                "gyros trotilla dzsájrosz dzsajrosz",
+                "[{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"onion\",\"_hide\":true,\"values\":[\"Lilahagyma\",\"Pirított hagyma\"],\"prices\":[0,0],\"aliases\":[\"LH\",\"PH\"]},{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"sauce\",\"_hide\":true,\"values\":[\"Sima\",\"Foghagymás\",\"Csípős\"],\"prices\":[0,0,0],\"aliases\":[\"SIMA\",\"FH\",\"CSÍP\"]},{\"type\":\"EXTRA_SELECT\",\"name\":\"cheese\",\"_hide\":true,\"values\":[\"Nem kérek\",\"Extra sajt\",\"Dupla sajt\"],\"prices\":[0,50,100],\"aliases\":[\"NE\",\"EXTRA x1\",\"Extra x2\"]},{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"extra\",\"_hide\":true,\"values\":[\"Extra hús\",\"Extra csípős\"],\"prices\":[200,50],\"aliases\":[\"HÚS\",\"CSÍP\"],\"_comment\":\"Extra csípős: mindenféle különleges esszenciát bevetve egyenesen a pokolból\"}]", 
+                650, true, true, false, true, false, "cdn/items/5.jpg"));
+        
+        items.save(new ItemEntity("Gyros pitában", circle, 
+                "pita, husi, zöldségek, öntet", 
+                "Pita, husi, zöldségek, öntet", 
+                "gyros pita dzsájrosz dzsajrosz",
+                "[{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"onion\",\"_hide\":true,\"values\":[\"Lilahagyma\",\"Pirított hagyma\"],\"prices\":[0,0],\"aliases\":[\"LH\",\"PH\"]},{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"sauce\",\"_hide\":true,\"values\":[\"Sima\",\"Foghagymás\",\"Csípős\"],\"prices\":[0,0,0],\"aliases\":[\"SIMA\",\"FH\",\"CSÍP\"]},{\"type\":\"EXTRA_SELECT\",\"name\":\"cheese\",\"_hide\":true,\"values\":[\"Nem kérek\",\"Extra sajt\",\"Dupla sajt\"],\"prices\":[0,50,100],\"aliases\":[\"NE\",\"EXTRA x1\",\"Extra x2\"]},{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"extra\",\"_hide\":true,\"values\":[\"Extra hús\",\"Extra csípős\"],\"prices\":[200,50],\"aliases\":[\"HÚS\",\"CSÍP\"],\"_comment\":\"Extra csípős: mindenféle különleges esszenciát bevetve egyenesen a pokolból\"}]", 
+                500, true, true, false, true, false, "cdn/items/5.jpg"));
+        
+        items.save(new ItemEntity("Gyros görög pitában", circle, 
+                "20 cm-es görög pita, husi, zöldségek, sültkrumpli, öntet", 
+                "20 cm-es görög pita, husi, zöldségek, sültkrumpli, öntet", 
+                "gyros pita görög gorog dzsájrosz dzsajrosz",
+                "[{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"onion\",\"_hide\":true,\"values\":[\"Lilahagyma\",\"Pirított hagyma\"],\"prices\":[0,0],\"aliases\":[\"LH\",\"PH\"]},{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"sauce\",\"_hide\":true,\"values\":[\"Sima\",\"Foghagymás\",\"Csípős\"],\"prices\":[0,0,0],\"aliases\":[\"SIMA\",\"FH\",\"CSÍP\"]},{\"type\":\"EXTRA_SELECT\",\"name\":\"cheese\",\"_hide\":true,\"values\":[\"Nem kérek\",\"Extra sajt\",\"Dupla sajt\"],\"prices\":[0,50,100],\"aliases\":[\"NE\",\"EXTRA x1\",\"Extra x2\"]},{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"extra\",\"_hide\":true,\"values\":[\"Extra hús\",\"Extra csípős\"],\"prices\":[200,50],\"aliases\":[\"HÚS\",\"CSÍP\"],\"_comment\":\"Extra csípős: mindenféle különleges esszenciát bevetve egyenesen a pokolból\"}]", 
+                600, true, true, false, true, false, "cdn/items/5.jpg"));
+        
+        items.save(new ItemEntity("Gyros kifliben", circle, 
+                "kifli, husi, zöldségek, öntet", 
+                "Kifli, husi, zöldségek, öntet", 
+                "gyros pita görög gorog dzsájrosz dzsajrosz",
+                "[{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"onion\",\"_hide\":true,\"values\":[\"Lilahagyma\",\"Pirított hagyma\"],\"prices\":[0,0],\"aliases\":[\"LH\",\"PH\"]},{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"sauce\",\"_hide\":true,\"values\":[\"Sima\",\"Foghagymás\",\"Csípős\"],\"prices\":[0,0,0],\"aliases\":[\"SIMA\",\"FH\",\"CSÍP\"]},{\"type\":\"EXTRA_SELECT\",\"name\":\"cheese\",\"_hide\":true,\"values\":[\"Nem kérek\",\"Extra sajt\",\"Dupla sajt\"],\"prices\":[0,50,100],\"aliases\":[\"NE\",\"EXTRA x1\",\"Extra x2\"]},{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"extra\",\"_hide\":true,\"values\":[\"Extra hús\",\"Extra csípős\"],\"prices\":[200,50],\"aliases\":[\"HÚS\",\"CSÍP\"],\"_comment\":\"Extra csípős: mindenféle különleges esszenciát bevetve egyenesen a pokolból\"}]", 
+                650, true, true, false, true, false, "cdn/items/5.jpg"));
+                      
+        
+//        openings.save(opening = new OpeningEntity(convert(4, 18, 0), convert(4, 23, 0), convert(4, 0, 0), convert(4, 18, 0), 
+//                "demo/dzsajrosz-pr.jpg", "Type your feeling here", circle, 2, 1, 0, 20));
+        openings.save(opening = new OpeningEntity(convert(4, 18, 0), convert(4, 23, 0), fromNow(0), fromNow(10), 
+                "demo/dzsajrosz-pr.jpg", "Ez egy Dzsájrosz nyitás. Ez a szöveg program sch-ra lesz exportálva.", 
+                "Type your feeling here", circle, 2, 1, 0, 20));
         opening.generateTimeWindows(openings);
         openings.save(opening);
         
@@ -162,7 +193,7 @@ public class TestingConfig {
                     + "gagyihúsos hamburgereket. Emellé jön a szintén saját speckó szószunk, melytől a hús még "
                     + "inkább elolvad a szádban. Hetente kedd esténként nyitunk a -1.-en a nagykonyhában. ", 
                 "blue",  2002,
-                "demo/americano-bg.jpg", "icons/icon-americano.svg", "Kedd"));
+                "demo/americano-bg.jpg", "icons/icon-americano.svg", "Kedd", "americano"));
 
         items.save(new ItemEntity("Random Burger", circle, 
                 "Izé, hozé, bigyó és return 4, lorem ipsum dolor sit amet", 
@@ -172,7 +203,8 @@ public class TestingConfig {
                 600, true, true, false, true, false, "cdn/items/4.jpg"));
         
         openings.save(opening = new OpeningEntity(convert(2, 16, 0), convert(2, 20, 0), convert(2, 0, 0), convert(2, 14, 0), 
-                "demo/americano-pr.jpg", "Random moment cuccok", circle, 100, 20, 0, 10));
+                "demo/americano-pr.jpg", "Ez egy Americano nyitás. Ez a szöveg program sch-ra lesz exportálva.", 
+                 "Random moment cuccok", circle, 100, 20, 0, 10));
         opening.generateTimeWindows(openings);
         openings.save(opening);
         
@@ -184,7 +216,7 @@ public class TestingConfig {
                     + "hangulatban megsütnek ~100 kg krumplit az éhes kollégisták nagy örömére. Akik szeretik a "
                     + "hazai, igazi „anyasütötte” krumpli ízét, azokat sok szeretettel várja hétfő esténként a Vödörkör.", 
                 "purple",  2005,
-                "demo/vodor-bg.jpg", "icons/icon-vodor.svg", "Hétfő"));
+                "demo/vodor-bg.jpg", "icons/icon-vodor.svg", "Hétfő", "vodor"));
         
         items.save(new ItemEntity("Vödör", circle, 
                 "Izé, hozé, bigyó és 4, lorem ipsum dolor sit amet", 
@@ -194,8 +226,9 @@ public class TestingConfig {
                 "{\"type\":\"EXTRA_SELECT\",\"name\":\"panzo\",\"_display\":\"0-6 {pieces}\",\"values\":[\"Nem kérek\",\"1 panzo\",\"2 panzo\",\"3 panzo\",\"4 panzo\",\"5 panzo\",\"6 panzo\"],\"prices\":[0,200,400,600,800,1000,1200]}]", 
                 600, true, true, false, true, false, "cdn/items/8.jpg"));
         
-        openings.save(opening = new OpeningEntity(convert(1, 18, 0), convert(2, 0, 0), convert(1, 0, 0), convert(3, 18, 0), 
-                "demo/dzsajrosz-pr.jpg", "Feeling típusú nyitás", circle, 100, 120, 0, 6 * 60));
+        openings.save(opening = new OpeningEntity(convert(1, 18, 0), convert(2, 0, 0), convert(1, 0, 0), convert(1, 18, 0), 
+                "demo/dzsajrosz-pr.jpg", "Ez egy Vödör nyitás. Ez a szöveg program sch-ra lesz exportálva.", 
+                 "Feeling típusú nyitás", circle, 100, 120, 0, 6 * 60));
         opening.generateTimeWindows(openings);
         openings.save(opening);
         
@@ -211,10 +244,11 @@ public class TestingConfig {
                     + "hanem vendégeink számára is. Jól mutatja ezt immár 23 éve tartó töretlen sikerességünk "
                     + "és a félévenkénti 10 feletti nyitásaink száma is.", 
                 "red", 1999,
-                "demo/kakas-bg.jpg", "icons/icon-kakas.svg", "Vasárnap"));
+                "demo/kakas-bg.jpg", "icons/icon-kakas.svg", "Vasárnap", "kakas"));
         
         openings.save(opening = new OpeningEntity(convert(7, 20, 0), convert(8, 0, 0), convert(7, 20, 0), convert(7, 20, 0), 
-                "demo/kakas-pr.jpg", "Forradalmi nyitás", circle, 100, 20, 0, 0));
+                "demo/kakas-pr.jpg", "Ez egy Kakas nyitás. Ez a szöveg program sch-ra lesz exportálva.", 
+                 "Forradalmi nyitás", circle, 100, 20, 0, 0));
         opening.generateTimeWindows(openings);
         openings.save(opening);
 
@@ -243,10 +277,11 @@ public class TestingConfig {
                     + "állítottuk fel sütödénket a villanykarosoknak. Itt a helyed, ha szeretnél tagja lenni egy "
                     + "frissen alakult körnek és egy mindenre nyitott csapatnak!", 
                 "yellow",  1994,
-                "demo/langosch-bg.jpg", "icons/icon-langosch.svg", "Vasárnap (2 hetente)"));
+                "demo/langosch-bg.jpg", "icons/icon-langosch.svg", "Vasárnap (2 hetente)", "langosch"));
         
         openings.save(opening = new OpeningEntity(convert(7, 18, 0), convert(8, 0, 0), convert(7, 0, 0), convert(7, 18, 0), 
-                "demo/langosch-pr.jpg", "Tüzes lángos", circle, 100, 20, 0, 30));
+                "demo/langosch-pr.jpg", "Ez egy Lángosch nyitás. Ez a szöveg program sch-ra lesz exportálva.", 
+                 "Tüzes lángos", circle, 100, 20, 0, 30));
         opening.generateTimeWindows(openings);
         openings.save(opening);
 

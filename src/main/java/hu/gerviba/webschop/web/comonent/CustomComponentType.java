@@ -26,7 +26,9 @@ public enum CustomComponentType {
 
         @Override
         public List<String> processMessage(CustomComponentAnswer cca, OrderEntity oe, CustomComponentModel ccm) {
-            return Arrays.asList(ccm.getValues().get(cca.getSelected().get(0)), null);
+            List<String> list = new ArrayList<>();
+            list.add(ccm.getAliases().get(cca.getSelected().get(0)));
+            return list;
         }
 	},
 	EXTRA_CHECKBOX {
@@ -42,12 +44,12 @@ public enum CustomComponentType {
         public List<String> processMessage(CustomComponentAnswer cca, OrderEntity oe, CustomComponentModel ccm) {
             List<String> result = new ArrayList<>();
             for (int index : cca.getSelected())
-                result.add(ccm.getValues().get(index));
+                result.add(ccm.getAliases().get(index));
             return result;
         }
 	},
 	LANGOSCH_IMAGEDRAWER, // Not sure hogyan fog működni
-	AMERICANO_EXTRA {
+	AMERICANO_EXTRA { // Checkbox (a negáltja jelenik meg a pdf-en)
         @Override
         public int processPrices(CustomComponentAnswer cca, OrderEntity oe, CustomComponentModel ccm) {
             int result = 0;
@@ -60,10 +62,10 @@ public enum CustomComponentType {
         public List<String> processMessage(CustomComponentAnswer cca, OrderEntity oe, CustomComponentModel ccm) {
             List<String> result = new ArrayList<>(ccm.getValues());
             for (int index : cca.getSelected())
-                result.removeIf(x -> x.equals(ccm.getValues().get(index)));
+                result.removeIf(x -> x.equals(ccm.getAliases().get(index)));
             return result;
         }
-	}, // Checkbox (a negáltja jelenik meg a pdf-en)
+	},
 	UNKNOWN {
 	    @Override
 	    public int processPrices(CustomComponentAnswer cca, OrderEntity oe, CustomComponentModel ccm) {
@@ -97,12 +99,14 @@ public enum CustomComponentType {
         int extraPrice = 0;
         List<String> extraString = new ArrayList<>();
         for (CustomComponentAnswer answer : answers.getAnswers()) {
-            extraPrice += types.getOrDefault(answer.getType(), UNKNOWN).processPrices(answer, order, mapped.get(answer.getName()));
-            extraString.addAll(types.getOrDefault(answer.getType(), UNKNOWN).processMessage(answer, order, mapped.get(answer.getName())));
+            extraPrice += types.getOrDefault(answer.getType(), UNKNOWN)
+                    .processPrices(answer, order, mapped.get(answer.getName()));
+            extraString.add(String.join(", ", types.getOrDefault(answer.getType(), UNKNOWN)
+                    .processMessage(answer, order, mapped.get(answer.getName()))));
         }
         
         order.setPrice(ie.getPrice() + extraPrice);
-        order.setExtra(extraString.stream().filter(x -> x != null).collect(Collectors.joining(", ")));
+        order.setExtra(extraString.stream().filter(x -> x != null).collect(Collectors.joining("; ")));
     }
 
 }

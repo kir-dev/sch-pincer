@@ -1,13 +1,19 @@
 package hu.gerviba.webschop.web;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,11 +22,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Font.FontFamily;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
 import hu.gerviba.webschop.dao.OpeningEntityDto;
 import hu.gerviba.webschop.model.CircleEntity;
 import hu.gerviba.webschop.model.CircleMemberEntity;
 import hu.gerviba.webschop.model.ItemEntity;
 import hu.gerviba.webschop.model.OpeningEntity;
+import hu.gerviba.webschop.model.OrderEntity;
 import hu.gerviba.webschop.model.OrderStatus;
 import hu.gerviba.webschop.model.UserEntity;
 import hu.gerviba.webschop.service.CircleMemberService;
@@ -28,6 +48,7 @@ import hu.gerviba.webschop.service.CircleService;
 import hu.gerviba.webschop.service.ItemService;
 import hu.gerviba.webschop.service.OpeningService;
 import hu.gerviba.webschop.service.OrderService;
+import hu.gerviba.webschop.web.comonent.ExportType;
 import io.swagger.annotations.Api;
 
 @Controller
@@ -51,6 +72,9 @@ public class ConfigureController {
     
     @Autowired
     ControllerUtil util;
+
+    @Value("${webschop.external:/etc/webschop/external}")
+    String uploadPath = "/etc/webschop/external";
     
     @GetMapping("/configure")
     public String configureRoot(HttpServletRequest request, Map<String, Object> model) {
@@ -351,7 +375,13 @@ public class ConfigureController {
         
         if (util.cannotEditCircle(circleId, request))
             return "redirect:/configure/" + circleId + "?error";
+
+        OpeningEntity opening = openings.getOne(openingId);
+        if (opening.getCircle().getId() != circleId)
+            return "redirect:/configure/" + circleId + "?error";
         
+        model.put("exportTypes", Arrays.asList(ExportType.values()));
+        model.put("openingId", opening.getId());
         model.put("circles", circles.findAllForMenu());
         model.put("orders", orders.findAllByOpening(openingId));
         return "openingShow";
@@ -362,6 +392,7 @@ public class ConfigureController {
     public String updateOrder(@RequestParam Long id,
             @RequestParam String status,
             HttpServletRequest request) {
+        
         System.out.println(id + " " + status);
         Long circleId = orders.getCircleIdByOrderId(id);
         if (util.cannotEditCircle(circleId, request))
@@ -375,4 +406,72 @@ public class ConfigureController {
         
         return "redirect:/configure/" + circleId;
     }
+    
+    @GetMapping("/configure/export")
+    public String showOpenings(Long openingId, String type, 
+            HttpServletRequest request, Map<String, Object> model) 
+                    throws FileNotFoundException, DocumentException {
+        
+        OpeningEntity opening = openings.getOne(openingId);
+        if (util.cannotEditCircle(opening.getCircle().getId(), request))
+            return "redirect:/configure/" + opening.getCircle().getId() + "?error";
+        
+        Document document = new Document();
+        ExportType export = ExportType.valueOf(type);
+        if (export.isPortrait())
+            document.setPageSize(PageSize.A4);
+        else
+            document.setPageSize(PageSize.A4.rotate());
+        String path = (uploadPath + "/export/").replace("//", "/");
+        new File(path).mkdirs();
+        String name = opening.getCircle().getAlias() + "_" + export.name() + "_" + openingId + ".pdf";
+        PdfWriter.getInstance(document, new FileOutputStream(path + name));
+         
+        document.open();
+        document.setMargins(20.0f, 20.0f, 30.0f, 30.0f);
+        document.newPage();
+        
+        PdfPTable table = new PdfPTable(export.getHeader().size());
+        table.setWidths(export.getWidths());
+        table.setWidthPercentage(100);
+        addTableHeader(table, export);
+        for (int i = 0; i < 100; ++i)
+            addRows(table, export, opening);
+         
+        document.add(table);
+        document.close();
+        
+        return "redirect:/cdn/export/" + name;
+    }
+    
+    private void addTableHeader(PdfPTable table, ExportType export) {
+        table.setHeaderRows(1);
+        Font font = new Font(FontFamily.UNDEFINED, 10);
+        export.getHeader().forEach(columnTitle -> {
+            PdfPCell header = new PdfPCell();
+            header.setHorizontalAlignment(Element.ALIGN_CENTER);
+            header.setVerticalAlignment(Element.ALIGN_CENTER);
+            header.setPhrase(new Phrase(columnTitle, font));
+            header.setBorderWidthBottom(1.5f);
+            header.setFixedHeight(15.0f);
+            table.addCell(header);
+        });
+    }
+
+    private void addRows(PdfPTable table, ExportType export, OpeningEntity opening) {
+        List<OrderEntity> ordersList = orders.findAllByOpening(opening.getId());
+        for (int i = 0; i < ordersList.size(); ++i)
+            ordersList.get(i).setArtificialId(i + 1);
+
+        Font font = new Font(FontFamily.UNDEFINED, 10);
+        ordersList.forEach(order -> export.getFields().forEach(column -> {
+            PdfPCell cell = new PdfPCell();
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setVerticalAlignment(Element.ALIGN_CENTER);
+            cell.setPhrase(new Phrase(column.apply(order), font));
+            cell.setFixedHeight(15.0f);
+            table.addCell(cell);
+        }));
+    }
+
 }

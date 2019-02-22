@@ -64,20 +64,28 @@ public class MainController {
         return "items";
     }
 
-    @GetMapping("/circle")
+    @GetMapping("/szor")
     public String circle(Map<String, Object> model) {
         model.put("circles", circles.findAllForMenu());
         model.put("openings", openings.findAll()); //TODO: nextWeek
         return "circle";
     }
     
-    @GetMapping("/circle/{circleId}")
-    public String circleSpecific(@PathVariable Long circleId, 
+    @GetMapping("/circle/{circle}")
+    public String circleSpecific(@PathVariable String circle, 
             Map<String, Object> model) {
         
         model.put("circles", circles.findAllForMenu());
-        model.put("selectedCircle", circles.getOne(circleId));
-        model.put("nextOpening", openings.findNextStartDateOf(circleId));
+
+        if (circle.matches("^\\d+$")) {
+            long id = Long.parseLong(circle);
+            model.put("selectedCircle", circles.getOne(id));
+            model.put("nextOpening", openings.findNextStartDateOf(id));
+        } else {
+            CircleEntity circleEntity = circles.findByAlias(circle);
+            model.put("selectedCircle", circleEntity);
+            model.put("nextOpening", openings.findNextStartDateOf(circleEntity.getId()));
+        }
         return "circleProfile";
     }
 

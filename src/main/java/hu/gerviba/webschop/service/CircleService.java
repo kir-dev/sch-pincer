@@ -42,5 +42,9 @@ public class CircleService {
     public void delete(CircleEntity ce) {
         repo.delete(ce);
     }
+
+    public CircleEntity findByAlias(String alias) {
+        return repo.findByAlias(alias);
+    }
     
 }

@@ -120,11 +120,14 @@ public class CircleEntity implements Serializable {
 
     @Column
     private String webhookOrderDoneUrl;
+
+    @Column
+    private String alias;
     
     public CircleEntity(@Size(min = 2, max = 32) String displayName, @Size(max = 1000) String description,
             @Size(max = 1000) String homePageDescription, @Size(max = 30) String cssClassName, int founded,
             @Size(max = 255) String backgroundUrl, @Size(max = 255) String logoUrl, 
-            @Size(max = 255) String avgOpening) {
+            @Size(max = 255) String avgOpening, String alias) {
         
         this.displayName = displayName;
         this.description = description;
@@ -142,6 +145,7 @@ public class CircleEntity implements Serializable {
         this.rateQuality = 2.35f;
         this.ratePrice = 5;
         this.rateingCount = 105;
+        this.alias = alias;
     }
 
     public CircleEntity(CircleEntity copy) {
@@ -162,6 +166,7 @@ public class CircleEntity implements Serializable {
         this.rateQuality = copy.getRateQuality();
         this.ratePrice = copy.getRatePrice();
         this.rateingCount = copy.getRateingCount();
+        this.alias = copy.getAlias();
     }
     
 }

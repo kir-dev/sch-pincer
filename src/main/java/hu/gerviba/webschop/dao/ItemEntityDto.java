@@ -23,6 +23,7 @@ public class ItemEntityDto {
     private final boolean personallyOrderable;
     private final String imageName;
     private final Long circleId;
+    private final String circleAlias;
     private final String circleName;
     private final String circleColor;
     private final long nextOpeningDate;
@@ -46,10 +47,12 @@ public class ItemEntityDto {
         
         if (base.getCircle() != null) {
 		    this.circleId = base.getCircle().getId();
+		    this.circleAlias = base.getCircle().getAlias();
 		    this.circleName = base.getCircle().getDisplayName();
 		    this.circleColor = base.getCircle().getCssClassName();
         } else {
 		    this.circleId = 0L;
+            this.circleAlias = "404";
 		    this.circleName = "Not Attached";
 		    this.circleColor = "";
         }

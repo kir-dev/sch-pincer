@@ -45,7 +45,7 @@
 			<table class="circles-table">
 				<tr th:each="opening : ${openings}" th:object="${opening}" th:class="*{circle.cssClassName}" class="purple">
 					<td class="border-colored">
-						<a href="#" th:text="*{circle.displayName}" th:href="@{/circle/__*{circle.id}__/}">Vödör</a>
+						<a href="#" th:text="*{circle.displayName}" th:href="@{/circle/__*{circle.alias}__/}">Vödör</a>
 					</td>
 					<td th:text="#{lang.weekday-__${#dates.dayOfWeekNameShort(opening.dateStart)}__}">Hetfő</td>
 					<td class="date" th:text="${#dates.format(opening.dateStart, '__#{lang.date-opening-format}__')}">18:00 (18-04-09)</td>

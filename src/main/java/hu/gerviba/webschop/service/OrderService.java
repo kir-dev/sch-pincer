@@ -92,6 +92,10 @@ public class OrderService {
         OrderEntity order = new OrderEntity(user.getUid(), user.getName(), comment, detailsJson, user.getRoom());
         order.setIntervalId(time);
         ItemEntity item = itemsRepo.getOne(id);
+        
+        if (!item.isOrderable() || item.isPersonallyOrderable())
+            return new ResponseEntity<String>("INTERNAL_ERROR", HttpStatus.OK);
+        
         order.setName(item.getName());
         CustomComponentType.calculateExtra(detailsJson, order, item);
         order.setOpeningId(openings.findNextOf(item.getCircle().getId()).getId());

@@ -56,8 +56,6 @@ public class ApiController {
     @Autowired
     ControllerUtil util;
     
-    private static final int DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
-    
     @ApiOperation("Item info")
     @GetMapping("/item/{id}")
     @ResponseBody
@@ -78,8 +76,8 @@ public class ApiController {
         return new ResponseEntity<List<ItemEntityDto>>(list, HttpStatus.OK);
     }
 
-    @ApiOperation("List of items orderable today")
-    @GetMapping("/items/today")
+    @ApiOperation("List of items orderable right now")
+    @GetMapping("/items/now")
     @ResponseBody
     public ResponseEntity<List<ItemEntityDto>> getAllItemsToday() {
         Map<Long, OpeningEntity> cache = new HashMap<>();

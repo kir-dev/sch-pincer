@@ -54,6 +54,9 @@ public class OpeningEntity implements Serializable {
 
     @Column
     private String prUrl;
+    
+    @Column
+    private String eventDescription;
 
     @Column(length = 255)
     @Size(max = 255)
@@ -94,7 +97,7 @@ public class OpeningEntity implements Serializable {
     /**
      * This method is for testing purposes
      */
-    public OpeningEntity(Long dateStart, Long dateEnd, Long orderStart, Long orderEnd, String prUrl,
+    public OpeningEntity(Long dateStart, Long dateEnd, Long orderStart, Long orderEnd, String prUrl, String eventDescription,
             String feeling, CircleEntity circle, int maxOrder, int maxOrderPerInterval, int maxExtraPerInterval,
             int intervalLength) {
         this.dateStart = dateStart;
@@ -102,6 +105,7 @@ public class OpeningEntity implements Serializable {
         this.orderStart = orderStart;
         this.orderEnd = orderEnd;
         this.prUrl = prUrl;
+        this.eventDescription = eventDescription;
         this.feeling = feeling;
         this.circle = circle;
         this.maxOrder = maxOrder;

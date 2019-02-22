@@ -37,6 +37,8 @@ public class OrderEntity implements Serializable {
     @Column
     private String userName;
 
+    private int artificialId;
+    
     @Column
     @Enumerated(EnumType.ORDINAL)
     private OrderStatus status;
@@ -93,5 +95,5 @@ public class OrderEntity implements Serializable {
         this.price = price;
         this.userName = userName;
     }
-
+    
 }

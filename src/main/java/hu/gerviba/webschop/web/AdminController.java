@@ -139,6 +139,7 @@ public class AdminController {
         original.setHomePageDescription(circle.getHomePageDescription());
         original.setHomePageOrder(circle.getHomePageOrder());
         original.setWebsiteUrl(circle.getWebsiteUrl());
+        original.setAlias(circle.getAlias());
         
         String file = util.uploadFile("logos", logo);
         if (file != null)

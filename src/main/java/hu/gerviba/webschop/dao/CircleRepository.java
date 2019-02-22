@@ -11,5 +11,7 @@ import hu.gerviba.webschop.model.CircleEntity;
 public interface CircleRepository extends JpaRepository<CircleEntity, Long> {
 
     List<CircleEntity> findAllByOrderByHomePageOrder();
+
+    CircleEntity findByAlias(String alias);
     
 }

@@ -99,6 +99,12 @@
 						</td>
 					</tr>
 					<tr>
+						<td th:text="#{lang.admin.circle.alias}">Alias</td>
+						<td><input type="text" th:field="*{alias}" maxlength="255"/>
+							<span class="error" th:if="${#fields.hasErrors('alias')}" th:errors="*{alias}"></span>
+						</td>
+					</tr>
+					<tr>
 						<td th:text="#{lang.admin.circle.logo}">Logo</td>
 						<td><input type="file" name="logo"/></td>
 					</tr>

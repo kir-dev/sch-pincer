@@ -11,6 +11,7 @@ public class CustomComponentModel {
 	private String name;
 	private List<String> values;
 	private List<Integer> prices;
+    private List<String> aliases;
 	private String _display;
 	private boolean _hide;
 	private String _comment;

@@ -48,6 +48,8 @@
 							<p id="popup-description">Jalapenos alap, csili, pick szalámi mittomén, izé</p><br />
 							<h5 th:text="#{lang.items.price}">Ára:</h5>
 							<span class="colored-light" id="popup-price">800 JMF</span>
+							<p th:if="${session.user} neq null and ${session.user.room} neq null and ${session.user.room.length()} gt 0" th:utext="#{lang.items.room-comment(${session.user.room})}"></p>
+							<p th:if="${session.user} neq null and (${session.user.room} eq null or ${session.user.room.length()} eq 0)"><a th:href="@{/profile}" th:text="#{lang.items.no-room-comment}"></a></p>
 						</div>
 						<form onsubmit="buySelectedItem(); return false;" action="#" method="GET" class="form-order">
 							<ins id="popup-custom"></ins>
@@ -106,7 +108,7 @@
 		<div class="content">
 			<div class="search-container">
 				<a th:href="@{/items/}"><i class="material-icons">turned_in</i>&nbsp;<span>Minden termék</span></a>
-				<a th:href="@{/items/?today}"><i class="material-icons">local_mall</i>&nbsp;<span>Rendelhető</span></a>
+				<a th:href="@{/items/?now}"><i class="material-icons">local_mall</i>&nbsp;<span>Rendelhető</span></a>
 				<a th:href="@{/items/?tomorrow}"><i class="material-icons">calendar_today</i>&nbsp;<span>Holnap rendelhető</span></a>
 
 				<form class="search" action="#" th:action="@{/search/}" method="get" onsubmit="searchSubmit(); return false">

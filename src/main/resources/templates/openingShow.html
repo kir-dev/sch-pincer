@@ -26,8 +26,21 @@
 
 	<div class="page content">
 
+		<div class="highlighted">
+			<h3 th:text="#{lang.export.title}">Export</h3>
+			<form th:action="@{/configure/export}" method="get">
+				<span class="note" style="margin-bottom: 0" th:text="#{lang.export.scheme}">Select scheme:</span>
+				<select name="type">
+					<option th:each="et : ${exportTypes}" th:object="${et}" th:value="*{name()}" th:text="*{displayName}">Dzsájrosz</option>
+				</select>
+				<input type="hidden" name="openingId" value="0" th:value="${openingId}" />
+				<input class="button" type="submit" value="Export" th:value="#{lang.export.pdf}">
+			</form>
+		</div>
+
 		<div class="highlighted latest">
 			<h3 th:text="#{lang.profile.orders}">Orders</h3>
+			
 			<table class="orders full-table">
 				<tr>
 					<th th:text="#{lang.profile.orders-username}">Username</th>

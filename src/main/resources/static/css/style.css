@@ -56,6 +56,24 @@ a {
 	-webkit-tap-highlight-color: rgba(0,0,0,0.3);
 }
 
+::-webkit-scrollbar-thumb {
+	background-color: #383839;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background-color: #000000;
+}
+
+::-webkit-scrollbar-track {
+	background-color: #222222;
+	box-shadow: 0;
+	border-radius: 0;
+}
+
+::-webkit-scrollbar {
+	width: 6px;
+}
+
 .blur {
 	-webkit-filter: blur(2px);
 	-moz-filter: blur(2px);
@@ -879,6 +897,21 @@ a {
 	text-align: center;
 }
 
+.popup .info p a {
+	color: #FFFFFF;
+	text-decoration: none;
+	border-bottom: 2px dotted #FFFFFF;
+}
+
+.popup .info p b {
+	display: inline-block;
+	background-color: #242425;
+	border-radius: 4px;
+    padding: 2px 8px;
+    font-weight: normal;
+    color: #FFFFFF;
+}
+	
 .popup .image i {
 	color: #FFFFFF;
 	position: relative;
