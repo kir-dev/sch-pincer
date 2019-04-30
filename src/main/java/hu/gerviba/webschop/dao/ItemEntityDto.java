@@ -29,6 +29,7 @@ public class ItemEntityDto {
     private final long nextOpeningDate;
     private final List<TimeWindowEntity> timeWindows;
     private final ItemOrderableStatus orderStatus;
+    private final int flag;
     
     public ItemEntityDto(ItemEntity base, OpeningEntity opening) {
         this.id = base.getId();
@@ -44,6 +45,7 @@ public class ItemEntityDto {
         this.nextOpeningDate = opening == null ? 0 : opening.getDateStart();
         this.timeWindows = opening == null ? new ArrayList<>() : opening.getTimeWindows();
         this.orderStatus = ItemOrderableStatus.OK;
+        this.flag = base.getFlag();
         
         if (base.getCircle() != null) {
 		    this.circleId = base.getCircle().getId();

@@ -59,29 +59,48 @@ public class ApiController {
     @ApiOperation("Item info")
     @GetMapping("/item/{id}")
     @ResponseBody
-    public ItemEntityDto getItem(@PathVariable Long id) {
+    public ItemEntityDto getItem(HttpServletRequest request, @PathVariable Long id) {
         ItemEntity item = items.getOne(id);
+        if (util.getUser(request) == null && !item.isVisibleWithoutLogin())
+            return null;
+        
         return new ItemEntityDto(item, openings.findNextOf(item.getCircle().getId()));
     }
 
     @ApiOperation("List of items")
     @GetMapping("/items")
     @ResponseBody
-    public ResponseEntity<List<ItemEntityDto>> getAllItems() {
+    public ResponseEntity<List<ItemEntityDto>> getAllItems(HttpServletRequest request, @RequestParam(required = false) Long circle) {
         Map<Long, OpeningEntity> cache = new HashMap<>();
+        
+        boolean loggedIn = util.getUser(request) != null;
+        
+        if (circle != null) {
+            List<ItemEntityDto> list = items.findAllByCircle(circle).stream()
+                    .filter(item -> item.isVisibleWithoutLogin() || loggedIn)
+                    .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(item.getCircle().getId(), (i) -> openings.findNextOf(i))))
+                    .collect(Collectors.toList());
+            return new ResponseEntity<List<ItemEntityDto>>(list, HttpStatus.OK); 
+        }
+        
         List<ItemEntityDto> list = items.findAll().stream()
+                .filter(item -> item.isVisibleWithoutLogin() || loggedIn)
+                .filter(item -> item.isVisibleInAll())
                 .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(item.getCircle().getId(), (i) -> openings.findNextOf(i))))
                 .collect(Collectors.toList());
-        
         return new ResponseEntity<List<ItemEntityDto>>(list, HttpStatus.OK);
     }
 
     @ApiOperation("List of items orderable right now")
     @GetMapping("/items/now")
     @ResponseBody
-    public ResponseEntity<List<ItemEntityDto>> getAllItemsToday() {
+    public ResponseEntity<List<ItemEntityDto>> getAllItemsToday(HttpServletRequest request) {
+        boolean loggedIn = util.getUser(request) != null;
+        
         Map<Long, OpeningEntity> cache = new HashMap<>();
         List<ItemEntityDto> list = items.findAllByOrerableNow().stream()
+                .filter(item -> item.isVisibleWithoutLogin() || loggedIn)
+                .filter(item -> item.isVisibleInAll())
                 .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(item.getCircle().getId(), (i) -> openings.findNextOf(i))))
                 .collect(Collectors.toList());
                 
@@ -91,9 +110,13 @@ public class ApiController {
     @ApiOperation("List of items orderable tomorrow")
     @GetMapping("/items/tomorrow")
     @ResponseBody
-    public ResponseEntity<List<ItemEntityDto>> getAllItemsTomorrow() {
+    public ResponseEntity<List<ItemEntityDto>> getAllItemsTomorrow(HttpServletRequest request) {
+        boolean loggedIn = util.getUser(request) != null;
+        
         Map<Long, OpeningEntity> cache = new HashMap<>();
         List<ItemEntityDto> list = items.findAllByOrerableTomorrow().stream()
+                .filter(item -> item.isVisibleWithoutLogin() || loggedIn)
+                .filter(item -> item.isVisibleInAll())
                 .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(item.getCircle().getId(), (i) -> openings.findNextOf(i))))
                 .collect(Collectors.toList());
         
@@ -103,9 +126,13 @@ public class ApiController {
     @ApiOperation("Page of items")
     @GetMapping("/items/{page}")
     @ResponseBody
-    public ResponseEntity<List<ItemEntityDto>> getItems(@PathVariable int page) {
+    public ResponseEntity<List<ItemEntityDto>> getItems(HttpServletRequest request, @PathVariable int page) {
+        boolean loggedIn = util.getUser(request) != null;
+        
         Map<Long, OpeningEntity> cache = new HashMap<>();
         List<ItemEntityDto> list = items.findAll(page).stream()
+                .filter(item -> item.isVisibleWithoutLogin() || loggedIn)
+                .filter(item -> item.isVisibleInAll())
                 .map(item -> new ItemEntityDto(item, 
                         cache.computeIfAbsent(item.getCircle().getId(), (i) -> openings.findNextOf(i))))
                 .collect(Collectors.toList());
@@ -151,7 +178,7 @@ public class ApiController {
     @ApiOperation("Set room code")
     @PostMapping("/user/room")
     @ResponseBody
-    public String setRoom(HttpServletRequest request, @RequestParam(required = true) int room) {
+    public String setRoom(HttpServletRequest request, @RequestParam(required = true) String room) {
         try {
             UserEntity user = util.getUser(request);
             user.setRoom(room);

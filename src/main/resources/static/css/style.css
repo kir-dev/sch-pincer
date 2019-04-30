@@ -18,6 +18,7 @@ object {
 body {
 	font-family: 'Roboto', 'Roboto-offline', sans-serif;
 	background-color: #242425;
+	overflow-x: hidden;
 }
 
 input, button {
@@ -93,6 +94,7 @@ a {
 	font-size: 26px;
 	font-weight: 900;
 	text-shadow: 0 2px 2px #111111;
+	cursor: pointer;
 }
 
 .header nav {
@@ -195,6 +197,21 @@ a {
 	bottom: 0;
 	background: linear-gradient(to bottom left, rgba(0, 0, 0, 0), rgba(136, 136, 136, 0.7));
 	z-index: 1000;
+	height: 100%;
+	width: 100%;
+}
+
+.item .picture .flag {
+	position: absolute;
+	top: 0;
+	right: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 1001;
+	background-repeat: no-repeat;
+	background-position: center;
+	height: 100%;
+	width: 100%;
 }
 
 .item table {
@@ -220,6 +237,7 @@ a {
 	text-transform: uppercase;
 	padding: 14px 20px 10px 20px;
 	display: block;
+	cursor: pointer;
 }
 
 .item span {
@@ -236,7 +254,8 @@ a {
 	right: 0;
 }
 
-.item span a {
+.item span a,
+.item span i.a {
 	text-decoration: none;
 	color: inherit;
 	opacity: 1;
@@ -1585,20 +1604,23 @@ textarea {
 
 .prompt table,
 .dashboard table,
-.orders {
+.orders,
+.responsive-table {
 	border-spacing: 0;
 	border-collapse: collapse;
 	text-transform: uppercase;
 	margin-top: 0 !important;
 }
 
-.orders .comment {
+.orders .comment,
+.responsive-table .comment {
 	text-transform: none;
 }
 
 .prompt table th,
 .dashboard table th,
-.orders th {
+.orders th,
+.responsive-table th {
 	border-bottom: 2px solid #888888;
 	text-align: left;
 	text-transform: uppercase;
@@ -1607,7 +1629,8 @@ textarea {
 
 .prompt table td,
 .dashboard table td,
-.orders td {
+.orders td,
+.responsive-table td {
 	text-align: left;
 	padding: 12px 14px !important;
 }
@@ -1618,20 +1641,27 @@ textarea {
 	background-color: #3f3f40;
 }
 
-.dashboard table a {
+.responsive-table tr:nth-of-type(6n-5) {
+	border-top: 2px solid #FFFFFF;
+}
+
+.responsive-table tr:last-of-type {
+	border-bottom: 2px solid #FFFFFF;
+}
+
+.dashboard table a,
+.responsive-table table a {
 	transition: opacity ease 0.2s;
 	opacity: 1;
 }
 
-.dashboard table a:hover {
+.dashboard table a:hover,
+.responsive-table table a:hover {
 	opacity: 0.5;
 }
 
-.orders td:first-of-type {
-	font-weight: bold;
-}
-
-.orders td:first-of-type {
+.orders td:first-of-type,
+.responsive-table td:first-of-type {
 	font-weight: bold;
 }
 
@@ -2205,14 +2235,16 @@ textarea {
 
 .site-menu a img {
 	height: 20vw;
-	max-height: 15vh;
+	max-height: 12vh;
 	width: 20vw;
-	max-width: 15vh;
+	max-width: 12vh;
+	display: block;
+	margin: 0 auto;
 }
 
 .site-menu a.icons {
 	display: inline-block;
-	padding: 6vmin;
+	padding: 4vmin;
 }
 
 .site-menu .container {
@@ -2221,6 +2253,12 @@ textarea {
 	bottom: 5vh;
 	width: 100vw;
 	max-height: calc(90vh - 200px);
+}
+
+.site-menu span {
+	margin-top: 8px;
+	display: block;
+	font-size: 10px;
 }
 
 .site-menu .close {
@@ -2376,6 +2414,25 @@ textarea {
 	
 	.circles-table .arrow {
 		display: table-cell;
+	}
+	
+	.responsive-table {
+		display: none;
+	}
+	
+	.orders {
+		display: table;
+	}
+}
+
+
+@media only screen and (max-width: 900px) {
+	.responsive-table {
+		display: table;
+	}
+	
+	.orders {
+		display: none;
 	}
 }
 	
@@ -2605,4 +2662,26 @@ input:checked+.form-slider:before {
 	-webkit-transform: translateX(26px);
 	-ms-transform: translateX(26px);
 	transform: translateX(26px);
+}
+
+.profile-badge {
+	background-color: #990033;
+	box-shadow: 0 2px 0 #54001C;
+	color: #FFFFFF;
+	font-size: 13px;
+	padding: 4px 8px;
+	display: inline-block;
+	margin-left: 10px;
+	vertical-align: top;
+	font-weight: 600;
+	border-radius: 2px;
+	text-shadow: 0 2px 0 #54001C;
+}
+
+.popup .info p .material-icons {
+	font-size: 16px;
+}
+
+#saved {
+	display: none;
 }

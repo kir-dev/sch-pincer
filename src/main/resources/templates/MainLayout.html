@@ -38,12 +38,14 @@
 		<div class="container">
 			<a th:each="circle : ${circles}" th:href="@{/circle/__${circle.id}__}" class="icons">
 				<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{/__${circle.logoUrl}__}" width="80" height="80" />
+				<span th:text="${circle.displayName}">Vödör</span>
 			</a>
 		</div>
 	</div>
 
 	<div class="header">
 		<span th:text="#{lang.header}" th:onclick="'location.href=\'' + @{/} + '\''">WEBSCHOP</span>
+		<ins th:if="${#arrays.contains(@environment.getActiveProfiles(),'demo')}" class="profile-badge">DEMO</ins>
 		<nav>
 			<object th:include="fragments/menu :: menu(${user})" th:remove="tag"></object>
 		</nav>

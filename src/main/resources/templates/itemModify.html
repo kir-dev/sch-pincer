@@ -114,6 +114,19 @@
 						</td>
 					</tr>
 					<tr>
+						<td th:text="#{lang.configure.item.visible-without-login}">Visible without login</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="visibleInAll" th:checked="*{visibleWithoutLogin}">
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.configure.item.tag}">Tag</td>
+						<td><input type="text" th:field="*{tag}"/></td>
+					</tr>
+					<tr>
 						<td th:text="#{lang.configure.item.image}">Image</td>
 						<td><input type="file" name="imageFile"/></td>
 					</tr>

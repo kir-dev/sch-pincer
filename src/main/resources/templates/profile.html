@@ -54,8 +54,9 @@
 							<ins id="room" th:text="${session.user?.room} ?: #{lang.profile.not-set}">SCH 1920</ins>
 							<a id="room-edit" href="#" onclick="showEdit(); return false"><i class="material-icons">edit</i></a>
 							<form id="room-form" style="display: none" onsubmit="setRoom(); return false" action="#" method="GET">
-								<input type="text" id="room-setter" maxlength="4" autocomplete="off" />
+								<input type="text" id="room-setter" maxlength="8" autocomplete="off" onfocusout="setRoom();" />
 							</form>
+							<ins id="saved" th:text="#{lang.profile.saved}">Elmentve</ins>
 						</span>
 					</td>
 				</tr>
@@ -91,9 +92,6 @@
 						<i class="material-icons" th:if="${#strings.equals(order.status, 'CANCELLED')}"
 								th:title="#{lang.profile.status-cancelled}">do_not_disturb</i>
 
-<!-- 						<a href="#" th:onclick="'cancelItem(' + ${order.id} + '); return false'" th:if="${#strings.equals(order.status, 'ACCEPTED')}"> -->
-<!-- 							<i class="material-icons">delete</i> -->
-<!-- 						</a> -->
 					</td>
 					<td th:text="${#dates.format(order.date, '__#{lang.date-short-format}__')} + ' ' + *{intervalMessage}">
 						10:00 - 10:30
@@ -102,6 +100,51 @@
 					<td th:text="*{price} + ' ' + #{lang.currency}">800 JMF</td>
 					<td th:text="*{comment}" class="comment">Csípjen papa</td>
 				</tr>
+			</table>
+			
+			<table class="responsive-table full-table">
+				<object th:each="order : ${orders}" th:object="${order}" th:remove="tag">
+				<tr>
+					<td th:text="#{lang.profile.orders-name}">Name</td>
+					<td th:text="*{name}">Ördög pizza</td>
+				</tr>
+				
+				<tr>
+					<td th:text="#{lang.profile.orders-status}">Status</td>
+					<td>
+						<i class="material-icons" th:if="${#strings.equals(order.status, 'SHIPPED')}" 
+								th:title="#{lang.profile.status-shipped}">done</i>
+						<i class="material-icons" th:if="${#strings.equals(order.status, 'INTERPRETED')}"
+								th:title="#{lang.profile.status-interpreted}">local_shipping</i>
+						<i class="material-icons" th:if="${#strings.equals(order.status, 'ACCEPTED')}"
+								th:title="#{lang.profile.status-accepted}">shopping_cart</i>
+						<i class="material-icons" th:if="${#strings.equals(order.status, 'CANCELLED')}"
+								th:title="#{lang.profile.status-cancelled}">do_not_disturb</i>
+					</td>
+				</tr>
+				
+				<tr>
+					<td th:text="#{lang.profile.orders-time}">Time</td>
+					<td th:text="${#dates.format(order.date, '__#{lang.date-short-format}__')} + ' ' + *{intervalMessage}">
+						10:00 - 10:30
+					</td>
+				</tr>
+				
+				<tr>
+					<td th:text="#{lang.profile.orders-room}">Room</td>
+					<td th:text="*{room}">SCH 1037</td>
+				</tr>
+				
+				<tr>
+					<td th:text="#{lang.profile.orders-price}">Price</td>
+					<td th:text="*{price} + ' ' + #{lang.currency}">800 JMF</td>
+				</tr>
+				
+				<tr>
+					<td th:text="#{lang.profile.orders-comment}">Comment</td>
+					<td th:text="*{comment}" class="comment">Csípjen papa</td>
+				</tr>
+				</object>
 			</table>
 			<span th:if="${#lists.isEmpty(orders)}" class="note" th:text="#{lang.profile.no-orders}">You have no orders yet</span>
 		</div>

@@ -1,17 +1,17 @@
 package hu.gerviba.webschop.web;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import hu.gerviba.webschop.model.CircleEntity;
@@ -48,9 +48,15 @@ public class MainController {
     
     @GetMapping("/")
     public String root(Map<String, Object> model) {
-        model.put("circles", circles.findAllForMenu());
+        List<CircleEntity> circlesList = circles.findAllForMenu();
+        model.put("circles", circlesList);
+        List<CircleEntity> random = new ArrayList<>();
+        random.addAll(circlesList);
+        Collections.shuffle(random);
+        model.put("circlesRandom", random);
         List<OpeningEntity> opens = openings.findAll();
         model.put("opener", opens.size() > 0 ? opens.get(0) : null);
+        model.put("openings", openings.findAll()); //TODO: nextWeek
         return "index";
     }
     
@@ -89,8 +95,8 @@ public class MainController {
         return "circleProfile";
     }
 
-    @PreAuthorize("hasRole('USER')")
-    @GetMapping("/circle/{circleId}/review")
+//    @PreAuthorize("hasRole('USER')")
+//    @GetMapping("/circle/{circleId}/review")
     public String circleSpecificRate(@PathVariable Long circleId, Map<String, Object> model) {
         
         CircleEntity circle = circles.getOne(circleId);
@@ -100,8 +106,8 @@ public class MainController {
         return "circleReview";
     }   
     
-    @PreAuthorize("hasRole('USER')")
-    @PostMapping("/circle/{circleId}/review")
+//    @PreAuthorize("hasRole('USER')")
+//    @PostMapping("/circle/{circleId}/review")
     public String circleRate(HttpServletRequest request, @PathVariable Long circleId, 
             @ModelAttribute ReviewEntity review, Map<String, Object> model) {
         

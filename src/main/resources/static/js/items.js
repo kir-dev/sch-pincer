@@ -1,30 +1,15 @@
 var page = 0;
 var endReached = false;
 var selectedItem = null;
+var latestData;
 
-function appendNext() {
+function appendNext(profile = 0) {
     if (page === 0)
         clearAll();
-    	
-//    $.ajax({
-//        dataType: "json",
-//        url: URL_BASE + "api/items/" + (page++),
-//        success: function(data) {
-//            if (data.length === 0) {
-//                endReached = true;
-//                $("#loading").css({display: "none"});
-//                $("#list-end").css({display: "inline-block"});
-//                return;
-//            }
-//            for (var item in data)
-//                addItem(data[item]);
-//            $("#loading").css({display: "none"});
-//        }
-//    });
     
     $.ajax({
         dataType : "json",
-        url : URL_BASE + "api/items/" + getFilter("/"),
+        url : URL_BASE + "api/items/" + getFilter("/") + (profile !== Number(0) ? '?circle=' + profile : ''),
         success : function(data) {
             endReached = true;
             if (data.length === 0) {
@@ -140,9 +125,10 @@ function formatItem(item) {
     return `
                 <div class="item ${item.circleColor}">
                     <div class="picture" style="background-image: url('${URL_BASE}${item.imageName}');" onclick="showPopup(${item.id})">
+                        ${item.flag === 0 ? '' : `<div class="flag" style="background-image: url('${URL_BASE}flags/flag${item.flag}.png')"></div>`}
                         <div class="overlay"></div>
                     </div>
-                    <h3>${item.name}</h3>
+                    <h3 onclick="showPopup(${item.id})">${item.name}</h3>
                     <table>
                         <tr>
                             <td>${LANG['ingred']}:</td>
@@ -155,12 +141,13 @@ ${appendCustom(item.detailsConfigJson)}
                         </tr>
                     </table>
                     <span>
-					    <a href="#" onclick="showPopup(${item.id}); return false">
-					    <i class="material-icons">assignment</i></a>
 					    ${!item.orderable ? '' : `
-                        <a href="#" onclick="showPopup(${item.id}); return false">
-                        <i class="material-icons">local_mall</i></a>
+                        <a href="#" onclick="showPopup(${item.id}); return false" alt="">
+                        <i class="material-icons" alt="">local_mall</i></a>
                         `}
+                        
+                        ${item.flag != '1' ? '' : `<i class="material-icons a" alt="">fiber_new</i>`}
+                        
                         <a class="colored-light" href="${URL_BASE}circle/${item.circleAlias}">${item.circleName}</a>
                     </span>
                 </div>`;
@@ -196,8 +183,12 @@ function generateCustom(json) {
                 result += generateExtraSelect(element);
             } else if (element.type === "EXTRA_CHECKBOX") {
                 result += generateExtraCheckbox(element);
-            } else if (element.type === "AMERICANO_EXTRA") {
-                result += generateExtraCheckbox(element);
+            } else if (element.type === "AMERICANO_SELECT") {
+                result += generateExtraSelect(element);
+            }  else if (element.type === "EXTRA_SELECT") {
+                result += generateExtraSelect(element);
+            }  else if (element.type === "PIZZASCH_SELECT") {
+                result += generatePizzaschSelect(element);
             } else {
                 result += 'UNKNOWN TYPE: ' + element.type;
             }
@@ -206,11 +197,11 @@ function generateCustom(json) {
     return result;
 }
 
-function generateTimes(timeWindows) {
+function generateTimes(timeWindows, extra = false) {
     let result = "";
     timeWindows.forEach(element => {
         if (element.name !== undefined) {
-            result += `<option value="${element.id}">${element.name} (${element.normalItemCount}${LANG.pieces})</option>`;
+            result += `<option value="${element.id}">${element.name} (${extra ? element.extraItemCount : element.normalItemCount}${LANG.pieces})</option>`;
         }
     });
     return result;
@@ -237,10 +228,28 @@ function generateExtraSelect(element) {
     
 }
 
-function generateExtraCheckbox(element) {
+function generatePizzaschSelect(element) {
     let result = "";
     result += `
-        <label>${LANG[element.name]}</label><div class="component">`;
+        <label>${LANG[element.name]}</label>
+        <select name="${element.name}" data-prices="${element.prices}" onchange="itemChangedPizzasch()" class="price-changer" id="pizzasch-select">`;
+    for (var optionId = 0; optionId < element.values.length; optionId++) {
+        let value = element.values[optionId];
+        let price = element.prices[optionId];
+        result += `<option value="${optionId}">${value}${price != 0 ? ' (+' + price + ' ' + LANG['currency'] + ')' : ''}</option>`;
+    }
+    result += `</select>`;
+    if (element._comment) {
+    	result += `<span class="comment">${element._comment}</span>`;
+    }
+    return result;
+    
+}
+
+
+function generateExtraCheckbox(element) {
+    let result = "";
+    result += `<label>${LANG[element.name]}</label><div class="component">`;
     for (var optionId = 0; optionId < element.values.length; optionId++) {
         let value = element.values[optionId];
         let price = element.prices[optionId];
@@ -270,11 +279,19 @@ function itemChanged() {
     $("#popup-price").text(price + " " + LANG['currency']);
 }
 
+
+function itemChangedPizzasch() {
+	itemChanged();
+    $("#popup-timewindows").html(generateTimes(latestData.timeWindows, $("#pizzasch-select").prop('selectedIndex') != 0));
+}
+
 function showPopup(id) {
+	disableScroll();
     $.ajax({
         dataType: "json",
         url: URL_BASE + "api/item/" + id,
         success: function(data) {
+        	latestData = data;
             $("#popup-title").text(data.name);
             $("#popup-header").css({"background-image": "url('" + URL_BASE + data.imageName + "')"});
             $("#popup-image").css({"background-image": "url('" + URL_BASE + data.imageName + "')"});
@@ -303,6 +320,7 @@ function closePopup(purchased = false) {
     $("#popup").addClass("inactive");
     $("#popup-window").attr("class", "popup");
     selectedItem = null;
+    enableScroll();
 }
 
 function packDetails() {
@@ -331,6 +349,12 @@ function packDetails() {
             		name: element.name,
                 	selected: getCheckboxChecked(element.name, element.values.length)
                 });
+            } else if (element.type === "PIZZASCH_SELECT") {
+	            result.push({
+	        		type: "PIZZASCH_SELECT",
+	        		name: element.name,
+	        		selected: [$(`select[name='${element.name}']`).val()]
+	            });
             }
         }
     });
@@ -368,6 +392,8 @@ function buySelectedItem() {
 	    	showMessageBox(LANG.orderFull);
 	    } else if (data === "MAX_REACHED") {
 	    	showMessageBox(LANG.intervalFull);
+	    } else if (data === "MAX_REACHED_EXTRA") {
+	    	showMessageBox(LANG.intervalFullExtra);
 	    } else if (data === "NO_ORDERING") {
 	    	showMessageBox(LANG.alreadyClosed);
 	    } else if (data === "NO_ROOM_SET") {
@@ -412,9 +438,42 @@ function showMessageBox(message) {
 	$(".messagebox").css({display: "inline-block"});
 }
 
+var keys = {37: 1, 38: 1, 39: 1, 40: 1};
+
+function preventDefault(e) {
+	e = e || window.event;
+	if (e.preventDefault)
+		e.preventDefault();
+	e.returnValue = false;  
+}
+
+function preventDefaultForScrollKeys(e) {
+	if (keys[e.keyCode]) {
+		preventDefault(e);
+		return false;
+	}
+}
+
+function disableScroll() {
+	if (window.addEventListener)
+		window.addEventListener('DOMMouseScroll', preventDefault, false);
+	window.onwheel = preventDefault;
+	window.onmousewheel = document.onmousewheel = preventDefault;
+	window.ontouchmove  = preventDefault;
+	document.onkeydown  = preventDefaultForScrollKeys;
+}
+
+function enableScroll() {
+	if (window.removeEventListener)
+		window.removeEventListener('DOMMouseScroll', preventDefault, false);
+	window.onmousewheel = document.onmousewheel = null; 
+	window.onwheel = null; 
+	window.ontouchmove = null;  
+	document.onkeydown = null;  
+}
+
 $(window).scroll(function() {
-    if ($(window).scrollTop() == $(document).height() - $(window).height()
-            && !endReached) {
+    if ($(window).scrollTop() == $(document).height() - $(window).height() && !endReached) {
         appendNext();
     }
 });

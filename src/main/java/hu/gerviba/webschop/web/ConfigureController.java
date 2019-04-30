@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -30,7 +28,6 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -91,9 +88,10 @@ public class ConfigureController {
     }
     
     @GetMapping("/configure/{circleId}")
-    public String configure(@PathVariable Long circleId, Map<String, Object> model) {
+    public String configure(@PathVariable Long circleId, Map<String, Object> model, HttpServletRequest request) {
         model.put("circles", circles.findAllForMenu());
         model.put("circle", circles.getOne(circleId));
+        model.put("pr", util.isPR(circleId, request));
         model.put("circleId", circleId);
         model.put("items", items.findAllByCircle(circleId));
         return "configure";
@@ -113,7 +111,7 @@ public class ConfigureController {
             @RequestParam MultipartFile avatarFile,
             HttpServletRequest request) {
         
-        if (util.cannotEditCircle(circleId, request))
+        if (util.cannotEditCircleNoPR(circleId, request))
             return "redirect:/configure/" + circleId + "?error";
         
         CircleEntity circle = circles.getOne(circleId);
@@ -126,9 +124,9 @@ public class ConfigureController {
         return "redirect:/configure/" + circleId;
     }
     
-    //TODO: hashPermission
+    //TODO: hashPermission (fixed?)
     @GetMapping("/configure/{circleId}/members/delete/{memberId}")
-    public String deleteMember(@PathVariable Long circleId, @PathVariable Long memberId, 
+    public String deleteMemberNoPR(@PathVariable Long circleId, @PathVariable Long memberId, 
             Map<String, Object> model) {
         
         
@@ -140,12 +138,11 @@ public class ConfigureController {
         return "prompt";
     }
 
-    //TODO: hashPermission CHECK IF THE MEMBER IS ON OTHER CIRCLE
     @PostMapping("/configure/{circleId}/members/delete/{memberId}/confirm")
     public String deleteMemberConfirm(@PathVariable Long circleId, @PathVariable Long memberId,
             Map<String, Object> model, HttpServletRequest request) {
         
-        if (util.cannotEditCircle(circleId, request))
+        if (util.cannotEditCircleNoPR(circleId, request))
             return "redirect:/configure/" + circleId + "?error";
         
         CircleMemberEntity cme = members.getOne(memberId);
@@ -171,7 +168,7 @@ public class ConfigureController {
             @RequestParam(required = false) MultipartFile background,
             HttpServletRequest request) {
         
-        if (util.cannotEditCircle(circleId, request))
+        if (util.cannotEditCircleNoPR(circleId, request))
             return "redirect:/configure/" + circleId + "?error";
         
         CircleEntity original = circles.getOne(circleId);
@@ -210,6 +207,8 @@ public class ConfigureController {
         ie.setService(false);
         ie.setVisibleInAll(true);
         ie.setPersonallyOrderable(false);
+        ie.setVisibleWithoutLogin(false);
+        ie.setFlag(0);
         model.put("item", ie);
         return "itemModify";
     }
@@ -267,6 +266,8 @@ public class ConfigureController {
         original.setPersonallyOrderable(item.isPersonallyOrderable());
         original.setService(item.isService());
         original.setVisibleInAll(item.isVisibleInAll());
+        original.setVisibleWithoutLogin(item.isVisibleWithoutLogin());
+        original.setFlag(item.getFlag());
         
         String file = util.uploadFile("items", imageFile);
         if (file != null)
@@ -435,8 +436,8 @@ public class ConfigureController {
         table.setWidths(export.getWidths());
         table.setWidthPercentage(100);
         addTableHeader(table, export);
-        for (int i = 0; i < 100; ++i)
-            addRows(table, export, opening);
+//        for (int i = 0; i < 100; ++i)
+//            addRows(table, export, opening);
          
         document.add(table);
         document.close();

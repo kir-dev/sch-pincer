@@ -65,6 +65,19 @@ public class ControllerUtil {
                 && user.getPermissions().contains("CIRCLE_" + circleId)) || user.isSysadmin());
     }
     
+    public boolean cannotEditCircleNoPR(Long circleId, HttpServletRequest request) {
+        UserEntity user = getUser(request);
+        return !((user.getPermissions() != null 
+                && user.getPermissions().contains("ROLE_LEADER")
+                && user.getPermissions().contains("CIRCLE_" + circleId)
+                && !user.getPermissions().contains("PR_" + circleId)) || user.isSysadmin());
+    }
+    
+    public boolean isPR(Long circleId, HttpServletRequest request) {
+        UserEntity user = getUser(request);
+        return user.getPermissions().contains("PR_" + circleId);
+    }
+    
     public Long parseDate(String in) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
         Date date;

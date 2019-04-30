@@ -2,7 +2,6 @@ package hu.gerviba.webschop.web.comonent;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -48,8 +47,32 @@ public enum CustomComponentType {
             return result;
         }
 	},
+	PIZZASCH_SELECT {
+        @Override
+        public int processPrices(CustomComponentAnswer cca, OrderEntity oe, CustomComponentModel ccm) {
+            return ccm.getPrices().get(cca.getSelected().get(0));
+        }
+
+        @Override
+        public List<String> processMessage(CustomComponentAnswer cca, OrderEntity oe, CustomComponentModel ccm) {
+            List<String> list = new ArrayList<>();
+            list.add(
+                    ccm.getAliases()
+                    .get(
+                    cca.getSelected()
+                    .get(0)
+                    )
+                    );
+            return list;
+        }
+        
+        @Override
+        public boolean isExtra(CustomComponentAnswer cca) {
+            return cca.getSelected().get(0) > 0;
+        }
+    },
 	LANGOSCH_IMAGEDRAWER, // Not sure hogyan fog működni
-	AMERICANO_EXTRA { // Checkbox (a negáltja jelenik meg a pdf-en)
+	AMERICANO_SELECT { // Checkbox (a negáltja jelenik meg a pdf-en)
         @Override
         public int processPrices(CustomComponentAnswer cca, OrderEntity oe, CustomComponentModel ccm) {
             int result = 0;
@@ -82,6 +105,10 @@ public enum CustomComponentType {
         return new ArrayList<>(0);
     }
     
+    public boolean isExtra(CustomComponentAnswer cca) {
+        return false;
+    }
+    
 	private static ObjectMapper mapper = new ObjectMapper();
 	private static Map<String, CustomComponentType> types = Stream.of(values())
 	        .collect(Collectors.toMap(CustomComponentType::name, x -> x));
@@ -103,6 +130,8 @@ public enum CustomComponentType {
                     .processPrices(answer, order, mapped.get(answer.getName()));
             extraString.add(String.join(", ", types.getOrDefault(answer.getType(), UNKNOWN)
                     .processMessage(answer, order, mapped.get(answer.getName()))));
+            if (types.getOrDefault(answer.getType(), UNKNOWN).isExtra(answer))
+                order.setExtraTag(true);
         }
         
         order.setPrice(ie.getPrice() + extraPrice);

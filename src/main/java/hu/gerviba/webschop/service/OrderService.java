@@ -86,7 +86,10 @@ public class OrderService {
             String detailsJson) throws JsonParseException, JsonMappingException, IOException {
         
         UserEntity user = util.getUser(request);
-        if (user.getRoom() == null || user.getRoom().length() < 3)
+        if (user == null)
+            return new ResponseEntity<String>("Error 403", HttpStatus.FORBIDDEN);
+        
+        if (user.getRoom() == null || user.getRoom().length() < 1)
             return new ResponseEntity<String>("NO_ROOM_SET", HttpStatus.OK);
         
         OrderEntity order = new OrderEntity(user.getUid(), user.getName(), comment, detailsJson, user.getRoom());
@@ -117,7 +120,14 @@ public class OrderService {
         if (timewindow.getNormalItemCount() <= 0)
             return new ResponseEntity<String>("MAX_REACHED", HttpStatus.OK);
         
+        if (order.isExtraTag() && timewindow.getExtraItemCount() <= 0) {
+            return new ResponseEntity<String>("MAX_REACHED_EXTRA", HttpStatus.OK);
+        }
+        
         timewindow.setNormalItemCount(timewindow.getNormalItemCount() - 1);
+        if (order.isExtraTag())
+            timewindow.setExtraItemCount(timewindow.getExtraItemCount() - 1);
+        
         current.setOrderCount(current.getOrderCount() + 1);
         
         order.setDate(timewindow.getDate());

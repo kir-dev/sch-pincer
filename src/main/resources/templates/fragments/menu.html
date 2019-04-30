@@ -12,7 +12,7 @@
 			</object>
 
 			<a href="index.html"    th:href="@{/}"       th:text="#{lang.nav.home}" class="long">Home</a>
-			<a href="circle.html"   th:href="@{/szor}" th:text="#{lang.nav.circle}" class="long">Circles</a>
+			<a href="circle.html"   th:href="@{/szor}"   th:text="#{lang.nav.circle}" class="long">Circles</a>
 			<a href="items.html"    th:href="@{/items}"  th:text="#{lang.nav.items}" class="long">Items</a>
 
 			<a th:if="${session.user} neq null" th:href="@{/profile}" th:text="${session.user?.name}" class="long">Test User</a>

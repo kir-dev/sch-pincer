@@ -80,6 +80,9 @@ public class ItemEntity implements Serializable {
     private boolean visibleInAll;
     
     @Column
+    private boolean visibleWithoutLogin;
+    
+    @Column
     private boolean personallyOrderable;
     
     @Column
@@ -90,8 +93,8 @@ public class ItemEntity implements Serializable {
     
 	public ItemEntity(String name, CircleEntity circle, String description, String ingredients, 
 	        String keywords, String detailsConfigJson, int price, boolean orderable, boolean visible, 
-	        boolean service, boolean visibleInAll, boolean personallyOrderable,
-	        String imageName) {
+	        boolean service, boolean visibleInAll, boolean personallyOrderable, boolean visibleWithoutLogin,
+	        String imageName, int flag) {
 		this.name = name;
 		this.circle = circle;
 		this.description = description;
@@ -104,8 +107,9 @@ public class ItemEntity implements Serializable {
 		this.service = service;
 		this.visibleInAll = visibleInAll;
 		this.personallyOrderable = personallyOrderable;
+		this.visibleWithoutLogin = visibleWithoutLogin;
 		this.imageName = imageName;
-		this.flag = 0;
+		this.flag = flag;
 	}
 
     public ItemEntity(ItemEntity copy) {

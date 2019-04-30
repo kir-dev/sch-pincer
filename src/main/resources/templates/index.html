@@ -41,9 +41,8 @@
 				</div>
 			</div>
 		</div>
-		
 		<div class="article-set">
-			<div th:each="circle : ${circles}" class="article orange" th:class="'article ' + ${circle.cssClassName}">
+			<div th:each="circle,cStat : ${circlesRandom}" class="article orange" th:class="'article ' + ${circle.cssClassName}" th:unless="${cStat.index >= 2}">
 				<div class="picture">
 					<div class="overlay"></div>
 					<div class="image" style="background-image: url('../static/demo/pizzasch-bg.jpg')" 
@@ -62,96 +61,24 @@
 							th:text="#{lang.article.circle-button}">More info</a>
 				</div>
 			</div>
-			
-			<div class="article green" th:remove="all">
-				<div class="picture">
-					<div class="overlay"></div>
-					<div class="image" style="background-image: url('../static/demo/dzsajrosz-bg.jpg')"></div>
-				</div>
-				<h3>Dzsájrosz</h3>
-				<p>
-					Donec est turpis, pellentesque at dictum ut, aliquam at turpis. In et turpis at risus lobortis 
-					egestas. Mauris tellus dolor, porta id dictum tristique, rutrum sit amet leo. Donec non turpis 
-					nulla. Aliquam eget nisi id orci sollicitudin sodales a non enim. Etiam ultrices enim vel 
-					nulla gravida viverra.
-				</p>
-				<div class="button-holder">
-					<a href="#">More info</a>
-				</div>
-			</div>
-			
-			<div class="article blue" th:remove="all">
-				<div class="picture">
-					<div class="overlay"></div>
-					<div class="image" style="background-image: url('../static/demo/americano-bg.jpg')"></div>
-				</div>
-				<h3>Americano</h3>
-				<p>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-					Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
-					Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim 
-					luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat 
-					euismod ut eget erat.
-				</p>
-				<div class="button-holder">
-					<a href="#">More info</a>
-				</div>
-			</div>
-			
-			<div class="article purple" th:remove="all">
-				<div class="picture">
-					<div class="overlay"></div>
-					<div class="image" style="background-image: url('../static/demo/vodor-bg.jpg')"></div>
-				</div>
-				<h3>Vödör</h3>
-				<p>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-					Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
-					Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim 
-					luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat 
-					euismod ut eget erat.
-				</p>
-				<div class="button-holder">
-					<a href="#">More info</a>
-				</div>
-			</div>
-			
-			<div class="article red" th:remove="all">
-				<div class="picture">
-					<div class="overlay"></div>
-					<div class="image" style="background-image: url('../static/demo/kakas-bg.jpg')"></div>
-				</div>
-				<h3>Kakas</h3>
-				<p>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-					Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
-					Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim 
-					luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat 
-					euismod ut eget erat.
-				</p>
-				<div class="button-holder">
-					<a href="#">More info</a>
-				</div>
-			</div>
-			
-			<div class="article yellow" th:remove="all">
-				<div class="picture">
-					<div class="overlay"></div>
-					<div class="image" style="background-image: url('../static/demo/langosch-bg.jpg')"></div>
-				</div>
-				<h3>Lángosch</h3>
-				<p>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-					Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
-					Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim 
-					luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat 
-					euismod ut eget erat.
-				</p>
-				<div class="button-holder">
-					<a href="#">More info</a>
-				</div>
-			</div>
 		</div>
+		
+		<div class="highlighted latest">
+			<h2 th:text="#{lang.circle.next-openings}">Következő nyitások</h2>
+			
+			<table class="circles-table">
+				<tr th:each="opening : ${openings}" th:object="${opening}" th:class="*{circle.cssClassName}" class="purple">
+					<td class="border-colored">
+						<a href="#" th:text="*{circle.displayName}" th:href="@{/circle/__*{circle.alias}__/}">Vödör</a>
+					</td>
+					<td th:text="#{lang.weekday-__${#dates.dayOfWeekNameShort(opening.dateStart)}__}">Hetfő</td>
+					<td class="date" th:text="${#dates.format(opening.dateStart, '__#{lang.date-opening-format}__')}">18:00 (18-04-09)</td>
+					<td class="feeling" th:text="*{feeling}">Lorem ispsum dolor sit amet.</td>
+					<td class="arrow"><a href="#" th:href="@{/circle/__*{circle.id}__/}"><i class="material-icons">navigate_next</i></a></td>
+				</tr>
+			</table>
+		</div>
+		
 	</div>
 	
 	<div th:replace="MainLayout :: footer"></div>

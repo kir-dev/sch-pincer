@@ -55,8 +55,8 @@ public class UserEntity implements Serializable {
         this.cardType = CardType.DO;
     }
     
-    public void setRoom(int room) {
-        this.room = "SCH " + room;
+    public void setRoom(String room) {
+        this.room = room;
     }
     
 }

@@ -168,9 +168,6 @@ public class AdminController {
     public String adminDeleteCircleConfirm(@PathVariable Long circleId, 
             HttpServletRequest request) {
         
-//        if (!util.getUser(request).isSysadmin())
-//            return "redirect:/admin/?error";
-        
         items.deleteByCircle(circleId);
         circles.delete(circles.getOne(circleId));
         return "redirect:/admin/";
@@ -198,6 +195,8 @@ public class AdminController {
         for (String role : roles.split(",")) {
             role = role.trim().toUpperCase();
             if (role.startsWith("CIRCLE_"))
+                user.getPermissions().add(role);
+            if (role.startsWith("PR_"))
                 user.getPermissions().add(role);
         }
         if (user.getPermissions().size() > 0)

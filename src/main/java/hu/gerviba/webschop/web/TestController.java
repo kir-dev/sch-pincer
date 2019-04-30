@@ -42,7 +42,7 @@ public class TestController {
                 auth = new UsernamePasswordAuthenticationToken("test1", "test1", getAuthorities(user));
             } else {
                 UserEntity user = new UserEntity("66a7b238-5f0d-482d-a357-bb2407906883", "Simple User", "simpleuser@email.com");
-                user.setRoom(906);
+                user.setRoom("906");
                 users.save(user);
                 auth = new UsernamePasswordAuthenticationToken("test1", "test1", getAuthorities(user));
                 request.getSession().setAttribute("user", user);
@@ -85,7 +85,7 @@ public class TestController {
                 UserEntity user = new UserEntity("4f2d8797-0a22-404a-9ce4-7420a8cb6c1f", "Leader User", "leaderuser@email.com");
                 user.getPermissions().add("ROLE_LEADER");
                 user.getPermissions().add("CIRCLE_1");
-                user.setRoom(1020);
+                user.setRoom("1020");
                 users.save(user);
                 auth = new UsernamePasswordAuthenticationToken("test2", "test2", getAuthorities(user));
                 request.getSession().setAttribute("user", user);
@@ -114,7 +114,7 @@ public class TestController {
             } else {
                 UserEntity user = new UserEntity("b6fa75f0-8399-4869-9438-42da2baca30d", "Admin User", "adminuser@email.com");
                 user.setSysadmin(true);
-                user.setRoom(1820);
+                user.setRoom("1820");
                 users.save(user);
                 auth = new UsernamePasswordAuthenticationToken("test3", "test3", getAuthorities(user));
                 request.getSession().setAttribute("user", user);

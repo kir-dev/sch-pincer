@@ -22,7 +22,7 @@
 			</div>
             <h3 th:text="#{lang.configure.title}" class="topless">Leader Dashboard</h3>
 
-            <a class="button" href="#" th:href="@{/configure/__${circleId}__/edit}" 
+            <a class="button" href="#" th:unless="${pr}" th:href="@{/configure/__${circleId}__/edit}" 
                     th:text="#{lang.configure.edit-circle}">Edit circle</a>
 		</div>
 
@@ -64,7 +64,7 @@
                     th:text="#{lang.configure.title-item}">New item</a>
         </div>
         
-        <div class="highlighted dashboard latest">
+        <div class="highlighted dashboard latest" th:unless="${pr}">
 			<table class="form full-table no-top-table">
 				<tr>
 					<th th:text="#{lang.configure.member-list}">Members</th>
@@ -83,6 +83,8 @@
             <a class="button" href="#" th:href="@{/configure/__${circleId}__/members/new}" 
                     th:text="#{lang.configure.title-member}">New member</a>
 		</div>
+		
+		<div style="margin-top: 40px" th:if="${pr}"></div>
 	</div>
 
 	<div th:replace="MainLayout :: footer"></div>
