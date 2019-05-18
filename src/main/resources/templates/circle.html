@@ -101,7 +101,7 @@
 					</div>
 				</div>
 				<div class="message">
-					<h3 th:text="*{displayName}">Pizzásch</h3>
+					<h3 th:text="*{displayName}" th:onclick="'location.href = \'' + @{/circle/__*{alias}__/} + '\''">Pizzásch</h3>
 					<p th:text="*{description}">
 						Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
 						Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.

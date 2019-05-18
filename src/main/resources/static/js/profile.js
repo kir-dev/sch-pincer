@@ -24,3 +24,16 @@ function setRoom() {
 		console.error("Cannot send POST request.");
 	});
 }
+
+function cancelItem(id) {
+	$.post({
+		dataType: "text",
+		url: URL_BASE + "api/order/delete",
+        data: {id: id}
+	}).done(function() {
+    	location.reload();
+	}).fail(function(e) {
+        console.error(e);
+		console.error("Cannot send DELETE request.");
+	});
+}

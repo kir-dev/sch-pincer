@@ -31,13 +31,13 @@ public class ItemEntityDto {
     private final ItemOrderableStatus orderStatus;
     private final int flag;
     
-    public ItemEntityDto(ItemEntity base, OpeningEntity opening) {
+    public ItemEntityDto(ItemEntity base, OpeningEntity opening, boolean loggedin) {
         this.id = base.getId();
         this.name = base.getName();
         this.description = base.getDescription();
         this.ingredients = base.getIngredients();
         this.detailsConfigJson = base.getDetailsConfigJson();
-        this.price = base.getPrice();
+        this.price = loggedin ? base.getPrice() : -1;
         this.orderable = base.isOrderable() && opening.isInInterval(System.currentTimeMillis());
         this.service = base.isService();
         this.personallyOrderable = base.isPersonallyOrderable();

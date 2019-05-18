@@ -135,10 +135,12 @@ function formatItem(item) {
                             <td>${item.ingredients}</td>
                         </tr>
 ${appendCustom(item.detailsConfigJson)}
+${item.price != -1 ? `
                         <tr>
                             <td>${LANG['price']}:</td>
                             <td>${item.price} ${LANG['currency']}</td>
                         </tr>
+`: ''}
                     </table>
                     <span>
 					    ${!item.orderable ? '' : `
@@ -147,6 +149,8 @@ ${appendCustom(item.detailsConfigJson)}
                         `}
                         
                         ${item.flag != '1' ? '' : `<i class="material-icons a" alt="">fiber_new</i>`}
+                        ${item.flag != '8' ? '' : `<i class="material-icons a" alt="">star</i>`}
+                        ${item.flag != '11' ? '' : `<i class="material-icons a" alt="">flag</i>`}
                         
                         <a class="colored-light" href="${URL_BASE}circle/${item.circleAlias}">${item.circleName}</a>
                     </span>
@@ -286,16 +290,17 @@ function itemChangedPizzasch() {
 }
 
 function showPopup(id) {
-	disableScroll();
     $.ajax({
         dataType: "json",
         url: URL_BASE + "api/item/" + id,
         success: function(data) {
+        	disableScroll();
         	latestData = data;
             $("#popup-title").text(data.name);
             $("#popup-header").css({"background-image": "url('" + URL_BASE + data.imageName + "')"});
             $("#popup-image").css({"background-image": "url('" + URL_BASE + data.imageName + "')"});
             $("#popup-description").text(data.description);
+            $("#popup-price-container").css({display: data.price != -1 ? "inline": "none"});
             $("#popup-price").text(data.price + " " + LANG['currency']);
             $("#popup-price").attr("data-base", data.price);
             $("#popup-window").addClass(data.circleColor);
@@ -438,38 +443,12 @@ function showMessageBox(message) {
 	$(".messagebox").css({display: "inline-block"});
 }
 
-var keys = {37: 1, 38: 1, 39: 1, 40: 1};
-
-function preventDefault(e) {
-	e = e || window.event;
-	if (e.preventDefault)
-		e.preventDefault();
-	e.returnValue = false;  
-}
-
-function preventDefaultForScrollKeys(e) {
-	if (keys[e.keyCode]) {
-		preventDefault(e);
-		return false;
-	}
-}
-
 function disableScroll() {
-	if (window.addEventListener)
-		window.addEventListener('DOMMouseScroll', preventDefault, false);
-	window.onwheel = preventDefault;
-	window.onmousewheel = document.onmousewheel = preventDefault;
-	window.ontouchmove  = preventDefault;
-	document.onkeydown  = preventDefaultForScrollKeys;
+	$("body").css({"overflow-y": "hidden"});
 }
 
 function enableScroll() {
-	if (window.removeEventListener)
-		window.removeEventListener('DOMMouseScroll', preventDefault, false);
-	window.onmousewheel = document.onmousewheel = null; 
-	window.onwheel = null; 
-	window.ontouchmove = null;  
-	document.onkeydown = null;  
+	$("body").css({"overflow-y": "scroll"});
 }
 
 $(window).scroll(function() {

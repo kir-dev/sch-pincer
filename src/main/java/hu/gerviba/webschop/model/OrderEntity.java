@@ -72,7 +72,14 @@ public class OrderEntity implements Serializable {
     @Column
     private String extra = "";
     
+    @Column
     private boolean extraTag = false;
+
+    @Column
+    private long cancelUntil;
+    
+    @Column
+    private String systemComment = "";
     
     public OrderEntity(String userId, String userName, String comment, String detailsJson, String room) {
         this.userId = userId;

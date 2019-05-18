@@ -86,7 +86,7 @@
 		
 					<div class="article highlighted">
 						<h3 th:text="#{lang.profile.about-us}">About us</h3>
-						<p th:text="${selectedCircle?.description}">
+						<p class="desc" th:utext="${#strings.replace(#strings.replace(#strings.replace(selectedCircle.description, '<', ''), '#h2#', '<b>'), '#/h2#', '</b>')}">
 							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget pretium odio. Lorem ipsum dolor sit amet,
 							consectetur adipiscing elit. Nulla accumsan fermentum aliquet. Fusce id augue elit. Vivamus porta augue ac 
 							enim faucibus scelerisque. Integer ut molestie justo. Morbi dapibus metus ac quam aliquet imperdiet. 

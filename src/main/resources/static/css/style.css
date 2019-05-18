@@ -260,6 +260,7 @@ a {
 	color: inherit;
 	opacity: 1;
 	transition: opacity ease 0.2s;
+	vertical-align: bottom;
 }
 
 .item span a:hover {
@@ -558,6 +559,12 @@ a {
 .highlighted p {
 	padding: 0 40px 40px 40px;
 	text-align: justify;
+}
+
+.highlighted p b {
+	display: block;
+	margin: 8px 0 2px 0;
+	text-transform: uppercase;
 }
 
 .highlighted h4.user {
@@ -2541,6 +2548,12 @@ textarea {
 		display: block;
 		content: "  ";
 		flex: 999 999 auto;
+	}
+}
+
+@media only screen and (max-height: 450px) {
+	.site-menu .container {
+		display: none;
 	}
 }
 

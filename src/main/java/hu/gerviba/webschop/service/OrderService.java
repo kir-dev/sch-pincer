@@ -132,12 +132,45 @@ public class OrderService {
         
         order.setDate(timewindow.getDate());
         order.setIntervalMessage(timewindow.getName());
+        order.setCancelUntil(current.getOrderEnd());
         
         timewindowRepo.save(timewindow);
         openings.save(current);
         save(order);
         
         return new ResponseEntity<String>("ACK", HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> cancelOrder(HttpServletRequest request, long id) {
+        try {
+            OrderEntity order = getOne(id);
+            if (!order.getUserId().equals(util.getUser(request).getUid()))
+                return new ResponseEntity<String>("BAD_REQUEST", HttpStatus.BAD_REQUEST);
+
+            if (order.getStatus() != OrderStatus.ACCEPTED) 
+                return new ResponseEntity<String>("INVALID_STATUS", HttpStatus.OK);
+            
+            OpeningEntity opening = openings.getOne(order.getOpeningId());
+            if (opening.getOrderEnd() <= System.currentTimeMillis()) 
+                return new ResponseEntity<String>("ORDER_PERIOD_ENDED", HttpStatus.OK);
+
+            order.setStatus(OrderStatus.CANCELLED);
+
+            TimeWindowEntity timewindow = timewindowRepo.getOne(order.getIntervalId());
+            timewindow.setNormalItemCount(timewindow.getNormalItemCount() + 1);
+            if (order.isExtraTag())
+                timewindow.setExtraItemCount(timewindow.getExtraItemCount() + 1);
+            
+            opening.setOrderCount(opening.getOrderCount() - 1);
+            
+            timewindowRepo.save(timewindow);
+            openings.save(opening);
+            save(order);
+            
+            return new ResponseEntity<String>("ACK", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("BAD_REQUEST", HttpStatus.BAD_REQUEST);
+        }
     }
     
 }

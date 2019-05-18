@@ -31,8 +31,10 @@
 								<i class="material-icons">fullscreen</i>
 							</div>
 							<p id="popup-description">Jalapenos alap, csili, pick szalámi mittomén, izé</p><br />
-							<h5 th:text="#{lang.items.price}">Ára:</h5>
+							<ins id="popup-price-container">
+							<h5 th:text="#{lang.items.price}">ÁR</h5>
 							<span class="colored-light" id="popup-price">800 JMF</span>
+							</ins>
 							<object th:remove="tag" th:if="${session.user} neq null and ${session.user.room} neq null and ${session.user.room.length()} gt 0">
 							<a th:href="@{/profile}"><p th:utext="#{lang.items.room-comment(${session.user.room})}"></p></a>
 							</object>

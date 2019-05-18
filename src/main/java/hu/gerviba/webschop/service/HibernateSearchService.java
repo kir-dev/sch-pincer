@@ -41,7 +41,7 @@ public class HibernateSearchService {
 	private float nameBoost = 3F;
 
 	@Value("${search.keyword-boost}")
-	private float keywordBoost = 0.1F;
+	private float keywordBoost = 0.2F;
 
 	@Value("${search.time-limit-sec}")
 	private int timeLimitSec = 1;
@@ -50,13 +50,17 @@ public class HibernateSearchService {
     private float minMatching = 0.5F;
 	
 	@Transactional
-	public List<ItemEntityDto> fuzzySearchItem(String matchingString) {
+	public List<ItemEntityDto> fuzzySearchItem(String matchingString, boolean loggedIn) {
         Map<Long, OpeningEntity> cache = new HashMap<>();
 		matchingString = matchingString.trim();
 		if (matchingString.length() < 3)
 			return items.findAll().stream()
-	                .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(item.getCircle().getId(), (i) -> openings.findNextOf(i))))
+	                .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(
+	                        item.getCircle().getId(), 
+	                        (i) -> openings.findNextOf(i)), 
+	                        loggedIn))
 	                .collect(Collectors.toList());
+		matchingString = "*" + matchingString + "*";
 		
 		FullTextEntityManager fullTextEntityManager =
 				Search.getFullTextEntityManager(entityManager);
@@ -89,7 +93,9 @@ public class HibernateSearchService {
         		.map(x -> x[0])
         		.distinct()
         		.map(x -> new ItemEntityDto((ItemEntity) x, 
-        		        cache.computeIfAbsent(((ItemEntity) x).getCircle().getId(), (i) -> openings.findNextOf(i))))
+        		        cache.computeIfAbsent(((ItemEntity) x).getCircle().getId(), 
+        		                (i) -> openings.findNextOf(i)), 
+        		        loggedIn))
         		.collect(Collectors.toList());
 	}
 

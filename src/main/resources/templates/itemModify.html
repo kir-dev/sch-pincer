@@ -117,14 +117,14 @@
 						<td th:text="#{lang.configure.item.visible-without-login}">Visible without login</td>
 						<td>
 							<label class="form-switch">
-								<input type="checkbox" name="visibleInAll" th:checked="*{visibleWithoutLogin}">
+								<input type="checkbox" name="visibleWithoutLogin" th:checked="*{visibleWithoutLogin}">
 								<ins class="form-slider"></ins>
 							</label>
 						</td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.configure.item.tag}">Tag</td>
-						<td><input type="text" th:field="*{tag}"/></td>
+						<td th:text="#{lang.configure.item.flag}">Flag</td>
+						<td><input type="text" th:field="*{flag}"/></td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.configure.item.image}">Image</td>

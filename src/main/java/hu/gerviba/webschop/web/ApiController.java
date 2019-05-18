@@ -22,8 +22,6 @@ import hu.gerviba.webschop.dao.ItemEntityDto;
 import hu.gerviba.webschop.model.CircleEntity;
 import hu.gerviba.webschop.model.ItemEntity;
 import hu.gerviba.webschop.model.OpeningEntity;
-import hu.gerviba.webschop.model.OrderEntity;
-import hu.gerviba.webschop.model.OrderStatus;
 import hu.gerviba.webschop.model.UserEntity;
 import hu.gerviba.webschop.service.CircleService;
 import hu.gerviba.webschop.service.ItemService;
@@ -64,7 +62,8 @@ public class ApiController {
         if (util.getUser(request) == null && !item.isVisibleWithoutLogin())
             return null;
         
-        return new ItemEntityDto(item, openings.findNextOf(item.getCircle().getId()));
+        boolean loggedIn = util.getUser(request) != null;
+        return new ItemEntityDto(item, openings.findNextOf(item.getCircle().getId()), loggedIn);
     }
 
     @ApiOperation("List of items")
@@ -78,7 +77,10 @@ public class ApiController {
         if (circle != null) {
             List<ItemEntityDto> list = items.findAllByCircle(circle).stream()
                     .filter(item -> item.isVisibleWithoutLogin() || loggedIn)
-                    .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(item.getCircle().getId(), (i) -> openings.findNextOf(i))))
+                    .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(
+                            item.getCircle().getId(), 
+                            (i) -> openings.findNextOf(i)), 
+                            loggedIn || util.isInInternalNetwork(request)))
                     .collect(Collectors.toList());
             return new ResponseEntity<List<ItemEntityDto>>(list, HttpStatus.OK); 
         }
@@ -86,7 +88,10 @@ public class ApiController {
         List<ItemEntityDto> list = items.findAll().stream()
                 .filter(item -> item.isVisibleWithoutLogin() || loggedIn)
                 .filter(item -> item.isVisibleInAll())
-                .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(item.getCircle().getId(), (i) -> openings.findNextOf(i))))
+                .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(
+                        item.getCircle().getId(), 
+                        (i) -> openings.findNextOf(i)), 
+                        loggedIn || util.isInInternalNetwork(request)))
                 .collect(Collectors.toList());
         return new ResponseEntity<List<ItemEntityDto>>(list, HttpStatus.OK);
     }
@@ -101,7 +106,10 @@ public class ApiController {
         List<ItemEntityDto> list = items.findAllByOrerableNow().stream()
                 .filter(item -> item.isVisibleWithoutLogin() || loggedIn)
                 .filter(item -> item.isVisibleInAll())
-                .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(item.getCircle().getId(), (i) -> openings.findNextOf(i))))
+                .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(
+                        item.getCircle().getId(), 
+                        (i) -> openings.findNextOf(i)), 
+                        loggedIn || util.isInInternalNetwork(request)))
                 .collect(Collectors.toList());
                 
         return new ResponseEntity<List<ItemEntityDto>>(list, HttpStatus.OK);
@@ -117,7 +125,10 @@ public class ApiController {
         List<ItemEntityDto> list = items.findAllByOrerableTomorrow().stream()
                 .filter(item -> item.isVisibleWithoutLogin() || loggedIn)
                 .filter(item -> item.isVisibleInAll())
-                .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(item.getCircle().getId(), (i) -> openings.findNextOf(i))))
+                .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(
+                        item.getCircle().getId(), 
+                        (i) -> openings.findNextOf(i)), 
+                        loggedIn || util.isInInternalNetwork(request)))
                 .collect(Collectors.toList());
         
         return new ResponseEntity<List<ItemEntityDto>>(list, HttpStatus.OK);
@@ -133,8 +144,10 @@ public class ApiController {
         List<ItemEntityDto> list = items.findAll(page).stream()
                 .filter(item -> item.isVisibleWithoutLogin() || loggedIn)
                 .filter(item -> item.isVisibleInAll())
-                .map(item -> new ItemEntityDto(item, 
-                        cache.computeIfAbsent(item.getCircle().getId(), (i) -> openings.findNextOf(i))))
+                .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(
+                        item.getCircle().getId(), 
+                        (i) -> openings.findNextOf(i)), 
+                        loggedIn || util.isInInternalNetwork(request)))
                 .collect(Collectors.toList());
         return new ResponseEntity<List<ItemEntityDto>>(list, HttpStatus.OK);
     }
@@ -200,21 +213,12 @@ public class ApiController {
         }
     }
     
-//    @ApiOperation("Delete order")
-//    @PostMapping("/order/delete")
-//    @ResponseBody
+    @ApiOperation("Delete order")
+    @PostMapping("/order/delete")
+    @ResponseBody
     public ResponseEntity<String> deleteOrder(HttpServletRequest request, @RequestParam(required = true) long id) {
-        try {
-            OrderEntity order = orders.getOne(id);
-            if (!order.getUserId().equals(util.getUser(request).getUid()))
-                return new ResponseEntity<String>("BAD_REQUEST", HttpStatus.BAD_REQUEST);
-            order.setStatus(OrderStatus.CANCELLED);
-            orders.save(order);
-            
-            return new ResponseEntity<String>("ACK", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<String>("BAD_REQUEST", HttpStatus.BAD_REQUEST);
-        }
+        return orders.cancelOrder(request, id);
     }
+
     
 }

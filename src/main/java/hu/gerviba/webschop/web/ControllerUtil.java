@@ -95,5 +95,9 @@ public class ControllerUtil {
         DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd hh:mm");
         return dateFormat.format(date);
     }
+
+    public boolean isInInternalNetwork(HttpServletRequest request) {
+        return request.getRemoteAddr().startsWith("152.66.") || request.getRemoteAddr().equals("127.0.0.1");
+    }
     
 }

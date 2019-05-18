@@ -92,6 +92,9 @@
 						<i class="material-icons" th:if="${#strings.equals(order.status, 'CANCELLED')}"
 								th:title="#{lang.profile.status-cancelled}">do_not_disturb</i>
 
+						<a href="#" th:onclick="'cancelItem(' + ${order.id} + '); return false'" th:if="${order.cancelUntil >= T(java.lang.System).currentTimeMillis() && #strings.equals(order.status, 'ACCEPTED')}">
+							<i class="material-icons">delete</i>
+						</a>
 					</td>
 					<td th:text="${#dates.format(order.date, '__#{lang.date-short-format}__')} + ' ' + *{intervalMessage}">
 						10:00 - 10:30
@@ -120,6 +123,10 @@
 								th:title="#{lang.profile.status-accepted}">shopping_cart</i>
 						<i class="material-icons" th:if="${#strings.equals(order.status, 'CANCELLED')}"
 								th:title="#{lang.profile.status-cancelled}">do_not_disturb</i>
+								
+						<a href="#" th:onclick="'cancelItem(' + ${order.id} + '); return false'" th:if="${order.cancelUntil >= T(java.lang.System).currentTimeMillis() && #strings.equals(order.status, 'ACCEPTED')}">
+							<i class="material-icons">delete</i>
+						</a>
 					</td>
 				</tr>
 				

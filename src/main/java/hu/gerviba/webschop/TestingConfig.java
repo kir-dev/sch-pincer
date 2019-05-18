@@ -12,7 +12,6 @@ import hu.gerviba.webschop.model.CircleEntity;
 import hu.gerviba.webschop.model.CircleMemberEntity;
 import hu.gerviba.webschop.model.ItemEntity;
 import hu.gerviba.webschop.model.OpeningEntity;
-import hu.gerviba.webschop.model.ReviewEntity;
 import hu.gerviba.webschop.service.CircleMemberService;
 import hu.gerviba.webschop.service.CircleService;
 import hu.gerviba.webschop.service.ItemService;
@@ -38,34 +37,36 @@ public class TestingConfig {
     @Autowired
     ReviewService reviews;
     
-    private static final String LONG_LOREM_IPSUM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \n" + 
-            "Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.\n" + 
-            "Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim \n" + 
-            "luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat \n" + 
-            "euismod ut eget erat.";
-    
     @PostConstruct
     public void insertDbData() {
         CircleEntity circle;
         
         circles.save(circle = new CircleEntity("Pizzásch", 
+                "#h2#Hivatásunk#/h2#"
+                    + "Szerda esténként az éhes kollégistákat szolgáljuk ki helybe sütött pizzáinkkal, amelyeket a "
+                    + "FoodEX szállít a szobáikba. Emellett gyakran megfordulunk Gólyabálokon, bulikon, "
+                    + "villanykaros és külsős rendezvényeken is. "
+                    + "#h2#Történetünk#/h2#"
+                    + "A PizzáSCH 2004 első felében jött létre egy baráti társaságból, és azóta látja el friss, "
+                    + "helyben sütött pizzával az éhes kollégistákat."
+                    + "#h2#Jelentkezés#/h2#"
+                    + "Minden félév elején várjuk szeretettel a fiatalokat (idősebbeket), hogy csatlakozzanak hozzánk. "
+                    + "Ehhez nincs más teendő, mint szerda délután megjelenni a -1. nagykonyhánál. "
+                    + "További részleteket helyben elmondjuk.",
                 "Szerda esténként az éhes kollégistákat szolgáljuk ki helybe sütött pizzáinkkal, amelyeket a "
                     + "FoodEX szállít a szobáikba. Emellett gyakran megfordulunk Gólyabálokon, bulikon, "
                     + "villanykaros és külsős rendezvényeken is.", 
-                "Szerda esténként az éhes kollégistákat szolgáljuk ki helybe sütött pizzáinkkal, amelyeket a "
-                    + "FoodEX szállít a szobáikba. Emellett gyakran megfordulunk Gólyabálokon, bulikon, "
-                    + "villanykaros és külsős rendezvényeken is.", 
-                "orange", 1991,
+                "orange", 2004,
                 "demo/pizzasch-bg.jpg", "icons/icon-pizzasch.svg", "Szerda", "pizzasch"));
         
         OpeningEntity opening;
 //        Original:
-        openings.save(opening = new OpeningEntity(convert(3, 18, 0), convert(4, 0, 0), convert(3, 0, 0), convert(3, 18, 0), 
-                "demo/pizzasch-pr.jpg", "Ez egy Pizzásch nyitás. Ez a szöveg program sch-ra lesz exportálva.", 
-                 "Jack pls mit írjak ide?", circle, 100, 20, 2, 30));
-//        openings.save(opening = new OpeningEntity(convert(3, 18, 0), convert(4, 0, 0), fromNow(0), fromNow(10), 
-//                "demo/pizzasch-pr.jpg", "Ez egy Pizzásch nyitás. Ez a szöveg program sch-ra lesz exportálva.",
-//                "Jack pls mit írjak ide?", circle, 100, 20, 2, 30));
+//        openings.save(opening = new OpeningEntity(convert(3, 18, 0), convert(4, 0, 0), convert(3, 0, 0), convert(3, 18, 0), 
+//                "demo/pizzasch-pr.jpg", "Ez egy Pizzásch nyitás. Ez a szöveg program sch-ra lesz exportálva.", 
+//                 "Jack pls mit írjak ide?", circle, 100, 20, 2, 30));
+        openings.save(opening = new OpeningEntity(convert(3, 18, 0), convert(4, 0, 0), fromNow(0), fromNow(100), 
+                "demo/pizzasch-pr.jpg", "Ez egy Pizzásch nyitás. Ez a szöveg program sch-ra lesz exportálva.",
+                "Jack pls mit írjak ide?", circle, 100, 20, 2, 30));
         opening.generateTimeWindows(openings);
         openings.save(opening);
         
@@ -79,42 +80,119 @@ public class TestingConfig {
         circleMembers.save(new CircleMemberEntity(circle, "Valami József", "Tag", "demo/profile-pic-1.jpg", 0));
         circleMembers.save(new CircleMemberEntity(circle, "Valami Attila", "Tag", "demo/profile-pic-1.jpg", 0));
         
-        reviews.save(new ReviewEntity(circle, "Szabó Gergely", LONG_LOREM_IPSUM, 
-                System.currentTimeMillis(), 5, 3, 5, 5));
-        reviews.save(new ReviewEntity(circle, "Kredit Huszár", "Csicskagyász ez a kör", 
-                System.currentTimeMillis() - 400000000, 1, 1, 1, 1));
-        reviews.save(new ReviewEntity(circle, "Tavasz Gábor", 
-                "Tesz szöveg. Teszt értékelés. A kockázatok és a mellékhatások pls...",
-                System.currentTimeMillis() + 332112300, 4, 5, 4, 4));
+//        reviews.save(new ReviewEntity(circle, "Szabó Gergely", LONG_LOREM_IPSUM, 
+//                System.currentTimeMillis(), 5, 3, 5, 5));
+//        reviews.save(new ReviewEntity(circle, "Kredit Huszár", "Csicskagyász ez a kör", 
+//                System.currentTimeMillis() - 400000000, 1, 1, 1, 1));
+//        reviews.save(new ReviewEntity(circle, "Tavasz Gábor", 
+//                "Tesz szöveg. Teszt értékelés. A kockázatok és a mellékhatások pls...",
+//                System.currentTimeMillis() + 332112300, 4, 5, 4, 4));
         
-        items.save(new ItemEntity("Ördög Pizza", circle, 
-                "Jalapeno szósz, Pick szalámi, bacon, pepperóni, mozzarella, lorem ipsum dolor sit amet", 
-                "Jalapeno szósz, Pick szalámi, bacon, pepperóni, mozzarella", 
-                "pizza csipos jalapeno pick bacon pepperoni mozzarella",
+        items.save(new ItemEntity("Albínó Batman", circle, 
+                "Fokhagymás alap, Pick szalámi, Lilahagyma, Kukorica, Mozzarella", 
+                "Fokhagymás alap, Pick szalámi, Lilahagyma, Kukorica, Mozzarella", 
+                " pizza pizzasch albino batman",
                 "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"aliases\":[\"kis\",\"nagy\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]",
-                800, true, true, false, true, false, true, "cdn/items/1.jpg", 8));
+                800, true, true, false, true, false, true, "cdn/items/pizzasch_blank.jpeg", 0));
         
-        items.save(new ItemEntity("Songoku Pizza", circle, 
-                "Paradicsomos alap, sonka, kukorica, friss gomba, mozzarella, lorem ipsum dolor sit amet",
-                "Paradicsomos alap, sonka, kukorica, friss gomba, mozzarella", 
-                "pizza paradicsom sonka kukorica asd song",
+        items.save(new ItemEntity("BBQ", circle, 
+                "BBQ alap, Bacon, Sonka, Lilahagyma, Mozzarella",
+                "BBQ alap, Bacon, Sonka, Lilahagyma, Mozzarella", 
+                " pizza pizzasch bbq",
                 "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"aliases\":[\"kis\",\"nagy\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]",
-                800, true, true, false, true, false, true, "cdn/items/2.jpg", 0));
+                800, true, true, false, true, false, true, "cdn/items/bbq.jpeg", 0));
         
-        items.save(new ItemEntity("Royal w/ Cheese Pizza", circle, 
-                "Bacon, sonka, paradicsom, mozzarella, sajtkrémes alap, lorem ipsum dolor sit amet", 
-                "Bacon, sonka, paradicsom, mozzarella, sajtkrémes alap", 
-                "pizza bacon sonka paradicsom mozzarella sajt krem",
+        items.save(new ItemEntity("HahaA", circle, 
+                "Paradicsomos alap, Tonhal, Olívabogyó, Vöröshagyma, Mozzarella", 
+                "Paradicsomos alap, Tonhal, Olívabogyó, Vöröshagyma, Mozzarella", 
+                " pizza pizzasch hahaa",
                 "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"aliases\":[\"kis\",\"nagy\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]", 
-                800, true, true, false, true, false, true, "cdn/items/3.jpg", 0));
-
-        items.save(new ItemEntity("Hidden Pizza", circle, 
-                "Ez a pizza csak akkor jelenik meg, ha be vagy jelentkezve.", 
-                "Ez a pizza csak akkor jelenik meg, ha be vagy jelentkezve. Szóval rejtett, gecc.", 
-                "pizza csipos jalapeno pick bacon pepperoni mozzarella hidden",
-                "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"aliases\":[\"kis\",\"nagy\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]",
-                800, true, true, false, true, false, false, "cdn/items/1.jpg", 1));
+                800, true, true, false, true, false, true, "cdn/items/hahaa.jpeg", 0));
         
+        items.save(new ItemEntity("Hawaii", circle, 
+                "Paradicsomos alap, Sonka, Kukorica, Ananász, Mozzarella", 
+                "Paradicsomos alap, Sonka, Kukorica, Ananász, Mozzarella", 
+                " pizza pizzasch hawaii",
+                "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"aliases\":[\"kis\",\"nagy\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]", 
+                800, true, true, false, true, false, true, "cdn/items/hawaii.jpeg", 0));
+        
+        items.save(new ItemEntity("Joker", circle, 
+                "Paradicsomos alap, Pick szalámi, Bacon, Lilahagyma, Mozzarella", 
+                "Paradicsomos alap, Pick szalámi, Bacon, Lilahagyma, Mozzarella", 
+                " pizza pizzasch joker",
+                "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"aliases\":[\"kis\",\"nagy\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]", 
+                800, true, true, false, true, false, true, "cdn/items/joker.jpeg", 0));
+        
+        items.save(new ItemEntity("Kusza", circle, 
+                "Paradicsomos alap, Pick szalámi, Kukorica, Mozzarella", 
+                "Paradicsomos alap, Pick szalámi, Kukorica, Mozzarella", 
+                " pizza pizzasch kusza",
+                "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"aliases\":[\"kis\",\"nagy\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]", 
+                800, true, true, false, true, false, true, "cdn/items/kusza.jpeg", 8));
+        
+        items.save(new ItemEntity("Magyaros", circle, 
+                "Paradicsomos alap, Bacon, Pick szalámi, Vöröshagyma, Erős paprika, Mozzarella", 
+                "Paradicsomos alap, Bacon, Pick szalámi, Vöröshagyma, Erős paprika, Mozzarella", 
+                " pizza pizzasch magyaros",
+                "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"aliases\":[\"kis\",\"nagy\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]", 
+                800, true, true, false, true, false, true, "cdn/items/pizzasch_blank.jpeg", 0));
+        
+        items.save(new ItemEntity("Margherita", circle, 
+                "Paradicsomos alap, Paradicsom, Mozzarella", 
+                "Paradicsomos alap, Paradicsom, Mozzarella", 
+                " pizza pizzasch margherita",
+                "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"aliases\":[\"kis\",\"nagy\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]", 
+                800, true, true, false, true, false, true, "cdn/items/pizzasch_blank.jpeg", 0));
+        
+        items.save(new ItemEntity("McStar", circle, 
+                "Mustáros alap, Sonka, Bacon, Lilahagyma, Mozzarella", 
+                "Mustáros alap, Sonka, Bacon, Lilahagyma, Mozzarella", 
+                " pizza pizzasch mcstar",
+                "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"aliases\":[\"kis\",\"nagy\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]", 
+                800, true, true, false, true, false, true, "cdn/items/mcstar.jpeg", 0));
+        
+        items.save(new ItemEntity("Ördög", circle, 
+                "Erős alap, Pick szalámi, Bacon, Pepperóni, Mozzarella", 
+                "Erős alap, Pick szalámi, Bacon, Pepperóni, Mozzarella", 
+                " pizza pizzasch ördög ordog",
+                "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"aliases\":[\"kis\",\"nagy\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]", 
+                800, true, true, false, true, false, true, "cdn/items/pizzasch_blank.jpeg", 0));
+        
+        items.save(new ItemEntity("Randi", circle, 
+                "Fokhagymás alap, Bacon, Sonka, Vöröshagyma, Mozzarella", 
+                "Fokhagymás alap, Bacon, Sonka, Vöröshagyma, Mozzarella", 
+                " pizza pizzasch randi",
+                "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"aliases\":[\"kis\",\"nagy\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]", 
+                800, true, true, false, true, false, true, "cdn/items/randi.jpeg", 0));
+        
+        items.save(new ItemEntity("Songoku", circle, 
+                "Paradicsomos alap, Sonka, Kukorica, Gomba, Mozzarella", 
+                "Paradicsomos alap, Sonka, Kukorica, Gomba, Mozzarella", 
+                " pizza pizzasch songoku",
+                "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"aliases\":[\"kis\",\"nagy\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]", 
+                800, true, true, false, true, false, true, "cdn/items/songoku.jpeg", 0));
+        
+        items.save(new ItemEntity("Sonkás", circle, 
+                "Paradicsomos alap, Sonka, Paradicsom, Mozzarella", 
+                "Paradicsomos alap, Sonka, Paradicsom, Mozzarella", 
+                " pizza pizzasch sonkas sonkás",
+                "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"aliases\":[\"kis\",\"nagy\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]", 
+                800, true, true, false, true, false, true, "cdn/items/sonkas.jpeg", 0));
+        
+        items.save(new ItemEntity("Szalámis", circle, 
+                "Paradicsomos alap, Pick szalámi, Paprika, Paradicsom, Mozzarella", 
+                "Paradicsomos alap, Pick szalámi, Paprika, Paradicsom, Mozzarella", 
+                " pizza pizzasch szalamis szalámis",
+                "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"aliases\":[\"kis\",\"nagy\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]", 
+                800, true, true, false, true, false, true, "cdn/items/szalamis.jpeg", 0));
+        
+        items.save(new ItemEntity("Yolo", circle, 
+                "Fokhagymás alap, Sonka, Paradicsom, Olívabogyó, Mozzarella", 
+                "Fokhagymás alap, Sonka, Paradicsom, Olívabogyó, Mozzarella", 
+                " pizza pizzasch yolo",
+                "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"aliases\":[\"kis\",\"nagy\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]", 
+                800, true, true, false, true, false, true, "cdn/items/yolo.jpeg", 68));
+
         circles.save(circle = new CircleEntity("Dzsájrosz", 
                 "Egyszer egy angol szóbelin valaki benyögte, hogy dzsájroszt reggelizett... "
                     + "biztos nem közülünk volt valaki ;) Kicsit késõbb történt, valamikor '12-ben, "
@@ -297,7 +375,7 @@ public class TestingConfig {
         items.save(new ItemEntity("Tüzes lángos", circle, 
                 "Chili, sonka, paradicsom, mozzarella, sajtkrémes alap, lorem ipsum dolor sit amet", 
                 "Chili, sonka, paradicsom, mozzarella, sajtkrémes alap", 
-                "langsch langs tuzes chili",
+                "langosch langos tuzes chili",
                 "[{\"name\":\"size\"}]", 
                 500, true, true, false, true, false, true, "cdn/items/7.jpg", 0));
         
@@ -305,7 +383,7 @@ public class TestingConfig {
 
     private long convert(int day, int hh, int mm) {
         final int month = 5;
-        final int weekStart = 6 - 1;
+        final int weekStart = 20 - 1;
         hh -= 1;
         if (hh < 0) {
             hh += 24;

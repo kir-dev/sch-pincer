@@ -123,6 +123,11 @@ public class ItemEntity implements Serializable {
         this.orderable = copy.isOrderable();
         this.visible = copy.isVisible();
         this.imageName = copy.getImageName();
+        this.service = copy.isService();
+        this.visibleInAll = copy.isVisibleInAll();
+        this.visibleWithoutLogin = copy.isVisibleWithoutLogin();
+        this.personallyOrderable = copy.isPersonallyOrderable();
+        this.flag = copy.getFlag();
     }
     
 }
