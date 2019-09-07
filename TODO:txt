@@ -10,12 +10,14 @@ TODO:
 + Csak akkor látszik a rendelés ha rendelhető (rendelés ikon)
 + Termékek szűrő
 + no more pages-es betöltés vagy gomb lehetőség
++ PDF export with themes
++ endpointok neveit megváltoztatni
++ + alias endpointok a köröknek
 
-- Max extra kaja / idősáv
-- - Termékek körökhöz
++ Max extra kaja / idősáv
++ - Termékek körökhöz
 - - Service
-- PDF export with themes
 - Rendelés felvétel admin oldalról
 - Foodex menü
-- endpointok neveit megváltoztatni
-- - alias endpointok a köröknek
+? Hírek menü a home-hoz
+? - Program sch link

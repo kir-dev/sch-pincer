@@ -69,14 +69,17 @@ public class ApiController {
     @ApiOperation("List of items")
     @GetMapping("/items")
     @ResponseBody
-    public ResponseEntity<List<ItemEntityDto>> getAllItems(HttpServletRequest request, @RequestParam(required = false) Long circle) {
-        Map<Long, OpeningEntity> cache = new HashMap<>();
+    public ResponseEntity<List<ItemEntityDto>> getAllItems(
+            HttpServletRequest request, 
+            @RequestParam(required = false) Long circle) {
         
+        Map<Long, OpeningEntity> cache = new HashMap<>();
         boolean loggedIn = util.getUser(request) != null;
         
         if (circle != null) {
             List<ItemEntityDto> list = items.findAllByCircle(circle).stream()
                     .filter(item -> item.isVisibleWithoutLogin() || loggedIn)
+                    .filter(item -> item.isVisible())
                     .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(
                             item.getCircle().getId(), 
                             (i) -> openings.findNextOf(i)), 
@@ -88,6 +91,7 @@ public class ApiController {
         List<ItemEntityDto> list = items.findAll().stream()
                 .filter(item -> item.isVisibleWithoutLogin() || loggedIn)
                 .filter(item -> item.isVisibleInAll())
+                .filter(item -> item.isVisible())
                 .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(
                         item.getCircle().getId(), 
                         (i) -> openings.findNextOf(i)), 

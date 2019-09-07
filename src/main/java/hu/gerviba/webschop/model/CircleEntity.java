@@ -127,7 +127,7 @@ public class CircleEntity implements Serializable {
     public CircleEntity(@Size(min = 2, max = 32) String displayName, @Size(max = 1000) String description,
             @Size(max = 1000) String homePageDescription, @Size(max = 30) String cssClassName, int founded,
             @Size(max = 255) String backgroundUrl, @Size(max = 255) String logoUrl, 
-            @Size(max = 255) String avgOpening, String alias) {
+            @Size(max = 255) String avgOpening, String alias, String facebook, String website) {
         
         this.displayName = displayName;
         this.description = description;
@@ -135,8 +135,8 @@ public class CircleEntity implements Serializable {
         this.founded = founded;
         this.homePageOrder = 0;
         this.cssClassName = cssClassName;
-        this.facebookUrl = "https://facebook.com/circle";
-        this.websiteUrl = "http://website.sch.bme.hu/";
+        this.facebookUrl = facebook;
+        this.websiteUrl = website;
         this.avgOpening = avgOpening;
         this.backgroundUrl = backgroundUrl;
         this.logoUrl = logoUrl;

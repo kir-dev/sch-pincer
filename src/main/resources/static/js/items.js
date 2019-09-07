@@ -297,7 +297,7 @@ function showPopup(id) {
         	disableScroll();
         	latestData = data;
             $("#popup-title").text(data.name);
-            $("#popup-header").css({"background-image": "url('" + URL_BASE + data.imageName + "')"});
+            $("#popup-header").css({"background-image": "url('" + URL_BASE + data.circleIcon + "')"});
             $("#popup-image").css({"background-image": "url('" + URL_BASE + data.imageName + "')"});
             $("#popup-description").text(data.description);
             $("#popup-price-container").css({display: data.price != -1 ? "inline": "none"});

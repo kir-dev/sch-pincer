@@ -30,6 +30,7 @@ public class ItemEntityDto {
     private final List<TimeWindowEntity> timeWindows;
     private final ItemOrderableStatus orderStatus;
     private final int flag;
+    private final String circleIcon;
     
     public ItemEntityDto(ItemEntity base, OpeningEntity opening, boolean loggedin) {
         this.id = base.getId();
@@ -46,6 +47,7 @@ public class ItemEntityDto {
         this.timeWindows = opening == null ? new ArrayList<>() : opening.getTimeWindows();
         this.orderStatus = ItemOrderableStatus.OK;
         this.flag = base.getFlag();
+        this.circleIcon = base.getCircle().getBackgroundUrl();
         
         if (base.getCircle() != null) {
 		    this.circleId = base.getCircle().getId();
