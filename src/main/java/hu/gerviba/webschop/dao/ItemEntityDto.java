@@ -39,7 +39,7 @@ public class ItemEntityDto {
         this.ingredients = base.getIngredients();
         this.detailsConfigJson = base.getDetailsConfigJson();
         this.price = loggedin ? base.getPrice() : -1;
-        this.orderable = base.isOrderable() && opening.isInInterval(System.currentTimeMillis());
+        this.orderable = base.isOrderable() && (opening != null && opening.isInInterval(System.currentTimeMillis()));
         this.service = base.isService();
         this.personallyOrderable = base.isPersonallyOrderable();
         this.imageName = base.getImageName();

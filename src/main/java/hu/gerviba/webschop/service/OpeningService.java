@@ -40,7 +40,7 @@ public class OpeningService {
     }
     
     public OpeningEntity findNextOf(Long id) {
-        return repo.findFirstByCircle_IdOrderByDateStart(id).orElse(null);
+        return repo.findFirstByCircle_IdAndDateEndGreaterThanOrderByDateStart(id, System.currentTimeMillis()).orElse(null);
     }
     
     public Long findNextStartDateOf(Long id) {

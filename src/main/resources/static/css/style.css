@@ -1677,9 +1677,12 @@ textarea {
 }
 
 .dashboard table td:nth-of-type(2) {
+	text-align: right;
+}
+
+.dashboard table td:nth-of-type(2) i {
 	position: relative;
 	top: -4px;
-	text-align: right;
 }
 
 .highlighted .note {

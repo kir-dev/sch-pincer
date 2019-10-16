@@ -2,6 +2,7 @@ package hu.gerviba.webschop.service;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -48,6 +49,16 @@ public class UserService {
             }
             return false;
         }).findAny().orElse(null);
+    }
+    
+    public boolean grantAdmin(String uid) {
+    	Optional<UserEntity> req = repo.findById(uid);
+    	if (!req.isPresent())
+    		return false;
+    	UserEntity user = req.get();
+		user.setSysadmin(true);
+    	repo.save(user);
+    	return true;
     }
 
 }
