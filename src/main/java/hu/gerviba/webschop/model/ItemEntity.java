@@ -52,6 +52,7 @@ public class ItemEntity implements Serializable {
     private String description;
 
     @Lob
+    @Field(termVector = TermVector.YES)
     @Column
     private String ingredients;
 

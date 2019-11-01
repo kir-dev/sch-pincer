@@ -45,12 +45,12 @@
 			<table class="circles-table">
 				<tr th:each="opening : ${openings}" th:object="${opening}" th:class="*{circle.cssClassName}" class="purple">
 					<td class="border-colored">
-						<a href="#" th:text="*{circle.displayName}" th:href="@{/circle/__*{circle.alias}__/}">Vödör</a>
+						<a href="#" th:text="*{circle.displayName}" th:href="@{/provider/__*{circle.alias}__/}">Vödör</a>
 					</td>
 					<td th:text="#{lang.weekday-__${#dates.dayOfWeekNameShort(opening.dateStart)}__}">Hetfő</td>
 					<td class="date" th:text="${#dates.format(opening.dateStart, '__#{lang.date-opening-format}__')}">18:00 (18-04-09)</td>
 					<td class="feeling" th:text="*{feeling}">Lorem ispsum dolor sit amet.</td>
-					<td class="arrow"><a href="#" th:href="@{/circle/__*{circle.id}__/}"><i class="material-icons">navigate_next</i></a></td>
+					<td class="arrow"><a href="#" th:href="@{/provider/__*{circle.id}__/}"><i class="material-icons">navigate_next</i></a></td>
 				</tr>
 				<tr class="blue" th:remove="all">
 					<td class="border-colored"><a href="">Americano</a></td>
@@ -101,7 +101,7 @@
 					</div>
 				</div>
 				<div class="message">
-					<h3 th:text="*{displayName}" th:onclick="'location.href = \'' + @{/circle/__*{alias}__/} + '\''">Pizzásch</h3>
+					<h3 th:text="*{displayName}" th:onclick="'location.href = \'' + @{/provider/__*{alias}__/} + '\''">Pizzásch</h3>
 					<p th:text="*{description}">
 						Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
 						Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.

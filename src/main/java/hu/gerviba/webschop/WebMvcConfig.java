@@ -46,8 +46,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(localeChangeInterceptor());
     }
 
-    @Value("${webschop.external}")
-    private String uploadPath = "/etc/webschop/external/";
+    @Value("${schpincer.external}")
+    private String uploadPath = "/etc/schpincer/external/";
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

@@ -5,6 +5,11 @@
     "description": "External files path, /cdn/** "
   },
   {
+    "name": "schpincer.external",
+    "type": "java.lang.String",
+    "description": "External files path, /cdn/** "
+  },
+  {
     "name": "search.distance",
     "type": "int",
     "description": "HibernateSerach fuzzy search distance"

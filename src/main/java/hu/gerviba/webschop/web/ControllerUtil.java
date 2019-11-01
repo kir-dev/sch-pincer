@@ -24,8 +24,8 @@ public class ControllerUtil {
 
     public ControllerUtil() {}
     
-    @Value("${webschop.external}")
-    String uploadPath = "/etc/webschop/external/";
+    @Value("${schpincer.external}")
+    String uploadPath = "/etc/schpincer/external/";
     
     public String uploadFile(String target, MultipartFile logo) {
         if (logo.isEmpty() || logo.getContentType() == null)
@@ -87,7 +87,6 @@ public class ControllerUtil {
             e.printStackTrace();
             return 0L;
         }
-        System.out.println(date.getTime());
         return date.getTime();
     }
 

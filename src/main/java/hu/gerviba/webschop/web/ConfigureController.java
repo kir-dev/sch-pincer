@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -70,8 +71,8 @@ public class ConfigureController {
     @Autowired
     ControllerUtil util;
 
-    @Value("${webschop.external:/etc/webschop/external}")
-    String uploadPath = "/etc/webschop/external";
+    @Value("${schpincer.external:/etc/schpincer/external}")
+    String uploadPath = "/etc/schpincer/external";
     
     @GetMapping("/configure")
     public String configureRoot(HttpServletRequest request, Map<String, Object> model) {
@@ -80,7 +81,7 @@ public class ConfigureController {
         
         UserEntity user = util.getUser(request);
         List<CircleEntity> editable = all.stream()
-                .filter(x -> x != null)
+                .filter(Objects::nonNull)
                 .filter(x -> user.isSysadmin() || user.getPermissions().contains("CIRCLE_" + x.getId()))
                 .collect(Collectors.toList());
         model.put("editable", editable);
@@ -124,7 +125,6 @@ public class ConfigureController {
         return "redirect:/configure/" + circleId;
     }
     
-    //TODO: hashPermission (fixed?)
     @GetMapping("/configure/{circleId}/members/delete/{memberId}")
     public String deleteMemberNoPR(@PathVariable Long circleId, @PathVariable Long memberId, 
             Map<String, Object> model) {
@@ -364,7 +364,7 @@ public class ConfigureController {
             return "redirect:/configure/" + circleId + "?error";
         
         OpeningEntity ie = openings.getOne(openingId);
-        if (ie.getCircle().getId() == circleId)
+        if (ie.getCircle().getId().equals(circleId))
             openings.delete(ie);
         
         return "redirect:/configure/" + circleId;
@@ -378,7 +378,7 @@ public class ConfigureController {
             return "redirect:/configure/" + circleId + "?error";
 
         OpeningEntity opening = openings.getOne(openingId);
-        if (opening.getCircle().getId() != circleId)
+        if (!opening.getCircle().getId().equals(circleId))
             return "redirect:/configure/" + circleId + "?error";
         
         model.put("exportTypes", Arrays.asList(ExportType.values()));
@@ -394,7 +394,6 @@ public class ConfigureController {
             @RequestParam String status,
             HttpServletRequest request) {
         
-        System.out.println(id + " " + status);
         Long circleId = orders.getCircleIdByOrderId(id);
         if (util.cannotEditCircle(circleId, request))
             return "NO PERMISSION";
@@ -436,8 +435,8 @@ public class ConfigureController {
         table.setWidths(export.getWidths());
         table.setWidthPercentage(100);
         addTableHeader(table, export);
-//        for (int i = 0; i < 100; ++i)
-//            addRows(table, export, opening);
+
+        addRows(table, export, opening);
          
         document.add(table);
         document.close();

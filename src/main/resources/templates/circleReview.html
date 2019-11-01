@@ -37,7 +37,7 @@
 				<i class="material-icons main">star</i>
 			</div>
 			<h3 th:text="#{lang.review.title}" class="topless">Review</h3>
-			<form action="#" th:action="@{/circle/__${selectedCircle?.id}__/review}" th:object="${review}" method="post">
+			<form action="#" th:action="@{/provider/__${selectedCircle?.id}__/review}" th:object="${review}" method="post">
 				<table class="form">
 					<tr>
 						<td th:text="#{lang.review.circle}">Circle to review</td>
@@ -76,7 +76,7 @@
 					</tr>
 				</table>
 
-				<a class="button" href="circleProfile.html" th:href="@{/circle/__${selectedCircle?.id}__}" 
+				<a class="button" href="circleProfile.html" th:href="@{/provider/__${selectedCircle?.id}__}"
 						th:text="#{lang.review.cancel}">Back</a>
 				<input class="button" type="submit" th:value="#{lang.review.send}" />
 			</form>

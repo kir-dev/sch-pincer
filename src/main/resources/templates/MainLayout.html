@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org/">
 <head th:fragment="head">
 	<meta charset="UTF-8" /> 
-	<title th:text="#{lang.header}">WebSCHop</title>
+	<title th:text="#{lang.header}">SCH Pincér</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
@@ -12,7 +12,7 @@
 	<meta name="msapplication-navbutton-color" content="#4C4C4D" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="#4C4C4D" />
 	<meta name="msapplication-tap-highlight" content="no">
-	<meta name="author" content="Szabó Gergely (Gerviba)"/>
+	<meta name="author" content="Schámán"/>
 	<meta name="keywords" content="" 	th:content="#{lang.head.keywords}">
 	<meta name="description" content=""	th:content="#{lang.head.description}">
 	<link rel="manifest" href="/manifest.json">
@@ -28,7 +28,7 @@
 		
 		<div class="nav">
 			<a href="index.html"    th:href="@{/}"       th:text="#{lang.nav.home}">Home</a>
-			<a href="circle.html"   th:href="@{/szor}" th:text="#{lang.nav.circle}">Circles</a>
+			<a href="circle.html"   th:href="@{/szor}"   th:text="#{lang.nav.circle}">Circles</a>
 			<a href="items.html"    th:href="@{/items}"  th:text="#{lang.nav.items}">Items</a>
 	
 			<a th:if="${session.user} neq null" th:href="@{/profile}" th:text="${session.user?.name}">Test User</a>
@@ -36,7 +36,7 @@
 		</div>
 		
 		<div class="container">
-			<a th:each="circle : ${circles}" th:href="@{/circle/__${circle.id}__}" class="icons">
+			<a th:each="circle : ${circles}" th:href="@{/provider/__${circle.id}__}" class="icons">
 				<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{/__${circle.logoUrl}__}" width="80" height="80" />
 				<span th:text="${circle.displayName}">Vödör</span>
 			</a>
@@ -54,7 +54,7 @@
 	
 	<div class="left-menu" th:fragment="left-menu">
 		<div class="scroll-child">
-			<a th:each="circle : ${circles}" th:href="@{/circle/__${circle.alias}__}">
+			<a th:each="circle : ${circles}" th:href="@{/provider/__${circle.alias}__}">
 				<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{/__${circle.logoUrl}__}" width="80" height="80" />
 				<span th:text="${circle.displayName}">Vödör</span>
 			</a>
@@ -70,12 +70,12 @@
 		<div class="wrapper">
 			<div>
 				<h3>Jogok</h3>
-				<p>Copyright &copy; 2018 GNU/GPL 3.0</p>
+				<p>Copyright &copy; 2019 GNU/GPL 3.0</p>
 				<p>
 					Az oldalon megjelenő képek szerzői joga minden esetben a forgalmazó kört illeti. 
 					A képek esetenként csak illusztrációk. A termékek leírásának helyességéért az adott körök felelősek.
 				</p>
-				<a href="../static/documents/legal.pdf"><i class="material-icons">link</i><span>Jogi nyilatkozat</span></a>
+				<!--<a href="../static/documents/legal.pdf"><i class="material-icons">link</i><span>Jogi nyilatkozat</span></a>-->
 			</div>
 			<div>
 				<h3>Partnerek</h3>
@@ -83,11 +83,6 @@
 				<a href="http://szor.sch.bme.hu/"><i class="material-icons">link</i><span>Szolgáltatói Reszort</span></a><br />
 				Hosting: <a href="http://kszk.sch.bme.hu/"><i class="material-icons">link</i><span>KSZK</span></a>
 			</div>
-		</div>
-		<div class="gerviba">
-			<span><i class="material-icons">code</i></span> 
-			with <span><i class="material-icons">favorite_border</i></span>
-			by <span><a href="http://gerviba.hu/?src=webschop">GERVIBA</a></span>
 		</div>
 	</div>
 </body>

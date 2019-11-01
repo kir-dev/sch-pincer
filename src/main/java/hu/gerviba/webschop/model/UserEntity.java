@@ -52,7 +52,6 @@ public class UserEntity implements Serializable {
         this.name = name;
         this.email = email;
         this.sysadmin = false;
-        this.cardType = CardType.DO;
     }
     
     public void setRoom(String room) {

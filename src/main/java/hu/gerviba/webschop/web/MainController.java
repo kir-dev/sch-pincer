@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import hu.gerviba.webschop.model.OrderEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,7 +57,7 @@ public class MainController {
         model.put("circlesRandom", random);
         List<OpeningEntity> opens = openings.findAll();
         model.put("opener", opens.size() > 0 ? opens.get(0) : null);
-        model.put("openings", openings.findAll()); //TODO: nextWeek
+        model.put("openings", openings.findNextWeek());
         return "index";
     }
     
@@ -73,7 +74,7 @@ public class MainController {
     @GetMapping("/szor")
     public String circle(Map<String, Object> model) {
         model.put("circles", circles.findAllForMenu());
-        model.put("openings", openings.findAll()); //TODO: nextWeek
+        model.put("openings", openings.findNextWeek());
         return "circle";
     }
     
@@ -93,6 +94,12 @@ public class MainController {
             model.put("nextOpening", openings.findNextStartDateOf(circleEntity.getId()));
         }
         return "circleProfile";
+    }
+
+    @GetMapping("/provider/{circle}")
+    public String circleSpecificAlias(@PathVariable String circle,
+                                 Map<String, Object> model) {
+        return circleSpecific(circle, model);
     }
 
 //    @PreAuthorize("hasRole('USER')")
@@ -119,21 +126,24 @@ public class MainController {
         List<ReviewEntity> allReviews = reviews.findAll(circleId);
         CircleEntity ce = circles.getOne(circleId);
         ce.setRateingCount(allReviews.size());
-        ce.setRateOverAll((float) allReviews.stream().mapToDouble(x -> x.getRateOverAll()).average().orElse(1));
-        ce.setRatePrice((float) allReviews.stream().mapToDouble(x -> x.getRatePrice()).average().orElse(1));
-        ce.setRateQuality((float) allReviews.stream().mapToDouble(x -> x.getRateQuality()).average().orElse(1));
-        ce.setRateSpeed((float) allReviews.stream().mapToDouble(x -> x.getRateSpeed()).average().orElse(1));
+        ce.setRateOverAll((float) allReviews.stream().mapToDouble(ReviewEntity::getRateOverAll).average().orElse(1));
+        ce.setRatePrice((float) allReviews.stream().mapToDouble(ReviewEntity::getRatePrice).average().orElse(1));
+        ce.setRateQuality((float) allReviews.stream().mapToDouble(ReviewEntity::getRateQuality).average().orElse(1));
+        ce.setRateSpeed((float) allReviews.stream().mapToDouble(ReviewEntity::getRateSpeed).average().orElse(1));
         
         circles.save(ce);
         
         model.put("circles", circles.findAllForMenu());
         model.put("selectedCircle", ce);
-        return "redirect:/circle/" + circleId + "/";
+        return "redirect:/provider/" + circleId + "/";
     }
 
     @GetMapping("/profile")
     public String profile(HttpServletRequest request, Map<String, Object> model) {
-        model.put("orders", orders.findAll(util.getUser(request).getUid()));
+        List<OrderEntity> orders = this.orders.findAll(util.getUser(request).getUid());
+        Collections.reverse(orders);
+
+        model.put("orders", orders);
         model.put("circles", circles.findAllForMenu());
         return "profile";
     }

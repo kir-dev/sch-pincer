@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -56,13 +57,7 @@ public enum CustomComponentType {
         @Override
         public List<String> processMessage(CustomComponentAnswer cca, OrderEntity oe, CustomComponentModel ccm) {
             List<String> list = new ArrayList<>();
-            list.add(
-                    ccm.getAliases()
-                    .get(
-                    cca.getSelected()
-                    .get(0)
-                    )
-                    );
+            list.add(ccm.getAliases().get(cca.getSelected().get(0)));
             return list;
         }
         
@@ -113,8 +108,7 @@ public enum CustomComponentType {
 	private static Map<String, CustomComponentType> types = Stream.of(values())
 	        .collect(Collectors.toMap(CustomComponentType::name, x -> x));
 	
-    public static void calculateExtra(String detailsJson, OrderEntity order, ItemEntity ie) 
-            throws JsonParseException, JsonMappingException, IOException {
+    public static void calculateExtra(String detailsJson, OrderEntity order, ItemEntity ie) throws IOException {
         
         CustomComponentAnswerList answers = mapper.readValue(detailsJson.getBytes(), CustomComponentAnswerList.class);
         CustomComponentModelList models = mapper.readValue(
@@ -135,7 +129,7 @@ public enum CustomComponentType {
         }
         
         order.setPrice(ie.getPrice() + extraPrice);
-        order.setExtra(extraString.stream().filter(x -> x != null).collect(Collectors.joining("; ")));
+        order.setExtra(extraString.stream().filter(Objects::nonNull).collect(Collectors.joining("; ")));
     }
 
 }

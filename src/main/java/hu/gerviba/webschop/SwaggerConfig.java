@@ -35,7 +35,7 @@ public class SwaggerConfig {
                 .apiInfo(pagesData())
                 .select()
                 .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.regex("(/circle/.*)|(/items/.*)|(/profile/.*)|(/configure/.*)|(/admin/.*)|(/)"))
+                .paths(PathSelectors.regex("(/circle/.*)|(/items/.*)|(/profile/.*)|(/configure/.*)|(/admin/.*)|(/provider/.*)|(/)"))
                 .build()
                 .forCodeGeneration(true);
     }
@@ -54,7 +54,7 @@ public class SwaggerConfig {
 
     private ApiInfo defaultData() {
         return new ApiInfoBuilder()
-                .title("WebSchop API Documentation")
+                .title("Schpincér API Documentation")
                 .description("Documentation of both RestAPI and Pages endpoints")
                 .version("1.0.0")
                 .build();
@@ -62,7 +62,7 @@ public class SwaggerConfig {
     
     private ApiInfo apiData() {
         return new ApiInfoBuilder()
-                .title("WebSchop RestAPI Documentation")
+                .title("Schpincér RestAPI Documentation")
                 .description("List of RestAPI endpoints")
                 .version("1.0.0")
                 .build();
@@ -70,7 +70,7 @@ public class SwaggerConfig {
     
     private ApiInfo pagesData() {
         return new ApiInfoBuilder()
-                .title("WebSchop Pages Documentation")
+                .title("Schpincér Pages Documentation")
                 .description("List of web pages")
                 .version("1.0.0")
                 .build();

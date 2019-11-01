@@ -83,21 +83,23 @@ public class OrderService {
     }
     
     public ResponseEntity<String> makeOrder(HttpServletRequest request, Long id, long time, String comment,
-            String detailsJson) throws JsonParseException, JsonMappingException, IOException {
+            String detailsJson) throws IOException {
         
         UserEntity user = util.getUser(request);
         if (user == null)
-            return new ResponseEntity<String>("Error 403", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Error 403", HttpStatus.FORBIDDEN);
         
         if (user.getRoom() == null || user.getRoom().length() < 1)
-            return new ResponseEntity<String>("NO_ROOM_SET", HttpStatus.OK);
+            return new ResponseEntity<>("NO_ROOM_SET", HttpStatus.OK);
         
-        OrderEntity order = new OrderEntity(user.getUid(), user.getName(), comment, detailsJson, user.getRoom());
+        OrderEntity order = new OrderEntity(user.getUid(), user.getName(),
+                "[" + user.getCardType().name() + "] " + comment,
+                detailsJson, user.getRoom());
         order.setIntervalId(time);
         ItemEntity item = itemsRepo.getOne(id);
         
         if (!item.isOrderable() || item.isPersonallyOrderable())
-            return new ResponseEntity<String>("INTERNAL_ERROR", HttpStatus.OK);
+            return new ResponseEntity<>("INTERNAL_ERROR", HttpStatus.OK);
         
         order.setName(item.getName());
         CustomComponentType.calculateExtra(detailsJson, order, item);
@@ -105,23 +107,23 @@ public class OrderService {
         OpeningEntity current = openings.findNextOf(item.getCircle().getId());
         
         if (current == null)
-            return new ResponseEntity<String>("INTERNAL_ERROR", HttpStatus.OK);
+            return new ResponseEntity<>("INTERNAL_ERROR", HttpStatus.OK);
         
         if (current.getOrderStart() > System.currentTimeMillis() || current.getOrderEnd() < System.currentTimeMillis())
-            return new ResponseEntity<String>("NO_ORDERING", HttpStatus.OK);
+            return new ResponseEntity<>("NO_ORDERING", HttpStatus.OK);
 
         if (current.getOrderCount() >= current.getMaxOrder())
-            return new ResponseEntity<String>("OVERALL_MAX_REACHED", HttpStatus.OK);
+            return new ResponseEntity<>("OVERALL_MAX_REACHED", HttpStatus.OK);
         
         TimeWindowEntity timewindow = timewindowRepo.getOne(time);
-        if (timewindow.getOpening().getId() != current.getId())
-            return new ResponseEntity<String>("INTERNAL_ERROR", HttpStatus.OK);
+        if (!timewindow.getOpening().getId().equals(current.getId()))
+            return new ResponseEntity<>("INTERNAL_ERROR", HttpStatus.OK);
         
         if (timewindow.getNormalItemCount() <= 0)
-            return new ResponseEntity<String>("MAX_REACHED", HttpStatus.OK);
+            return new ResponseEntity<>("MAX_REACHED", HttpStatus.OK);
         
         if (order.isExtraTag() && timewindow.getExtraItemCount() <= 0) {
-            return new ResponseEntity<String>("MAX_REACHED_EXTRA", HttpStatus.OK);
+            return new ResponseEntity<>("MAX_REACHED_EXTRA", HttpStatus.OK);
         }
         
         timewindow.setNormalItemCount(timewindow.getNormalItemCount() - 1);
@@ -138,21 +140,21 @@ public class OrderService {
         openings.save(current);
         save(order);
         
-        return new ResponseEntity<String>("ACK", HttpStatus.OK);
+        return new ResponseEntity<>("ACK", HttpStatus.OK);
     }
 
     public ResponseEntity<String> cancelOrder(HttpServletRequest request, long id) {
         try {
             OrderEntity order = getOne(id);
             if (!order.getUserId().equals(util.getUser(request).getUid()))
-                return new ResponseEntity<String>("BAD_REQUEST", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("BAD_REQUEST", HttpStatus.BAD_REQUEST);
 
             if (order.getStatus() != OrderStatus.ACCEPTED) 
-                return new ResponseEntity<String>("INVALID_STATUS", HttpStatus.OK);
+                return new ResponseEntity<>("INVALID_STATUS", HttpStatus.OK);
             
             OpeningEntity opening = openings.getOne(order.getOpeningId());
             if (opening.getOrderEnd() <= System.currentTimeMillis()) 
-                return new ResponseEntity<String>("ORDER_PERIOD_ENDED", HttpStatus.OK);
+                return new ResponseEntity<>("ORDER_PERIOD_ENDED", HttpStatus.OK);
 
             order.setStatus(OrderStatus.CANCELLED);
 
@@ -167,9 +169,9 @@ public class OrderService {
             openings.save(opening);
             save(order);
             
-            return new ResponseEntity<String>("ACK", HttpStatus.OK);
+            return new ResponseEntity<>("ACK", HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<String>("BAD_REQUEST", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("BAD_REQUEST", HttpStatus.BAD_REQUEST);
         }
     }
     

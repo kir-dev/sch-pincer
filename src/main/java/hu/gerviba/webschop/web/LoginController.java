@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import hu.gerviba.authsch.struct.Entrant;
+import hu.gerviba.webschop.model.CardType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -47,19 +49,32 @@ public class LoginController {
         try {
             AuthResponse response = authSch.validateAuthentication(code);
             ProfileDataResponse profile = authSch.getProfile(response.getAccessToken());
-            
+            UserEntity user;
+
             if (users.exists(profile.getInternalId().toString())) {
-                UserEntity user = users.getById(profile.getInternalId().toString());
+                user = users.getById(profile.getInternalId().toString());
             	request.getSession().setAttribute("user", user);
                 auth = new UsernamePasswordAuthenticationToken(code, state, getAuthorities(user));
+
+                CardType card = cardTypeLookup(profile);
+                if (user.getCardType() != card) {
+                    user.setCardType(card);
+                    users.save(user);
+                }
             } else {
-            	UserEntity user = new UserEntity(profile.getInternalId().toString(), 
+            	user = new UserEntity(profile.getInternalId().toString(),
                         profile.getSurname() + " " + profile.getGivenName(), 
                         profile.getMail());
+                CardType card = cardTypeLookup(profile);
+                if (user.getCardType() != card) {
+                    user.setCardType(card);
+                }
                 users.save(user);
                 auth = new UsernamePasswordAuthenticationToken(code, state, getAuthorities(user));
                 request.getSession().setAttribute("user", user);
             }
+
+
             SecurityContextHolder.getContext().setAuthentication(auth);
             
         } catch (Exception e) {
@@ -69,6 +84,18 @@ public class LoginController {
         }
         
         return (auth != null && auth.isAuthenticated()) ? "redirect:/" : "redirect:/?error";
+    }
+
+    private CardType cardTypeLookup(ProfileDataResponse profile) {
+        CardType card = CardType.DO;
+        for (Entrant entrant : profile.getEntrants()) {
+            if (entrant.getEntrantType().equalsIgnoreCase("KB") && card.ordinal() < CardType.KB.ordinal()) {
+                card = CardType.KB;
+            } else if (entrant.getEntrantType().matches("^[ÁáAa][Bb]$") && card.ordinal() < CardType.AB.ordinal()) {
+                card = CardType.AB;
+            }
+        }
+        return card;
     }
 
     private List<GrantedAuthority> getAuthorities(UserEntity user) {
