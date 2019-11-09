@@ -1,22 +1,16 @@
-package hu.gerviba.webschop;
-
-import java.time.Instant;
-
-import javax.annotation.PostConstruct;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
+package hu.gerviba.webschop.config;
 
 import hu.gerviba.webschop.model.CircleEntity;
 import hu.gerviba.webschop.model.CircleMemberEntity;
 import hu.gerviba.webschop.model.ItemEntity;
 import hu.gerviba.webschop.model.OpeningEntity;
-import hu.gerviba.webschop.service.CircleMemberService;
-import hu.gerviba.webschop.service.CircleService;
-import hu.gerviba.webschop.service.ItemService;
-import hu.gerviba.webschop.service.OpeningService;
-import hu.gerviba.webschop.service.ReviewService;
+import hu.gerviba.webschop.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.time.Instant;
 
 @Component
 @Profile("test")
@@ -58,7 +52,7 @@ public class TestingConfig {
                     + "villanykaros és külsős rendezvényeken is.", 
                 "orange", 2004,
                 "demo/pizzasch-bg.jpg", "icons/icon-pizzasch.svg", "Szerda", "pizzasch",
-                "https://www.facebook.com/pizzasch/", "https://pizzasch.hu/pizzas"));
+                "https://www.facebook.com/pizzasch/", "https://pizzasch.hu/pizzas", true));
         
         OpeningEntity opening;
 //        Original:
@@ -217,7 +211,7 @@ public class TestingConfig {
                     + "meg Dzsájrosszal az ottlakók hasát.", 
                 "green", 1995,
                 "demo/dzsajrosz-bg.jpg", "icons/icon-dzsajrosz.svg", "Csütörtök", "dzsajrosz", 
-                "https://www.facebook.com/dzsajrosz/", "http://dzsajrosz.sch.bme.hu/"));
+                "https://www.facebook.com/dzsajrosz/", "http://dzsajrosz.sch.bme.hu/", true));
 
         items.save(new ItemEntity("Normál gyros tál", circle, 
                 "hasábkrumpli, husi, zöldségek, öntet", 
@@ -276,7 +270,7 @@ public class TestingConfig {
                     + "inkább elolvad a szádban. Hetente kedd esténként nyitunk a -1.-en a nagykonyhában. ", 
                 "blue",  2002,
                 "demo/americano-bg.jpg", "icons/icon-americano.svg", "Kedd", "americano",
-                "https://www.facebook.com/americano.sch/", "https://americano.sch.bme.hu/"));
+                "https://www.facebook.com/americano.sch/", "https://americano.sch.bme.hu/", true));
 
         items.save(new ItemEntity("Random Burger", circle, 
                 "Izé, hozé, bigyó és return 4, lorem ipsum dolor sit amet", 
@@ -300,7 +294,7 @@ public class TestingConfig {
                     + "hazai, igazi „anyasütötte” krumpli ízét, azokat sok szeretettel várja hétfő esténként a Vödörkör.", 
                 "purple",  2005,
                 "demo/vodor-bg.jpg", "icons/icon-vodor.svg", "Hétfő", "vodor",
-                "https://www.facebook.com/vodorkor/", "https://vodor.sch.bme.hu/"));
+                "https://www.facebook.com/vodorkor/", "https://vodor.sch.bme.hu/", true));
         
         items.save(new ItemEntity("Vödör", circle, 
                 "A panzó elnevezés az olasz panzerotti szóból ered. Jelentése: töltött lángos. A mi receptünk alapján a lángos tésztába mexikói zöldségkeveréket és darálthúst teszünk, amit ezután forró olajban kisütünk.", 
@@ -329,7 +323,7 @@ public class TestingConfig {
                     + "és a félévenkénti 10 feletti nyitásaink száma is.", 
                 "red", 1999,
                 "demo/kakas-bg.jpg", "icons/icon-kakas.svg", "Vasárnap", "kakas",
-                "https://www.facebook.com/kakasfogado/", "http://kakas.sch.bme.hu/"));
+                "https://www.facebook.com/kakasfogado/", "http://kakas.sch.bme.hu/", true));
         
         openings.save(opening = new OpeningEntity(convert(7, 20, 0), convert(8, 0, 0), convert(7, 20, 0), convert(7, 20, 0), 
                 "demo/kakas-pr.jpg", "Ez egy Kakas nyitás. Ez a szöveg program sch-ra lesz exportálva.", 
@@ -370,7 +364,7 @@ public class TestingConfig {
                     + "frissen alakult körnek és egy mindenre nyitott csapatnak!", 
                 "yellow",  1994,
                 "demo/langosch-bg.jpg", "icons/icon-langosch.svg", "Vasárnap (2 hetente)", "langosch",
-                "https://www.facebook.com/EgyelLangost/", "https://langosch.sch.bme.hu"));
+                "https://www.facebook.com/EgyelLangost/", "https://langosch.sch.bme.hu", true));
         
         openings.save(opening = new OpeningEntity(convert(7, 18, 0), convert(8, 0, 0), convert(7, 0, 0), convert(7, 18, 0), 
                 "demo/langosch-pr.jpg", "Ez egy Lángosch nyitás. Ez a szöveg program sch-ra lesz exportálva.", 

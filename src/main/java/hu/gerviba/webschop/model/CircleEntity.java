@@ -123,11 +123,14 @@ public class CircleEntity implements Serializable {
 
     @Column
     private String alias;
+
+    @Column(nullable = false)
+    private Boolean visible = false;
     
     public CircleEntity(@Size(min = 2, max = 32) String displayName, @Size(max = 1000) String description,
             @Size(max = 1000) String homePageDescription, @Size(max = 30) String cssClassName, int founded,
             @Size(max = 255) String backgroundUrl, @Size(max = 255) String logoUrl, 
-            @Size(max = 255) String avgOpening, String alias, String facebook, String website) {
+            @Size(max = 255) String avgOpening, String alias, String facebook, String website, boolean visible) {
         
         this.displayName = displayName;
         this.description = description;
@@ -146,6 +149,7 @@ public class CircleEntity implements Serializable {
         this.ratePrice = 5;
         this.rateingCount = 105;
         this.alias = alias;
+        this.visible = visible;
     }
 
     public CircleEntity(CircleEntity copy) {
@@ -167,6 +171,7 @@ public class CircleEntity implements Serializable {
         this.ratePrice = copy.getRatePrice();
         this.rateingCount = copy.getRateingCount();
         this.alias = copy.getAlias();
+        this.visible = copy.getVisible();
     }
     
 }

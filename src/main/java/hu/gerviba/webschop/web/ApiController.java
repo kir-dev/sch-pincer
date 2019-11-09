@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -80,25 +79,25 @@ public class ApiController {
         if (circle != null) {
             List<ItemEntityDto> list = items.findAllByCircle(circle).stream()
                     .filter(item -> item.isVisibleWithoutLogin() || loggedIn)
-                    .filter(item -> item.isVisible())
+                    .filter(ItemEntity::isVisible)
                     .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(
                             item.getCircle().getId(), 
                             (i) -> openings.findNextOf(i)), 
                             loggedIn || util.isInInternalNetwork(request)))
                     .collect(Collectors.toList());
-            return new ResponseEntity<List<ItemEntityDto>>(list, HttpStatus.OK); 
+            return new ResponseEntity<>(list, HttpStatus.OK);
         }
         
         List<ItemEntityDto> list = items.findAll().stream()
                 .filter(item -> item.isVisibleWithoutLogin() || loggedIn)
-                .filter(item -> item.isVisibleInAll())
-                .filter(item -> item.isVisible())
+                .filter(ItemEntity::isVisibleInAll)
+                .filter(ItemEntity::isVisible)
                 .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(
                         item.getCircle().getId(), 
                         (i) -> openings.findNextOf(i)), 
                         loggedIn || util.isInInternalNetwork(request)))
                 .collect(Collectors.toList());
-        return new ResponseEntity<List<ItemEntityDto>>(list, HttpStatus.OK);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @ApiOperation("List of items orderable right now")
@@ -108,16 +107,16 @@ public class ApiController {
         boolean loggedIn = util.getUser(request) != null;
         
         Map<Long, OpeningEntity> cache = new HashMap<>();
-        List<ItemEntityDto> list = items.findAllByOrerableNow().stream()
+        List<ItemEntityDto> list = items.findAllByOrderableNow().stream()
                 .filter(item -> item.isVisibleWithoutLogin() || loggedIn)
-                .filter(item -> item.isVisibleInAll())
+                .filter(ItemEntity::isVisibleInAll)
                 .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(
                         item.getCircle().getId(), 
                         (i) -> openings.findNextOf(i)), 
                         loggedIn || util.isInInternalNetwork(request)))
                 .collect(Collectors.toList());
                 
-        return new ResponseEntity<List<ItemEntityDto>>(list, HttpStatus.OK);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @ApiOperation("List of items orderable tomorrow")
@@ -129,14 +128,14 @@ public class ApiController {
         Map<Long, OpeningEntity> cache = new HashMap<>();
         List<ItemEntityDto> list = items.findAllByOrerableTomorrow().stream()
                 .filter(item -> item.isVisibleWithoutLogin() || loggedIn)
-                .filter(item -> item.isVisibleInAll())
+                .filter(ItemEntity::isVisibleInAll)
                 .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(
                         item.getCircle().getId(), 
                         (i) -> openings.findNextOf(i)), 
                         loggedIn || util.isInInternalNetwork(request)))
                 .collect(Collectors.toList());
         
-        return new ResponseEntity<List<ItemEntityDto>>(list, HttpStatus.OK);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @ApiOperation("Page of items")
@@ -148,7 +147,7 @@ public class ApiController {
         Map<Long, OpeningEntity> cache = new HashMap<>();
         List<ItemEntityDto> list = items.findAll(page).stream()
                 .filter(item -> item.isVisibleWithoutLogin() || loggedIn)
-                .filter(item -> item.isVisibleInAll())
+                .filter(ItemEntity::isVisibleInAll)
                 .map(item -> new ItemEntityDto(item, cache.computeIfAbsent(
                         item.getCircle().getId(), 
                         (i) -> openings.findNextOf(i)), 
@@ -162,7 +161,7 @@ public class ApiController {
     @ResponseBody
     public ResponseEntity<List<OpeningEntity>> getAllOpenings() {
         List<OpeningEntity> page = openings.findAll();
-        return new ResponseEntity<List<OpeningEntity>>(page, HttpStatus.OK);
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     @ApiOperation("List of openings (next week period)")
@@ -170,7 +169,7 @@ public class ApiController {
     @ResponseBody
     public ResponseEntity<List<OpeningEntity>> getNextWeekOpenings() {
         List<OpeningEntity> page = openings.findNextWeek();
-        return new ResponseEntity<List<OpeningEntity>>(page, HttpStatus.OK);
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     @ApiOperation("List of circles")
@@ -178,7 +177,7 @@ public class ApiController {
     @ResponseBody
     public ResponseEntity<List<CircleEntity>> getAllCircles() {
         List<CircleEntity> page = circles.findAll();
-        return new ResponseEntity<List<CircleEntity>>(page, HttpStatus.OK);
+        return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     @ApiOperation("New order")

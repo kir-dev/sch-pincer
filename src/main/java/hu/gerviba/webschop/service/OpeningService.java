@@ -12,7 +12,10 @@ import hu.gerviba.webschop.dao.TimeWindowRepository;
 import hu.gerviba.webschop.model.OpeningEntity;
 import hu.gerviba.webschop.model.TimeWindowEntity;
 
+import javax.transaction.Transactional;
+
 @Service
+@Transactional
 public class OpeningService {
 
     public static final SimpleDateFormat DATE_FORMATTER_HH_MM = new SimpleDateFormat("HH:mm"); 
@@ -27,6 +30,10 @@ public class OpeningService {
     
     public List<OpeningEntity> findAll() {
         return repo.findAllByOrderByDateStart();
+    }
+
+    public List<OpeningEntity> findUpcomingOpenings() {
+        return repo.findAllByOrderEndGreaterThanOrderByDateStart(System.currentTimeMillis());
     }
 
     public List<OpeningEntity> findNextWeek() {

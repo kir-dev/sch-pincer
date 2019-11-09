@@ -770,6 +770,13 @@ a {
 	display: inline-block;
 	margin: 0 auto;
 	padding: 10px 20px 0 20px;
+	opacity: 0;
+	width: 80%;
+	transition: opacity ease 2s;
+}
+
+.footer .gerviba:hover {
+	opacity: 1;
 }
 
 .footer .gerviba span i {

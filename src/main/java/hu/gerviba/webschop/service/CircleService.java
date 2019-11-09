@@ -28,7 +28,7 @@ public class CircleService {
     }
 
     public List<CircleEntity> findAllForMenu() {
-        return repo.findAllByOrderByHomePageOrder();
+        return repo.findAllByVisibleTrueOrderByHomePageOrder();
     }
 
     public void save(CircleEntity circleEntity) {
@@ -44,7 +44,7 @@ public class CircleService {
     }
 
     public CircleEntity findByAlias(String alias) {
-        return repo.findByAlias(alias);
+        return repo.findAllByAlias(alias).get(0);
     }
     
 }

@@ -15,7 +15,7 @@ public class OpeningEntityDto {
     private String feeling;
     private int maxOrder = 120;
     private int maxOrderPerInterval = 15;
-    private int maxExtraPerInterval = 2;
+    private int maxExtraPerInterval = 0;
     private int intervalLength = 30;
     
 }

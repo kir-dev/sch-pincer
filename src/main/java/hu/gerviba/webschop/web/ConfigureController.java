@@ -78,9 +78,9 @@ public class ConfigureController {
     public String configureRoot(HttpServletRequest request, Map<String, Object> model) {
         List<CircleEntity> all = circles.findAllForMenu();
         model.put("circles", all);
-        
+
         UserEntity user = util.getUser(request);
-        List<CircleEntity> editable = all.stream()
+        List<CircleEntity> editable = circles.findAll().stream()
                 .filter(Objects::nonNull)
                 .filter(x -> user.isSysadmin() || user.getPermissions().contains("CIRCLE_" + x.getId()))
                 .collect(Collectors.toList());
@@ -202,12 +202,12 @@ public class ConfigureController {
         model.put("mode", "new");
         ItemEntity ie = new ItemEntity();
         ie.setDetailsConfigJson("[]");
-        ie.setOrderable(false);
+        ie.setOrderable(true);
         ie.setVisible(true);
         ie.setService(false);
         ie.setVisibleInAll(true);
         ie.setPersonallyOrderable(false);
-        ie.setVisibleWithoutLogin(false);
+        ie.setVisibleWithoutLogin(true);
         ie.setFlag(0);
         model.put("item", ie);
         return "itemModify";
@@ -235,8 +235,13 @@ public class ConfigureController {
     
     @GetMapping("/configure/{circleId}/items/edit/{itemId}")
     public String editItem(@PathVariable Long itemId, 
-            @PathVariable Long circleId, Map<String, Object> model) {
-        
+            @PathVariable Long circleId, Map<String, Object> model,
+           HttpServletRequest request
+    ) {
+
+        if (util.cannotEditCircle(circleId, request))
+            return "redirect:/configure/" + circleId + "?error";
+
         model.put("circles", circles.findAllForMenu());
         model.put("mode", "edit");
         model.put("item", new ItemEntity(items.getOne(itemId)));
@@ -267,7 +272,8 @@ public class ConfigureController {
         original.setService(item.isService());
         original.setVisibleInAll(item.isVisibleInAll());
         original.setVisibleWithoutLogin(item.isVisibleWithoutLogin());
-        original.setFlag(item.getFlag());
+        if (item.getFlag() < 1000 || util.getUser(request).isSysadmin())
+            original.setFlag(item.getFlag());
         
         String file = util.uploadFile("items", imageFile);
         if (file != null)

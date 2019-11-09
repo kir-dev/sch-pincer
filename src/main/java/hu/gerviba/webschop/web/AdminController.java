@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,16 +51,17 @@ public class AdminController {
 	@GetMapping("/")
 	public String adminRoot(Map<String, Object> model) {
         model.put("circles", circles.findAllForMenu());
+        model.put("circlesToEdit", circles.findAll());
         List<RoleEntryDto> roles = users.findAll().stream()
-                .map(x -> {
+                .map(user -> {
                     try {
-                        return new RoleEntryDto(util.sha256(x.getUid()), x);
+                        return new RoleEntryDto(util.sha256(user.getUid()), user);
                     } catch (NoSuchAlgorithmException e) {
                         e.printStackTrace();
                     }
                     return null;
                 })
-                .filter(x -> x != null)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         model.put("roles", roles);
 		return "admin";
@@ -68,6 +70,7 @@ public class AdminController {
 	@GetMapping("/circles")
 	public String adminCircles(Map<String, Object> model) {
 		model.put("circles", circles.findAllForMenu());
+        model.put("circlesToEdit", circles.findAll());
 		return "admin";
 	}
 
@@ -140,6 +143,7 @@ public class AdminController {
         original.setHomePageOrder(circle.getHomePageOrder());
         original.setWebsiteUrl(circle.getWebsiteUrl());
         original.setAlias(circle.getAlias());
+        original.setVisible(circle.getVisible());
         
         String file = util.uploadFile("logos", logo);
         if (file != null)

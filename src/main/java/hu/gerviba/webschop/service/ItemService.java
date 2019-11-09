@@ -28,11 +28,11 @@ public class ItemService {
     private static final int HOUR6_IN_MILLIS  = 6 * 60 * 60 * 1000;
 
     public List<ItemEntity> findAll() {
-		return repo.findAllByVisibleTrue();
+		return repo.findAllByVisibleTrueOrderByPrecedenceDesc();
 	}
 	
 	public List<ItemEntity> findAll(int page) {
-	    return repo.findAllByVisibleTrueAndVisibleInAllTrue(PageRequest.of(page, 6)).getContent();
+	    return repo.findAllByVisibleTrueAndVisibleInAllTrueOrderByPrecedenceDesc(PageRequest.of(page, 6)).getContent();
 	}
 	
 	public ItemEntity getOne(Long itemId) {
@@ -44,7 +44,7 @@ public class ItemService {
     }
 
     public List<ItemEntity> findAllByCircle(Long circleId) {
-        return repo.findAllByCircle_Id(circleId);
+        return repo.findAllByCircle_IdOrderByPrecedenceDesc(circleId);
     }
 
     public void delete(ItemEntity ie) {
@@ -55,7 +55,7 @@ public class ItemService {
         repo.deleteByCircle_Id(circleId);
     }
 
-    public List<ItemEntity> findAllByOrerableNow() {
+    public List<ItemEntity> findAllByOrderableNow() {
         long time = System.currentTimeMillis();
         List<Long> circles = openingRepo.findAllByOrderStartLessThanAndOrderEndGreaterThan(
                     time,
@@ -63,7 +63,7 @@ public class ItemService {
                 .stream()
                 .map(opening -> opening.getCircle().getId())
                 .collect(Collectors.toList());
-        return repo.findAllByCircle_IdIn(circles);
+        return repo.findAllByCircle_IdInOrderByPrecedenceDesc(circles);
     }
     
     public List<ItemEntity> findAllByOrerableTomorrow() {
@@ -73,7 +73,7 @@ public class ItemService {
                 .stream()
                 .map(opening -> opening.getCircle().getId())
                 .collect(Collectors.toList());
-        return repo.findAllByCircle_IdIn(circles);
+        return repo.findAllByCircle_IdInOrderByPrecedenceDesc(circles);
     }
     
     public static long getJustDateFrom(long millis) {

@@ -17,6 +17,7 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +85,7 @@ public class HibernateSearchService {
 
 		javax.persistence.Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, ItemEntity.class);
 
-		List<ItemEntity> results = List.of();
+		List<ItemEntity> results = new ArrayList<>();
 		try {
 			results = ((FullTextQuery) jpaQuery)
 					.limitExecutionTimeTo(timeLimitSec, TimeUnit.SECONDS)

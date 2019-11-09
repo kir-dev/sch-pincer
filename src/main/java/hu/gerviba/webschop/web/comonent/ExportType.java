@@ -11,7 +11,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ExportType {
-    DEFAULT(false, "Americano",
+    DEFAULT(false, "Default",
             Arrays.asList("ID", "NÉV", "IDÖSÁV", "TERMÉK", "EXTRA", "MEGJEGYZÉS", "ÁR"),
             new int[] {   3,    8,     5,        10,       5,       10,           4   },
             Arrays.asList(
@@ -47,19 +47,19 @@ public enum ExportType {
                     (order) -> "" + order.getArtificialId(),
                     OrderEntity::getUserName,
                     OrderEntity::getIntervalMessage,
-                    (order) -> order.getName() + " " + order.getExtra(),
+                    OrderEntity::getName,
                     OrderEntity::getExtra,
                     OrderEntity::getComment,
                     (order) -> "" + order.getPrice()
             )),
-    PIZZASCH(false, "Americano",
+    PIZZASCH(false, "Pizzasch",
             Arrays.asList("ID", "NÉV", "IDÖSÁV", "TERMÉK", "MEGJEGYZÉS", "ÁR"),
             new int[] {   3,    8,     5,        10,       10,           4   },
             Arrays.asList(
                     (order) -> "" + order.getArtificialId(),
                     OrderEntity::getUserName,
                     OrderEntity::getIntervalMessage,
-                    OrderEntity::getName,
+                    (order) -> order.getName() + " " + order.getExtra().toUpperCase(),
                     OrderEntity::getComment,
                     (order) -> "" + order.getPrice()
             )),

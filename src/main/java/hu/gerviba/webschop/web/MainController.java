@@ -51,11 +51,10 @@ public class MainController {
     public String root(Map<String, Object> model) {
         List<CircleEntity> circlesList = circles.findAllForMenu();
         model.put("circles", circlesList);
-        List<CircleEntity> random = new ArrayList<>();
-        random.addAll(circlesList);
+        List<CircleEntity> random = new ArrayList<>(circlesList);
         Collections.shuffle(random);
         model.put("circlesRandom", random);
-        List<OpeningEntity> opens = openings.findAll();
+        List<OpeningEntity> opens = openings.findUpcomingOpenings();
         model.put("opener", opens.size() > 0 ? opens.get(0) : null);
         model.put("openings", openings.findNextWeek());
         return "index";
@@ -96,9 +95,8 @@ public class MainController {
         return "circleProfile";
     }
 
-    @GetMapping("/provider/{circle}")
-    public String circleSpecificAlias(@PathVariable String circle,
-                                 Map<String, Object> model) {
+    @GetMapping({"/provider/{circle}", "/p/{circle}"})
+    public String circleSpecificAlias(@PathVariable String circle, Map<String, Object> model) {
         return circleSpecific(circle, model);
     }
 

@@ -13,5 +13,9 @@ public interface CircleRepository extends JpaRepository<CircleEntity, Long> {
     List<CircleEntity> findAllByOrderByHomePageOrder();
 
     CircleEntity findByAlias(String alias);
-    
+
+    List<CircleEntity> findAllByVisibleTrueOrderByHomePageOrder();
+
+    List<CircleEntity> findAllByAlias(String alias);
+
 }

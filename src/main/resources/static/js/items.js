@@ -26,12 +26,8 @@ function appendNext(profile = 0) {
             }
             for (var item in data)
                 addItem(data[item]);
-            $("#list-end").css({
-                display : "inline-block"
-            });
-            $("#loading").css({
-                display : "none"
-            });
+            $("#list-end").css({display : "inline-block"});
+            $("#loading").css({display : "none"});
         }
     });
 }
@@ -90,12 +86,8 @@ function searchFor(keyword) {
             }
             for (var item in data)
                 addItem(data[item]);
-            $("#list-end").css({
-                display : "inline-block"
-            });
-            $("#loading").css({
-                display : "none"
-            });
+            $("#list-end").css({display : "inline-block"});
+            $("#loading").css({display : "none"});
         }
     });
 }
@@ -121,6 +113,9 @@ function clearAll() {
     $("#item-set").html("");
 }
 
+const STARS = [8, 100];
+const FLAGS = [1010, 1069];
+
 function formatItem(item) {
     return `
                 <div class="item ${item.circleColor}">
@@ -135,7 +130,7 @@ function formatItem(item) {
                             <td>${item.ingredients}</td>
                         </tr>
 ${appendCustom(item.detailsConfigJson)}
-${item.price != -1 ? `
+${item.price !== -1 ? `
                         <tr>
                             <td>${LANG['price']}:</td>
                             <td>${item.price} ${LANG['currency']}</td>
@@ -148,9 +143,10 @@ ${item.price != -1 ? `
                         <i class="material-icons" alt="">local_mall</i></a>
                         `}
                         
-                        ${item.flag != '1' ? '' : `<i class="material-icons a" alt="">fiber_new</i>`}
-                        ${item.flag != '8' ? '' : `<i class="material-icons a" alt="">star</i>`}
-                        ${item.flag != '11' ? '' : `<i class="material-icons a" alt="">flag</i>`}
+                        ${item.flag !== '1' ? '' : `<i class="material-icons a" alt="">fiber_new</i>`}
+                        ${item.flag !== '100' ? '' : `<i class="material-icons a" alt="">bug_report</i>`}
+                        ${!STARS.includes(item.flag) ? '' : `<i class="material-icons a" alt="">star</i>`}
+                        ${!FLAGS.includes(item.flag) ? '' : `<i class="material-icons a" alt="">flag</i>`}
                         
                         <a class="colored-light" href="${URL_BASE}circle/${item.circleAlias}">${item.circleName}</a>
                     </span>
@@ -158,7 +154,13 @@ ${item.price != -1 ? `
 }
 
 function appendCustom(json) {
-    let custom = JSON.parse(json);
+    let custom;
+    try {
+        custom = JSON.parse(json);
+    } catch (e) {
+        console.error(e);
+        return "<tr><td rowspan='2'>Invalid descriptor</td></tr>";
+    }
 
     let result = "";
     custom.forEach(element => {
@@ -179,6 +181,7 @@ function generateCustom(json) {
         custom = JSON.parse(json);
     } catch (e) {
         console.error(e);
+        return;
     }
     let result = "";
     custom.forEach(element => {
@@ -188,7 +191,7 @@ function generateCustom(json) {
             } else if (element.type === "EXTRA_CHECKBOX") {
                 result += generateExtraCheckbox(element);
             } else if (element.type === "AMERICANO_SELECT") {
-                result += generateExtraSelect(element);
+                result += generateExtraCheckbox(element);
             }  else if (element.type === "EXTRA_SELECT") {
                 result += generateExtraSelect(element);
             }  else if (element.type === "PIZZASCH_SELECT") {
@@ -220,7 +223,7 @@ function generateExtraSelect(element) {
         let value = element.values[optionId];
         let price = element.prices[optionId];
         result += `
-            <option value="${optionId}">${value}${price != 0 ? ' (+' + price + ' ' + LANG['currency'] + ')' : ''}</option>`;
+            <option value="${optionId}">${value}${price !== 0 ? ' (+' + price + ' ' + LANG['currency'] + ')' : ''}</option>`;
     }
     result += `
         </select>`;
@@ -240,7 +243,7 @@ function generatePizzaschSelect(element) {
     for (var optionId = 0; optionId < element.values.length; optionId++) {
         let value = element.values[optionId];
         let price = element.prices[optionId];
-        result += `<option value="${optionId}">${value}${price != 0 ? ' (+' + price + ' ' + LANG['currency'] + ')' : ''}</option>`;
+        result += `<option value="${optionId}">${value}${price !== 0 ? ' (+' + price + ' ' + LANG['currency'] + ')' : ''}</option>`;
     }
     result += `</select>`;
     if (element._comment) {
@@ -258,7 +261,7 @@ function generateExtraCheckbox(element) {
         let value = element.values[optionId];
         let price = element.prices[optionId];
         result += `
-            <label class="checkcontainer">${value}${price != 0 ? ' (+' + price + ' ' + LANG['currency'] + ')' : ''}
+            <label class="checkcontainer">${value}${price !== 0 ? ' (+' + price + ' ' + LANG['currency'] + ')' : ''}
                 <input type="checkbox" name="${element.name}_${optionId}" data-price="${price}" onchange="itemChanged()" class="price-changer"/>
                 <span class="checkmark"></span>
             </label>`;
@@ -286,7 +289,7 @@ function itemChanged() {
 
 function itemChangedPizzasch() {
 	itemChanged();
-    $("#popup-timewindows").html(generateTimes(latestData.timeWindows, $("#pizzasch-select").prop('selectedIndex') != 0));
+    $("#popup-timewindows").html(generateTimes(latestData.timeWindows, $("#pizzasch-select").prop('selectedIndex') !== 0));
 }
 
 function showPopup(id) {
@@ -300,7 +303,7 @@ function showPopup(id) {
             $("#popup-header").css({"background-image": "url('" + URL_BASE + data.circleIcon + "')"});
             $("#popup-image").css({"background-image": "url('" + URL_BASE + data.imageName + "')"});
             $("#popup-description").text(data.description);
-            $("#popup-price-container").css({display: data.price != -1 ? "inline": "none"});
+            $("#popup-price-container").css({display: data.price !== -1 ? "inline": "none"});
             $("#popup-price").text(data.price + " " + LANG['currency']);
             $("#popup-price").attr("data-base", data.price);
             $("#popup-window").addClass(data.circleColor);
@@ -311,7 +314,7 @@ function showPopup(id) {
             $("#popup-not-orderable").css({display: data.orderable || data.personallyOrderable ? "none" : "block"});
             $("#popup-perosnally").css({display: data.personallyOrderable ? "block" : "none"});
             $("#popup-timewindows").css({display: data.timeWindows.length > 1 ? "block" : "none"});
-            
+
             $("#popup").removeClass("inactive");
             $("#blur-section").addClass("blur");
             selectedItem = data;
@@ -452,19 +455,19 @@ function enableScroll() {
 }
 
 $(window).scroll(function() {
-    if ($(window).scrollTop() == $(document).height() - $(window).height() && !endReached) {
+    if ($(window).scrollTop() === $(document).height() - $(window).height() && !endReached) {
         appendNext();
     }
 });
 
 $(window).click(function() {
-    if (event.target == $("#popup")[0]) {
+    if (event.target === $("#popup")[0]) {
         closePopup();
     }
 });
 
 $(document).keyup(function (e) {
-    if (e.keyCode == 27) {
+    if (e.keyCode === 27) {
         closePopup();
     }
 });

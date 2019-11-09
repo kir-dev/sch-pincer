@@ -5,6 +5,7 @@
 
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 mkfile_dir := $(dir $(mkfile_path))
+version := $(shell cat $(mkfile_dir)pom.xml | grep '<version>' | head -1 | cut -d \> -f 2 | cut -d \< -f 1)
 
 .PHONY: all
 all: install
@@ -14,20 +15,26 @@ install:
 
 test:
 	./mvnw test
-	
-deploy: docker-volume-create docker-remove docker-build
-	@echo
-	@echo Done
-	@echo
+
+version:
+	@echo $(version)
 
 run:
 
 package:
-	./mvnw package spring-boot:repackage
+	./mvnw clean package spring-boot:repackage
 
 docker-build: package
 	cp target/schpincer-*.jar docker/schpincer-latest.jar
 	docker build --file=docker/Dockerfile --tag=schpincer:latest --rm=true docker/
+
+deploy: docker-build
+	docker tag schpincer registry.k8s.sch.bme.hu/schpincer/schpincer:$(version)
+	docker push registry.k8s.sch.bme.hu/schpincer/schpincer:$(version)
+	@echo
+	@echo VERSION: $(version) | STATUS: DONE
+	@echo
+
 
 docker-run:
 	docker run -d --name=schpincer --publish=80:80 \

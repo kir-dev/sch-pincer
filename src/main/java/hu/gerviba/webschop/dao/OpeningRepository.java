@@ -23,4 +23,5 @@ public interface OpeningRepository extends JpaRepository<OpeningEntity, Long> {
 
     List<OpeningEntity> findAllByOrderStartLessThanAndOrderEndGreaterThan(long currentTime1, long currentTime2);
 
+    List<OpeningEntity> findAllByOrderEndGreaterThanOrderByDateStart(long currentTimeMillis);
 }

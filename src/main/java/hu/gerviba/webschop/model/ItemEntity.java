@@ -91,7 +91,10 @@ public class ItemEntity implements Serializable {
 
     @Column
     private int flag;
-    
+
+    @Column(nullable = false)
+    private Integer precedence = 0;
+
 	public ItemEntity(String name, CircleEntity circle, String description, String ingredients, 
 	        String keywords, String detailsConfigJson, int price, boolean orderable, boolean visible, 
 	        boolean service, boolean visibleInAll, boolean personallyOrderable, boolean visibleWithoutLogin,
@@ -129,6 +132,7 @@ public class ItemEntity implements Serializable {
         this.visibleWithoutLogin = copy.isVisibleWithoutLogin();
         this.personallyOrderable = copy.isPersonallyOrderable();
         this.flag = copy.getFlag();
+        this.precedence = copy.getPrecedence();
     }
     
 }

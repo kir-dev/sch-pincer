@@ -105,6 +105,15 @@
 						</td>
 					</tr>
 					<tr>
+						<td th:text="#{lang.admin.circle.visible}">Visible</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="visible" th:checked="*{visible}">
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
 						<td th:text="#{lang.admin.circle.logo}">Logo</td>
 						<td><input type="file" name="logo"/></td>
 					</tr>

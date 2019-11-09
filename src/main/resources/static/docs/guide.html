@@ -1,0 +1,344 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>schpincér</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+      
+<ul>
+<li><a href="#sch-pincér-ultimate-guide-köröknek">SCH-PINCÉR Ultimate Guide köröknek</a></li>
+<li><a href="#csatlakozástestreszabás">1. Csatlakozás/Testreszabás</a>
+<ul>
+<li></li>
+</ul>
+</li>
+<li><a href="#jogkörök">2. Jogkörök</a>
+<ul>
+<li></li>
+</ul>
+</li>
+<li><a href="#nyitás-készítése">3. Nyitás készítése</a></li>
+<li><a href="#termék-felvételetestreszabása">4. Termék felvétele/Testreszabása</a></li>
+<li><a href="#beállítások-json-advanced">5. Beállítások JSON (Advanced)</a>
+<ul>
+<li></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+  </div>
+  <div class="stackedit__right">
+    <div class="stackedit__html">
+      <h1 id="sch-pincér-ultimate-guide-köröknek">SCH-PINCÉR Ultimate Guide köröknek</h1>
+
+<table>
+<thead>
+<tr>
+<th align="left">Adat</th>
+<th align="left">Érték</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Utolsó módosítás</td>
+<td align="left">2019.11.09.</td>
+</tr>
+<tr>
+<td align="left">Aktuális fejlesztő</td>
+<td align="left">Szabó Gergely (Schámán)</td>
+</tr>
+<tr>
+<td align="left">Schpincér verzió</td>
+<td align="left">1.1.4+</td>
+</tr>
+</tbody>
+</table><h1 id="csatlakozástestreszabás">1. Csatlakozás/Testreszabás</h1>
+<blockquote>
+<p>A megadott képméretek csak tájékoztató jellegűek, ilyen méretben fognak megjelenni. (WxH formátumban)</p>
+</blockquote>
+<h3 id="első-lépések">1.0 Első lépések</h3>
+<ul>
+<li>Körvezetőként kérj jogot a köröd szerkesztéséhez (tervben van auto export)</li>
+<li>Körvezetőként add le az aktuális jogosult tagokat. Körvezető jogkört kaphat bárki a körből, ahogyan PR-t is, részletek lejjebb. A jogkör megnevezése külsőleg nem látszik, szóval akár mindenkinek is lehet kérni ilyen jogkört.</li>
+</ul>
+<h3 id="mire-lesz-szüksége-a-körnek">1.1 Mire lesz szüksége a körnek</h3>
+<ul>
+<li>80x80-as monokróm (fehér és átlátszó) logó</li>
+<li>600x300-as kép minden termékről</li>
+<li>Termék adatai (ár, leírás, hozzávalók, választható feltétek, stb…) lásd lentebb</li>
+<li>Nyitás kép (1200x500 pr kép, ami a fő oldalon fog megjelenni), nyitás feelingje (opcionális)</li>
+</ul>
+<h3 id="opcionális-testreszabás-flagek">1.2 Opcionális testreszabás, flagek</h3>
+<ul>
+<li>Tagok felsorolása, van lehetőség fotót is felrakni fotóval (100x100)</li>
+<li>Flag-ek: Termék képe fölött megjelenő badge. (pl: A hét pizzája, ajándék pita) Ha ilyet szeretne valamelyik kör, akkor azt előző hét csütörtökig tegye meg lehetőleg, mert új flag hozzáadásához redeploy kell. (Ha már megvan a flag korlátlanul ki/be kapcsolható)</li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>Flag neve</th>
+<th>Ikon</th>
+<th align="center">Kód</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Semmi</td>
+<td>Nincs</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td>A hét pizzája</td>
+<td>A7’P’JA badge</td>
+<td align="center">8</td>
+</tr>
+<tr>
+<td>-</td>
+<td>-</td>
+<td align="center">-</td>
+</tr>
+<tr>
+<td>Editors` choice*</td>
+<td>Trófea</td>
+<td align="center">1010</td>
+</tr>
+</tbody>
+</table><blockquote>
+<p>* 1000 feletti kódokat csak admin jogkörrel lehet beállítani</p>
+</blockquote>
+<h3 id="export-formátum">1.3 Export formátum</h3>
+<ul>
+<li>Az export formátumot a mindenkori fejlesztővel egyeztetve pontosítsa minden kör, még az első nyitás előtt.</li>
+<li>Van lehetőség webhookos összeköttetésre is. Ha ilyet szeretne valaki, akkor ugyanúgy a mindenkori fejlesztőt keresse meg.</li>
+</ul>
+<h1 id="jogkörök">2. Jogkörök</h1>
+<h3 id="pr-korlátozott-jogkör">PR (Korlátozott jogkör)</h3>
+<ul>
+<li>Nyitás hozzáadása</li>
+<li>Rendelések exportálása</li>
+<li>Termékek szerkesztése/hozzáadása/törlése</li>
+</ul>
+<h3 id="körvezető-teljes-jogkör">Körvezető (Teljes jogkör)</h3>
+<ul>
+<li>PR jogkörből minden</li>
+<li>Kör adatlapjának szerkesztése</li>
+<li>Tagok kezelése</li>
+</ul>
+<h3 id="admin-site-szintű-teljes-jogkör">Admin (Site-szintű teljes jogkör)</h3>
+<ul>
+<li><em>Mindenkori fejlesztők és reszortvez részére</em></li>
+<li>Kör hozzáadása, törlése</li>
+<li>Felhasználók jogköreinek szerkesztése</li>
+</ul>
+<h1 id="nyitás-készítése">3. Nyitás készítése</h1>
+<ol>
+<li>Körök szerkesztése menü (bejelentkezés után látszik)</li>
+<li>Kör kiválasztása</li>
+<li>Új nyitás gomb</li>
+<li>Nyitás kezdete/vége: Az az időszak amin belül a kiszállítás történik.</li>
+<li>Rendelés kezdete/vége: Az a tartomány amin belül lehet rendelni. Körönként egy időben csak egy rendelési sáv legyen aktív.</li>
+<li>A PR kép mérete optimálisan: 1200x500</li>
+<li>A többi beállítás intuitív, hozzáadás gomb</li>
+<li><strong>A nyitás nem szerkeszthető jelenleg. Ha valami el lett rontva, töröld le és hozd létre újra.</strong></li>
+</ol>
+<h1 id="termék-felvételetestreszabása">4. Termék felvétele/Testreszabása</h1>
+<ol>
+<li>Körök szerkesztése menü (bejelentkezés után látszik)</li>
+<li>Kör kiválasztása</li>
+<li>Új termék / Ceruza ikon egy terméken</li>
+<li>Leírás: Az a szöveg ami a felugró ablakban jelenik meg.</li>
+<li>Hozzávalók: Az a szöveg ami a termékek listában jelenik meg. Formátum: Alapanyagok neveinek felsorolása vesszővel elválasztva.</li>
+<li>Kulcsszavak: felsorolás szóközzel elválasztva</li>
+<li>Beállítások JSON (lásd 5. pont)</li>
+<li>Flag (lásd 1.2 pont)</li>
+<li>Módosít / hozzáad gomb</li>
+</ol>
+<blockquote>
+<p>A kulcsszavak elterjedésének lehet egy kis ideje a lucene full text index miatt.</p>
+</blockquote>
+<h1 id="beállítások-json-advanced">5. Beállítások JSON (Advanced)</h1>
+<blockquote>
+<p>A termékek menüjének beállításait tartalmazó JSON</p>
+</blockquote>
+<h3 id="felépítése">5.1 Felépítése</h3>
+<p>A végleges json egy objektum lista: <code>[{...}, {...}]</code> Az egyes objektumok a beviteli mezők egy-egy csoportja, azaz egy komponens.</p>
+<p>Ha nem világos, keresd meg az aktuális fejlesztőt nyugodtan.</p>
+<h3 id="komponens-formátum">5.2 Komponens formátum</h3>
+<pre class=" language-json"><code class="prism  language-json"><span class="token punctuation">{</span>
+    <span class="token string">"type"</span><span class="token punctuation">:</span> <span class="token string">"EXTRA_SELECT"</span><span class="token punctuation">,</span>          <span class="token comment">// Can be: EXTRA_SELECT (single choice), EXTRA_CHECKBOX (multiple choice)</span>
+    <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"size"</span><span class="token punctuation">,</span>                  <span class="token comment">// Can be: size, sauce, contain, extra, potato, panzo, type</span>
+    <span class="token string">"values"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">"value1"</span><span class="token punctuation">,</span> <span class="token string">"value2"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>  <span class="token comment">// Value names</span>
+    <span class="token string">"prices"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">]</span><span class="token punctuation">,</span>              <span class="token comment">// Additional prices for each value</span>
+    <span class="token string">"aliases"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">"v1"</span><span class="token punctuation">,</span> <span class="token string">"v2"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>         <span class="token comment">// Value name aliases for pdf export (only internal use)</span>
+    <span class="token string">"_display"</span><span class="token punctuation">:</span> <span class="token string">"Display text"</span><span class="token punctuation">,</span>      <span class="token comment">// Display text in search menu (optional, default: values-&gt;join) {pieces} =&gt; db</span>
+    <span class="token string">"_hide"</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>                   <span class="token comment">// Hide from search menu (optional, default: false)</span>
+    <span class="token string">"_comment"</span> <span class="token punctuation">:</span> <span class="token string">"Lorem ipsum"</span><span class="token punctuation">,</span>      <span class="token comment">// Text below the input field (optional, default: empty string)</span>
+    <span class="token string">"_extra"</span> <span class="token punctuation">:</span> <span class="token boolean">false</span>                 <span class="token comment">// If true the item will be notified as 'extra'. (optional, default: false)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h4 id="megkötések">5.2.1 Megkötések:</h4>
+<ul>
+<li>Ugyan annyi <code>values</code> értéknek kell lennie mint a <code>prices</code>-nak és az <code>aliases</code>-nak.</li>
+<li>Ha hibás a json, akkor a termékek listában “Invalid descriptor” szöveg jelenik meg a termék leírásában.</li>
+<li>Minifyolva kell beilleszteni a jsont. (egy sor legyen)</li>
+</ul>
+<h4 id="példák">5.2.2 Példák</h4>
+<h5 id="americano-példa">5.2.2.1 Americano példa:</h5>
+<pre class=" language-json"><code class="prism  language-json"><span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+        <span class="token string">"type"</span><span class="token punctuation">:</span><span class="token string">"EXTRA_SELECT"</span><span class="token punctuation">,</span>
+        <span class="token string">"name"</span><span class="token punctuation">:</span><span class="token string">"sauce"</span><span class="token punctuation">,</span>
+        <span class="token string">"_hide"</span><span class="token punctuation">:</span><span class="token boolean">false</span><span class="token punctuation">,</span>
+        <span class="token string">"values"</span><span class="token punctuation">:</span><span class="token punctuation">[</span>
+            <span class="token string">"Ketchup"</span><span class="token punctuation">,</span>
+            <span class="token string">"Mustár"</span><span class="token punctuation">,</span>
+            <span class="token string">"Majonéz"</span><span class="token punctuation">,</span>
+            <span class="token string">"Speckó szósz"</span><span class="token punctuation">,</span>
+            <span class="token string">"Sajt szósz"</span><span class="token punctuation">,</span>
+            <span class="token string">"BBQ szósz"</span><span class="token punctuation">,</span>
+            <span class="token string">"Csípős szósz"</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string">"prices"</span><span class="token punctuation">:</span><span class="token punctuation">[</span>
+            <span class="token number">0</span><span class="token punctuation">,</span>
+            <span class="token number">0</span><span class="token punctuation">,</span>
+            <span class="token number">0</span><span class="token punctuation">,</span>
+            <span class="token number">0</span><span class="token punctuation">,</span>
+            <span class="token number">50</span><span class="token punctuation">,</span>
+            <span class="token number">50</span><span class="token punctuation">,</span>
+            <span class="token number">50</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string">"aliases"</span><span class="token punctuation">:</span><span class="token punctuation">[</span>
+            <span class="token string">"KUPC"</span><span class="token punctuation">,</span>
+            <span class="token string">"MUST"</span><span class="token punctuation">,</span>
+            <span class="token string">"MAJO"</span><span class="token punctuation">,</span>
+            <span class="token string">"SPEC"</span><span class="token punctuation">,</span>
+            <span class="token string">"SAJT"</span><span class="token punctuation">,</span>
+            <span class="token string">"BBQ"</span><span class="token punctuation">,</span>
+            <span class="token string">"CSIP"</span>
+        <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+        <span class="token string">"type"</span><span class="token punctuation">:</span><span class="token string">"EXTRA_SELECT"</span><span class="token punctuation">,</span>
+        <span class="token string">"name"</span><span class="token punctuation">:</span><span class="token string">"extra"</span><span class="token punctuation">,</span>
+        <span class="token string">"_hide"</span><span class="token punctuation">:</span><span class="token boolean">true</span><span class="token punctuation">,</span>
+        <span class="token string">"values"</span><span class="token punctuation">:</span><span class="token punctuation">[</span>
+            <span class="token string">"Pirított hagyma"</span><span class="token punctuation">,</span>
+            <span class="token string">"Csemege uborka"</span><span class="token punctuation">,</span>
+            <span class="token string">"Cheddar sajt"</span><span class="token punctuation">,</span>
+            <span class="token string">"Tükörtojás"</span><span class="token punctuation">,</span>
+            <span class="token string">"Jalapeño paprika"</span><span class="token punctuation">,</span>
+            <span class="token string">"Bacon"</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string">"prices"</span><span class="token punctuation">:</span><span class="token punctuation">[</span>
+            <span class="token number">0</span><span class="token punctuation">,</span>
+            <span class="token number">0</span><span class="token punctuation">,</span>
+            <span class="token number">50</span><span class="token punctuation">,</span>
+            <span class="token number">50</span><span class="token punctuation">,</span>
+            <span class="token number">50</span><span class="token punctuation">,</span>
+            <span class="token number">100</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string">"aliases"</span><span class="token punctuation">:</span><span class="token punctuation">[</span>
+            <span class="token string">"PH"</span><span class="token punctuation">,</span>
+            <span class="token string">"CSUBI"</span><span class="token punctuation">,</span>
+            <span class="token string">"CHED"</span><span class="token punctuation">,</span>
+            <span class="token string">"TOJ"</span><span class="token punctuation">,</span>
+            <span class="token string">"JAL"</span><span class="token punctuation">,</span>
+            <span class="token string">"BAC"</span>
+        <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">]</span>
+</code></pre>
+<h5 id="dzsájrosz-példa">5.2.2.2 Dzsájrosz példa:</h5>
+<pre class=" language-json"><code class="prism  language-json"><span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+        <span class="token string">"type"</span><span class="token punctuation">:</span><span class="token string">"EXTRA_CHECKBOX"</span><span class="token punctuation">,</span>
+        <span class="token string">"name"</span><span class="token punctuation">:</span><span class="token string">"onion"</span><span class="token punctuation">,</span>
+        <span class="token string">"_hide"</span><span class="token punctuation">:</span><span class="token boolean">true</span><span class="token punctuation">,</span>
+        <span class="token string">"values"</span><span class="token punctuation">:</span><span class="token punctuation">[</span>
+            <span class="token string">"Lilahagyma"</span><span class="token punctuation">,</span>
+            <span class="token string">"Pirított hagyma"</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string">"prices"</span><span class="token punctuation">:</span><span class="token punctuation">[</span>
+            <span class="token number">0</span><span class="token punctuation">,</span>
+            <span class="token number">0</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string">"aliases"</span><span class="token punctuation">:</span><span class="token punctuation">[</span>
+            <span class="token string">"LH"</span><span class="token punctuation">,</span>
+            <span class="token string">"PH"</span>
+        <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+        <span class="token string">"type"</span><span class="token punctuation">:</span><span class="token string">"EXTRA_CHECKBOX"</span><span class="token punctuation">,</span>
+        <span class="token string">"name"</span><span class="token punctuation">:</span><span class="token string">"sauce"</span><span class="token punctuation">,</span>
+        <span class="token string">"_hide"</span><span class="token punctuation">:</span><span class="token boolean">true</span><span class="token punctuation">,</span>
+        <span class="token string">"values"</span><span class="token punctuation">:</span><span class="token punctuation">[</span>
+            <span class="token string">"Sima"</span><span class="token punctuation">,</span>
+            <span class="token string">"Foghagymás"</span><span class="token punctuation">,</span>
+            <span class="token string">"Csípős"</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string">"prices"</span><span class="token punctuation">:</span><span class="token punctuation">[</span>
+            <span class="token number">0</span><span class="token punctuation">,</span>
+            <span class="token number">0</span><span class="token punctuation">,</span>
+            <span class="token number">0</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string">"aliases"</span><span class="token punctuation">:</span><span class="token punctuation">[</span>
+            <span class="token string">"SIMA"</span><span class="token punctuation">,</span>
+            <span class="token string">"FH"</span><span class="token punctuation">,</span>
+            <span class="token string">"CSÍP"</span>
+        <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+        <span class="token string">"type"</span><span class="token punctuation">:</span><span class="token string">"EXTRA_SELECT"</span><span class="token punctuation">,</span>
+        <span class="token string">"name"</span><span class="token punctuation">:</span><span class="token string">"cheese"</span><span class="token punctuation">,</span>
+        <span class="token string">"_hide"</span><span class="token punctuation">:</span><span class="token boolean">true</span><span class="token punctuation">,</span>
+        <span class="token string">"values"</span><span class="token punctuation">:</span><span class="token punctuation">[</span>
+            <span class="token string">"Nem kérek"</span><span class="token punctuation">,</span>
+            <span class="token string">"Extra sajt"</span><span class="token punctuation">,</span>
+            <span class="token string">"Dupla sajt"</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string">"prices"</span><span class="token punctuation">:</span><span class="token punctuation">[</span>
+            <span class="token number">0</span><span class="token punctuation">,</span>
+            <span class="token number">100</span><span class="token punctuation">,</span>
+            <span class="token number">200</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string">"aliases"</span><span class="token punctuation">:</span><span class="token punctuation">[</span>
+            <span class="token string">"NE"</span><span class="token punctuation">,</span>
+            <span class="token string">"EXTRA x1"</span><span class="token punctuation">,</span>
+            <span class="token string">"Extra x2"</span>
+        <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+        <span class="token string">"type"</span><span class="token punctuation">:</span><span class="token string">"EXTRA_CHECKBOX"</span><span class="token punctuation">,</span>
+        <span class="token string">"name"</span><span class="token punctuation">:</span><span class="token string">"extra"</span><span class="token punctuation">,</span>
+        <span class="token string">"_hide"</span><span class="token punctuation">:</span><span class="token boolean">true</span><span class="token punctuation">,</span>
+        <span class="token string">"values"</span><span class="token punctuation">:</span><span class="token punctuation">[</span>
+            <span class="token string">"Extra hús"</span><span class="token punctuation">,</span>
+            <span class="token string">"Extra csípős"</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string">"prices"</span><span class="token punctuation">:</span><span class="token punctuation">[</span>
+            <span class="token number">200</span><span class="token punctuation">,</span>
+            <span class="token number">50</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string">"aliases"</span><span class="token punctuation">:</span><span class="token punctuation">[</span>
+            <span class="token string">"HÚS"</span><span class="token punctuation">,</span>
+            <span class="token string">"CSÍP"</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        <span class="token string">"_comment"</span><span class="token punctuation">:</span><span class="token string">"Extra csípős: mindenféle különleges esszenciát bevetve egyenesen a pokolból"</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">]</span>
+</code></pre>
+
+    </div>
+  </div>
+</body>
+
+</html>
