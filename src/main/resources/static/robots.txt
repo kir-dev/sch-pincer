@@ -1,0 +1,7 @@
+User-Agent: *
+Disallow:
+Allow: /
+Allow: /szor
+Allow: /items
+Disallow: /profile
+Disallow: /login

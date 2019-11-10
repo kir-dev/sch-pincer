@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org/">
+<html xmlns:th="http://www.thymeleaf.org/" lang="hu">
 <head th:fragment="head">
 	<meta charset="UTF-8" /> 
 	<title th:text="#{lang.header}">SCH Pincér</title>
@@ -13,14 +13,16 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="#4C4C4D" />
 	<meta name="msapplication-tap-highlight" content="no">
 	<meta name="author" content="Schámán"/>
-	<meta name="keywords" content="" 	th:content="#{lang.head.keywords}">
+	<meta property="og:title" th:content="#{lang.header}">
+	<meta property="og:image" content="https://schpincer.sch.bme.hu/image/ogimage.jpg">
+	<link rel="icon" href="favicon.ico">
 	<meta name="description" content=""	th:content="#{lang.head.description}">
 	<link rel="manifest" href="/manifest.json">
 </head>
 <body>
 	<object th:fragment="header" th:remove="tag">
 	<div class="site-menu" id="site-menu">
-		<h1>Menu</h1>
+		<h1 th:text="#{lang.mobile-menu.title}">Menu</h1>
 		
 		<div class="close" onclick="document.getElementById('site-menu').style.display = 'none'">
 			<i class="material-icons">close</i>
@@ -55,7 +57,7 @@
 	<div class="left-menu" th:fragment="left-menu">
 		<div class="scroll-child">
 			<a th:each="circle : ${circles}" th:href="@{/provider/__${circle.alias}__}">
-				<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{/__${circle.logoUrl}__}" width="80" height="80" />
+				<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{/__${circle.logoUrl}__}" width="80" height="80" th:alt="${circle.displayName}" />
 				<span th:text="${circle.displayName}">Vödör</span>
 			</a>
 			<a th:remove="all"><img src="../static/icons/ecommerce_gift.svg" />Americano</a>

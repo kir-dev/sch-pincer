@@ -19,7 +19,7 @@ public class RoleEntryDto {
     private String permissions; 
     
     public RoleEntryDto(String uidHashed, UserEntity ue) {
-        this.uidHash = uidHashed.substring(0, 8);
+        this.uidHash = uidHashed;
         this.name = ue.getName();
         this.sysadmin = ue.isSysadmin();
         this.permissions = (ue.getPermissions() == null || ue.getPermissions().size() == 0) 

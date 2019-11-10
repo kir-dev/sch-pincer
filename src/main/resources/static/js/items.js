@@ -113,7 +113,7 @@ function clearAll() {
     $("#item-set").html("");
 }
 
-const STARS = [8, 100];
+const STARS = [8, 100, 20, 21, 22, 23, 69];
 const FLAGS = [1010, 1069];
 
 function formatItem(item) {
