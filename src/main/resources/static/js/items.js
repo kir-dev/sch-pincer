@@ -175,7 +175,7 @@ function appendCustom(json) {
     return result;
 }
 
-function generateCustom(json) {
+function generateCustom(json, item) {
     let custom;
     try {
         custom = JSON.parse(json);
@@ -186,6 +186,9 @@ function generateCustom(json) {
     let result = "";
     custom.forEach(element => {
         if (element.values !== undefined) {
+            if (item.price < 0)
+                element.price = 0;
+
             if (element.type === "EXTRA_SELECT") {
                 result += generateExtraSelect(element);
             } else if (element.type === "EXTRA_CHECKBOX") {
@@ -307,7 +310,7 @@ function showPopup(id) {
             $("#popup-price").text(data.price + " " + LANG['currency']);
             $("#popup-price").attr("data-base", data.price);
             $("#popup-window").addClass(data.circleColor);
-            $("#popup-custom").html(generateCustom(data.detailsConfigJson));
+            $("#popup-custom").html(generateCustom(data.detailsConfigJson, data));
             $("#popup-timewindows").html(generateTimes(data.timeWindows));
             $("#popup-comment").val("");
             $("#popup-orderable-block").css({display: data.orderable && !data.perosnallyOrderable ? "block" : "none"});

@@ -1,12 +1,11 @@
 ﻿SCH-PINCÉR Ultimate Guide köröknek
 ===
 
-
-|Adat|Érték|
-|:---|:--|
-|Utolsó módosítás|2019.11.09.|
-|Aktuális fejlesztő|Szabó Gergely (Schámán)|
-|Schpincér verzió|1.1.4+|
+|Adat               |Érték                   |
+|:------------------|:-----------------------|
+|Utolsó módosítás   |2019.11.11.             |
+|Aktuális fejlesztő |Szabó Gergely (Schámán) |
+|Schpincér verzió   |1.1.7+                  |
 
 # 1. Csatlakozás/Testreszabás
 
@@ -19,22 +18,28 @@
 
 ### 1.1 Mire lesz szüksége a körnek
 
-- 80x80-as monokróm (fehér és átlátszó) logó
+- 80x80-as monokróm (fehér és átlátszó) logó, PNG és SVG ajánlott
 - 600x300-as kép minden termékről
 - Termék adatai (ár, leírás, hozzávalók, választható feltétek, stb...) lásd lentebb
-- Nyitás kép (1200x500 pr kép, ami a fő oldalon fog megjelenni), nyitás feelingje (opcionális)
+- Nyitás kép (1200x500 PR kép, ami a fő oldalon fog megjelenni), nyitás feelingje (opcionális)
 
 ### 1.2 Opcionális testreszabás, flagek
 
 - Tagok felsorolása, van lehetőség fotót is felrakni fotóval (100x100)
 - Flag-ek: Termék képe fölött megjelenő badge. (pl: A hét pizzája, ajándék pita) Ha ilyet szeretne valamelyik kör, akkor azt előző hét csütörtökig tegye meg lehetőleg, mert új flag hozzáadásához redeploy kell. (Ha már megvan a flag korlátlanul ki/be kapcsolható) 
 
-|Flag neve                |Ikon           |Kód |
-|-------------------------|---------------|:--:|
-|Semmi                    |Nincs          |0   |
-|A hét pizzája            |A7'P'JA badge  |8   |
-|-                        |-              |-   |
-|Editors` choice*         |Trófea         |1010|
+|Flag neve                |Ikon             |Kód |
+|-------------------------|-----------------|:--:|
+|Semmi                    |Nincs            |0   |
+|A hét pizzája            |A7'P'JA badge    |8   |
+|10% akció                |-10%             |23  |
+|20% akció                |-20%             |22  |
+|25% akció                |-25%             |21  |
+|50% akció                |-50%             |20  |
+|69% akció                |NICE             |69  |
+|Teszt termék             |Teszt és kémcső  |100 |
+|-                        |-                |-   |
+|Editors` choice*         |Trófea           |1010|
 
 > \* 1000 feletti kódokat csak admin jogkörrel lehet beállítani
 
@@ -103,7 +108,7 @@ Ha nem világos, keresd meg az aktuális fejlesztőt nyugodtan.
 ``` json
 {
     "type": "EXTRA_SELECT",          // Can be: EXTRA_SELECT (single choice), EXTRA_CHECKBOX (multiple choice)
-    "name": "size",                  // Can be: size, sauce, contain, extra, potato, panzo, type
+    "name": "size",                  // Can be: size, sauce, contain, extra, potato, panzo, type, stbpanzo, cheese,
     "values": ["value1", "value2"],  // Value names
     "prices": [0, 200],              // Additional prices for each value
     "aliases": ["v1", "v2"],         // Value name aliases for pdf export (only internal use)
@@ -119,6 +124,7 @@ Ha nem világos, keresd meg az aktuális fejlesztőt nyugodtan.
 - Ugyan annyi `values` értéknek kell lennie mint a `prices`-nak és az `aliases`-nak.
 - Ha hibás a json, akkor a termékek listában "Invalid descriptor" szöveg jelenik meg a termék leírásában.
 - Minifyolva kell beilleszteni a jsont. (egy sor legyen)
+- A name értéknek egyedinek kell legyen. Ha nem találod itt a megfelelőt, akkor kérj újat.
 
 #### 5.2.2 Példák
 

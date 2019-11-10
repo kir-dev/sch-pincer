@@ -49,7 +49,7 @@
 <tbody>
 <tr>
 <td align="left">Utolsó módosítás</td>
-<td align="left">2019.11.09.</td>
+<td align="left">2019.11.11.</td>
 </tr>
 <tr>
 <td align="left">Aktuális fejlesztő</td>
@@ -57,7 +57,7 @@
 </tr>
 <tr>
 <td align="left">Schpincér verzió</td>
-<td align="left">1.1.4+</td>
+<td align="left">1.1.7+</td>
 </tr>
 </tbody>
 </table><h1 id="csatlakozástestreszabás">1. Csatlakozás/Testreszabás</h1>
@@ -71,10 +71,10 @@
 </ul>
 <h3 id="mire-lesz-szüksége-a-körnek">1.1 Mire lesz szüksége a körnek</h3>
 <ul>
-<li>80x80-as monokróm (fehér és átlátszó) logó</li>
+<li>80x80-as monokróm (fehér és átlátszó) logó, PNG és SVG ajánlott</li>
 <li>600x300-as kép minden termékről</li>
 <li>Termék adatai (ár, leírás, hozzávalók, választható feltétek, stb…) lásd lentebb</li>
-<li>Nyitás kép (1200x500 pr kép, ami a fő oldalon fog megjelenni), nyitás feelingje (opcionális)</li>
+<li>Nyitás kép (1200x500 PR kép, ami a fő oldalon fog megjelenni), nyitás feelingje (opcionális)</li>
 </ul>
 <h3 id="opcionális-testreszabás-flagek">1.2 Opcionális testreszabás, flagek</h3>
 <ul>
@@ -100,6 +100,36 @@
 <td>A hét pizzája</td>
 <td>A7’P’JA badge</td>
 <td align="center">8</td>
+</tr>
+<tr>
+<td>10% akció</td>
+<td>-10%</td>
+<td align="center">23</td>
+</tr>
+<tr>
+<td>20% akció</td>
+<td>-20%</td>
+<td align="center">22</td>
+</tr>
+<tr>
+<td>25% akció</td>
+<td>-25%</td>
+<td align="center">21</td>
+</tr>
+<tr>
+<td>50% akció</td>
+<td>-50%</td>
+<td align="center">20</td>
+</tr>
+<tr>
+<td>69% akció</td>
+<td>NICE</td>
+<td align="center">69</td>
+</tr>
+<tr>
+<td>Teszt termék</td>
+<td>Teszt és kémcső</td>
+<td align="center">100</td>
 </tr>
 <tr>
 <td>-</td>
@@ -175,7 +205,7 @@
 <h3 id="komponens-formátum">5.2 Komponens formátum</h3>
 <pre class=" language-json"><code class="prism  language-json"><span class="token punctuation">{</span>
     <span class="token string">"type"</span><span class="token punctuation">:</span> <span class="token string">"EXTRA_SELECT"</span><span class="token punctuation">,</span>          <span class="token comment">// Can be: EXTRA_SELECT (single choice), EXTRA_CHECKBOX (multiple choice)</span>
-    <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"size"</span><span class="token punctuation">,</span>                  <span class="token comment">// Can be: size, sauce, contain, extra, potato, panzo, type</span>
+    <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"size"</span><span class="token punctuation">,</span>                  <span class="token comment">// Can be: size, sauce, contain, extra, potato, panzo, type, stbpanzo, cheese,</span>
     <span class="token string">"values"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">"value1"</span><span class="token punctuation">,</span> <span class="token string">"value2"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>  <span class="token comment">// Value names</span>
     <span class="token string">"prices"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">]</span><span class="token punctuation">,</span>              <span class="token comment">// Additional prices for each value</span>
     <span class="token string">"aliases"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">"v1"</span><span class="token punctuation">,</span> <span class="token string">"v2"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>         <span class="token comment">// Value name aliases for pdf export (only internal use)</span>
@@ -190,6 +220,7 @@
 <li>Ugyan annyi <code>values</code> értéknek kell lennie mint a <code>prices</code>-nak és az <code>aliases</code>-nak.</li>
 <li>Ha hibás a json, akkor a termékek listában “Invalid descriptor” szöveg jelenik meg a termék leírásában.</li>
 <li>Minifyolva kell beilleszteni a jsont. (egy sor legyen)</li>
+<li>A name értéknek egyedinek kell legyen. Ha nem találod itt a megfelelőt, akkor kérj újat.</li>
 </ul>
 <h4 id="példák">5.2.2 Példák</h4>
 <h5 id="americano-példa">5.2.2.1 Americano példa:</h5>
