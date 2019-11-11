@@ -186,8 +186,11 @@ function generateCustom(json, item) {
     let result = "";
     custom.forEach(element => {
         if (element.values !== undefined) {
-            if (item.price < 0)
-                element.price = 0;
+            if (item.price < 0) {
+                for (let i = 0; i < element.values.length; i++) {
+                    element.prices[i] = 0;
+                }
+            }
 
             if (element.type === "EXTRA_SELECT") {
                 result += generateExtraSelect(element);
