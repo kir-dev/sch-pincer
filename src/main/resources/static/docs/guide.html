@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>schpincér</title>
+  <title>guide</title>
   <link rel="stylesheet" href="https://stackedit.io/style.css" />
 </head>
 
@@ -25,7 +25,11 @@
 </ul>
 </li>
 <li><a href="#nyitás-készítése">3. Nyitás készítése</a></li>
-<li><a href="#termék-felvételetestreszabása">4. Termék felvétele/Testreszabása</a></li>
+<li><a href="#termék-felvételetestreszabása">4. Termék felvétele/Testreszabása</a>
+<ul>
+<li></li>
+</ul>
+</li>
 <li><a href="#beállítások-json-advanced">5. Beállítások JSON (Advanced)</a>
 <ul>
 <li></li>
@@ -49,7 +53,7 @@
 <tbody>
 <tr>
 <td align="left">Utolsó módosítás</td>
-<td align="left">2019.11.11.</td>
+<td align="left">2019.11.24.</td>
 </tr>
 <tr>
 <td align="left">Aktuális fejlesztő</td>
@@ -57,7 +61,11 @@
 </tr>
 <tr>
 <td align="left">Schpincér verzió</td>
-<td align="left">1.1.7+</td>
+<td align="left">1.1.9+</td>
+</tr>
+<tr>
+<td align="left">Futó verziók</td>
+<td align="left"><a href="https://schpincer.sch.bme.hu/api/version">live</a> | staging | dev</td>
 </tr>
 </tbody>
 </table><h1 id="csatlakozástestreszabás">1. Csatlakozás/Testreszabás</h1>
@@ -181,13 +189,18 @@
 <li><strong>A nyitás nem szerkeszthető jelenleg. Ha valami el lett rontva, töröld le és hozd létre újra.</strong></li>
 </ol>
 <h1 id="termék-felvételetestreszabása">4. Termék felvétele/Testreszabása</h1>
+<h3 id="beállítások">4.1 Beállítások</h3>
 <ol>
 <li>Körök szerkesztése menü (bejelentkezés után látszik)</li>
 <li>Kör kiválasztása</li>
 <li>Új termék / Ceruza ikon egy terméken</li>
-<li>Leírás: Az a szöveg ami a felugró ablakban jelenik meg.</li>
+<li>Leírás: Az a szöveg ami a felugró ablakban jelenik meg. Formázás: (lásd 4.1)</li>
 <li>Hozzávalók: Az a szöveg ami a termékek listában jelenik meg. Formátum: Alapanyagok neveinek felsorolása vesszővel elválasztva.</li>
 <li>Kulcsszavak: felsorolás szóközzel elválasztva</li>
+<li><strong>[1.1.9+]</strong> Rövidítés: Belső használatra az exporthoz név.</li>
+<li><strong>[1.1.10+]</strong> Akció: Ha nulla akkor nem csinál semmit. Ha több akkor az az akciós ár. Kiemelt megjelenés ebben az esetben.</li>
+<li><strong>[1.1.9+]</strong> Megjelenési azonosító: A kör a saját profilján belüli megjelenéshez használt azonosító. Minél nagyobb, annál előbb van,</li>
+<li><strong>[1.1.9+]</strong> Kategória:  Nyitásonkénti rendelés mennyiség megszabásához. Az adott kategóriában lévő termékre külön felső határ húzható,</li>
 <li>Beállítások JSON (lásd 5. pont)</li>
 <li>Flag (lásd 1.2 pont)</li>
 <li>Módosít / hozzáad gomb</li>
@@ -195,6 +208,14 @@
 <blockquote>
 <p>A kulcsszavak elterjedésének lehet egy kis ideje a lucene full text index miatt.</p>
 </blockquote>
+<h3 id="leírás-formázása-1.1.9">4.2 Leírás formázása [1.1.9+]</h3>
+<p>Egészen hasonló a html-hez, csak sokkal kevesebbet tud. Pont annyit amennyit kell neki. A HTML tagek továbbra sem elfogadottak a leírásban.</p>
+<ul>
+<li><code>#h#</code> és <code>#/h#</code> között címszöveg</li>
+<li><code>#br#</code> új sor</li>
+<li><code>#ls#</code> és <code>#/ls#</code> között lista elem</li>
+<li><code>#b#</code> és <code>#/b#</code> között</li>
+</ul>
 <h1 id="beállítások-json-advanced">5. Beállítások JSON (Advanced)</h1>
 <blockquote>
 <p>A termékek menüjének beállításait tartalmazó JSON</p>

@@ -10,25 +10,9 @@
 </head>
 <body>
 	<div class="header" th:replace="MainLayout :: header">
-		<span th:text="#{lang.header}">WEBSCHOP</span>
-		<nav>
-			<a href="index.html"	th:href="@{/}" 		 th:text="#{lang.nav.home}">Home</a>
-			<a href="circle.html" 	th:href="@{/circle}" th:text="#{lang.nav.circle}">Circles</a>
-			<a href="items.html" 	th:href="@{/items}"  th:text="#{lang.nav.items}">Items</a>
-			<a href="#login" 		th:href="@{/login}"  th:text="#{lang.nav.login}">Login</a>
-		</nav>
 	</div>
 	
 	<div class="left-menu" th:replace="MainLayout :: left-menu">
-		<a th:each="circle : ${circles}">
-			<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{${circle.logoUrl}}" />
-			<span th:text="${circle.displayName}">Vödör</span>
-		</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_gift.svg" />Americano</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_graph_increase.svg" />Pizzásch</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_money.svg" />Gyros</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_safe.svg" />Kakas</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_sale.svg" />Lángosch</a>
 	</div>
 
 	<div class="page content">
@@ -38,8 +22,8 @@
 			</div>
 			<h3 th:text="#{lang.admin.title-circle-__${mode}__}" class="topless">Modify Circle</h3>
 			<form action="#" th:action="${adminMode} ? @{/admin/circles/__${mode}__} : @{/configure/edit}" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="circleId" th:value="*{id}" />
 				<table class="form full-table" th:object="${circle}">
-					<input type="hidden" name="circleId" th:value="*{id}" />
 					<tr>
 						<th th:text="#{lang.modify.property}">Property</th>
 						<th th:text="#{lang.modify.value}">Value</th>
@@ -104,7 +88,7 @@
 							<span class="error" th:if="${#fields.hasErrors('alias')}" th:errors="*{alias}"></span>
 						</td>
 					</tr>
-					<tr>
+					<tr th:if="${adminMode}">
 						<td th:text="#{lang.admin.circle.visible}">Visible</td>
 						<td>
 							<label class="form-switch">

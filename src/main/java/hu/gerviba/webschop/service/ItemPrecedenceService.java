@@ -18,6 +18,7 @@ public class ItemPrecedenceService {
     ItemRepository items;
 
     private static final int FLAG_EDITORS_CHOICE = 1010;
+    private static final int FLAG_HIDDEN_EDITORS_CHOICE = 1011;
     private static final int FLAG_FUNKY_ITEM = 1069;
 
     @Transactional
@@ -26,7 +27,7 @@ public class ItemPrecedenceService {
         Collections.shuffle(all);
 
         List<ItemEntity> result = all.stream()
-                .filter(item -> item.getFlag() == FLAG_EDITORS_CHOICE)
+                .filter(item -> item.getFlag() == FLAG_EDITORS_CHOICE || item.getFlag() == FLAG_HIDDEN_EDITORS_CHOICE)
                 .collect(Collectors.toCollection(LinkedList::new));
 
         for (Long circleId : getShuffledCircleIds(all)) {

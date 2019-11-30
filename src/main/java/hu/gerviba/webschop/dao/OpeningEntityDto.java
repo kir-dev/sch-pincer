@@ -17,5 +17,11 @@ public class OpeningEntityDto {
     private int maxOrderPerInterval = 15;
     private int maxExtraPerInterval = 0;
     private int intervalLength = 30;
+
+    private int maxAlpha = 0;
+    private int maxBeta = 0;
+    private int maxGamma = 0;
+    private int maxDelta = 0;
+    private int maxLambda = 0;
     
 }

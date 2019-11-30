@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <object th:include="MainLayout :: head" th:remove="tag"></object>
+</head>
+<body>
+
+<table class="export-table">
+    <tr>
+        <th th:if="${artificialId}" th:text="#{lang.export.custom-field.artificial-id}">artificialId</th>
+        <th th:if="${userName}" th:text="#{lang.export.custom-field.user-name}">userName</th>
+        <th th:if="${name}" th:text="#{lang.export.custom-field.name}">name</th>
+        <th th:if="${count}" th:text="#{lang.export.custom-field.count}">count</th>
+        <th th:if="${compactName}" th:text="#{lang.export.custom-field.compact-name}">compactName</th>
+        <th th:if="${intervalId}" th:text="#{lang.export.custom-field.interval-id}">intervalId</th>
+        <th th:if="${comment}" th:text="#{lang.export.custom-field.comment}">comment</th>
+        <th th:if="${room}" th:text="#{lang.export.custom-field.room}">room</th>
+        <th th:if="${extra}" th:text="#{lang.export.custom-field.extra}">extra</th>
+        <th th:if="${extraTag}" th:text="#{lang.export.custom-field.extraTag}">extraTag</th>
+        <th th:if="${price}" th:text="#{lang.export.custom-field.price}">price</th>
+        <th th:if="${status}" th:text="#{lang.export.custom-field.status}">status</th>
+        <th th:if="${category}" th:text="#{lang.export.custom-field.category}">category</th>
+        <th th:if="${systemComment}" th:text="#{lang.export.custom-field.system-comment}">systemComment</th>
+    </tr>
+    <tr th:each="entry : ${orders}" th:object="${entry}">
+        <td th:text="*{artificialId}" th:if="${artificialId}"></td>
+        <td th:text="*{userName}" th:if="${userName}"></td>
+        <td th:text="*{name}" th:if="${name}"></td>
+        <td th:text="*{count}" th:if="${count}"></td>
+        <td th:text="*{compactName}" th:if="${compactName}"></td>
+        <td th:text="*{intervalMessage}" th:if="${intervalId}"></td>
+        <td th:text="*{comment}" th:if="${comment}"></td>
+        <td th:text="*{room}" th:if="${room}"></td>
+        <td th:text="*{extra}" th:if="${extra}"></td>
+        <td th:text="*{extraTag}" th:if="${extraTag}"></td>
+        <td th:text="*{price}" th:if="${price}"></td>
+        <td th:text="*{status}" th:if="${status}"></td>
+        <td th:text="*{category}" th:if="${category}"></td>
+        <td th:text="*{systemComment}" th:if="${systemComment}"></td>
+    </tr>
+</table>
+
+</body>
+</html>

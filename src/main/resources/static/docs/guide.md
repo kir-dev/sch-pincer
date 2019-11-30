@@ -3,9 +3,10 @@
 
 |Adat               |Érték                   |
 |:------------------|:-----------------------|
-|Utolsó módosítás   |2019.11.11.             |
+|Utolsó módosítás   |2019.11.24.             |
 |Aktuális fejlesztő |Szabó Gergely (Schámán) |
-|Schpincér verzió   |1.1.7+                  |
+|Schpincér verzió   |1.1.9+                  |
+|Futó verziók       | [live](https://schpincer.sch.bme.hu/api/version) \| staging \| dev |
 
 # 1. Csatlakozás/Testreszabás
 
@@ -81,17 +82,32 @@
 
 # 4. Termék felvétele/Testreszabása
 
+### 4.1 Beállítások
+
 1. Körök szerkesztése menü (bejelentkezés után látszik)
 2. Kör kiválasztása
 3. Új termék / Ceruza ikon egy terméken
-4. Leírás: Az a szöveg ami a felugró ablakban jelenik meg.
+4. Leírás: Az a szöveg ami a felugró ablakban jelenik meg. Formázás: (lásd 4.1)
 5. Hozzávalók: Az a szöveg ami a termékek listában jelenik meg. Formátum: Alapanyagok neveinek felsorolása vesszővel elválasztva.
 6. Kulcsszavak: felsorolás szóközzel elválasztva
-7. Beállítások JSON (lásd 5. pont)
-8. Flag (lásd 1.2 pont)
-9. Módosít / hozzáad gomb
+7. **[1.1.9+]** Rövidítés: Belső használatra az exporthoz név.
+8. **[1.1.10+]** Akció: Ha nulla akkor nem csinál semmit. Ha több akkor az az akciós ár. Kiemelt megjelenés ebben az esetben.
+9.  **[1.1.9+]** Megjelenési azonosító: A kör a saját profilján belüli megjelenéshez használt azonosító. Minél nagyobb, annál előbb van,
+10. **[1.1.9+]** Kategória:  Nyitásonkénti rendelés mennyiség megszabásához. Az adott kategóriában lévő termékre külön felső határ húzható,
+11. Beállítások JSON (lásd 5. pont)
+12. Flag (lásd 1.2 pont)
+13. Módosít / hozzáad gomb
 
 > A kulcsszavak elterjedésének lehet egy kis ideje a lucene full text index miatt. 
+
+### 4.2 Leírás formázása [1.1.9+]
+
+Egészen hasonló a html-hez, csak sokkal kevesebbet tud. Pont annyit amennyit kell neki. A HTML tagek továbbra sem elfogadottak a leírásban.
+
+- `#h#` és `#/h#` között címszöveg
+- `#br#` új sor
+- `#ls#` és `#/ls#` között lista elem
+- `#b#` és `#/b#` között 
 
 # 5. Beállítások JSON (Advanced)
 

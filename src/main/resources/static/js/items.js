@@ -133,22 +133,26 @@ ${appendCustom(item.detailsConfigJson)}
 ${item.price !== -1 ? `
                         <tr>
                             <td>${LANG['price']}:</td>
-                            <td>${item.price} ${LANG['currency']}</td>
+                            <td>${item.discountPrice === 0 
+                                ? `<em class="normal-price">${item.price} ${LANG['currency']}</em>` 
+                                : `<em class="strike">${item.price} ${LANG['currency']}</em> <em class="discount"><i class="material-icons">trending_down</i> ${item.discountPrice} ${LANG['currency']}</em>`} 
+                            </td>
                         </tr>
 `: ''}
                     </table>
                     <span>
 					    ${!item.orderable ? '' : `
-                        <a href="#" onclick="showPopup(${item.id}); return false" alt="">
-                        <i class="material-icons" alt="">local_mall</i></a>
+                        <a href="#" onclick="showPopup(${item.id}); return false">
+                        <i class="material-icons">local_mall</i></a>
                         `}
                         
-                        ${item.flag !== '1' ? '' : `<i class="material-icons a" alt="">fiber_new</i>`}
-                        ${item.flag !== '100' ? '' : `<i class="material-icons a" alt="">bug_report</i>`}
-                        ${!STARS.includes(item.flag) ? '' : `<i class="material-icons a" alt="">star</i>`}
-                        ${!FLAGS.includes(item.flag) ? '' : `<i class="material-icons a" alt="">flag</i>`}
+                        ${item.flag !== '1' ? '' : `<i class="material-icons a">fiber_new</i>`}
+                        ${item.flag !== '100' ? '' : `<i class="material-icons a">bug_report</i>`}
+                        ${!STARS.includes(item.flag) ? '' : `<i class="material-icons a">star</i>`}
+                        ${!FLAGS.includes(item.flag) ? '' : `<i class="material-icons a">flag</i>`}
+                        ${item.discountPrice === 0 ? '' : `<i class="material-icons a">trending_down</i>`}
                         
-                        <a class="colored-light" href="${URL_BASE}circle/${item.circleAlias}">${item.circleName}</a>
+                        <a class="colored-light" href="${URL_BASE}provider/${item.circleAlias}">${item.circleName}</a>
                     </span>
                 </div>`;
 }
@@ -210,11 +214,11 @@ function generateCustom(json, item) {
     return result;
 }
 
-function generateTimes(timeWindows, extra = false) {
+function generateTimes(timeWindows, categoryMax, extra = false) {
     let result = "";
     timeWindows.forEach(element => {
         if (element.name !== undefined) {
-            result += `<option value="${element.id}">${element.name} (${extra ? element.extraItemCount : element.normalItemCount}${LANG.pieces})</option>`;
+            result += `<option value="${element.id}">${element.name} (${extra ? element.extraItemCount : Math.min(element.normalItemCount, categoryMax)}${LANG.pieces})</option>`;
         }
     });
     return result;
@@ -295,7 +299,7 @@ function itemChanged() {
 
 function itemChangedPizzasch() {
 	itemChanged();
-    $("#popup-timewindows").html(generateTimes(latestData.timeWindows, $("#pizzasch-select").prop('selectedIndex') !== 0));
+    $("#popup-timewindows").html(generateTimes(latestData.timeWindows, latestData.categoryMax,$("#pizzasch-select").prop('selectedIndex') !== 0));
 }
 
 function showPopup(id) {
@@ -308,18 +312,25 @@ function showPopup(id) {
             $("#popup-title").text(data.name);
             $("#popup-header").css({"background-image": "url('" + URL_BASE + data.circleIcon + "')"});
             $("#popup-image").css({"background-image": "url('" + URL_BASE + data.imageName + "')"});
-            $("#popup-description").text(data.description);
+            $("#popup-description").html(data.description
+                .replaceAll("#h#", "<h5>")
+                .replaceAll("#/h#", "</h5><br>")
+                .replaceAll("#ls#", "<li>- ")
+                .replaceAll("#/ls#", "</li>")
+                .replaceAll("#br#", "</br>")
+                .replaceAll("#b#", "<b>")
+                .replaceAll("#/b#", "</b>"));
             $("#popup-price-container").css({display: data.price !== -1 ? "inline": "none"});
-            $("#popup-price").text(data.price + " " + LANG['currency']);
-            $("#popup-price").attr("data-base", data.price);
+            let price = data.discountPrice === 0 ? data.price : data.discountPrice;
+            $("#popup-price").text(price + " " + LANG['currency']).attr("data-base", price);
+            $("#popup-price-tag").text(LANG[data.discountPrice === 0 ? 'price' : 'priceDiscounted']);
             $("#popup-window").addClass(data.circleColor);
             $("#popup-custom").html(generateCustom(data.detailsConfigJson, data));
-            $("#popup-timewindows").html(generateTimes(data.timeWindows));
+            $("#popup-timewindows").html(generateTimes(data.timeWindows, data.categoryMax)).css({display: data.timeWindows.length > 1 ? "block" : "none"});
             $("#popup-comment").val("");
             $("#popup-orderable-block").css({display: data.orderable && !data.perosnallyOrderable ? "block" : "none"});
             $("#popup-not-orderable").css({display: data.orderable || data.personallyOrderable ? "none" : "block"});
             $("#popup-perosnally").css({display: data.personallyOrderable ? "block" : "none"});
-            $("#popup-timewindows").css({display: data.timeWindows.length > 1 ? "block" : "none"});
 
             $("#popup").removeClass("inactive");
             $("#blur-section").addClass("blur");
@@ -412,6 +423,8 @@ function buySelectedItem() {
 	    	showMessageBox(LANG.alreadyClosed);
 	    } else if (data === "NO_ROOM_SET") {
 	    	showMessageBox(LANG.noRoom);
+        } else if (data === "CATEGORY_FULL") {
+            showMessageBox(LANG.categoryFull);
 	    } else {
 	    	showMessageBox(data);
 	    }
@@ -477,3 +490,8 @@ $(document).keyup(function (e) {
         closePopup();
     }
 });
+
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};

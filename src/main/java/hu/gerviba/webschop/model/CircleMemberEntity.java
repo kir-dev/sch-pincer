@@ -50,6 +50,9 @@ public class CircleMemberEntity implements Serializable {
     @Column
     private int sort;
 
+    @Column(nullable = false)
+    private Integer precedence = 0;
+
     public CircleMemberEntity(CircleEntity circle, @Size(max = 64) String name, @Size(max = 64) String rank, 
             String avatar, int sort) {
         
@@ -58,6 +61,7 @@ public class CircleMemberEntity implements Serializable {
         this.rank = rank;
         this.avatar = avatar;
         this.sort = sort;
+        this.precedence = 0;
     }
     
 }

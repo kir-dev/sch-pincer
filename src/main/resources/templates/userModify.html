@@ -37,8 +37,12 @@
                         <td><input type="checkbox" name="sysadmin" th:checked="${sysadmin}"/></td>
                     </tr>
 					<tr>
-						<td th:text="#{lang.admin.roles.roles}">Rank</td>
+						<td th:text="#{lang.admin.roles.roles}">Roles</td>
 						<td><input type="text" name="roles" th:value="${roles}"/></td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.admin.roles.priority}">Priority</td>
+						<td><input type="number" name="priority" th:value="${priority}"/></td>
 					</tr>
 				</table>
 				<input class="button" type="submit" th:value="#{lang.admin.title-roles}" /> 

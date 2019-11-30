@@ -51,8 +51,8 @@ public class OpeningService {
     }
     
     public Long findNextStartDateOf(Long id) {
-        Optional<OpeningEntity> opening = repo.findFirstByCircle_IdOrderByDateStart(id);
-        return opening.isPresent() ? opening.get().getDateStart() : null;
+        Optional<OpeningEntity> opening = repo.findFirstByCircle_IdAndDateEndGreaterThanOrderByDateStart(id, System.currentTimeMillis());
+        return opening.map(OpeningEntity::getDateStart).orElse(null);
     }
 
     public OpeningEntity getOne(Long openingId) {

@@ -32,7 +32,7 @@
 							</div>
 							<p id="popup-description">Jalapenos alap, csili, pick szalámi mittomén, izé</p><br />
 							<ins id="popup-price-container">
-							<h5 th:text="#{lang.items.price}">ÁR</h5>
+							<h5 id="popup-price-tag" th:text="#{lang.items.price}">ÁR</h5>
 							<span class="colored-light" id="popup-price">800 JMF</span>
 							</ins>
 							<object th:remove="tag" th:if="${session.user} neq null and ${session.user.room} neq null and ${session.user.room.length()} gt 0">
@@ -51,7 +51,7 @@
 									<option value="3">19:30 - 20:00 (20 db)</option>
 								</select>
 								<label th:text="#{lang.items.comment}">Comment</label>
-								<input id="popup-comment" type="text" name="comment" autocomplete="off" />
+								<input id="popup-comment" type="text" name="comment" autocomplete="off" maxlength="200" />
 								<input type="submit" class="colored-light" value="Order" 
 										th:value="#{lang.items.buy}" th:unless="${session.user} eq null" />
 							</div>

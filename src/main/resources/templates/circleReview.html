@@ -10,25 +10,9 @@
 </head>
 <body>
 	<div class="header" th:replace="MainLayout :: header">
-		<span th:text="#{lang.header}">WEBSCHOP</span>
-		<nav>
-			<a href="index.html"	th:href="@{/}" 		 th:text="#{lang.nav.home}">Home</a>
-			<a href="circle.html" 	th:href="@{/circle}" th:text="#{lang.nav.circle}">Circles</a>
-			<a href="items.html" 	th:href="@{/items}"  th:text="#{lang.nav.items}">Items</a>
-			<a href="#login" 		th:href="@{/login}"  th:text="#{lang.nav.login}">Login</a>
-		</nav>
 	</div>
 	
 	<div class="left-menu" th:replace="MainLayout :: left-menu">
-		<a th:each="circle : ${circles}">
-			<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{${circle.logoUrl}}" />
-			<span th:text="${circle.displayName}">Vödör</span>
-		</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_gift.svg" />Americano</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_graph_increase.svg" />Pizzásch</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_money.svg" />Gyros</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_safe.svg" />Kakas</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_sale.svg" />Lángosch</a>
 	</div>
 
 	<div class="page content">

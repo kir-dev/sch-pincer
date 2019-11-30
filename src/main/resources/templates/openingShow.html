@@ -26,6 +26,72 @@
 
 	<div class="page content">
 
+		<div class="highlighted dashboard">
+			<h3 th:text="#{lang.opening-info.title}">Opening info</h3>
+			<table class="form full-table">
+				<tr>
+					<td th:text="#{lang.configure.opening.feeling}">Feeling</td>
+					<td><ins th:text="${opening.feeling}"></ins></td>
+				</tr>
+				<tr>
+					<td th:text="#{lang.configure.opening.date-start}">Date start</td>
+					<td><ins th:text="${#dates.format(opening.dateStart, '__#{lang.date-format}__')}"></ins></td>
+				</tr>
+				<tr>
+					<td th:text="#{lang.configure.opening.date-end}">Date end</td>
+					<td><ins th:text="${#dates.format(opening.dateEnd, '__#{lang.date-format}__')}"></ins></td>
+				</tr>
+				<tr>
+					<td th:text="#{lang.configure.opening.order-start}">Order start</td>
+					<td><ins th:text="${#dates.format(opening.orderStart, '__#{lang.date-format}__')}"></ins></td>
+				</tr>
+				<tr>
+					<td th:text="#{lang.configure.opening.order-end}">Order end</td>
+					<td><ins th:text="${#dates.format(opening.orderEnd, '__#{lang.date-format}__')}"></ins></td>
+				</tr>
+				<tr>
+					<td th:text="#{lang.configure.opening.order-max}">Order max</td>
+					<td><ins th:text="${opening.maxOrder}"></ins></td>
+				</tr>
+				<tr>
+					<td th:text="#{lang.configure.opening.order-max-per}">Order max per interval</td>
+					<td><ins th:text="${opening.maxOrderPerInterval}"></ins></td>
+				</tr>
+				<tr>
+					<td th:text="#{lang.configure.opening.order-extra-max-per}">Order max extra per interval</td>
+					<td><ins th:text="${opening.maxExtraPerInterval}"></ins></td>
+				</tr>
+				<tr>
+					<td th:text="#{lang.configure.opening.interval-length}">Interval length</td>
+					<td><ins th:text="${opening.intervalLength}"></ins></td>
+				</tr>
+				<tr>
+					<td th:text="#{lang.configure.opening.cat-alpha}">Alpha category</td>
+					<td><ins th:text="${opening.maxAlpha}"></ins></td>
+				</tr>
+				<tr>
+					<td th:text="#{lang.configure.opening.cat-beta}">Beta category</td>
+					<td><ins th:text="${opening.maxBeta}"></ins></td>
+				</tr>
+				<tr>
+					<td th:text="#{lang.configure.opening.cat-gamma}">Gamma category</td>
+					<td><ins th:text="${opening.maxGamma}"></ins></td>
+				</tr>
+				<tr>
+					<td th:text="#{lang.configure.opening.cat-delta}">Delta category</td>
+					<td><ins th:text="${opening.maxDelta}"></ins></td>
+				</tr>
+				<tr>
+					<td th:text="#{lang.configure.opening.cat-lambda}">Lambda category</td>
+					<td><ins th:text="${opening.maxLambda}"></ins></td>
+				</tr>
+				<tr>
+					<td th:text="#{lang.configure.opening.pr}">Lambda category</td>
+					<td><img class="centered-mini" th:src="|@{/}${opening.prUrl}|" width="300" alt=""></td>
+				</tr>
+			</table>
+		</div>
+
 		<div class="highlighted">
 			<h3 th:text="#{lang.export.title}">Export</h3>
 			<form th:action="@{/configure/export}" method="get">
@@ -36,6 +102,155 @@
 				<input type="hidden" name="openingId" value="0" th:value="${openingId}" />
 				<input class="button" type="submit" value="Export" th:value="#{lang.export.pdf}">
 			</form>
+		</div>
+
+		<div class="highlighted dashboard">
+			<h3 th:text="#{lang.export.title-table}">Table export</h3>
+
+			<form th:action="@{/configure/table-export/__${openingId}__}" method="get" class="export">
+
+				<table class="form full-table">
+					<tr>
+						<td th:text="#{lang.export.custom-field.artificial-id}">artificialId</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="artificialId" checked>
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.export.custom-field.user-name}">userName</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="userName" checked>
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.export.custom-field.name}">name</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="name">
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.export.custom-field.count}">count</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="count">
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.export.custom-field.compact-name}">compactName</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="compactName" checked>
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.export.custom-field.interval-id}">intervalId</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="intervalId">
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.export.custom-field.comment}">comment</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="comment" checked>
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.export.custom-field.room}">room</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="room" checked>
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.export.custom-field.extra}">extra</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="extra">
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.export.custom-field.extraTag}">extraTag</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="extraTag">
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.export.custom-field.price}">price</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="price" checked>
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.export.custom-field.status}">status</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="status">
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.export.custom-field.category}">category</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="category">
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.export.custom-field.system-comment}">systemComment</td>
+						<td>
+							<label class="form-switch">
+								<input type="checkbox" name="systemComment">
+								<ins class="form-slider"></ins>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.export.order-by}">Order by</td>
+						<td>
+							<select name="orderby">
+								<option th:text="#{lang.export.order.absolute}" th:value="${T(hu.gerviba.webschop.service.OrderService).ORDER_ABSOLUTE}">Absolute order</option>
+								<option th:text="#{lang.export.order.grouped}" th:value="${T(hu.gerviba.webschop.service.OrderService).ORDER_GROUPED}">Grouped timelines</option>
+								<option th:text="#{lang.export.order.rooms}" th:value="${T(hu.gerviba.webschop.service.OrderService).ORDER_ROOMS}">Grouped timelines and rooms</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+
+				<input class="button" type="submit" th:value="#{lang.export.table}" />
+			</form>
+
 		</div>
 
 		<div class="highlighted latest">

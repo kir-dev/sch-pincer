@@ -126,10 +126,10 @@ public class ConfigureController {
     }
     
     @GetMapping("/configure/{circleId}/members/delete/{memberId}")
-    public String deleteMemberNoPR(@PathVariable Long circleId, @PathVariable Long memberId, 
-            Map<String, Object> model) {
-        
-        
+    public String deleteMemberNoPR(@PathVariable Long circleId,
+                                   @PathVariable Long memberId,
+                                   Map<String, Object> model) {
+
         model.put("circles", circles.findAllForMenu());
         model.put("topic", "member");
         model.put("arg", members.getOne(memberId).getName());
@@ -139,14 +139,15 @@ public class ConfigureController {
     }
 
     @PostMapping("/configure/{circleId}/members/delete/{memberId}/confirm")
-    public String deleteMemberConfirm(@PathVariable Long circleId, @PathVariable Long memberId,
-            Map<String, Object> model, HttpServletRequest request) {
+    public String deleteMemberConfirm(@PathVariable Long circleId,
+                                      @PathVariable Long memberId,
+                                      HttpServletRequest request) {
         
         if (util.cannotEditCircleNoPR(circleId, request))
             return "redirect:/configure/" + circleId + "?error";
         
         CircleMemberEntity cme = members.getOne(memberId);
-        if (cme.getCircle().getId() == circleId)
+        if (cme.getCircle().getId().equals(circleId))
             members.delete(cme);
         
         return "redirect:/configure/" + circleId;
@@ -174,7 +175,9 @@ public class ConfigureController {
         CircleEntity original = circles.getOne(circleId);
         
         original.setAvgOpening(circle.getAvgOpening());
-        original.setDescription(circle.getDescription());
+        original.setDescription(circle.getDescription()
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;"));
         original.setDisplayName(circle.getDisplayName());
         original.setFacebookUrl(circle.getFacebookUrl());
         original.setFounded(circle.getFounded());
@@ -224,8 +227,7 @@ public class ConfigureController {
         
         CircleEntity circle = circles.getOne(circleId);
         ie.setCircle(circle);
-        // TODO: Validate JSON
-        
+
         String file = util.uploadFile("items", imageFile);
         ie.setImageName(file == null ? "image/blank-item.jpg" : "cdn/items/" + file);
         
@@ -260,7 +262,9 @@ public class ConfigureController {
         
         ItemEntity original = items.getOne(itemId);
         
-        original.setDescription(item.getDescription());
+        original.setDescription(item.getDescription()
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;"));
         original.setDetailsConfigJson(item.getDetailsConfigJson());
         original.setIngredients(item.getIngredients());
         original.setKeywords(item.getKeywords());
@@ -272,6 +276,12 @@ public class ConfigureController {
         original.setService(item.isService());
         original.setVisibleInAll(item.isVisibleInAll());
         original.setVisibleWithoutLogin(item.isVisibleWithoutLogin());
+
+        original.setAlias(item.getAlias());
+        original.setManualPrecedence(item.getManualPrecedence());
+        original.setDiscountPrice(item.getDiscountPrice());
+        original.setCategory(item.getCategory());
+
         if (item.getFlag() < 1000 || util.getUser(request).isSysadmin())
             original.setFlag(item.getFlag());
         
@@ -304,7 +314,7 @@ public class ConfigureController {
             return "redirect:/configure/" + circleId + "?error";
         
         ItemEntity ie = items.getOne(itemId);
-        if (ie.getCircle().getId() == circleId)
+        if (ie.getCircle().getId().equals(circleId))
             items.delete(ie);
         
         return "redirect:/configure/" + circleId;
@@ -339,6 +349,12 @@ public class ConfigureController {
         eo.setMaxOrderPerInterval(oed.getMaxOrderPerInterval());
         eo.setMaxExtraPerInterval(oed.getMaxExtraPerInterval());
         eo.setIntervalLength(oed.getIntervalLength());
+
+        eo.setMaxAlpha(oed.getMaxAlpha());
+        eo.setMaxBeta(oed.getMaxBeta());
+        eo.setMaxGamma(oed.getMaxGamma());
+        eo.setMaxDelta(oed.getMaxDelta());
+        eo.setMaxLambda(oed.getMaxLambda());
         
         String file = util.uploadFile("pr", prFile);
         eo.setPrUrl(file == null ? "image/blank-pr.jpg" : "cdn/pr/" + file);
@@ -391,6 +407,7 @@ public class ConfigureController {
         model.put("openingId", opening.getId());
         model.put("circles", circles.findAllForMenu());
         model.put("orders", orders.findAllByOpening(openingId));
+        model.put("opening", opening);
         return "openingShow";
     }
     
@@ -412,11 +429,57 @@ public class ConfigureController {
         
         return "redirect:/configure/" + circleId;
     }
-    
+
+    @GetMapping("/configure/table-export/{openingId}")
+    public String showOpenings(
+            @PathVariable Long openingId,
+            @RequestParam String orderby,
+            @RequestParam(defaultValue = "off") String artificialId,
+            @RequestParam(defaultValue = "off") String userName,
+            @RequestParam(defaultValue = "off") String name,
+            @RequestParam(defaultValue = "off") String count,
+            @RequestParam(defaultValue = "off") String compactName,
+            @RequestParam(defaultValue = "off") String intervalId,
+            @RequestParam(defaultValue = "off") String comment,
+            @RequestParam(defaultValue = "off") String room,
+            @RequestParam(defaultValue = "off") String extra,
+            @RequestParam(defaultValue = "off") String extraTag,
+            @RequestParam(defaultValue = "off") String price,
+            @RequestParam(defaultValue = "off") String status,
+            @RequestParam(defaultValue = "off") String category,
+            @RequestParam(defaultValue = "off") String systemComment,
+            HttpServletRequest request,
+            Map<String, Object> model) {
+
+        OpeningEntity opening = openings.getOne(openingId);
+        if (util.cannotEditCircle(opening.getCircle().getId(), request))
+            return "redirect:/configure/" + opening.getCircle().getId() + "?error";
+
+        model.put("artificialId",   !artificialId.equals("off"));
+        model.put("userName",       !userName.equals("off"));
+        model.put("name",           !name.equals("off"));
+        model.put("count",          !count.equals("off"));
+        model.put("compactName",    !compactName.equals("off"));
+        model.put("intervalId",     !intervalId.equals("off"));
+        model.put("comment",        !comment.equals("off"));
+        model.put("room",           !room.equals("off"));
+        model.put("extra",          !extra.equals("off"));
+        model.put("extraTag",       !extraTag.equals("off"));
+        model.put("price",          !price.equals("off"));
+        model.put("status",         !status.equals("off"));
+        model.put("category",       !category.equals("off"));
+        model.put("systemComment",  !systemComment.equals("off"));
+
+        model.put("orders", orders.findToExport(openingId, orderby));
+
+        return "exportTable";
+    }
+
     @GetMapping("/configure/export")
-    public String showOpenings(Long openingId, String type, 
-            HttpServletRequest request, Map<String, Object> model) 
-                    throws FileNotFoundException, DocumentException {
+    public String showOpenings(Long openingId,
+                               String type,
+                               HttpServletRequest request)
+            throws FileNotFoundException, DocumentException {
         
         OpeningEntity opening = openings.getOne(openingId);
         if (util.cannotEditCircle(opening.getCircle().getId(), request))
@@ -475,7 +538,7 @@ public class ConfigureController {
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setVerticalAlignment(Element.ALIGN_CENTER);
             cell.setPhrase(new Phrase(column.apply(order), font));
-            cell.setFixedHeight(15.0f);
+            cell.setNoWrap(false);
             table.addCell(cell);
         }));
     }

@@ -73,7 +73,7 @@ public class MainController {
     @GetMapping("/szor")
     public String circle(Map<String, Object> model) {
         model.put("circles", circles.findAllForMenu());
-        model.put("openings", openings.findNextWeek());
+        model.put("circlesWithOpening", circles.findAllForInfo());
         return "circle";
     }
     

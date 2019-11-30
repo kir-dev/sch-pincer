@@ -2,15 +2,7 @@ package hu.gerviba.webschop.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 import lombok.Data;
@@ -37,6 +29,7 @@ public class OrderEntity implements Serializable {
     @Column
     private String userName;
 
+    @Transient
     private int artificialId;
     
     @Column
@@ -80,28 +73,25 @@ public class OrderEntity implements Serializable {
     
     @Column
     private String systemComment = "";
-    
+
+    @Column(nullable = false)
+    private Integer count = 1;
+
+    @Column(nullable = false)
+    private Integer category = 0;
+
+    @Column(nullable = false)
+    private Integer priority = 1;
+
+    @Column(nullable = false)
+    private String compactName;
+
     public OrderEntity(String userId, String userName, String comment, String detailsJson, String room) {
         this.userId = userId;
         this.status = OrderStatus.ACCEPTED;
         this.comment = comment;
         this.detailsJson = detailsJson;
         this.room = room;
-        this.userName = userName;
-    }
-    
-    public OrderEntity(String userId, String userName, OrderStatus status, String name, String detailsJson, int intervalId,
-            String intervalMessage, long date, String room, int price) {
-
-        this.userId = userId;
-        this.status = status;
-        this.name = name;
-        this.detailsJson = detailsJson;
-        this.intervalId = intervalId;
-        this.intervalMessage = intervalMessage;
-        this.date = date;
-        this.room = room;
-        this.price = price;
         this.userName = userName;
     }
     

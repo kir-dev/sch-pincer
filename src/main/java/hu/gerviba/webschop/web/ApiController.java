@@ -216,9 +216,10 @@ public class ApiController {
             return "ERROR";
         }
     }
-    
+
+    @Deprecated
     @ApiOperation("Delete order")
-    @PostMapping("/order/delete")
+//    @PostMapping("/order/delete")
     @ResponseBody
     public ResponseEntity<String> deleteOrder(HttpServletRequest request, @RequestParam(required = true) long id) {
         return orders.cancelOrder(request, id);

@@ -3,10 +3,7 @@ package hu.gerviba.webschop.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import hu.gerviba.webschop.model.ItemEntity;
-import hu.gerviba.webschop.model.ItemOrderableStatus;
-import hu.gerviba.webschop.model.OpeningEntity;
-import hu.gerviba.webschop.model.TimeWindowEntity;
+import hu.gerviba.webschop.model.*;
 import lombok.Data;
 
 @Data
@@ -31,6 +28,8 @@ public class ItemEntityDto {
     private final ItemOrderableStatus orderStatus;
     private final int flag;
     private final String circleIcon;
+    private final int categoryMax;
+    private final int discountPrice;
     
     public ItemEntityDto(ItemEntity base, OpeningEntity opening, boolean loggedin) {
         this.id = base.getId();
@@ -48,6 +47,7 @@ public class ItemEntityDto {
         this.orderStatus = ItemOrderableStatus.OK;
         this.flag = base.getFlag();
         this.circleIcon = base.getCircle().getBackgroundUrl();
+        this.discountPrice = base.getDiscountPrice();
         
         if (base.getCircle() != null) {
 		    this.circleId = base.getCircle().getId();
@@ -60,6 +60,29 @@ public class ItemEntityDto {
 		    this.circleName = "Not Attached";
 		    this.circleColor = "";
         }
+
+        int max = opening == null ? 0 : opening.getMaxOrderPerInterval();
+        if (opening != null) {
+            switch (ItemCategory.of(base.getCategory())) {
+                case ALPHA:
+                    max = opening.getMaxAlpha() - opening.getUsedAlpha();
+                    break;
+                case BETA:
+                    max = opening.getMaxBeta() - opening.getUsedBeta();
+                    break;
+                case GAMMA:
+                    max = opening.getMaxGamma() - opening.getUsedGamma();
+                    break;
+                case DELTA:
+                    max = opening.getMaxDelta() - opening.getUsedDelta();
+                    break;
+                case LAMBDA:
+                    max = opening.getMaxLambda() - opening.getUsedLambda();
+                    break;
+            }
+        }
+
+        this.categoryMax = max;
     }
     
 }

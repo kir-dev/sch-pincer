@@ -44,7 +44,7 @@ public class ItemService {
     }
 
     public List<ItemEntity> findAllByCircle(Long circleId) {
-        return repo.findAllByCircle_IdOrderByPrecedenceDesc(circleId);
+        return repo.findAllByCircle_IdOrderByManualPrecedenceDesc(circleId);
     }
 
     public void delete(ItemEntity ie) {

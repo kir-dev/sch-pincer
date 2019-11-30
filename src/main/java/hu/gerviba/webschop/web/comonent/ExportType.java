@@ -41,7 +41,7 @@ public enum ExportType {
             )),
     
     AMERICANO(false, "Americano", 
-            Arrays.asList("ID", "NÉV", "IDÖSÁV", "TERMÉK", "!SZÓSZOK", "MEGJEGYZÉS", "ÁR"),
+            Arrays.asList("ID", "NÉV", "IDÖSÁV", "TERMÉK", "SZÓSZOK", "MEGJEGYZÉS", "ÁR"),
             new int[] {   3,    8,     5,        10,       5,          10,           4   },
             Arrays.asList(
                     (order) -> "" + order.getArtificialId(),

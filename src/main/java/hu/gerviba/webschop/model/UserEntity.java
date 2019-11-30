@@ -45,7 +45,10 @@ public class UserEntity implements Serializable {
     
     @Column
     @ElementCollection(fetch = FetchType.EAGER)
-    private Set<String> permissions = new HashSet<>(); 
+    private Set<String> permissions = new HashSet<>();
+
+    @Column(nullable = false)
+    private Integer orderingPriority = 1;
 
     public UserEntity(String uid, String name, String email) {
         this.uid = uid;

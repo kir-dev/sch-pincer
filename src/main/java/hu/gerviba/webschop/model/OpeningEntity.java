@@ -91,7 +91,37 @@ public class OpeningEntity implements Serializable {
     @Column
     @Min(0)
     private int orderCount;
-    
+
+    @Column(nullable = false)
+    private Integer maxAlpha = 0;
+
+    @Column(nullable = false)
+    private Integer maxBeta = 0;
+
+    @Column(nullable = false)
+    private Integer maxGamma = 0;
+
+    @Column(nullable = false)
+    private Integer maxDelta = 0;
+
+    @Column(nullable = false)
+    private Integer maxLambda = 0;
+
+    @Column(nullable = false)
+    private Integer usedAlpha = 0;
+
+    @Column(nullable = false)
+    private Integer usedBeta = 0;
+
+    @Column(nullable = false)
+    private Integer usedGamma = 0;
+
+    @Column(nullable = false)
+    private Integer usedDelta = 0;
+
+    @Column(nullable = false)
+    private Integer usedLambda = 0;
+
     private static final long MILLIS_TO_MINS = 60000;
     
     /**

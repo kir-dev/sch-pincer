@@ -10,25 +10,9 @@
 </head>
 <body>
 	<div class="header" th:replace="MainLayout :: header">
-		<span th:text="#{lang.header}">WEBSCHOP</span>
-		<nav>
-			<a href="index.html"	th:href="@{/}" 		 th:text="#{lang.nav.home}">Home</a>
-			<a href="circle.html" 	th:href="@{/circle}" th:text="#{lang.nav.circle}">Circles</a>
-			<a href="items.html" 	th:href="@{/items}"  th:text="#{lang.nav.items}">Items</a>
-			<a href="#login" 		th:href="@{/login}"  th:text="#{lang.nav.login}">Login</a>
-		</nav>
 	</div>
 	
 	<div class="left-menu" th:replace="MainLayout :: left-menu">
-		<a th:each="circle : ${circles}">
-			<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{${circle.logoUrl}}" />
-			<span th:text="${circle.displayName}">Vödör</span>
-		</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_gift.svg" />Americano</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_graph_increase.svg" />Pizzásch</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_money.svg" />Gyros</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_safe.svg" />Kakas</a>
-		<a th:remove="all"><img src="../static/icons/ecommerce_sale.svg" />Lángosch</a>
 	</div>
 
 	<div class="content page">
@@ -39,61 +23,10 @@
 			<p th:utext="#{lang.circle.description}">Lorem ipsum dolor sit amet</p>
 		</div>
 		
-		<div class="highlighted" th:remove="all">
-			<h2 th:text="#{lang.circle.next-openings}">Következő nyitások</h2>
-			
-			<table class="circles-table">
-				<tr th:each="opening : ${openings}" th:object="${opening}" th:class="*{circle.cssClassName}" class="purple">
-					<td class="border-colored">
-						<a href="#" th:text="*{circle.displayName}" th:href="@{/provider/__*{circle.alias}__/}">Vödör</a>
-					</td>
-					<td th:text="#{lang.weekday-__${#dates.dayOfWeekNameShort(opening.dateStart)}__}">Hetfő</td>
-					<td class="date" th:text="${#dates.format(opening.dateStart, '__#{lang.date-opening-format}__')}">18:00 (18-04-09)</td>
-					<td class="feeling" th:text="*{feeling}">Lorem ispsum dolor sit amet.</td>
-					<td class="arrow"><a href="#" th:href="@{/provider/__*{circle.id}__/}"><i class="material-icons">navigate_next</i></a></td>
-				</tr>
-				<tr class="blue" th:remove="all">
-					<td class="border-colored"><a href="">Americano</a></td>
-					<td>Kedd</td>
-					<td>18:00 (18-04-09)</td>
-					<td>Random moment cuccok</td>
-					<td><a href="#"><i class="material-icons">navigate_next</i></a></td>
-				</tr>
-				<tr class="orange" th:remove="all">
-					<td class="border-colored"><a href="">Pizzásch</a></td>
-					<td>Szerda</td>
-					<td>18:00 (18-04-09)</td>
-					<td>Jack pls mit írjak ide?</td>
-					<td><a href="#"><i class="material-icons">navigate_next</i></a></td>
-				</tr>
-				<tr class="green" th:remove="all">
-					<td class="border-colored"><a href="">Dzsájrosz</a></td>
-					<td>Csütörtök</td>
-					<td>18:00 (18-05-03)</td>
-					<td>Type your feeling here</td>
-					<td><a href="#"><i class="material-icons">navigate_next</i></a></td>
-				</tr>
-				<tr class="red" th:remove="all">
-					<td class="border-colored"><a href="">Kakas</a></td>
-					<td>Vasárnap</td>
-					<td>21:00 (18-04-24)</td>
-					<td>Forradalmi nyitás</td>
-					<td><a href="#"><i class="material-icons">navigate_next</i></a></td>
-				</tr>
-				<tr class="yellow" th:remove="all">
-					<td class="border-colored"><a href="">Lángosch</a></td>
-					<td>Vasárnap</td>
-					<td>18:00 (18-04-09)</td>
-					<td>Lángos lángosch</td>
-					<td><a href="#"><i class="material-icons">navigate_next</i></a></td>
-				</tr>
-			</table>
-		</div>
-		
-		<h2 th:text="#{lang.circle.circles}" class="naked-title">Köreink</h2>
+		<h2 th:text="#{lang.circle.circles}" class="naked-title">Kajás Köreink</h2>
 		
 		<div class="circles">
-			<div th:each="circle : ${circles}" th:object="${circle}" th:class="'article ' + *{cssClassName}" class="article orange">
+			<div th:each="circle : ${circlesWithOpening}" th:object="${circle.circleEntity}" th:class="'article ' + *{cssClassName}" class="article orange">
 				<div class="picture border-colored">
 					<div class="overlay"></div>
 					<div class="image" style="background-image: url('http://wemagazin.com/assets/images/olaszgasztro1pizza.jpg')"
@@ -102,7 +35,7 @@
 				</div>
 				<div class="message">
 					<h3 th:text="*{displayName}" th:onclick="'location.href = \'' + @{/provider/__*{alias}__/} + '\''">Pizzásch</h3>
-					<p th:text="*{description}">
+					<p th:text="*{homePageDescription}">
 						Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
 						Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
 						Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim 
@@ -111,9 +44,9 @@
 					</p>
 					<span class="colored-white">
 						<b>Következő nyitás:</b>
-						<em th:if="${#lists.size(circle.openings) != 0}" class="border-colored"
-							th:text="${#dates.format(circle.openings[0].dateStart, #messages.msg('lang.date-format'))}">2018.04.12. 18:00</em>
-						<em th:unless="${#lists.size(circle.openings) != 0}" class="border-colored"
+						<em th:if="${circle.nextOpening != null}" class="border-colored"
+							th:text="${#dates.format(circle.nextOpening.dateStart, #messages.msg('lang.date-format'))}">2018.04.12. 18:00</em>
+						<em th:unless="${circle.nextOpening != null}" class="border-colored"
 							th:text="#{lang.profile.date-not-set}">Nincs beütemezve</em>
 					</span>
 				</div>

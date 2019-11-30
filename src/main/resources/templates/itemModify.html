@@ -49,6 +49,10 @@
 						<td><input type="text" th:field="*{name}"/></td>
 					</tr>
 					<tr>
+						<td th:text="#{lang.configure.item.alias}">Alias</td>
+						<td><input type="text" th:field="*{alias}"/></td>
+					</tr>
+					<tr>
 						<td th:text="#{lang.configure.item.description}">Description</td>
 						<td><textarea th:field="*{description}"></textarea></td>
 					</tr>
@@ -65,8 +69,12 @@
 						<td><input type="text" th:field="*{keywords}"/></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.configure.item.price}">Home page order</td>
+						<td th:text="#{lang.configure.item.price}">Price</td>
 						<td><input type="text" th:field="*{price}"/></td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.configure.item.discount}">Discount price</td>
+						<td><input type="text" th:field="*{discountPrice}"/></td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.configure.item.orderable}">Orderable</td>
@@ -125,6 +133,23 @@
 					<tr>
 						<td th:text="#{lang.configure.item.flag}">Flag</td>
 						<td><input type="text" th:field="*{flag}"/></td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.configure.item.display-order}">Display order</td>
+						<td><input type="text" th:field="*{manualPrecedence}"/></td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.configure.item.category}">Display order</td>
+						<td>
+							<select th:field="*{category}">
+								<option th:value="0" th:selected="${item.category == 0}">-----</option>
+								<option th:value="1" th:selected="${item.category == 1}">Alpha</option>
+								<option th:value="2" th:selected="${item.category == 2}">Beta</option>
+								<option th:value="3" th:selected="${item.category == 3}">Gamma</option>
+								<option th:value="4" th:selected="${item.category == 4}">Delta</option>
+								<option th:value="5" th:selected="${item.category == 5}">Lambda</option>
+							</select>
+						</td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.configure.item.image}">Image</td>

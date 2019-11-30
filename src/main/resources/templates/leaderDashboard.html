@@ -33,7 +33,7 @@
 				<tr th:each="circle : ${editable}" th:object="${circle}">
 					<td th:text="*{displayName}">Pizzásch</td>
 					<td>
-						<a href="#" th:href="@{/configure/__*{id}__}"><i class="material-icons">edit</i></a>
+						<a href="#" th:href="@{/configure/__*{id}__}"><i class="material-icons">details</i></a>
 					</td>
 				</tr>
 			</table>

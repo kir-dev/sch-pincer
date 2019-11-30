@@ -66,8 +66,8 @@ public enum CustomComponentType {
             return cca.getSelected().get(0) > 0;
         }
     },
-	LANGOSCH_IMAGEDRAWER, // Not sure hogyan fog működni
-	AMERICANO_SELECT { // Checkbox (a negáltja jelenik meg a pdf-en)
+	LANGOSCH_IMAGEDRAWER,
+	AMERICANO_SELECT {
         @Override
         public int processPrices(CustomComponentAnswer cca, OrderEntity oe, CustomComponentModel ccm) {
             int result = 0;
@@ -128,7 +128,7 @@ public enum CustomComponentType {
                 order.setExtraTag(true);
         }
         
-        order.setPrice(ie.getPrice() + extraPrice);
+        order.setPrice((ie.getDiscountPrice() == 0 ? ie.getPrice() : ie.getDiscountPrice()) + extraPrice);
         order.setExtra(extraString.stream().filter(Objects::nonNull).collect(Collectors.joining("; ")));
     }
 

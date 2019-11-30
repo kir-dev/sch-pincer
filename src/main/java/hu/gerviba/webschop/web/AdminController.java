@@ -10,16 +10,12 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import hu.gerviba.webschop.service.ItemPrecedenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import hu.gerviba.webschop.dao.RoleEntryDto;
@@ -47,6 +43,9 @@ public class AdminController {
     
     @Autowired
     ControllerUtil util;
+
+    @Autowired
+    ItemPrecedenceService itemSorter;
     
 	@GetMapping("/")
 	public String adminRoot(Map<String, Object> model) {
@@ -185,13 +184,16 @@ public class AdminController {
         model.put("name", user.getName());
         model.put("sysadmin", user.isSysadmin());
         model.put("roles", String.join(", ", user.getPermissions()));
+        model.put("priority", user.getOrderingPriority());
         return "userModify";
     }
 
     @PostMapping("/roles/edit/")
     public String editRoles(@RequestParam String uidHash,
             @RequestParam String roles,
-            @RequestParam(required = false, defaultValue = "false") boolean sysadmin) {
+            @RequestParam(required = false, defaultValue = "false") boolean sysadmin,
+            @RequestParam(defaultValue = "1") Integer priority
+    ) {
         
         UserEntity user = users.getByUidHash(uidHash);
         user.setSysadmin(sysadmin);
@@ -205,10 +207,18 @@ public class AdminController {
         }
         if (user.getPermissions().size() > 0)
             user.getPermissions().add("ROLE_LEADER");
-        
+
+        user.setOrderingPriority(priority);
         users.save(user);
-        
+
         return "redirect:/admin/";
     }
-    
+
+    @ResponseBody
+    @GetMapping("/circles/api/reorder")
+    public String reorder() {
+        itemSorter.reorder();
+        return "ok";
+    }
+
 }
