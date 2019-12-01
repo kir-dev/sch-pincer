@@ -1140,7 +1140,6 @@ form input[type="text"] {
 	width: 250px;
 }
 
-form input[type="number"],
 form input[type="datetime-local"] {
 	min-width: 300px;
 }

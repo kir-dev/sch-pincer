@@ -28,31 +28,35 @@
     </style>
 </head>
 <body class="dashboard">
-    <h3>Error Page</h3>
+    <h3>Error Page - Repoltold a Schámánnak!</h3>
     <table>
         <tr>
             <td>Date</td>
-            <td th:text="${timestamp}" />
+            <td th:text="${timestamp}"></td>
         </tr>
         <tr>
             <td>Path</td>
-            <td th:text="${path}" />
+            <td th:text="${path}"></td>
         </tr>
         <tr>
             <td>Error</td>
-            <td th:text="${error}" />
+            <td th:text="${error}"></td>
         </tr>
         <tr>
             <td>Status</td>
-            <td th:text="${status}" />
+            <td th:text="${status}"></td>
+        </tr>
+        <tr>
+            <td>Report</td>
+            <td><a target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSe1XaJuDzGjPUWvSnud8XXsEgUCUOUGsCHeoud_AgVJb6qorA/viewform">ITT TUDOD REPORTOLNI</a></td>
         </tr>
         <tr>
             <td>Message</td>
-            <td th:text="${message}" />
+            <td th:text="${message}"></td>
         </tr>
         <tr>
             <td>Exception</td>
-            <td th:text="${exception}" />
+            <td th:text="${exception}"></td>
         </tr>
         <tr>
             <td>Trace</td>

@@ -434,6 +434,7 @@ public class ConfigureController {
     public String showOpenings(
             @PathVariable Long openingId,
             @RequestParam String orderby,
+            @RequestParam String fields,
             @RequestParam(defaultValue = "off") String artificialId,
             @RequestParam(defaultValue = "off") String userName,
             @RequestParam(defaultValue = "off") String name,
@@ -470,6 +471,7 @@ public class ConfigureController {
         model.put("category",       !category.equals("off"));
         model.put("systemComment",  !systemComment.equals("off"));
 
+        model.put("fields",  fields);
         model.put("orders", orders.findToExport(openingId, orderby));
 
         return "exportTable";
@@ -528,9 +530,9 @@ public class ConfigureController {
     }
 
     private void addRows(PdfPTable table, ExportType export, OpeningEntity opening) {
-        List<OrderEntity> ordersList = orders.findAllByOpening(opening.getId());
+        List<OrderEntity> ordersList = orders.findToExport(opening.getId(), export.getOrderByFunction());
         for (int i = 0; i < ordersList.size(); ++i)
-            ordersList.get(i).setArtificialId(i + 1);
+            ordersList.get(i).setArtificialTransientId(i + 1);
 
         Font font = new Font(FontFamily.UNDEFINED, 10);
         ordersList.forEach(order -> export.getFields().forEach(column -> {

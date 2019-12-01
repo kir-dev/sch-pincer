@@ -246,6 +246,15 @@
 							</select>
 						</td>
 					</tr>
+					<tr>
+						<td th:text="#{lang.export.field-order}">Field order</td>
+						<td>
+							<select name="fields">
+								<option value="default">Default</option>
+								<option value="americano">Americano</option>
+							</select>
+						</td>
+					</tr>
 				</table>
 
 				<input class="button" type="submit" th:value="#{lang.export.table}" />
@@ -297,6 +306,12 @@
 							<i class="material-icons" th:title="#{lang.configure.orders.cancel}">delete_forever</i>
 						</a>
 					</td>
+				</tr>
+			</table>
+
+			<table class="responsive-table full-table">
+				<tr>
+					<td>Device screen is too low. Use desktop mode. This issue is going to be fixed.</td>
 				</tr>
 			</table>
 			<span th:if="${#lists.isEmpty(orders)}" class="note" th:text="#{lang.orders.no-orders}">There are no orders yet</span>

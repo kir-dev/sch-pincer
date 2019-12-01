@@ -113,7 +113,7 @@ function clearAll() {
     $("#item-set").html("");
 }
 
-const STARS = [8, 100, 20, 21, 22, 23, 69];
+const STARS = [8, 100, 20, 21, 22, 23, 69, 2];
 const FLAGS = [1010, 1069];
 
 function formatItem(item) {
@@ -163,7 +163,7 @@ function appendCustom(json) {
         custom = JSON.parse(json);
     } catch (e) {
         console.error(e);
-        return "<tr><td rowspan='2'>Invalid descriptor</td></tr>";
+        return "<tr><td colspan='2'>Invalid descriptor</td></tr>";
     }
 
     let result = "";
@@ -202,10 +202,12 @@ function generateCustom(json, item) {
                 result += generateExtraCheckbox(element);
             } else if (element.type === "AMERICANO_SELECT") {
                 result += generateExtraCheckbox(element);
-            }  else if (element.type === "EXTRA_SELECT") {
+            } else if (element.type === "EXTRA_SELECT") {
                 result += generateExtraSelect(element);
-            }  else if (element.type === "PIZZASCH_SELECT") {
+            } else if (element.type === "PIZZASCH_SELECT") {
                 result += generatePizzaschSelect(element);
+            } else if (element.type === "ITEM_COUNT") {
+                result += generateItemCount(element);
             } else {
                 result += 'UNKNOWN TYPE: ' + element.type;
             }
@@ -263,6 +265,16 @@ function generatePizzaschSelect(element) {
     
 }
 
+function generateItemCount(element) {
+    let result = `
+        <label>${LANG[element.name]}</label>
+        <input type="number" min="${element.min}" max="${element.max}" name="${element.name}" value="${element.min}" id="popup-count" onkeypress="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" onmousedown="limitNumber(this, ${element.min}, ${element.max}); itemChanged()"  onmouseup="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" onchange="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" />
+    `;
+    if (element._comment) {
+        result += `<span class="comment">${element._comment}</span>`;
+    }
+    return result;
+}
 
 function generateExtraCheckbox(element) {
     let result = "";
@@ -293,6 +305,9 @@ function itemChanged() {
         else if ($(this).attr("data-prices"))
             price += Number($(this).attr("data-prices").split(',')[Number($(this).val())]);
     });
+    let countElement = $("#popup-count");
+    price = countElement.length !== 0 ? (price * countElement.val()) : price;
+
     $("#popup-price").text(price + " " + LANG['currency']);
 }
 
@@ -405,6 +420,7 @@ function buySelectedItem() {
             id: selectedItem.id,
             time: $("select[name='time']").val(),
             comment: $("#popup-comment").val(),
+            count: $('#popup-count').length ? $('#popup-count').val() : 1,
             detailsJson: packDetails()
         }
     }).done(function(data) {
@@ -471,6 +487,13 @@ function disableScroll() {
 
 function enableScroll() {
 	$("body").css({"overflow-y": "scroll"});
+}
+
+function limitNumber(element, min, max) {
+    if (element.value > max)
+        element.value = max;
+    else if (element.value < min)
+        element.value = min;
 }
 
 $(window).scroll(function() {

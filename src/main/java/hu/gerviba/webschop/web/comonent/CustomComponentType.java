@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import hu.gerviba.webschop.dao.OrderDetails;
 import hu.gerviba.webschop.model.ItemEntity;
 import hu.gerviba.webschop.model.OrderEntity;
 import hu.gerviba.webschop.web.comonent.CustomComponentAnswer.CustomComponentAnswerList;
@@ -108,15 +109,22 @@ public enum CustomComponentType {
 	private static Map<String, CustomComponentType> types = Stream.of(values())
 	        .collect(Collectors.toMap(CustomComponentType::name, x -> x));
 	
-    public static void calculateExtra(String detailsJson, OrderEntity order, ItemEntity ie) throws IOException {
-        
+    public static OrderDetails calculateExtra(String detailsJson, OrderEntity order, ItemEntity ie) throws IOException {
+        OrderDetails details = new OrderDetails();
         CustomComponentAnswerList answers = mapper.readValue(detailsJson.getBytes(), CustomComponentAnswerList.class);
         CustomComponentModelList models = mapper.readValue(
-                ("{\"models\":" + ie.getDetailsConfigJson() + "}").getBytes(), 
+                ("{\"models\":" + ie.getDetailsConfigJson() + "}").getBytes(),
                 CustomComponentModelList.class);
         Map<String, CustomComponentModel> mapped = models.getModels().stream()
                 .collect(Collectors.toMap(CustomComponentModel::getName, x -> x));
-        
+
+        for (CustomComponentModel model : models.getModels()) {
+            if (model.getType().equals("ITEM_COUNT")) {
+                details.setMinCount(model.getMin());
+                details.setMaxCount(model.getMax());
+            }
+        }
+
         int extraPrice = 0;
         List<String> extraString = new ArrayList<>();
         for (CustomComponentAnswer answer : answers.getAnswers()) {
@@ -127,9 +135,10 @@ public enum CustomComponentType {
             if (types.getOrDefault(answer.getType(), UNKNOWN).isExtra(answer))
                 order.setExtraTag(true);
         }
-        
+
         order.setPrice((ie.getDiscountPrice() == 0 ? ie.getPrice() : ie.getDiscountPrice()) + extraPrice);
         order.setExtra(extraString.stream().filter(Objects::nonNull).collect(Collectors.joining("; ")));
+        return details;
     }
 
 }

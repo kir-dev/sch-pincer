@@ -5,8 +5,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Entity
@@ -29,8 +28,12 @@ public class OrderEntity implements Serializable {
     @Column
     private String userName;
 
+    @Deprecated
+    @Column(nullable = false)
+    private Integer artificialId = 0;
+
     @Transient
-    private int artificialId;
+    private int artificialTransientId = Integer.MAX_VALUE;
     
     @Column
     @Enumerated(EnumType.ORDINAL)

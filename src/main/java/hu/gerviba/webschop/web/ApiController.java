@@ -1,5 +1,6 @@
 package hu.gerviba.webschop.web;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -187,9 +188,10 @@ public class ApiController {
             @RequestParam(required = true) Long id,
             @RequestParam(required = true) int time,
             @RequestParam(required = true) String comment,
+            @RequestParam(defaultValue = "1") int count,
             @RequestParam(required = true) String detailsJson) throws Exception {
-        
-        return orders.makeOrder(request, id, time, comment, detailsJson);
+
+        return orders.makeOrder(request, id, count, time, comment, detailsJson);
     }
 
     @ApiOperation("Set room code")
@@ -219,7 +221,7 @@ public class ApiController {
 
     @Deprecated
     @ApiOperation("Delete order")
-//    @PostMapping("/order/delete")
+    @PostMapping("/order/delete")
     @ResponseBody
     public ResponseEntity<String> deleteOrder(HttpServletRequest request, @RequestParam(required = true) long id) {
         return orders.cancelOrder(request, id);
@@ -228,7 +230,15 @@ public class ApiController {
     @GetMapping("/version")
     @ResponseBody
     public String version() {
-        return "ImplementationVersion: " + getClass().getPackage().getImplementationVersion();
+        return "Version: " + getClass().getPackage().getImplementationVersion();
     }
-    
+
+    @GetMapping("/time")
+    @ResponseBody
+    public String time() {
+        return "Time: "
+                + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z").format(System.currentTimeMillis())
+                + " \nTimestamp: " + System.currentTimeMillis();
+    }
+
 }

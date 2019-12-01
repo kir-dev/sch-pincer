@@ -70,7 +70,8 @@
 					<th th:text="#{lang.profile.orders-comment}">Comment</th>
 				</tr>
 				<tr th:each="order : ${orders}" th:object="${order}">
-					<td th:text="*{name}">Ördög pizza</td>
+					<td th:if="${order.count <= 1}" th:text="*{name}">Ördög pizza</td>
+					<td th:unless="${order.count <= 1}" th:text="|*{name} x *{count}|">Ördög pizza</td>
 					<td>
 						<i class="material-icons" th:if="${#strings.equals(order.status, 'SHIPPED')}" 
 								th:title="#{lang.profile.status-shipped}">done</i>
@@ -81,7 +82,7 @@
 						<i class="material-icons" th:if="${#strings.equals(order.status, 'CANCELLED')}"
 								th:title="#{lang.profile.status-cancelled}">do_not_disturb</i>
 
-						<a th:remove="all" href="#" th:onclick="'cancelItem(' + ${order.id} + '); return false'" th:if="${order.cancelUntil >= T(java.lang.System).currentTimeMillis() && #strings.equals(order.status, 'ACCEPTED')}">
+						<a href="#" th:onclick="'cancelItem(' + ${order.id} + '); return false'" th:if="${order.cancelUntil >= T(java.lang.System).currentTimeMillis() && #strings.equals(order.status, 'ACCEPTED')}">
 							<i class="material-icons">delete</i>
 						</a>
 					</td>
@@ -98,7 +99,8 @@
 				<object th:each="order : ${orders}" th:object="${order}" th:remove="tag">
 				<tr>
 					<td th:text="#{lang.profile.orders-name}">Name</td>
-					<td th:text="*{name}">Ördög pizza</td>
+					<td th:if="${order.count <= 1}" th:text="*{name}">Ördög pizza</td>
+					<td th:unless="${order.count <= 1}" th:text="|*{name} x *{count}|">Ördög pizza</td>
 				</tr>
 				
 				<tr>

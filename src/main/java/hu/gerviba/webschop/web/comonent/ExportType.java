@@ -8,14 +8,16 @@ import hu.gerviba.webschop.model.OrderEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import static hu.gerviba.webschop.service.OrderService.ORDER_GROUPED;
+
 @Getter
 @AllArgsConstructor
 public enum ExportType {
-    DEFAULT(false, "Default",
+    DEFAULT(false, "Default", ORDER_GROUPED,
             Arrays.asList("ID", "NÉV", "IDÖSÁV", "TERMÉK", "EXTRA", "MEGJEGYZÉS", "ÁR"),
             new int[] {   3,    8,     5,        10,       5,       10,           4   },
             Arrays.asList(
-                    (order) -> "" + order.getArtificialId(),
+                    (order) -> "" + order.getArtificialTransientId(),
                     OrderEntity::getUserName,
                     OrderEntity::getIntervalMessage,
                     OrderEntity::getName,
@@ -24,11 +26,11 @@ public enum ExportType {
                     (order) -> "" + order.getPrice()
             )),
 
-    DZSAJROSZ(false, "Dzsájrosz",
+    DZSAJROSZ(false, "Dzsájrosz", ORDER_GROUPED,
             Arrays.asList("ID", "NÉV", "SZOBA", "TERMÉK", "HAGYMA", "ÖNTET", "SAJT", "EXTRA", "MEGJEGYZÉS", "ÁR"), 
             new int[] {   3,    8,     5,       10,       8,        10,      8,      10,      20,           4   },
             Arrays.asList(
-                    (order) -> "" + order.getArtificialId(),
+                    (order) -> "" + order.getArtificialTransientId(),
                     OrderEntity::getUserName,
                     (order) -> order.getRoom().replace("SCH ", ""),
                     OrderEntity::getName,
@@ -40,23 +42,24 @@ public enum ExportType {
                     (order) -> "" + order.getPrice()
             )),
     
-    AMERICANO(false, "Americano", 
-            Arrays.asList("ID", "NÉV", "IDÖSÁV", "TERMÉK", "SZÓSZOK", "MEGJEGYZÉS", "ÁR"),
-            new int[] {   3,    8,     5,        10,       5,          10,           4   },
+    AMERICANO(false, "Americano", ORDER_GROUPED,
+            Arrays.asList("ID", "IDÖSÁV", "NÉV", "SZOBA", "TERMÉK", "EXTRA", "MEGJEGYZÉS", "ÁR"),
+            new int[] {   2,    4,        5,     2,       3,        7,       12,           2   },
             Arrays.asList(
-                    (order) -> "" + order.getArtificialId(),
-                    OrderEntity::getUserName,
+                    (order) -> "" + order.getArtificialTransientId(),
                     OrderEntity::getIntervalMessage,
-                    OrderEntity::getName,
+                    OrderEntity::getUserName,
+                    OrderEntity::getRoom,
+                    OrderEntity::getCompactName,
                     OrderEntity::getExtra,
                     OrderEntity::getComment,
                     (order) -> "" + order.getPrice()
             )),
-    PIZZASCH(false, "Pizzasch",
+    PIZZASCH(false, "Pizzasch", ORDER_GROUPED,
             Arrays.asList("ID", "NÉV", "IDÖSÁV", "TERMÉK", "MEGJEGYZÉS", "ÁR"),
             new int[] {   3,    8,     5,        10,       10,           4   },
             Arrays.asList(
-                    (order) -> "" + order.getArtificialId(),
+                    (order) -> "" + order.getArtificialTransientId(),
                     OrderEntity::getUserName,
                     OrderEntity::getIntervalMessage,
                     (order) -> order.getName() + " " + order.getExtra().toUpperCase(),
@@ -64,11 +67,11 @@ public enum ExportType {
                     (order) -> "" + order.getPrice()
             )),
 
-    FOODEX(true, "Foodex", 
+    FOODEX(true, "Foodex", ORDER_GROUPED,
             Arrays.asList("ID", "NÉV", "TERMÉK", "MEGJEGYZÉS", "ÁR"), 
             new int[] {   3,    8,     5,        10,           4   },
             Arrays.asList(
-                    (order) -> "" + order.getArtificialId(),
+                    (order) -> "" + order.getArtificialTransientId(),
                     OrderEntity::getUserName,
                     OrderEntity::getName,
                     OrderEntity::getComment,
@@ -78,8 +81,9 @@ public enum ExportType {
 
     private final boolean portrait;
     private final String displayName;
+    private final String orderByFunction;
     private final List<String> header;
     private final int[] widths;
     private final List<Function<OrderEntity, String>> fields;
-    
+
 }

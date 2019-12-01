@@ -111,6 +111,7 @@ public class ItemEntity implements Serializable {
 	        String keywords, String detailsConfigJson, int price, boolean orderable, boolean visible, 
 	        boolean service, boolean visibleInAll, boolean personallyOrderable, boolean visibleWithoutLogin,
 	        String imageName, int flag) {
+	    
 		this.name = name;
 		this.circle = circle;
 		this.description = description;

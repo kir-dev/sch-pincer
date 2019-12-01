@@ -7,20 +7,13 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
+import hu.gerviba.webschop.dao.*;
 import hu.gerviba.webschop.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.metadata.ItemMetadata;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-
-import hu.gerviba.webschop.dao.ItemRepository;
-import hu.gerviba.webschop.dao.OpeningRepository;
-import hu.gerviba.webschop.dao.OrderRepository;
-import hu.gerviba.webschop.dao.TimeWindowRepository;
 import hu.gerviba.webschop.web.ControllerUtil;
 import hu.gerviba.webschop.web.comonent.CustomComponentType;
 
@@ -82,7 +75,7 @@ public class OrderService {
         return order.map(orderEntity -> openingRepo.getOne(orderEntity.getOpeningId()).getCircle().getId()).orElse(null);
     }
     
-    public ResponseEntity<String> makeOrder(HttpServletRequest request, Long id, long time, String comment,
+    public ResponseEntity<String> makeOrder(HttpServletRequest request, Long id, int count, long time, String comment,
             String detailsJson) throws IOException {
         
         UserEntity user = util.getUser(request);
@@ -102,7 +95,7 @@ public class OrderService {
             return new ResponseEntity<>("INTERNAL_ERROR", HttpStatus.OK);
         
         order.setName(item.getName());
-        CustomComponentType.calculateExtra(detailsJson, order, item);
+        OrderDetails details = CustomComponentType.calculateExtra(detailsJson, order, item);
         order.setOpeningId(openings.findNextOf(item.getCircle().getId()).getId());
         OpeningEntity current = openings.findNextOf(item.getCircle().getId());
         
@@ -112,7 +105,10 @@ public class OrderService {
         if (current.getOrderStart() > System.currentTimeMillis() || current.getOrderEnd() < System.currentTimeMillis())
             return new ResponseEntity<>("NO_ORDERING", HttpStatus.OK);
 
-        int count = 1;
+        if (count < details.getMinCount())
+            count = details.getMinCount();
+        else if (count > details.getMaxCount())
+            count = details.getMaxCount();
 
         if (current.getOrderCount() + count > current.getMaxOrder())
             return new ResponseEntity<>("OVERALL_MAX_REACHED", HttpStatus.OK);
@@ -133,15 +129,15 @@ public class OrderService {
                     || item.getCategory() == ItemCategory.BETA.getId() && current.getUsedBeta() >= current.getMaxBeta()
                     || item.getCategory() == ItemCategory.GAMMA.getId() && current.getUsedGamma() >= current.getMaxGamma()
                     || item.getCategory() == ItemCategory.DELTA.getId() && current.getUsedDelta() >= current.getMaxDelta()
-                    || item.getCategory() == ItemCategory.LAMBDA.getId() && current.getUsedLambda() >= current.getMaxDelta()) {
+                    || item.getCategory() == ItemCategory.LAMBDA.getId() && current.getUsedLambda() >= current.getMaxLambda()) {
                 return new ResponseEntity<>("CATEGORY_FULL", HttpStatus.OK);
             } else {
                 switch (ItemCategory.of(item.getCategory())) {
-                    case ALPHA: current.setUsedAlpha(current.getUsedAlpha() + count);
-                    case BETA: current.setUsedBeta(current.getUsedBeta() + count);
-                    case GAMMA: current.setUsedGamma(current.getUsedGamma() + count);
-                    case DELTA: current.setUsedDelta(current.getUsedDelta() + count);
-                    case LAMBDA: current.setUsedLambda(current.getUsedLambda() + count);
+                    case ALPHA: current.setUsedAlpha(current.getUsedAlpha() + count); break;
+                    case BETA: current.setUsedBeta(current.getUsedBeta() + count); break;
+                    case GAMMA: current.setUsedGamma(current.getUsedGamma() + count); break;
+                    case DELTA: current.setUsedDelta(current.getUsedDelta() + count); break;
+                    case LAMBDA: current.setUsedLambda(current.getUsedLambda() + count); break;
                 }
             }
         }
@@ -153,6 +149,7 @@ public class OrderService {
         current.setOrderCount(current.getOrderCount() + count);
         
         order.setDate(timewindow.getDate());
+        order.setPrice(order.getPrice() * count);
         order.setIntervalMessage(timewindow.getName());
         order.setCancelUntil(current.getOrderEnd());
         order.setCategory(item.getCategory());
@@ -182,17 +179,26 @@ public class OrderService {
                 return new ResponseEntity<>("ORDER_PERIOD_ENDED", HttpStatus.OK);
 
             order.setStatus(OrderStatus.CANCELLED);
+            int count = order.getCount();
 
-            TimeWindowEntity timewindow = timewindowRepo.getOne(order.getIntervalId());
-            timewindow.setNormalItemCount(timewindow.getNormalItemCount() + 1);
+            TimeWindowEntity timeWindow = timewindowRepo.getOne(order.getIntervalId());
+            timeWindow.setNormalItemCount(timeWindow.getNormalItemCount() + count);
             if (order.isExtraTag())
-                timewindow.setExtraItemCount(timewindow.getExtraItemCount() + 1);
+                timeWindow.setExtraItemCount(timeWindow.getExtraItemCount() + count);
             
-            opening.setOrderCount(opening.getOrderCount() - 1);
+            opening.setOrderCount(opening.getOrderCount() - count);
 
-            // TODO: Remove categories and use count field
+            if (order.getCategory() != ItemCategory.DEFAULT.getId()) {
+                switch (ItemCategory.of(order.getCategory())) {
+                    case ALPHA: opening.setUsedAlpha(opening.getUsedAlpha() - count); break;
+                    case BETA: opening.setUsedBeta(opening.getUsedBeta() - count); break;
+                    case GAMMA: opening.setUsedGamma(opening.getUsedGamma() - count); break;
+                    case DELTA: opening.setUsedDelta(opening.getUsedDelta() - count); break;
+                    case LAMBDA: opening.setUsedLambda(opening.getUsedLambda() - count); break;
+                }
+            }
 
-            timewindowRepo.save(timewindow);
+            timewindowRepo.save(timeWindow);
             openings.save(opening);
             save(order);
             
@@ -205,12 +211,17 @@ public class OrderService {
     public List<OrderEntity> findToExport(Long openingId, String orderBy) {
         switch (orderBy) {
             case ORDER_ABSOLUTE:
-                return appendArtificialId(repo.findAllByOpeningIdOrderByPriorityDescDateAsc(openingId));
+                return appendArtificialId(repo.findAllByOpeningIdAndStatusNotOrderByPriorityDescDateAsc(
+                        openingId, OrderStatus.CANCELLED));
+
             case ORDER_GROUPED:
-                return appendArtificialId(repo.findAllByOpeningIdOrderByIntervalIdAscPriorityDescDateAsc(openingId));
+                return appendArtificialId(repo.findAllByOpeningIdAndStatusNotOrderByIntervalIdAscPriorityDescDateAsc(
+                        openingId, OrderStatus.CANCELLED));
+
             case ORDER_ROOMS:
-                return appendArtificialId(repo.findAllByOpeningId(openingId).stream().collect(
-                        groupingBy(OrderEntity::getIntervalId, groupingBy(OrderEntity::getRoom)))
+                return appendArtificialId(repo.findAllByOpeningIdAndStatusNot(openingId, OrderStatus.CANCELLED)
+                        .stream().collect(
+                                groupingBy(OrderEntity::getIntervalId, groupingBy(OrderEntity::getRoom)))
                         .entrySet()
                         .stream()
                         .sorted(Comparator.comparing(Map.Entry::getKey))
@@ -222,14 +233,16 @@ public class OrderService {
                                                 .map(OrderEntity::getPriority).orElse(0)))
                                 .flatMap(Collection::stream))
                         .collect(Collectors.toList()));
-                default: return appendArtificialId(repo.findAllByOpeningIdOrderByPriorityDescDateAsc(openingId));
+
+                default: return appendArtificialId(repo.findAllByOpeningIdAndStatusNotOrderByPriorityDescDateAsc(
+                        openingId, OrderStatus.CANCELLED));
         }
     }
 
     private List<OrderEntity> appendArtificialId(List<OrderEntity> source) {
         int id = 1;
         for (OrderEntity order : source)
-            order.setArtificialId(id++);
+            order.setArtificialTransientId(id++);
         return source;
     }
 

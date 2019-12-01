@@ -2,6 +2,7 @@ package hu.gerviba.webschop.web;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -61,6 +62,7 @@ public class AdminController {
                     return null;
                 })
                 .filter(Objects::nonNull)
+                .sorted(Comparator.comparing(RoleEntryDto::getName))
                 .collect(Collectors.toList());
         model.put("roles", roles);
 		return "admin";
