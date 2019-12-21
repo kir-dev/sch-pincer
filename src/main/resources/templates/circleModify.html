@@ -22,8 +22,10 @@
 			</div>
 			<h3 th:text="#{lang.admin.title-circle-__${mode}__}" class="topless">Modify Circle</h3>
 			<form action="#" th:action="${adminMode} ? @{/admin/circles/__${mode}__} : @{/configure/edit}" method="post" enctype="multipart/form-data">
-				<input type="hidden" name="circleId" th:value="*{id}" />
 				<table class="form full-table" th:object="${circle}">
+					<tr style="display: none">
+						<td colspan="2"><input type="hidden" name="circleId" th:value="*{id}" /></td>
+					</tr>
 					<tr>
 						<th th:text="#{lang.modify.property}">Property</th>
 						<th th:text="#{lang.modify.value}">Value</th>
