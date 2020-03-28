@@ -241,4 +241,9 @@ public class ApiController {
                 + " \nTimestamp: " + System.currentTimeMillis();
     }
 
+    @GetMapping("/test")
+    public String test() {
+        return "OK";
+    }
+
 }
