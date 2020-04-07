@@ -65,6 +65,10 @@
 								<td><a href="#" target="_blank" th:href="${selectedCircle?.websiteUrl}"
 									th:text="${selectedCircle} neq null ? #{lang.profile.open-url}">OPEN</a></td>
 							</tr>
+							<tr th:if="${session.user} neq null">
+								<td th:text="#{lang.speedupbutton.label}">Speed the work up</td>
+								<td><button type="button" th:text="#{lang.speedupbutton.button}" class="action-button animate grey-button" value="Go!">Work up!</button></td>
+							</tr>
 						</table>
 					</div>
 		
@@ -79,6 +83,7 @@
 							hendrerit sagittis vel lacinia mauris. Aliquam vel mi et dolor venenatis vehicula in ut nibh.
 						</p>
 					</div>
+
 				</div>
 	
 				<div class="item-set" id="item-set" style="width: 110%;margin-left: -5%" th:remove="body"></div>

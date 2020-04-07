@@ -3053,3 +3053,28 @@ input:checked+.form-slider:before {
 #saved {
 	display: none;
 }
+
+.animate {
+	transition: all 0.1s;
+}
+
+.action-button {
+	padding: 5px 10px;
+	margin: 5px 0px 5px 0px;
+	border-radius: 5px;
+	color: white;
+}
+
+.action-button:active {
+	transform: translate(3px,6px);
+	border-bottom: 1px solid #4C4C4D;
+	margin: 5px 0px 9px 0px;
+}
+
+.grey-button {
+	background-color: #625f6b;
+	border-bottom: 5px solid #54525c;
+	text-transform: uppercase;
+	font-weight: 900;
+	cursor: pointer;
+}
