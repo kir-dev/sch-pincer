@@ -442,7 +442,8 @@ a {
 	border-bottom: 8px solid #383839;
 	flex: 1 0 0;
 	position: relative;
-	padding-bottom: 100px;
+	padding-bottom: 80px;
+	overflow: hidden;
 }
 
 .article:last-of-type {
@@ -453,6 +454,12 @@ a {
 	background-color: #9d9d9e;
 	border-bottom: 8px solid #8d8d8e;
 	height: 200px;
+	position: relative;
+}
+
+.article .svg-header {
+	border-bottom: 8px solid #383839;
+	height: 80px;
 	position: relative;
 }
 
@@ -478,11 +485,69 @@ a {
 	background-position: center;
 }
 
+.article .svg-header .news {
+	background-color: #464647;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 900;
+	background-position: center;
+}
+
+.article .svg-header .news span {
+	background-color: #3f3f40;
+	color: #FFFFFF;
+	padding: 8px 20px;
+	font-size: 24px;
+	float: right;
+	line-height: 64px;
+	text-shadow: 1px 1px 0 #383839, 2px 2px 0 #383839, 3px 3px 0 #383839, 4px 4px 0 #383839, 5px 5px 0 #383839, 6px 6px 0 #383839, 7px 7px 0 #383839, 8px 8px 0 #383839, 9px 9px 0 #383839, 10px 10px 0 #383839, 11px 11px 0 #383839, 12px 12px 0 #383839, 13px 13px 0 #383839, 14px 14px 0 #383839, 15px 15px 0 #383839, 16px 16px 0 #383839, 17px 17px 0 #383839, 18px 18px 0 #383839, 19px 19px 0 #383839, 20px 20px 0 #383839, 21px 21px 0 #383839, 22px 22px 0 #383839, 23px 23px 0 #383839, 24px 24px 0 #383839, 25px 25px 0 #383839, 26px 26px 0 #383839, 27px 27px 0 #383839, 28px 28px 0 #383839, 29px 29px 0 #383839, 30px 30px 0 #383839, 31px 31px 0 #383839, 32px 32px 0 #383839, 33px 33px 0 #383839, 34px 34px 0 #383839, 35px 35px 0 #383839, 36px 36px 0 #383839, 37px 37px 0 #383839, 38px 38px 0 #383839, 39px 39px 0 #383839, 40px 40px 0 #383839, 41px 41px 0 #383839, 42px 42px 0 #383839, 43px 43px 0 #383839, 44px 44px 0 #383839, 45px 45px 0 #383839, 46px 46px 0 #383839, 47px 47px 0 #383839, 48px 48px 0 #383839, 49px 49px 0 #383839, 50px 50px 0 #383839;
+	overflow: hidden;
+}
+
+.article .svg-header .news i {
+	background-color: #3f3f40;
+	color: #FFFFFF;
+	padding: 16px;
+	font-size: 48px;
+	float: left;
+	text-shadow: 1px 1px 0 #383839, 2px 2px 0 #383839, 3px 3px 0 #383839, 4px 4px 0 #383839, 5px 5px 0 #383839, 6px 6px 0 #383839, 7px 7px 0 #383839, 8px 8px 0 #383839, 9px 9px 0 #383839, 10px 10px 0 #383839, 11px 11px 0 #383839, 12px 12px 0 #383839, 13px 13px 0 #383839, 14px 14px 0 #383839, 15px 15px 0 #383839, 16px 16px 0 #383839, 17px 17px 0 #383839, 18px 18px 0 #383839, 19px 19px 0 #383839, 20px 20px 0 #383839;
+	overflow: hidden;
+}
+
+.article p {
+	margin-bottom: 20px;
+}
+
+.article ul {
+	text-align: left;
+	color: #4c4c4d;
+	margin-left: 40px;
+}
+
+.article ul li {
+	list-style: none;
+	margin-bottom: 10px;
+}
+
+.article a {
+	color: inherit;
+}
+
+.article a i {
+	position: relative;
+	top: 3px;
+	font-size: 20px;
+	padding-right: 2px;
+}
+
 .article h3 {
 	text-transform: uppercase;
 	font-size: 24px;
 	font-weight: 900;
-	padding: 10px;
+	padding: 20px;
 	color: #383839;
 }
 
@@ -517,6 +582,41 @@ a {
 .article .button-holder a:hover {
 	border-top: 4px solid #FFFFFF;
 	border-bottom-width: 0;
+}
+
+.article.news-article {
+	background-color: #DEDEDF;
+}
+
+.article .background-overlay {
+	float: right;
+	font-size: 300px;
+	position: relative;
+	left: 60px;
+	transform: rotate(-15deg);
+	color: #DEDEDF;
+	animation-name: hourglass;
+	animation-duration: 8s;
+	animation-iteration-count: infinite;
+}
+
+.article.active-orders h3 {
+	margin: 40px 0;
+}
+
+.article.active-orders .order {
+	margin: 20px 40px;
+	text-align: left;
+}
+
+.article.active-orders .order b {
+	color: #4c4c4d;
+}
+
+.article.active-orders .order .placeholder {
+	border-bottom: 4px solid #8d8d8e;
+	width: 40px;
+	margin: 10px 0;
 }
 
 /** CIRCLES **/
@@ -2848,6 +2948,12 @@ img.centered-mini {
 		transform: translateY(0);
 		-webkit-transform: translateY(0);
 	}
+}
+
+@keyframes hourglass {
+	0%   { transform: rotate(-15deg); }
+	85%  { transform: rotate(-15deg); }
+	100%  { transform: rotate(345deg); }
 }
 
 /*.decoration i {

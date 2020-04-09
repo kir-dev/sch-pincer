@@ -1,44 +1,55 @@
 SCH-PINCÉR
 ===
 
-[![Trello Board](https://img.shields.io/badge/-Trello%20Board-blue.svg?colorB=0079BF&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA3XAAAN1wFCKJt4AAAAB3RJTUUH4gMfFRg2j85BawAAAJBJREFUSMftk8sNwjAQRGdRukBUwSlOBaEQOqBNqtg+HhciRVYczEZRcvC7rfcz67EsNU4H8ACc/3FgzOfZgoBLugb3czO7/brBRJ+dp5pcjUXFwkjusvebNoF9BABbi+d0wcVewHsW30uFSx8NSTKzYm6NvO+4NwBSFg8RgZANWy3yDfO9xqJnUMS/vY2T8QHlfqEd/I6h/wAAAABJRU5ErkJggg==)
-](https://trello.com/b/p5tDOnF8/webschop)
+## Setup dev env
 
+- Open the project (for IDEA users: don't use import, use open)
+- Create a database with this mysql query: `CREATE DATABASE schpincer CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
+- Create your own application-local.properties to set the properties or use `docker` flag and apply the environment variables from `application-docker.properties`
+- You will need an authsch application that points to the `http://127.0.0.1:8080/loggedin` url. You can register one for yourself at https://auth.sch.bme.hu/ Don't forget to set the `authsch.client-identifier` (20 chars long) and `authsch.client-key` (80 chars long) properties.
+- Add the following profiles to running configuration: `dev,test,local` (or `docker` is you use env variables)
+- You can now start the app and open: http://127.0.0.1:8080 (when it's started)
+- Enable `test` profile to insert demo data
+- To test you can grant yourself admin privileges from the db (see below)
 
-## Features
+### A sample application-local.properties
 
-- Users can order items
-- Auth.SCH support (http://auth.sch.bme.hu)
-- Roles: guest, User, GroupLeader, Sysadmin
-- Menu for upcoming events
-- Customizable circle profiles
-- I18N (locale)
-- Editable permissions
-- Order cancellation
-- Items load using ajax
-- It uses Thymeleaf as a templating engine
-- Other technologies: Spring-boot, JPA, Hibernate, Hibernate search, Maven
-- Spring profiles: test, dev, db-mysql, local, production
+Location: `src/main/resources/config/application-local.properties` (Git will automatically ignore it, so you can put your personal properties there)
 
-## API docs
-
-- Open: `/swagger-ui.html`
-
-
-## Additinal docs
-
-### Item settings json
-
-```json
-{
-    "type": "EXTRA_SELECT",          // Can be: EXTRA_SELECT, EXTRA_CHECKBOX, AMERICANO_EXTRA
-    "name": "size",                  // Can be: size, sauce, contain, extra, potato, panzo, type
-    "values": ["value1", "value2"],  // Value names
-    "prices": [0, 200],              // Additional prices for each value
-    "aliases": ["v1", "v2"],         // Value name aliases for pdf export (only internal use)
-    "_display": "Display text",      // Display text in search menu (optional, default: values->join) {pieces} => db
-    "_hide": true,                   // Hide from search menu (optional, default: false)
-    "_comment" : "Lorem ipsum",      // Text below the input field (optional, default: empty string)
-    "_extra" : false                 // If true the item will be notified as 'extra'. (optional, default: false)
-}
 ```
+# Don't forget to enable local profile!
+
+spring.datasource.url=jdbc:mysql://127.0.0.1:3306/schpincer?useSSL=false&useUnicode=yes&characterEncoding=utf8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+spring.datasource.username=username
+spring.datasource.password=password
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+spring.jpa.hibernate.ddl-auto=create
+spring.jpa.show-sql=true # change to false if you want
+
+authsch.client-identifier=20 chars length
+authsch.client-key=80 chars length
+
+# never / always / on-trace-param
+#server.error.include-stacktrace=never
+
+webschop.external=./test/external/
+schpincer.external=./test/external/
+spring.jpa.properties.hibernate.search.default.directory_provider=filesystem
+spring.jpa.properties.hibernate.search.default.indexBase=/tmp/schpincer/search/
+
+spring.servlet.multipart.max-file-size=2000KB
+spring.servlet.multipart.max-request-size=2000KB
+```
+
+### Grant admin privilege via SQL queries
+
+- Open mysql console
+- `use schpincer;`
+- Make sure you've logged in at least once
+- `UPDATE `users` SET `sysadmin`=1 WHERE `email`='YOUR_EMAIL';`
+- Relog (log out and in)
+- You will now see the two administration buttons
+
+## How to contribute
+
+Coming soon.

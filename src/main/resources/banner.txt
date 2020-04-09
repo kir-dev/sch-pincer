@@ -3,8 +3,9 @@
  \__ \ (__| __ | [] |  _/| || .` | (__| _||   /
  |___/\___|_||_|    |_| |___|_|\_|\___|___|_|_\
   :: SCH-PINCÉR ::            Startup completed
-  Author:      Szabo Gergely
-  Github:      https://github.com/Gerviba/webschop
-  Profiles:    ${spring.profiles.active}
-  Spring Boot:${spring-boot.formatted-version}
+  Project lead: Szabo Gergely
+  Contributors: *add yourself if you contributed*
+  Github:       https://github.com/kir-dev/sch-pincer
+  Profiles:     ${spring.profiles.active}
+  Spring Boot: ${spring-boot.formatted-version}
   
