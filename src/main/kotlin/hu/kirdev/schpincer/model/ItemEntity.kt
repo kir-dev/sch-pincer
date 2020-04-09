@@ -39,14 +39,14 @@ data class ItemEntity(
         @Column 
         var ingredients: String,
 
-        @Lob 
-        @Column 
-        var detailsConfigJson: String,
-
         @JsonIgnore
         @Field(termVector = TermVector.YES)
-        @Column 
+        @Column
         var keywords: String? = null,
+
+        @Lob
+        @Column
+        var detailsConfigJson: String,
 
         @Column
         var price: Int = 0,

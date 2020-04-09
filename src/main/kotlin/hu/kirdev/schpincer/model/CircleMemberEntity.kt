@@ -24,7 +24,7 @@ data class CircleMemberEntity(
         @Column
         var name: @Size(max = 64) String? = null,
 
-        @Column
+        @Column(name = "`rank`")
         var rank: @Size(max = 64) String? = null,
 
         @Column

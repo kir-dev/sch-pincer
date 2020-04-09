@@ -81,7 +81,7 @@ public class AuthSchAPI implements Serializable {
     /**
      * Sets login base url
      * 
-     * @param tokenUrlBase (default: https://auth.sch.bme.hu/site/login)
+     * @param loginUrlBase (default: https://auth.sch.bme.hu/site/login)
      */
     public void setLoginUrlBase(String loginUrlBase) {
         this.loginUrlBase = loginUrlBase;
@@ -99,7 +99,7 @@ public class AuthSchAPI implements Serializable {
     /**
      * Sets API endpoint base url
      * 
-     * @param tokenUrlBase (default: https://auth.sch.bme.hu/api)
+     * @param apiUrlBase (default: https://auth.sch.bme.hu/api)
      */
     public void setApiUrlBase(String apiUrlBase) {
         this.apiUrlBase = apiUrlBase;

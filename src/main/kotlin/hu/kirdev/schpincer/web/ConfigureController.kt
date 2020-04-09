@@ -383,7 +383,7 @@ class ConfigureController {
             request: HttpServletRequest,
             model: Model
     ): String? {
-        val (_, _, _, _, _, _, _, _, _, circle) = openings.getOne(openingId)
+        val circle = openings.getOne(openingId).circle
         if (cannotEditCircle(circle!!.id!!, request)) return "redirect:/configure/" + circle.id + "?error"
         model.addAttribute("artificialId", artificialId != "off")
         model.addAttribute("userName", userName != "off")
@@ -410,22 +410,33 @@ class ConfigureController {
                      type: String?,
                      request: HttpServletRequest): String {
         val opening = openings.getOne(openingId)
-        if (cannotEditCircle(opening.circle!!.id!!, request)) return "redirect:/configure/" + opening.circle!!.id + "?error"
+        if (cannotEditCircle(opening.circle!!.id!!, request))
+            return "redirect:/configure/" + opening.circle!!.id + "?error"
+
         val document = Document()
         val export = ExportType.valueOf(type!!)
-        if (export.isPortrait()) document.pageSize = PageSize.A4 else document.pageSize = PageSize.A4.rotate()
+
+        if (export.isPortrait()) {
+            document.pageSize = PageSize.A4
+        } else {
+            document.pageSize = PageSize.A4.rotate()
+        }
+
         val path = "$uploadPath/export/".replace("//", "/")
         File(path).mkdirs()
+
         val name = opening.circle!!.alias + "_" + export.name + "_" + openingId + ".pdf"
         PdfWriter.getInstance(document, FileOutputStream(path + name))
         document.open()
         document.setMargins(20.0f, 20.0f, 30.0f, 30.0f)
         document.newPage()
+
         val table = PdfPTable(export.getHeader().size)
         table.setWidths(export.getWidths())
         table.widthPercentage = 100f
         addTableHeader(table, export)
         addRows(table, export, opening)
+
         document.add(table)
         document.close()
         return "redirect:/cdn/export/$name"
@@ -434,7 +445,7 @@ class ConfigureController {
     private fun addTableHeader(table: PdfPTable, export: ExportType) {
         table.headerRows = 1
         val font = Font(Font.FontFamily.UNDEFINED, 10.0f)
-        export.getHeader().forEach(Consumer { columnTitle: String? ->
+        export.getHeader().forEach(Consumer { columnTitle ->
             val header = PdfPCell()
             header.horizontalAlignment = Element.ALIGN_CENTER
             header.verticalAlignment = Element.ALIGN_CENTER
