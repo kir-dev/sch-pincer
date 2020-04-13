@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.time.Instant
 import javax.annotation.PostConstruct
+import kotlin.math.sign
 
 @Component
 @Profile("test")
@@ -54,9 +55,9 @@ class TestingConfig {
                 "https://www.facebook.com/pizzasch/", "https://pizzasch.hu/pizzas", true).also { circle = it })
         var opening: OpeningEntity
         //        Original:
-        openings.save(OpeningEntity(convert(3, 18, 0), convert(4, 0, 0), convert(3, 0, 0), convert(3, 18, 0),
+        openings.save(OpeningEntity(null, 30, convert(3, 18, 0), convert(4, 0, 0), convert(3, 0, 0), convert(3, 18, 0),
                 "demo/pizzasch-pr.jpg", "Ez egy Pizzásch nyitás. Ez a szöveg program sch-ra lesz exportálva.",
-                "Jack pls mit írjak ide?", circle, 100, 20, 2, 30).also { opening = it })
+                "Jack pls mit írjak ide?", circle, mutableListOf(), 100, 20, 2, 30).also { opening = it })
         //        openings.save(opening = new OpeningEntity(convert(3, 18, 0), convert(4, 0, 0), fromNow(0), fromNow(100),
 //                "demo/pizzasch-pr.jpg", "Ez egy Pizzásch nyitás. Ez a szöveg program sch-ra lesz exportálva.",
 //                "Jack pls mit írjak ide?", circle, 100, 20, 2, 30));
@@ -222,10 +223,10 @@ class TestingConfig {
                 "gyros pita görög gorog dzsájrosz dzsajrosz",
                 "[{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"onion\",\"_hide\":true,\"values\":[\"Lilahagyma\",\"Pirított hagyma\"],\"prices\":[0,0],\"aliases\":[\"LH\",\"PH\"]},{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"sauce\",\"_hide\":true,\"values\":[\"Sima\",\"Foghagymás\",\"Csípős\"],\"prices\":[0,0,0],\"aliases\":[\"SIMA\",\"FH\",\"CSÍP\"]},{\"type\":\"EXTRA_SELECT\",\"name\":\"cheese\",\"_hide\":true,\"values\":[\"Nem kérek\",\"Extra sajt\",\"Dupla sajt\"],\"prices\":[0,50,100],\"aliases\":[\"NE\",\"EXTRA x1\",\"Extra x2\"]},{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"extra\",\"_hide\":true,\"values\":[\"Extra hús\",\"Extra csípős\"],\"prices\":[200,50],\"aliases\":[\"HÚS\",\"CSÍP\"],\"_comment\":\"Extra csípős: mindenféle különleges esszenciát bevetve egyenesen a pokolból\"}]",
                 650, true, false, false, true, false, true, "cdn/items/5.jpg", 0))
-        openings.save(OpeningEntity(convert(4, 18, 0), convert(4, 23, 0), convert(4, 0, 0), convert(4, 18, 0),  //                "demo/dzsajrosz-pr.jpg", "Type your feeling here", circle, 2, 1, 0, 20));
+        openings.save(OpeningEntity(null, 30, convert(4, 18, 0), convert(4, 23, 0), convert(4, 0, 0), convert(4, 18, 0),  //                "demo/dzsajrosz-pr.jpg", "Type your feeling here", circle, 2, 1, 0, 20));
 //        openings.save(opening = new OpeningEntity(convert(4, 18, 0), convert(4, 23, 0), fromNow(0), fromNow(10),
                 "demo/dzsajrosz-pr.jpg", "Ez egy Dzsájrosz nyitás. Ez a szöveg program sch-ra lesz exportálva.",
-                "Type your feeling here", circle, 2, 1, 0, 20).also { opening = it })
+                "Type your feeling here", circle, mutableListOf(), 2, 1, 0, 20).also { opening = it })
         opening.generateTimeWindows(openings)
         openings.save(opening)
         circles.save(CircleEntity("Americano",
@@ -248,9 +249,9 @@ class TestingConfig {
                 "burger asd",
                 "[{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"sauce\",\"values\":[\"Ketchup\",\"Majonéz\",\"Mustár\"],\"prices\":[0,50,150]}]",
                 600, true, true, false, true, false, true, "cdn/items/4.jpg", 0))
-        openings.save(OpeningEntity(convert(2, 16, 0), convert(2, 20, 0), convert(2, 0, 0), convert(2, 14, 0),
+        openings.save(OpeningEntity(null, 30, convert(2, 16, 0), convert(2, 20, 0), convert(2, 0, 0), convert(2, 14, 0),
                 "demo/americano-pr.jpg", "Ez egy Americano nyitás. Ez a szöveg program sch-ra lesz exportálva.",
-                "Random moment cuccok", circle, 100, 20, 0, 10).also { opening = it })
+                "Random moment cuccok", circle, mutableListOf(), 100, 20, 0, 10).also { opening = it })
         opening.generateTimeWindows(openings)
         openings.save(opening)
         circles.save(CircleEntity("Vödör",
@@ -270,9 +271,9 @@ class TestingConfig {
                 "[{\"type\":\"EXTRA_SELECT\",\"name\":\"potato\",\"_display\":\"1-6 {pieces}\",\"values\":[\"1 krumpli\",\"2 krumpli\",\"3 krumpli\",\"4 krumpli\",\"5 krumpli\",\"6 krumpli\"],\"prices\":[0,400,800,1200,1600,2000]}," +
                         "{\"type\":\"EXTRA_SELECT\",\"name\":\"panzo\",\"_display\":\"0-6 {pieces}\",\"values\":[\"Nem kérek\",\"1 panzo\",\"2 panzo\",\"3 panzo\",\"4 panzo\",\"5 panzo\",\"6 panzo\"],\"prices\":[0,200,400,600,800,1000,1200]}]",
                 600, true, true, false, true, false, true, "cdn/items/panzo.jpg", 0))
-        openings.save(OpeningEntity(convert(1, 18, 0), convert(2, 0, 0), convert(1, 0, 0), convert(1, 18, 0),
+        openings.save(OpeningEntity(null, 30, convert(1, 18, 0), convert(2, 0, 0), convert(1, 0, 0), convert(1, 18, 0),
                 "demo/dzsajrosz-pr.jpg", "Ez egy Vödör nyitás. Ez a szöveg program sch-ra lesz exportálva.",
-                "Feeling típusú nyitás", circle, 100, 120, 0, 6 * 60).also { opening = it })
+                "Feeling típusú nyitás", circle, mutableListOf(), 100, 120, 0, 6 * 60).also { opening = it })
         opening.generateTimeWindows(openings)
         openings.save(opening)
         circles.save(CircleEntity("Kakas",
@@ -289,9 +290,9 @@ class TestingConfig {
                 "red", 1999,
                 "demo/kakas-bg.jpg", "icons/icon-kakas.svg", "Vasárnap", "kakas",
                 "https://www.facebook.com/kakasfogado/", "http://kakas.sch.bme.hu/", true).also({ circle = it }))
-        openings.save(OpeningEntity(convert(7, 20, 0), convert(8, 0, 0), convert(7, 20, 0), convert(7, 20, 0),
+        openings.save(OpeningEntity(null, 30, convert(7, 20, 0), convert(8, 0, 0), convert(7, 20, 0), convert(7, 20, 0),
                 "demo/kakas-pr.jpg", "Ez egy Kakas nyitás. Ez a szöveg program sch-ra lesz exportálva.",
-                "Forradalmi nyitás", circle, 100, 20, 0, 0).also { opening = it })
+                "Forradalmi nyitás", circle, mutableListOf(), 100, 20, 0, 0).also { opening = it })
         opening.generateTimeWindows(openings)
         openings.save(opening)
         items.save(ItemEntity(null,"Sonkás melegszendvics", circle,
@@ -326,9 +327,9 @@ class TestingConfig {
                 "yellow", 1994,
                 "demo/langosch-bg.jpg", "icons/icon-langosch.svg", "Vasárnap (2 hetente)", "langosch",
                 "https://www.facebook.com/EgyelLangost/", "https://langosch.sch.bme.hu", true).also({ circle = it }))
-        openings.save(OpeningEntity(convert(7, 18, 0), convert(8, 0, 0), convert(7, 0, 0), convert(7, 18, 0),
+        openings.save(OpeningEntity(null, 30, convert(7, 18, 0), convert(8, 0, 0), convert(7, 0, 0), convert(7, 18, 0),
                 "demo/langosch-pr.jpg", "Ez egy Lángosch nyitás. Ez a szöveg program sch-ra lesz exportálva.",
-                "Tüzes lángos", circle, 100, 20, 0, 30).also { opening = it })
+                "Tüzes lángos", circle, mutableListOf(), 100, 20, 0, 30).also { opening = it })
         opening.generateTimeWindows(openings)
         openings.save(opening)
         items.save(ItemEntity(null,"Tüzes lángos", circle,
@@ -355,5 +356,11 @@ class TestingConfig {
 
     private fun fromNow(minutes: Int): Long {
         return System.currentTimeMillis() + minutes * 60000
+    }
+
+    fun main() {
+        readLine()
+        val(a,b)=readLine()!!.split(" ").map{it.toInt()}
+        println(arrayOf("Lower","Same","Higher")[(a.compareTo(b)).sign+1])
     }
 }

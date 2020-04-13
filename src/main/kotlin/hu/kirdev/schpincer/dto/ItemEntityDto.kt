@@ -1,4 +1,4 @@
-package hu.gerviba.webschop.dto
+package hu.kirdev.schpincer.dto
 
 import hu.kirdev.schpincer.model.*
 
@@ -48,18 +48,17 @@ class ItemEntityDto(base: ItemEntity, opening: OpeningEntity?, loggedin: Boolean
         circleName = base.circle?.displayName ?: "Not Attached"
         circleColor = base.circle?.cssClassName ?: ""
 
-        // TODO: Refactor
-        var max = opening?.maxOrderPerInterval ?: 0
-        if (opening != null) {
-            max = when (ItemCategory.of(base.category)) {
+        categoryMax = if (opening != null) {
+            when (ItemCategory.of(base.category)) {
                 ItemCategory.ALPHA -> opening.maxAlpha - opening.usedAlpha
                 ItemCategory.BETA -> opening.maxBeta - opening.usedBeta
                 ItemCategory.GAMMA -> opening.maxGamma - opening.usedGamma
                 ItemCategory.DELTA -> opening.maxDelta - opening.usedDelta
                 ItemCategory.LAMBDA -> opening.maxLambda - opening.usedLambda
-                else -> max
+                else -> opening.maxOrderPerInterval
             }
+        } else {
+            0
         }
-        categoryMax = max
     }
 }

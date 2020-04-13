@@ -259,9 +259,9 @@
 						<td th:text="#{lang.export.order-by}">Order by</td>
 						<td>
 							<select name="orderby">
-								<option th:text="#{lang.export.order.absolute}" th:value="${T(hu.kirdev.schpincer.service.OrderServiceKt).ORDER_ABSOLUTE}">Absolute order</option>
-								<option th:text="#{lang.export.order.grouped}" th:value="${T(hu.kirdev.schpincer.service.OrderServiceKt).ORDER_GROUPED}">Grouped timelines</option>
-								<option th:text="#{lang.export.order.rooms}" th:value="${T(hu.kirdev.schpincer.service.OrderServiceKt).ORDER_ROOMS}">Grouped timelines and rooms</option>
+								<option th:text="#{lang.export.order.absolute}" th:value="${T(hu.kirdev.schpincer.service.OrderStrategy).ORDER_ABSOLUTE.representation}">Absolute order</option>
+								<option th:text="#{lang.export.order.grouped}" th:value="${T(hu.kirdev.schpincer.service.OrderStrategy).ORDER_GROUPED.representation}">Grouped timelines</option>
+								<option th:text="#{lang.export.order.rooms}" th:value="${T(hu.kirdev.schpincer.service.OrderStrategy).ORDER_ROOMS.representation}">Grouped timelines and rooms</option>
 							</select>
 						</td>
 					</tr>

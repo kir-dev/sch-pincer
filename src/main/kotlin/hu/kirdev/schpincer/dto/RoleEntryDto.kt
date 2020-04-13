@@ -1,4 +1,4 @@
-package hu.gerviba.webschop.dto
+package hu.kirdev.schpincer.dto
 
 import hu.kirdev.schpincer.model.UserEntity
 
@@ -10,7 +10,7 @@ class RoleEntryDto(val uidHash: String, ue: UserEntity) {
     init {
         name = ue.name
         sysadmin = ue.sysadmin
-        permissions = if (ue.permissions.size == 0) "-" else ue.permissions.joinToString(", ")
+        permissions = if (ue.permissions.isEmpty()) "-" else ue.permissions.joinToString(", ")
     }
 
 }

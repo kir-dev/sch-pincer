@@ -1,8 +1,8 @@
 package hu.kirdev.schpincer.service
 
-import hu.gerviba.webschop.dto.CircleEntityInfoDto
 import hu.kirdev.schpincer.dao.CircleRepository
 import hu.kirdev.schpincer.dao.OpeningRepository
+import hu.kirdev.schpincer.dto.CircleEntityInfoDto
 import hu.kirdev.schpincer.model.CircleEntity
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page

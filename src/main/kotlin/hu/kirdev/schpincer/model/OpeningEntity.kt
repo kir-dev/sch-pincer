@@ -43,9 +43,12 @@ data class OpeningEntity(
         @Column(length = 255)
         var feeling: @Size(max = 255) String? = null,
 
-        @JsonIdentityInfo(generator = PropertyGenerator::class, property = "id")
-        @JsonIdentityReference(alwaysAsId = true)
-        @ManyToOne(fetch = FetchType.LAZY)
+        @field:JsonIdentityInfo(generator = PropertyGenerator::class, property = "id")
+        @field:JsonIdentityReference(alwaysAsId = true)
+        @field:ManyToOne(fetch = FetchType.LAZY)
+        @get:JsonIdentityInfo(generator = PropertyGenerator::class, property = "id")
+        @get:JsonIdentityReference(alwaysAsId = true)
+        @get:ManyToOne(fetch = FetchType.LAZY)
         var circle: CircleEntity? = null,
 
         @Column
@@ -100,40 +103,7 @@ data class OpeningEntity(
 
 ) : Serializable {
 
-    /**
-     * This is for testing
-     */
-    constructor(
-            orderStart: Long,
-            orderEnd: Long,
-            dateStart: Long,
-            dateEnd: Long,
-            prUrl: String,
-            eventDescription: String,
-            feeling: String,
-            circle: CircleEntity,
-            maxOrder: Int,
-            maxOrderPerInterval: Int,
-            maxExtraPerInterval: Int,
-            intervalLength: Int
-    ) : this(
-            orderStart = orderStart,
-            orderEnd = orderEnd,
-            dateStart = dateStart,
-            dateEnd = dateEnd,
-            prUrl = prUrl,
-            eventDescription = eventDescription,
-            feeling = feeling,
-            circle = circle,
-            maxOrder = maxOrder,
-            maxOrderPerInterval = maxOrderPerInterval,
-            maxExtraPerInterval = maxExtraPerInterval,
-            intervalLength = intervalLength,
-            timeWindows = mutableListOf()
-    )
-
     fun generateTimeWindows(openings: OpeningService) {
-        timeWindows = mutableListOf()
         if (this.intervalLength <= 0) {
             appendTimeWindow(openings, this.dateStart)
             return
@@ -145,7 +115,7 @@ data class OpeningEntity(
         }
     }
 
-    fun appendTimeWindow(openings: OpeningService, time: Long) {
+    private fun appendTimeWindow(openings: OpeningService, time: Long) {
         val tw = TimeWindowEntity(null, this,
                 OpeningService.DATE_FORMATTER_HH_MM.format(time)
                         + " - " + OpeningService.DATE_FORMATTER_HH_MM.format(time + this.intervalLength * MILLIS_TO_MINS),
