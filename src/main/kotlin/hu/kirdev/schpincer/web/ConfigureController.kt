@@ -354,11 +354,11 @@ open class ConfigureController {
         if (cannotEditCircle(circleId, request)) 
             return "redirect:/configure/$circleId?error=invalidPermissions"
         
-        val opening = openings.getOne(openingId!!)
+        val opening = openings.getOne(openingId)
         if (opening.circle!!.id != circleId) 
             return "redirect:/configure/$circleId?error"
         
-        model.addAttribute("exportTypes", ExportType.values())
+        model.addAttribute("exportTypes", listOf(ExportType.values()))
         model.addAttribute("openingId", opening.id)
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("orders", orders.findAllByOpening(openingId))

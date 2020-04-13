@@ -1,7 +1,7 @@
 package hu.kirdev.schpincer.web.component
 
 import hu.kirdev.schpincer.model.OrderEntity
-import hu.kirdev.schpincer.service.OrderStrategy
+import hu.kirdev.schpincer.service.ORDER_GROUPED
 
 enum class ExportType(
         val isPortrait: Boolean,

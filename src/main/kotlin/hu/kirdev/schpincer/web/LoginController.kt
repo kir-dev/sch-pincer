@@ -92,7 +92,7 @@ open class LoginController {
         authorities.add(SimpleGrantedAuthority("ROLE_${Role.USER.name}"))
         if (user.sysadmin) {
             authorities.add(SimpleGrantedAuthority("ROLE_${Role.ADMIN.name}"))
-            authorities.add(SimpleGrantedAuthority("ROLE_${Role.LEADER}.name"))
+            authorities.add(SimpleGrantedAuthority("ROLE_${Role.LEADER.name}"))
         }
         if (user.permissions.contains("ROLE_${Role.LEADER.name}"))
             authorities.add(SimpleGrantedAuthority("ROLE_${Role.LEADER.name}"))
