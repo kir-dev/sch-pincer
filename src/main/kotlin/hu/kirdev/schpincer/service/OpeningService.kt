@@ -1,6 +1,5 @@
 package hu.kirdev.schpincer.service
 
-
 import hu.kirdev.schpincer.dao.OpeningRepository
 import hu.kirdev.schpincer.dao.TimeWindowRepository
 import hu.kirdev.schpincer.model.OpeningEntity
@@ -50,7 +49,7 @@ open class OpeningService {
 
     open fun findNextStartDateOf(id: Long): Long? {
         val opening: Optional<OpeningEntity> = repo.findFirstByCircle_IdAndDateEndGreaterThanOrderByDateStart(id, System.currentTimeMillis())
-        return opening.map<Long?>(OpeningEntity::dateStart).orElse(null)
+        return opening.map(OpeningEntity::dateStart).orElse(null)
     }
 
     open fun getOne(openingId: Long): OpeningEntity {

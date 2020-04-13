@@ -1,7 +1,9 @@
 package hu.kirdev.schpincer.web
 
-import hu.kirdev.schpincer.model.UserEntity
+import hu.kirdev.schpincer.service.UserService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.io.IOException
@@ -15,15 +17,28 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
-fun MultipartFile.uploadFile(target: String, uploadPath: String): String? {
+@Component class DI {
+    companion object {
+        lateinit var instance: DI
+    }
+
+    init {
+        instance = this
+    }
+
+    @Autowired lateinit var users: UserService
+    @Value("\${schpincer.external:/etc/schpincer/external}") lateinit var uploadPath: String
+}
+
+fun MultipartFile.uploadFile(target: String): String? {
     if (this.isEmpty || this.contentType == null)
         return null
-    var path = if (!uploadPath.startsWith("/")) System.getProperty("user.dir") + "/" + uploadPath else uploadPath
+    var path = if (!DI.instance.uploadPath.startsWith("/")) System.getProperty("user.dir") + "/" + DI.instance.uploadPath
+            else DI.instance.uploadPath
     val dir = File(path, target)
     dir.mkdirs()
     val originalFilename = this.originalFilename ?: ""
     val fileName = (UUID(System.currentTimeMillis(), Random().nextLong()).toString()
-
             + originalFilename.substring(if (originalFilename.contains(".")) originalFilename.lastIndexOf('.') else 0))
     path += (if (path.endsWith("/")) "" else "/") + "$target/$fileName"
     try {
@@ -34,9 +49,13 @@ fun MultipartFile.uploadFile(target: String, uploadPath: String): String? {
     return fileName
 }
 
-fun HttpServletRequest.getUser(): UserEntity {
-    return this.session.getAttribute("user") as UserEntity
-}
+fun HttpServletRequest.hasUser() = this.session.getAttribute(USER_SESSION_ATTRIBUTE_NAME) != null
+
+fun HttpServletRequest.getUser() = DI.instance.users.getById(this.session.getAttribute(USER_SESSION_ATTRIBUTE_NAME) as String)
+
+fun HttpServletRequest.getUserIfPresent() = if (hasUser()) DI.instance.users.getById(this.session.getAttribute(USER_SESSION_ATTRIBUTE_NAME) as String) else null
+
+fun HttpServletRequest.getUserId() = this.session.getAttribute(USER_SESSION_ATTRIBUTE_NAME) as String
 
 @Throws(NoSuchAlgorithmException::class)
 fun String.sha256(): String {
@@ -55,8 +74,7 @@ fun cannotEditCircleNoPR(circleId: Long, request: HttpServletRequest): Boolean {
 }
 
 fun isPR(circleId: Long, request: HttpServletRequest): Boolean {
-    val (_, _, _, _, _, _, permissions) = request.getUser()
-    return permissions.contains("PR_$circleId")
+    return request.getUser().permissions.contains("PR_$circleId")
 }
 
 val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm")
@@ -73,7 +91,6 @@ fun parseDate(dateToParse: String): Long {
 }
 
 fun formatDate(date: Long): String {
-    val dateFormat: DateFormat = SimpleDateFormat("yyyy.MM.dd hh:mm")
     return dateFormat.format(date)
 }
 
