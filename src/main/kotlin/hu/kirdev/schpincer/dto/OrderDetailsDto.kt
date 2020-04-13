@@ -1,4 +1,4 @@
-package hu.gerviba.webschop.dto
+package hu.kirdev.schpincer.dto
 
 data class OrderDetailsDto(
         var minCount: Int = 0,

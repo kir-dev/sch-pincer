@@ -33,7 +33,7 @@ data class OrderEntity(
     var status: OrderStatus = OrderStatus.ACCEPTED,
     
     @Column(length = 255)
-    var name: String? = null,
+    var name: String = "",
     
     @Lob
     @Column
@@ -43,7 +43,7 @@ data class OrderEntity(
     var intervalId: Long = 0,
     
     @Column
-    var intervalMessage: String? = null,
+    var intervalMessage: String = "",
     
     @Column
     var date: Long = 0,
@@ -52,7 +52,7 @@ data class OrderEntity(
     var comment: String,
 
     @Column
-    var room: @Size(max = 8) String?,
+    var room: @Size(max = 8) String = "m/a",
     
     @Column
     var price: Int = 0,
@@ -79,6 +79,6 @@ data class OrderEntity(
     var priority: Int = 1,
     
     @Column(nullable = false)
-    var compactName: String? = null
+    var compactName: String = ""
 
 ) : Serializable

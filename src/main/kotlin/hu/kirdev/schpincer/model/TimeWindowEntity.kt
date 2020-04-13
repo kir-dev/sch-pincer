@@ -20,7 +20,7 @@ data class TimeWindowEntity(
     var opening: OpeningEntity? = null,
 
     @Column
-    var name: String? = null,
+    var name: String = "",
 
     @Column
     var date: Long = 0,

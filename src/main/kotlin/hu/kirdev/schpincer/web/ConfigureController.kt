@@ -4,10 +4,10 @@ import com.itextpdf.text.*
 import com.itextpdf.text.pdf.PdfPCell
 import com.itextpdf.text.pdf.PdfPTable
 import com.itextpdf.text.pdf.PdfWriter
-import hu.gerviba.webschop.dto.OpeningEntityDto
+import hu.kirdev.schpincer.dto.OpeningEntityDto
 import hu.kirdev.schpincer.model.*
 import hu.kirdev.schpincer.service.*
-import hu.kirdev.schpincer.web.comonent.ExportType
+import hu.kirdev.schpincer.web.component.ExportType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
@@ -29,7 +29,7 @@ enum class PageTypes(val orientation: String) {
 }
 
 @Controller
-class ConfigureController {
+open class ConfigureController {
 
     @Autowired
     private lateinit var circles: CircleService
@@ -63,7 +63,7 @@ class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}")
-    fun configure(@PathVariable circleId: Long?, model: Model, request: HttpServletRequest): String? {
+    fun configure(@PathVariable circleId: Long, model: Model, request: HttpServletRequest): String? {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circle", circles.getOne(circleId!!))
         model.addAttribute("pr", isPR(circleId, request))
@@ -73,7 +73,7 @@ class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/members/new")
-    fun newMember(@PathVariable circleId: Long?, model: Model): String? {
+    fun newMember(@PathVariable circleId: Long, model: Model): String? {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circleId", circleId)
         model.addAttribute("member", CircleMemberEntity())
@@ -88,7 +88,7 @@ class ConfigureController {
         if (cannotEditCircleNoPR(circleId, request)) return "redirect:/configure/$circleId?error"
         val circle = circles.getOne(circleId)
         cme!!.circle = circle
-        val file = avatarFile?.uploadFile("avatars", uploadPath)
+        val file = avatarFile?.uploadFile("avatars")
         cme.avatar = if (file == null) "image/blank-avatar.png" else "cdn/avatars/$file"
         members.save(cme)
         return "redirect:/configure/$circleId"
@@ -97,7 +97,7 @@ class ConfigureController {
     @GetMapping("/configure/{circleId}/members/delete/{memberId}")
     fun deleteMemberNoPR(@PathVariable circleId: Long,
                          @PathVariable memberId: Long,
-                         model: Model): String? {
+                         model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("topic", "member")
         model.addAttribute("arg", members.getOne(memberId).name)
@@ -108,8 +108,8 @@ class ConfigureController {
 
     @PostMapping("/configure/{circleId}/members/delete/{memberId}/confirm")
     fun deleteMemberConfirm(@PathVariable circleId: Long,
-                            @PathVariable memberId: Long?,
-                            request: HttpServletRequest): String? {
+                            @PathVariable memberId: Long,
+                            request: HttpServletRequest): String {
         if (cannotEditCircleNoPR(circleId, request)) return "redirect:/configure/$circleId?error"
         val cme = members.getOne(memberId!!)
         if (cme.circle!!.id == circleId) members.delete(cme)
@@ -117,7 +117,7 @@ class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/edit")
-    fun editCircle(@PathVariable circleId: Long, model: Model): String? {
+    fun editCircle(@PathVariable circleId: Long, model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("mode", "edit")
         model.addAttribute("adminMode", false)
@@ -126,7 +126,7 @@ class ConfigureController {
     }
 
     @PostMapping("/configure/edit")
-    fun editCircle(circle: @Valid CircleEntity?,
+    fun editCircle(circle: @Valid CircleEntity,
                    @RequestParam circleId: Long,
                    @RequestParam(required = false) logo: MultipartFile?,
                    @RequestParam(required = false) background: MultipartFile?,
@@ -136,7 +136,7 @@ class ConfigureController {
             return "redirect:/configure/$circleId?error=invalidPermissions"
         
         val original = circles.getOne(circleId) ?: return "redirect:/configure/$circleId?error=invalidId"
-        original.avgOpening = circle!!.avgOpening
+        original.avgOpening = circle.avgOpening
         original.description = circle.description
                 .replace("<".toRegex(), "&lt;")
                 .replace(">".toRegex(), "&gt;")
@@ -146,11 +146,11 @@ class ConfigureController {
         original.homePageDescription = circle.homePageDescription
         original.websiteUrl = circle.websiteUrl
         
-        val logoFile = logo?.uploadFile("logos", uploadPath)
+        val logoFile = logo?.uploadFile("logos")
         if (logoFile != null) 
             original.logoUrl = "cdn/logos/$logoFile"
         
-        val backgroundFile = background?.uploadFile("backgrounds", uploadPath)
+        val backgroundFile = background?.uploadFile("backgrounds")
         if (backgroundFile != null) 
             original.backgroundUrl = "cdn/backgrounds/$backgroundFile"
         
@@ -159,7 +159,7 @@ class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/items/new")
-    fun newItem(@PathVariable circleId: Long?, model: Model): String? {
+    fun newItem(@PathVariable circleId: Long, model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circleId", circleId)
         model.addAttribute("itemId", -1)
@@ -187,24 +187,26 @@ class ConfigureController {
                 ie: @Valid ItemEntity,
                 @RequestParam imageFile: MultipartFile?,
                 request: HttpServletRequest
-    ): String? {
+    ): String {
         if (cannotEditCircle(circleId, request)) 
             return "redirect:/configure/$circleId?error"
         
         val circle = circles.getOne(circleId)
         ie.circle = circle
-        val file: String? = imageFile?.uploadFile("items", uploadPath)
+        val file: String? = imageFile?.uploadFile("items")
         ie.imageName = if (file == null) "image/blank-item.jpg" else "cdn/items/$file"
         items.save(ie)
         return "redirect:/configure/$circleId"
     }
 
     @GetMapping("/configure/{circleId}/items/edit/{itemId}")
-    fun editItem(@PathVariable itemId: Long?,
+    fun editItem(@PathVariable itemId: Long,
                  @PathVariable circleId: Long, model: Model,
                  request: HttpServletRequest
-    ): String? {
-        if (cannotEditCircle(circleId, request)) return "redirect:/configure/$circleId?error"
+    ): String {
+        if (cannotEditCircle(circleId, request))
+            return "redirect:/configure/$circleId?error"
+
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("mode", "edit")
         model.addAttribute("item", items.getOne(itemId!!)?.copy())
@@ -214,15 +216,15 @@ class ConfigureController {
     @PostMapping("/configure/{circleId}/items/edit")
     fun editItem(@PathVariable circleId: Long,
                  item: @Valid ItemEntity,
-                 @RequestParam itemId: Long?,
+                 @RequestParam itemId: Long,
                  @RequestParam(required = false) imageFile: MultipartFile?,
                  request: HttpServletRequest
-    ): String? {
+    ): String {
         
         if (cannotEditCircle(circleId, request))
             return "redirect:/configure/$circleId?error=invalidPermissions"
 
-        val original = items.getOne(itemId!!) ?: return "redirect:/configure/$circleId?error=invalidId"
+        val original = items.getOne(itemId) ?: return "redirect:/configure/$circleId?error=invalidId"
 
         with(original) {
             description = item.description
@@ -246,7 +248,7 @@ class ConfigureController {
         }
         if (item.flag < 1000 || request.getUser().sysadmin)
             original.flag = item.flag
-        val file: String? = imageFile?.uploadFile("items", uploadPath)
+        val file = imageFile?.uploadFile("items")
         if (file != null)
             original.imageName = "cdn/items/$file"
         items.save(original)
@@ -254,8 +256,10 @@ class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/items/delete/{itemId}")
-    fun deleteItem(@PathVariable circleId: Long, @PathVariable itemId: Long,
-                   model: Model): String? {
+    fun deleteItem(@PathVariable circleId: Long,
+                   @PathVariable itemId: Long,
+                   model: Model
+    ): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("topic", "member")
         model.addAttribute("arg", items.getOne(itemId)!!.name)
@@ -265,8 +269,10 @@ class ConfigureController {
     }
 
     @PostMapping("/configure/{circleId}/items/delete/{itemId}/confirm")
-    fun deleteItemConfirm(@PathVariable circleId: Long, @PathVariable itemId: Long?,
-                          request: HttpServletRequest): String? {
+    fun deleteItemConfirm(@PathVariable circleId: Long,
+                          @PathVariable itemId: Long,
+                          request: HttpServletRequest
+    ): String {
         if (cannotEditCircle(circleId, request)) return "redirect:/configure/$circleId?error"
         val ie = items.getOne(itemId!!)
         if (ie!!.circle!!.id == circleId) items.delete(ie)
@@ -274,7 +280,7 @@ class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/openings/new")
-    fun newOpening(@PathVariable circleId: Long?, model: Model): String? {
+    fun newOpening(@PathVariable circleId: Long, model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circleId", circleId)
         model.addAttribute("opening", OpeningEntityDto())
@@ -285,7 +291,8 @@ class ConfigureController {
     fun newOpening(@PathVariable circleId: Long,
                    oed: OpeningEntityDto,
                    @RequestParam prFile: MultipartFile?,
-                   request: HttpServletRequest): String? {
+                   request: HttpServletRequest
+    ): String {
         if (cannotEditCircle(circleId, request)) return "redirect:/configure/$circleId?error"
         val eo = OpeningEntity(
             feeling = oed.feeling,
@@ -305,7 +312,7 @@ class ConfigureController {
             maxDelta = oed.maxDelta,
             maxLambda = oed.maxLambda
         )
-        val file = prFile?.uploadFile("pr", uploadPath)
+        val file = prFile?.uploadFile("pr")
         eo.prUrl = if (file == null) "image/blank-pr.jpg" else "cdn/pr/$file"
         openings.save(eo)
         eo.generateTimeWindows(openings)
@@ -314,8 +321,10 @@ class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/openings/delete/{openingId}")
-    fun deleteOpening(@PathVariable circleId: Long, @PathVariable openingId: Long,
-                      model: Model): String? {
+    fun deleteOpening(@PathVariable circleId: Long,
+                      @PathVariable openingId: Long,
+                      model: Model)
+            : String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("topic", "opening")
         model.addAttribute("arg", formatDate(openings.getOne(openingId).dateStart))
@@ -325,8 +334,10 @@ class ConfigureController {
     }
 
     @PostMapping("/configure/{circleId}/openings/delete/{openingId}/confirm")
-    fun deleteOpeningConfirm(@PathVariable circleId: Long, @PathVariable openingId: Long?,
-                             request: HttpServletRequest): String? {
+    fun deleteOpeningConfirm(@PathVariable circleId: Long,
+                             @PathVariable openingId: Long?,
+                             request: HttpServletRequest
+    ): String {
         if (cannotEditCircle(circleId, request)) 
             return "redirect:/configure/$circleId?error=invalidPermissions"
         val ie = openings.getOne(openingId!!)
@@ -335,8 +346,11 @@ class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/openings/show/{openingId}")
-    fun showOpenings(@PathVariable circleId: Long, @PathVariable openingId: Long?,
-                     request: HttpServletRequest, model: Model): String? {
+    fun showOpenings(@PathVariable circleId: Long,
+                     @PathVariable openingId: Long,
+                     request: HttpServletRequest,
+                     model: Model
+    ): String {
         if (cannotEditCircle(circleId, request)) 
             return "redirect:/configure/$circleId?error=invalidPermissions"
         
@@ -344,7 +358,7 @@ class ConfigureController {
         if (opening.circle!!.id != circleId) 
             return "redirect:/configure/$circleId?error"
         
-        model.addAttribute("exportTypes", Arrays.asList(*ExportType.values()))
+        model.addAttribute("exportTypes", ExportType.values())
         model.addAttribute("openingId", opening.id)
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("orders", orders.findAllByOpening(openingId))
@@ -356,7 +370,8 @@ class ConfigureController {
     @ResponseBody
     fun updateOrder(@RequestParam id: Long,
                     @RequestParam status: String,
-                    request: HttpServletRequest): String? {
+                    request: HttpServletRequest
+    ): String {
         val circleId = orders.getCircleIdByOrderId(id) ?: return "INVALID ID"
         
         if (cannotEditCircle(circleId, request)) 
@@ -387,9 +402,11 @@ class ConfigureController {
             @RequestParam(defaultValue = "off") systemComment: String,
             request: HttpServletRequest,
             model: Model
-    ): String? {
+    ): String {
         val circle = openings.getOne(openingId).circle
-        if (cannotEditCircle(circle!!.id!!, request)) return "redirect:/configure/" + circle.id + "?error"
+        if (cannotEditCircle(circle!!.id!!, request))
+            return "redirect:/configure/${circle.id}?error"
+
         model.addAttribute("artificialId", artificialId != "off")
         model.addAttribute("userName", userName != "off")
         model.addAttribute("name", name != "off")
@@ -412,9 +429,9 @@ class ConfigureController {
     @GetMapping("/configure/export")
     @Throws(FileNotFoundException::class, DocumentException::class)
     fun showOpenings(openingId: Long,
-                     type: String?,
-                     pageOrientation: String?,
-                     emptyRows: Int = 0,
+                     type: String,
+                     pageOrientation: String,
+                     @RequestParam(defaultValue = "0") emptyRows: Int = 0,
                      request: HttpServletRequest
     ): String {
         val opening = openings.getOne(openingId)
@@ -422,7 +439,7 @@ class ConfigureController {
             return "redirect:/configure/" + opening.circle!!.id + "?error"
 
         val document = Document()
-        val export = ExportType.valueOf(type!!)
+        val export = ExportType.valueOf(type)
 
         if (pageOrientation.equals(PageTypes.PORTRAIT.orientation)) {
             document.pageSize = PageSize.A4
@@ -454,7 +471,7 @@ class ConfigureController {
 
     private fun isDocumentEmpty(emptyRows: Int, orderRows: Int, document: Document) {
         if ((emptyRows + orderRows) == 0) {
-            document.add(Chunk(""));
+            document.add(Chunk(""))
         }
     }
 
@@ -483,12 +500,12 @@ class ConfigureController {
                 val cell = PdfPCell()
                 cell.horizontalAlignment = Element.ALIGN_CENTER
                 cell.verticalAlignment = Element.ALIGN_CENTER
-                cell.phrase = Phrase(column.apply(order), font)
+                cell.phrase = Phrase(column(order), font)
                 cell.isNoWrap = false
                 table.addCell(cell)
             }
         }
-        return ordersList.size;
+        return ordersList.size
     }
 
     private fun addEmptyRows(table: PdfPTable, export: ExportType, emptyRows: Int) {

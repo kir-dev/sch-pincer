@@ -1,6 +1,6 @@
 package hu.kirdev.schpincer.service
 
-import hu.gerviba.webschop.dto.ItemEntityDto
+import hu.kirdev.schpincer.dto.ItemEntityDto
 import hu.kirdev.schpincer.model.ItemEntity
 import hu.kirdev.schpincer.model.OpeningEntity
 import org.hibernate.search.jpa.FullTextQuery
@@ -21,9 +21,9 @@ open class HibernateSearchService(entityManagerFactory: EntityManagerFactory) {
 
 	private val log = LoggerFactory.getLogger(javaClass)
 
-    val entityManager: EntityManager
+    val entityManager: EntityManager = entityManagerFactory.createEntityManager()
 
-    @Autowired
+	@Autowired
     private lateinit var items: ItemService
 
     @Autowired
@@ -41,11 +41,7 @@ open class HibernateSearchService(entityManagerFactory: EntityManagerFactory) {
     @Value("\${search.time-limit-sec:10}")
     private var timeLimitSec: Long = 10
 
-    init {
-        entityManager = entityManagerFactory.createEntityManager()
-    }
-
-    @PostConstruct
+	@PostConstruct
 	fun initializeHibernateSearch() {
 		try {
 			val fullTextEntityManager = Search.getFullTextEntityManager(entityManager)

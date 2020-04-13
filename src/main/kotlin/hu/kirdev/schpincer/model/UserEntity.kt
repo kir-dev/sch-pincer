@@ -22,7 +22,7 @@ data class UserEntity(
         var email: String? = null,
 
         @Column
-        var room: String? = null,
+        var room: String = "",
 
         @Column
         var sysadmin: Boolean = false,

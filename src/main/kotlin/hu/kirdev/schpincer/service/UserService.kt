@@ -2,7 +2,7 @@ package hu.kirdev.schpincer.service
 
 import hu.kirdev.schpincer.dao.UserRepository
 import hu.kirdev.schpincer.model.UserEntity
-import hu.kirdev.schpincer.web.ControllerUtil
+import hu.kirdev.schpincer.web.sha256
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.security.NoSuchAlgorithmException
@@ -16,10 +16,6 @@ open class UserService {
 
     @Autowired
     private lateinit var repo: UserRepository
-
-    // TODO: Refactor: use the extension functions
-    @Autowired
-    private lateinit var util: ControllerUtil
 
     open fun getById(uid: String): UserEntity {
         return repo.getOne(uid)
@@ -37,12 +33,11 @@ open class UserService {
         return repo.findAll()
     }
 
-    // TODO: Refactor: use the extension sha512 function
     open fun getByUidHash(uidHash: String): UserEntity? {
         val users: List<UserEntity> = repo.findAll()
-        return users.stream().filter { x: UserEntity ->
+        return users.stream().filter {
             try {
-                return@filter util.sha256(x.uid).equals(uidHash, ignoreCase = true)
+                return@filter it.uid?.sha256().equals(uidHash, ignoreCase = true)
             } catch (e: NoSuchAlgorithmException) {
                 e.printStackTrace()
             }
@@ -58,6 +53,12 @@ open class UserService {
         user.sysadmin = true
         repo.save(user)
         return true
+    }
+
+    fun setRoom(userId: String, room: String) {
+        val user = getById(userId)
+        user.room = room
+        repo.save(user)
     }
 
 }

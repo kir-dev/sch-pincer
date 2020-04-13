@@ -1,4 +1,4 @@
-package hu.gerviba.webschop.dto
+package hu.kirdev.schpincer.dto
 
 import hu.kirdev.schpincer.model.CircleEntity
 import hu.kirdev.schpincer.model.OpeningEntity

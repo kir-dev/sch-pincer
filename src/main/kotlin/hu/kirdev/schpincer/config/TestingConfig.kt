@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.time.Instant
 import javax.annotation.PostConstruct
+import kotlin.math.sign
 
 @Component
 @Profile("test")
@@ -355,5 +356,11 @@ class TestingConfig {
 
     private fun fromNow(minutes: Int): Long {
         return System.currentTimeMillis() + minutes * 60000
+    }
+
+    fun main() {
+        readLine()
+        val(a,b)=readLine()!!.split(" ").map{it.toInt()}
+        println(arrayOf("Lower","Same","Higher")[(a.compareTo(b)).sign+1])
     }
 }

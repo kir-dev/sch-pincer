@@ -100,40 +100,7 @@ data class OpeningEntity(
 
 ) : Serializable {
 
-    /**
-     * This is for testing
-     */
-    constructor(
-            orderStart: Long,
-            orderEnd: Long,
-            dateStart: Long,
-            dateEnd: Long,
-            prUrl: String,
-            eventDescription: String,
-            feeling: String,
-            circle: CircleEntity,
-            maxOrder: Int,
-            maxOrderPerInterval: Int,
-            maxExtraPerInterval: Int,
-            intervalLength: Int
-    ) : this(
-            orderStart = orderStart,
-            orderEnd = orderEnd,
-            dateStart = dateStart,
-            dateEnd = dateEnd,
-            prUrl = prUrl,
-            eventDescription = eventDescription,
-            feeling = feeling,
-            circle = circle,
-            maxOrder = maxOrder,
-            maxOrderPerInterval = maxOrderPerInterval,
-            maxExtraPerInterval = maxExtraPerInterval,
-            intervalLength = intervalLength,
-            timeWindows = mutableListOf()
-    )
-
     fun generateTimeWindows(openings: OpeningService) {
-        timeWindows = mutableListOf()
         if (this.intervalLength <= 0) {
             appendTimeWindow(openings, this.dateStart)
             return

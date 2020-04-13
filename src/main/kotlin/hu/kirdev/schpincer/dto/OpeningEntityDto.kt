@@ -1,4 +1,4 @@
-package hu.gerviba.webschop.dto
+package hu.kirdev.schpincer.dto
 
 data class OpeningEntityDto(
     var timeIntervals: Int = 4,
