@@ -33,7 +33,7 @@
 			<a href="circle.html"   th:href="@{/szor}"   th:text="#{lang.nav.circle}">Circles</a>
 			<a href="items.html"    th:href="@{/items}"  th:text="#{lang.nav.items}">Items</a>
 	
-			<a th:if="${session.user} neq null" th:href="@{/profile}" th:text="${session.user?.name}">Test User</a>
+			<a th:if="${session.user} neq null" th:href="@{/profile}" th:text="${session.user?.name.substring(session.user?.name.trim().lastIndexOf(' ')+1)}">Test User</a>
 			<a th:if="${session.user} eq null" href="#login" th:href="@{/login}" th:text="#{lang.nav.login}">Login</a>
 		</div>
 		
