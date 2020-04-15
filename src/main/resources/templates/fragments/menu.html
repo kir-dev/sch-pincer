@@ -15,7 +15,7 @@
 			<a href="circle.html"   th:href="@{/szor}"   th:text="#{lang.nav.circle}" class="long">Circles</a>
 			<a href="items.html"    th:href="@{/items}"  th:text="#{lang.nav.items}" class="long">Items</a>
 
-			<a th:if="${session.user} neq null" th:href="@{/profile}" th:text="${session.user?.name}" class="long">Test User</a>
+			<a th:if="${session.user} neq null" th:href="@{/profile}" th:text="${session.user?.name.substring(session.user?.name.trim().lastIndexOf(' ')+1)}" class="long">Test User</a>
 			<a th:if="${session.user} eq null" href="#login" th:href="@{/login}" th:text="#{lang.nav.login}" class="long">Login</a>
 			
 			<a href="#" class="icon short" onclick="document.getElementById('site-menu').style.display = 'block'"><i class="material-icons">menu</i></a>
