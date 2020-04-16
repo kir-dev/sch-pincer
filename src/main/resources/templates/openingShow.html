@@ -95,12 +95,27 @@
 		<div class="highlighted">
 			<h3 th:text="#{lang.export.title}">Export</h3>
 			<form th:action="@{/configure/export}" method="get">
-				<span class="note" style="margin-bottom: 0" th:text="#{lang.export.scheme}">Select scheme:</span>
-				<select name="type">
-					<option th:each="et : ${exportTypes}" th:object="${et}" th:value="*{name()}" th:text="*{displayName}">Dzsájrosz</option>
-				</select>
-				<input type="hidden" name="openingId" value="0" th:value="${openingId}" />
-				<input class="button" type="submit" value="Export" th:value="#{lang.export.pdf}">
+				<div style="display: inline-block">
+					<span class="note" style="margin-bottom: 0" th:text="#{lang.export.scheme}">Select scheme:</span>
+					<select name="type">
+						<option th:each="et : ${exportTypes}" th:object="${et}" th:value="*{name()}" th:text="*{displayName}">Dzsájrosz</option>
+					</select>
+				</div>
+				<div style="display: inline-block">
+					<span class="note" style="margin-bottom: 0" th:text="#{lang.export.page_orientation}">Select page orientation:</span>
+					<select name="page">
+						<option selected value="landscape" th:text="#{lang.export.landscape}">Landscape</option>
+						<option value="portrait" th:text="#{lang.export.portrait}">Portrait</option>
+					</select>
+				</div>
+				<div style="display: inline-block">
+					<span class="note" style="margin-bottom: 0" th:text="#{lang.export.empty_rows}">Add empty rows:</span>
+					<input name="emptyrows" type="number" th:value="${opening.maxOrder - #lists.size(orders)}" min="0" max="200"/>
+				</div>
+				<div style="display: inline-block">
+					<input type="hidden" name="openingId" value="0" th:value="${openingId}" />
+					<input class="button" type="submit" value="Export" th:value="#{lang.export.pdf}">
+				</div>
 			</form>
 		</div>
 
@@ -240,9 +255,9 @@
 						<td th:text="#{lang.export.order-by}">Order by</td>
 						<td>
 							<select name="orderby">
-								<option th:text="#{lang.export.order.absolute}" th:value="${T(hu.gerviba.webschop.service.OrderService).ORDER_ABSOLUTE}">Absolute order</option>
-								<option th:text="#{lang.export.order.grouped}" th:value="${T(hu.gerviba.webschop.service.OrderService).ORDER_GROUPED}">Grouped timelines</option>
-								<option th:text="#{lang.export.order.rooms}" th:value="${T(hu.gerviba.webschop.service.OrderService).ORDER_ROOMS}">Grouped timelines and rooms</option>
+								<option th:text="#{lang.export.order.absolute}" th:value="${T(hu.kirdev.schpincer.service.OrderServiceKt).ORDER_ABSOLUTE}">Absolute order</option>
+								<option th:text="#{lang.export.order.grouped}" th:value="${T(hu.kirdev.schpincer.service.OrderServiceKt).ORDER_GROUPED}">Grouped timelines</option>
+								<option th:text="#{lang.export.order.rooms}" th:value="${T(hu.kirdev.schpincer.service.OrderServiceKt).ORDER_ROOMS}">Grouped timelines and rooms</option>
 							</select>
 						</td>
 					</tr>

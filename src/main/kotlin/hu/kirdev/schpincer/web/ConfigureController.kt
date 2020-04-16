@@ -408,6 +408,8 @@ class ConfigureController {
     @Throws(FileNotFoundException::class, DocumentException::class)
     fun showOpenings(openingId: Long,
                      type: String?,
+                     page: String?,
+                     emptyrows: Long = 0,
                      request: HttpServletRequest): String {
         val opening = openings.getOne(openingId)
         if (cannotEditCircle(opening.circle!!.id!!, request))
@@ -416,7 +418,7 @@ class ConfigureController {
         val document = Document()
         val export = ExportType.valueOf(type!!)
 
-        if (export.isPortrait()) {
+        if (page.equals("portrait")) {
             document.pageSize = PageSize.A4
         } else {
             document.pageSize = PageSize.A4.rotate()
@@ -435,7 +437,11 @@ class ConfigureController {
         table.setWidths(export.getWidths())
         table.widthPercentage = 100f
         addTableHeader(table, export)
-        addRows(table, export, opening)
+        val added = addRows(table, export, opening)
+        addEmptyRows(table, export, emptyrows)
+        if ((emptyrows + added) == 0L) { // <-- In case of empty document
+            document.add(Chunk(""));
+        }
 
         document.add(table)
         document.close()
@@ -456,7 +462,7 @@ class ConfigureController {
         })
     }
 
-    private fun addRows(table: PdfPTable, export: ExportType, opening: OpeningEntity) {
+    private fun addRows(table: PdfPTable, export: ExportType, opening: OpeningEntity): Long {
         val ordersList: List<OrderEntity> = orders.findToExport(opening.id!!, export.getOrderByFunction())
         for (i in ordersList.indices)
             ordersList[i].artificialTransientId = i + 1
@@ -468,6 +474,18 @@ class ConfigureController {
                 cell.horizontalAlignment = Element.ALIGN_CENTER
                 cell.verticalAlignment = Element.ALIGN_CENTER
                 cell.phrase = Phrase(column.apply(order), font)
+                cell.isNoWrap = false
+                table.addCell(cell)
+            }
+        }
+        return ordersList.size.toLong();
+    }
+
+    private fun addEmptyRows(table: PdfPTable, export: ExportType, emptyRows: Long) {
+        for (i in 1..emptyRows) {
+            export.getFields().forEach {
+                val cell = PdfPCell()
+                cell.phrase = Phrase(" ")
                 cell.isNoWrap = false
                 table.addCell(cell)
             }
