@@ -408,9 +408,10 @@ class ConfigureController {
     @Throws(FileNotFoundException::class, DocumentException::class)
     fun showOpenings(openingId: Long,
                      type: String?,
-                     page: String?,
-                     emptyrows: Long = 0,
-                     request: HttpServletRequest): String {
+                     pageOrientation: String?,
+                     emptyRows: Int = 0,
+                     request: HttpServletRequest
+    ): String {
         val opening = openings.getOne(openingId)
         if (cannotEditCircle(opening.circle!!.id!!, request))
             return "redirect:/configure/" + opening.circle!!.id + "?error"
@@ -418,7 +419,7 @@ class ConfigureController {
         val document = Document()
         val export = ExportType.valueOf(type!!)
 
-        if (page.equals("portrait")) {
+        if (pageOrientation.equals("portrait")) {
             document.pageSize = PageSize.A4
         } else {
             document.pageSize = PageSize.A4.rotate()
@@ -433,13 +434,13 @@ class ConfigureController {
         document.setMargins(20.0f, 20.0f, 30.0f, 30.0f)
         document.newPage()
 
-        val table = PdfPTable(export.getHeader().size)
-        table.setWidths(export.getWidths())
+        val table = PdfPTable(export.header.size)
+        table.setWidths(export.widths)
         table.widthPercentage = 100f
         addTableHeader(table, export)
-        val added = addRows(table, export, opening)
-        addEmptyRows(table, export, emptyrows)
-        if ((emptyrows + added) == 0L) { // <-- In case of empty document
+        val orderRows = addOrderRows(table, export, opening)
+        addEmptyRows(table, export, emptyRows)
+        if ((emptyRows + orderRows) == 0) { // <-- In case of empty document
             document.add(Chunk(""));
         }
 
@@ -451,7 +452,7 @@ class ConfigureController {
     private fun addTableHeader(table: PdfPTable, export: ExportType) {
         table.headerRows = 1
         val font = Font(Font.FontFamily.UNDEFINED, 10.0f)
-        export.getHeader().forEach(Consumer { columnTitle ->
+        export.header.forEach(Consumer { columnTitle ->
             val header = PdfPCell()
             header.horizontalAlignment = Element.ALIGN_CENTER
             header.verticalAlignment = Element.ALIGN_CENTER
@@ -462,14 +463,14 @@ class ConfigureController {
         })
     }
 
-    private fun addRows(table: PdfPTable, export: ExportType, opening: OpeningEntity): Long {
-        val ordersList: List<OrderEntity> = orders.findToExport(opening.id!!, export.getOrderByFunction())
+    private fun addOrderRows(table: PdfPTable, export: ExportType, opening: OpeningEntity): Int {
+        val ordersList: List<OrderEntity> = orders.findToExport(opening.id!!, export.orderByFunction)
         for (i in ordersList.indices)
             ordersList[i].artificialTransientId = i + 1
 
         val font = Font(Font.FontFamily.UNDEFINED, 10.0f)
-        ordersList.forEach { order ->
-            export.getFields().forEach { column ->
+        for (order in ordersList) {
+            for (column in export.fields) {
                 val cell = PdfPCell()
                 cell.horizontalAlignment = Element.ALIGN_CENTER
                 cell.verticalAlignment = Element.ALIGN_CENTER
@@ -478,14 +479,14 @@ class ConfigureController {
                 table.addCell(cell)
             }
         }
-        return ordersList.size.toLong();
+        return ordersList.size;
     }
 
-    private fun addEmptyRows(table: PdfPTable, export: ExportType, emptyRows: Long) {
+    private fun addEmptyRows(table: PdfPTable, export: ExportType, emptyRows: Int) {
         for (i in 1..emptyRows) {
-            export.getFields().forEach {
+            export.fields.forEach { _ ->
                 val cell = PdfPCell()
-                cell.phrase = Phrase(" ")
+                cell.phrase = Phrase(" ") // <-- Needs a whitespace
                 cell.isNoWrap = false
                 table.addCell(cell)
             }

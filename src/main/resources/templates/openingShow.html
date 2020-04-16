@@ -103,14 +103,14 @@
 				</div>
 				<div style="display: inline-block">
 					<span class="note" style="margin-bottom: 0" th:text="#{lang.export.page_orientation}">Select page orientation:</span>
-					<select name="page">
+					<select name="pageOrientation">
 						<option selected value="landscape" th:text="#{lang.export.landscape}">Landscape</option>
 						<option value="portrait" th:text="#{lang.export.portrait}">Portrait</option>
 					</select>
 				</div>
 				<div style="display: inline-block">
 					<span class="note" style="margin-bottom: 0" th:text="#{lang.export.empty_rows}">Add empty rows:</span>
-					<input name="emptyrows" type="number" th:value="${opening.maxOrder - #lists.size(orders)}" min="0" max="200"/>
+					<input name="emptyRows" type="number" th:value="${opening.maxOrder - #lists.size(orders)}" min="0" max="200"/>
 				</div>
 				<div style="display: inline-block">
 					<input type="hidden" name="openingId" value="0" th:value="${openingId}" />
