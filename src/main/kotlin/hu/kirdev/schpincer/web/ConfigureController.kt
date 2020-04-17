@@ -23,6 +23,11 @@ import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
+enum class PageTypes(val orientation: String) {
+    PORTRAIT("portrait"),
+    LANDSCAPE("landscape")
+}
+
 @Controller
 class ConfigureController {
 
@@ -419,7 +424,7 @@ class ConfigureController {
         val document = Document()
         val export = ExportType.valueOf(type!!)
 
-        if (pageOrientation.equals("portrait")) {
+        if (pageOrientation.equals(PageTypes.PORTRAIT.orientation)) {
             document.pageSize = PageSize.A4
         } else {
             document.pageSize = PageSize.A4.rotate()
@@ -440,13 +445,17 @@ class ConfigureController {
         addTableHeader(table, export)
         val orderRows = addOrderRows(table, export, opening)
         addEmptyRows(table, export, emptyRows)
-        if ((emptyRows + orderRows) == 0) { // <-- In case of empty document
-            document.add(Chunk(""));
-        }
+        isDocumentEmpty(emptyRows, orderRows, document)
 
         document.add(table)
         document.close()
         return "redirect:/cdn/export/$name"
+    }
+
+    private fun isDocumentEmpty(emptyRows: Int, orderRows: Int, document: Document) {
+        if ((emptyRows + orderRows) == 0) {
+            document.add(Chunk(""));
+        }
     }
 
     private fun addTableHeader(table: PdfPTable, export: ExportType) {
@@ -486,7 +495,8 @@ class ConfigureController {
         for (i in 1..emptyRows) {
             export.fields.forEach { _ ->
                 val cell = PdfPCell()
-                cell.phrase = Phrase(" ") // <-- Needs a whitespace
+                cell.phrase = Phrase(" ") // NOTE: Empty phrases are ignored. Therefore at least
+                                                 // one whitespace character is needed to be added.
                 cell.isNoWrap = false
                 table.addCell(cell)
             }
