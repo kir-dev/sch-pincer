@@ -52,7 +52,7 @@ data class OrderEntity(
     var comment: String,
 
     @Column
-    var room: @Size(max = 8) String = "m/a",
+    var room: @Size(max = 8) String = "",
     
     @Column
     var price: Int = 0,

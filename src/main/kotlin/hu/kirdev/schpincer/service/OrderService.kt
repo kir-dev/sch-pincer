@@ -8,7 +8,7 @@ import hu.kirdev.schpincer.dto.OrderDetailsDto
 import hu.kirdev.schpincer.model.*
 import hu.kirdev.schpincer.web.component.calculateExtra
 import hu.kirdev.schpincer.web.getUserId
-import hu.kirdev.schpincer.web.getUserIfPresents
+import hu.kirdev.schpincer.web.getUserIfPresent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -21,9 +21,11 @@ import javax.servlet.http.HttpServletRequest
 private val List<OrderEntity>.highestPriority: Int
     get() = this.maxBy { it.priority }?.priority ?: 1
 
-const val ORDER_ABSOLUTE = "absolute"
-const val ORDER_GROUPED = "grouped"
-const val ORDER_ROOMS = "rooms"
+enum class OrderStrategy(val representation: String) {
+    ORDER_ABSOLUTE("absolute"),
+    ORDER_GROUPED("grouped"),
+    ORDER_ROOMS("rooms");
+}
 
 const val RESPONSE_NO_ROOM_SET = "NO_ROOM_SET"
 const val RESPONSE_INTERNAL_ERROR = "INTERNAL_ERROR"
@@ -97,7 +99,7 @@ open class OrderService {
     @Transactional
     @Throws(IOException::class)
     open fun makeOrder(request: HttpServletRequest, id: Long, itemCount: Int, time: Long, comment: String, detailsJson: String): ResponseEntity<String> {
-        val user = request.getUserIfPresents() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
+        val user = request.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
         if (user.room.isEmpty())
             return responseOf(RESPONSE_NO_ROOM_SET)
 
@@ -232,11 +234,11 @@ open class OrderService {
 
     open fun findToExport(openingId: Long, orderBy: String): List<OrderEntity> {
         return when (orderBy) {
-            ORDER_ABSOLUTE -> appendArtificialId(repo.findAllByOpeningIdAndStatusNotOrderByPriorityDescDateAsc(openingId, OrderStatus.CANCELLED))
+            OrderStrategy.ORDER_ABSOLUTE.representation -> appendArtificialId(repo.findAllByOpeningIdAndStatusNotOrderByPriorityDescDateAsc(openingId, OrderStatus.CANCELLED))
 
-            ORDER_GROUPED -> appendArtificialId(repo.findAllByOpeningIdAndStatusNotOrderByIntervalIdAscPriorityDescDateAsc(openingId, OrderStatus.CANCELLED))
+            OrderStrategy.ORDER_GROUPED.representation -> appendArtificialId(repo.findAllByOpeningIdAndStatusNotOrderByIntervalIdAscPriorityDescDateAsc(openingId, OrderStatus.CANCELLED))
 
-            ORDER_ROOMS -> appendArtificialId(repo.findAllByOpeningIdAndStatusNot(openingId, OrderStatus.CANCELLED)
+            OrderStrategy.ORDER_ROOMS.representation -> appendArtificialId(repo.findAllByOpeningIdAndStatusNot(openingId, OrderStatus.CANCELLED)
                     .groupBy { it.intervalId }
                     .entries
                     .map { intervals -> Pair(intervals.key, intervals.value.groupBy { it.room }) }

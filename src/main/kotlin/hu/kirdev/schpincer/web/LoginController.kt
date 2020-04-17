@@ -3,9 +3,7 @@ package hu.kirdev.schpincer.web
 import hu.gerviba.authsch.AuthSchAPI
 import hu.gerviba.authsch.response.ProfileDataResponse
 import hu.gerviba.authsch.struct.Scope
-import hu.kirdev.schpincer.config.ADMIN_ROLE
-import hu.kirdev.schpincer.config.LEADER_ROLE
-import hu.kirdev.schpincer.config.USER_ROLE
+import hu.kirdev.schpincer.config.Role
 import hu.kirdev.schpincer.model.CardType
 import hu.kirdev.schpincer.model.UserEntity
 import hu.kirdev.schpincer.service.UserService
@@ -91,13 +89,13 @@ open class LoginController {
 
     private fun getAuthorities(user: UserEntity): List<GrantedAuthority> {
         val authorities: MutableList<GrantedAuthority> = ArrayList()
-        authorities.add(SimpleGrantedAuthority("ROLE_$USER_ROLE"))
+        authorities.add(SimpleGrantedAuthority("ROLE_${Role.USER.name}"))
         if (user.sysadmin) {
-            authorities.add(SimpleGrantedAuthority("ROLE_$ADMIN_ROLE"))
-            authorities.add(SimpleGrantedAuthority("ROLE_$LEADER_ROLE"))
+            authorities.add(SimpleGrantedAuthority("ROLE_${Role.ADMIN.name}"))
+            authorities.add(SimpleGrantedAuthority("ROLE_${Role.LEADER}.name"))
         }
-        if (user.permissions.contains("ROLE_$LEADER_ROLE"))
-            authorities.add(SimpleGrantedAuthority("ROLE_$LEADER_ROLE"))
+        if (user.permissions.contains("ROLE_${Role.LEADER.name}"))
+            authorities.add(SimpleGrantedAuthority("ROLE_${Role.LEADER.name}"))
         return authorities
     }
 

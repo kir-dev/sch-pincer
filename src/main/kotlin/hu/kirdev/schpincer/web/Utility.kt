@@ -53,7 +53,7 @@ fun HttpServletRequest.hasUser() = this.session.getAttribute(USER_SESSION_ATTRIB
 
 fun HttpServletRequest.getUser() = DI.instance.users.getById(this.session.getAttribute(USER_SESSION_ATTRIBUTE_NAME) as String)
 
-fun HttpServletRequest.getUserIfPresents() = if (hasUser()) DI.instance.users.getById(this.session.getAttribute(USER_SESSION_ATTRIBUTE_NAME) as String) else null
+fun HttpServletRequest.getUserIfPresent() = if (hasUser()) DI.instance.users.getById(this.session.getAttribute(USER_SESSION_ATTRIBUTE_NAME) as String) else null
 
 fun HttpServletRequest.getUserId() = this.session.getAttribute(USER_SESSION_ATTRIBUTE_NAME) as String
 

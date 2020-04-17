@@ -187,7 +187,7 @@ open class ApiController {
     @GetMapping("/user/id")
     @ResponseBody
     fun setRoom(request: HttpServletRequest): String {
-        return request.getUserIfPresents()?.uid?.sha256() ?: "ERROR"
+        return request.getUserIfPresent()?.uid?.sha256() ?: "ERROR"
     }
 
     @Deprecated("There is an issue with allowed item counts, DO NOT remove this functionallity")

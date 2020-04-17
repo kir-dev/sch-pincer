@@ -10,9 +10,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 
-const val ADMIN_ROLE  = "ADMIN"
-const val LEADER_ROLE = "LEADER"
-const val USER_ROLE   = "USER"
+enum class Role {
+    ADMIN,
+    LEADER,
+    USER;
+}
 
 @EnableWebSecurity
 @Configuration
@@ -25,10 +27,10 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
                         "/americano", "/pizzasch", "/reggelisch", "/kakas", "/langosch", "/vodor", "/dzsajrosz").permitAll()
                 .antMatchers("/loggedin", "/login").permitAll()
                 .antMatchers("/api/**").permitAll()
-                .antMatchers("/profile", "/profile/**").hasRole(USER_ROLE)
-                .antMatchers("/configure/**").hasAnyRole(LEADER_ROLE, ADMIN_ROLE)
-                .antMatchers("/admin", "/admin/**").hasRole(ADMIN_ROLE)
-                .antMatchers("/admin", "/admin/**").hasRole(USER_ROLE)
+                .antMatchers("/profile", "/profile/**").hasRole(Role.USER.name)
+                .antMatchers("/configure/**").hasAnyRole(Role.LEADER.name, Role.ADMIN.name)
+                .antMatchers("/admin", "/admin/**").hasRole(Role.ADMIN.name)
+                .antMatchers("/admin", "/admin/**").hasRole(Role.USER.name)
                 .and()
                 .formLogin()
                 .loginPage("/login")

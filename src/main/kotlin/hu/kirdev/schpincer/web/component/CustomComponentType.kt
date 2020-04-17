@@ -7,6 +7,8 @@ import hu.kirdev.schpincer.model.OrderEntity
 import java.io.IOException
 import java.util.*
 
+const val ITEM_COUNT_COMPONENT_TYPE = "ITEM_COUNT"
+
 enum class CustomComponentType {
     EXTRA_SELECT {
         override fun processPrices(cca: CustomComponentAnswer, oe: OrderEntity, ccm: CustomComponentModel): Int {
@@ -95,7 +97,7 @@ fun calculateExtra(detailsJson: String, order: OrderEntity, ie: ItemEntity): Ord
     val mapped: Map<String, CustomComponentModel> = models.models.associateBy({ it.name }, { it })
 
     for (model in models.models) {
-        if (model.type == "ITEM_COUNT") {
+        if (model.type == ITEM_COUNT_COMPONENT_TYPE) {
             details.minCount = model.min
             details.maxCount = model.max
         }

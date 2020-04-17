@@ -1,7 +1,7 @@
 package hu.kirdev.schpincer.web.component
 
 import hu.kirdev.schpincer.model.OrderEntity
-import hu.kirdev.schpincer.service.ORDER_GROUPED
+import hu.kirdev.schpincer.service.OrderStrategy
 
 enum class ExportType(
         val isPortrait: Boolean,
@@ -12,7 +12,7 @@ enum class ExportType(
         val fields: List<(OrderEntity) -> String>
 ) {
 
-    DEFAULT(false, "Default", ORDER_GROUPED,
+    DEFAULT(false, "Default", OrderStrategy.ORDER_GROUPED.representation,
             listOf("ID", "NÉV", "IDÖSÁV", "TERMÉK", "EXTRA", "MEGJEGYZÉS", "ÁR"), intArrayOf(3, 8, 5, 10, 5, 10, 4),
             listOf<(OrderEntity) -> String>(
                     { it.artificialTransientId.toString() },
@@ -23,7 +23,7 @@ enum class ExportType(
                     { it.comment },
                     { it.price.toString() }
             )),
-    DZSAJROSZ(false, "Dzsájrosz", ORDER_GROUPED,
+    DZSAJROSZ(false, "Dzsájrosz", OrderStrategy.ORDER_GROUPED.representation,
             listOf("ID", "NÉV", "SZOBA", "TERMÉK", "HAGYMA", "ÖNTET", "SAJT", "EXTRA", "MEGJEGYZÉS", "ÁR"), intArrayOf(3, 8, 5, 10, 8, 10, 8, 10, 20, 4),
             listOf<(OrderEntity) -> String>(
                     { it.artificialTransientId.toString() },
@@ -37,7 +37,7 @@ enum class ExportType(
                     { it.comment },
                     { it.price.toString() }
             )),
-    AMERICANO(false, "Americano", ORDER_GROUPED,
+    AMERICANO(false, "Americano", OrderStrategy.ORDER_GROUPED.representation,
             listOf("ID", "IDÖSÁV", "NÉV", "SZOBA", "TERMÉK", "EXTRA", "MEGJEGYZÉS", "ÁR"), intArrayOf(2, 4, 5, 2, 3, 7, 12, 2),
             listOf<(OrderEntity) -> String>(
                     { it.artificialTransientId.toString() },
@@ -49,7 +49,7 @@ enum class ExportType(
                     { it.comment },
                     { it.price.toString() }
             )),
-    PIZZASCH(false, "Pizzasch", ORDER_GROUPED,
+    PIZZASCH(false, "Pizzasch", OrderStrategy.ORDER_GROUPED.representation,
             listOf("ID", "NÉV", "IDÖSÁV", "TERMÉK", "MEGJEGYZÉS", "ÁR"), intArrayOf(3, 8, 5, 10, 10, 4),
             listOf<(OrderEntity) -> String>(
                     { it.artificialTransientId.toString() },
@@ -59,7 +59,7 @@ enum class ExportType(
                     { it.comment },
                     { it.price.toString() }
             )),
-    FOODEX(true, "Foodex", ORDER_GROUPED,
+    FOODEX(true, "Foodex", OrderStrategy.ORDER_GROUPED.representation,
             listOf("ID", "NÉV", "TERMÉK", "MEGJEGYZÉS", "ÁR"), intArrayOf(3, 8, 5, 10, 4),
             listOf<(OrderEntity) -> String>(
                     { it.artificialTransientId.toString() },
