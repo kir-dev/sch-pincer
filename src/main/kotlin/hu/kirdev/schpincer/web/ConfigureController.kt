@@ -23,6 +23,11 @@ import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
+enum class PageTypes(val orientation: String) {
+    PORTRAIT("portrait"),
+    LANDSCAPE("landscape")
+}
+
 @Controller
 class ConfigureController {
 
@@ -408,7 +413,10 @@ class ConfigureController {
     @Throws(FileNotFoundException::class, DocumentException::class)
     fun showOpenings(openingId: Long,
                      type: String?,
-                     request: HttpServletRequest): String {
+                     pageOrientation: String?,
+                     emptyRows: Int = 0,
+                     request: HttpServletRequest
+    ): String {
         val opening = openings.getOne(openingId)
         if (cannotEditCircle(opening.circle!!.id!!, request))
             return "redirect:/configure/" + opening.circle!!.id + "?error"
@@ -416,7 +424,7 @@ class ConfigureController {
         val document = Document()
         val export = ExportType.valueOf(type!!)
 
-        if (export.isPortrait()) {
+        if (pageOrientation.equals(PageTypes.PORTRAIT.orientation)) {
             document.pageSize = PageSize.A4
         } else {
             document.pageSize = PageSize.A4.rotate()
@@ -431,21 +439,29 @@ class ConfigureController {
         document.setMargins(20.0f, 20.0f, 30.0f, 30.0f)
         document.newPage()
 
-        val table = PdfPTable(export.getHeader().size)
-        table.setWidths(export.getWidths())
+        val table = PdfPTable(export.header.size)
+        table.setWidths(export.widths)
         table.widthPercentage = 100f
         addTableHeader(table, export)
-        addRows(table, export, opening)
+        val orderRows = addOrderRows(table, export, opening)
+        addEmptyRows(table, export, emptyRows)
+        isDocumentEmpty(emptyRows, orderRows, document)
 
         document.add(table)
         document.close()
         return "redirect:/cdn/export/$name"
     }
 
+    private fun isDocumentEmpty(emptyRows: Int, orderRows: Int, document: Document) {
+        if ((emptyRows + orderRows) == 0) {
+            document.add(Chunk(""));
+        }
+    }
+
     private fun addTableHeader(table: PdfPTable, export: ExportType) {
         table.headerRows = 1
         val font = Font(Font.FontFamily.UNDEFINED, 10.0f)
-        export.getHeader().forEach(Consumer { columnTitle ->
+        export.header.forEach(Consumer { columnTitle ->
             val header = PdfPCell()
             header.horizontalAlignment = Element.ALIGN_CENTER
             header.verticalAlignment = Element.ALIGN_CENTER
@@ -456,18 +472,31 @@ class ConfigureController {
         })
     }
 
-    private fun addRows(table: PdfPTable, export: ExportType, opening: OpeningEntity) {
-        val ordersList: List<OrderEntity> = orders.findToExport(opening.id!!, export.getOrderByFunction())
+    private fun addOrderRows(table: PdfPTable, export: ExportType, opening: OpeningEntity): Int {
+        val ordersList: List<OrderEntity> = orders.findToExport(opening.id!!, export.orderByFunction)
         for (i in ordersList.indices)
             ordersList[i].artificialTransientId = i + 1
 
         val font = Font(Font.FontFamily.UNDEFINED, 10.0f)
-        ordersList.forEach { order ->
-            export.getFields().forEach { column ->
+        for (order in ordersList) {
+            for (column in export.fields) {
                 val cell = PdfPCell()
                 cell.horizontalAlignment = Element.ALIGN_CENTER
                 cell.verticalAlignment = Element.ALIGN_CENTER
                 cell.phrase = Phrase(column.apply(order), font)
+                cell.isNoWrap = false
+                table.addCell(cell)
+            }
+        }
+        return ordersList.size;
+    }
+
+    private fun addEmptyRows(table: PdfPTable, export: ExportType, emptyRows: Int) {
+        for (i in 1..emptyRows) {
+            export.fields.forEach { _ ->
+                val cell = PdfPCell()
+                cell.phrase = Phrase(" ") // NOTE: Empty phrases are ignored. Therefore at least
+                                                 // one whitespace character is needed to be added.
                 cell.isNoWrap = false
                 table.addCell(cell)
             }
