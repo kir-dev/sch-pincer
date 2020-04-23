@@ -1,6 +1,5 @@
 package hu.kirdev.schpincer.service
 
-
 import hu.kirdev.schpincer.dao.OpeningRepository
 import hu.kirdev.schpincer.dao.TimeWindowRepository
 import hu.kirdev.schpincer.model.OpeningEntity

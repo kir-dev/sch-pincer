@@ -46,7 +46,12 @@ spring.servlet.multipart.max-request-size=2000KB
 - Open mysql console
 - `use schpincer;`
 - Make sure you've logged in at least once
-- `UPDATE `users` SET `sysadmin`=1 WHERE `email`='YOUR_EMAIL';`
+- Use eg. this query to grant yourself sysadmin, or provide the `schincer.sysadmin=YOUR_AUTHSCH_UUID` to any of the properties files
+
+```sql
+`UPDATE `users` SET `sysadmin`=1 WHERE `email`='YOUR_EMAIL';`
+```
+
 - Relog (log out and in)
 - You will now see the two administration buttons
 
