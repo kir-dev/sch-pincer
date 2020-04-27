@@ -1815,6 +1815,10 @@ textarea {
 	text-align: right;
 }
 
+.dashboard.members table td:nth-of-type(3) {
+	text-align: right;
+}
+
 .dashboard table td:nth-of-type(2) i {
 	position: relative;
 	top: -4px;

@@ -20,8 +20,8 @@
 			<div class="decoration admin">
 				<i class="material-icons main">how_to_reg</i>
 			</div>
-			<h3 th:text="#{lang.configure.title-member}" class="topless">Prompt text comes here?</h3>
-			<form action="#" th:action="@{/configure/__${circleId}__/members/new}" method="post" enctype="multipart/form-data">
+			<h3 th:text="#{lang.configure.title-member-__${mode}__}" class="topless">Prompt text comes here?</h3>
+			<form action="#" th:action="@{/configure/__${circleId}__/members/__${mode}__}" method="post" enctype="multipart/form-data">
 				<table class="form full-table" th:object="${member}">
 					<input type="hidden" th:field="*{id}" />
 					<tr>
@@ -37,11 +37,15 @@
 						<td><input type="text" th:field="*{rank}"/></td>
 					</tr>
 					<tr>
+						<td th:text="#{lang.configure.member.sort}">Sort</td>
+						<td><input type="number" th:field="*{sort}"/></td>
+					</tr>
+					<tr>
 						<td th:text="#{lang.configure.member.profile}">Profile</td>
 						<td><input type="file" name="avatarFile"/></td>
 					</tr>
 				</table>
-				<input class="button" type="submit" th:value="#{lang.configure.title-member}" /> 
+				<input class="button" type="submit" th:value="#{lang.configure.title-member-__${mode}__}" />
 			</form>
 		</div>
 	</div>
