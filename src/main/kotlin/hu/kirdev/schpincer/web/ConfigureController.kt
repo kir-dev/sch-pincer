@@ -77,7 +77,8 @@ open class ConfigureController {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circleId", circleId)
         model.addAttribute("member", CircleMemberEntity())
-        return "memberAdd"
+        model.addAttribute("mode", "new")
+        return "memberModify"
     }
 
     @PostMapping("/configure/{circleId}/members/new")
@@ -91,6 +92,40 @@ open class ConfigureController {
         val file = avatarFile?.uploadFile("avatars")
         cme.avatar = if (file == null) "image/blank-avatar.png" else "cdn/avatars/$file"
         members.save(cme)
+        return "redirect:/configure/$circleId"
+    }
+
+    @GetMapping("/configure/{circleId}/members/edit/{memberId}")
+    fun editMember(@PathVariable circleId: Long,
+                   @PathVariable memberId: Long,
+                   model: Model): String? {
+        model.addAttribute("circles", circles.findAllForMenu())
+        model.addAttribute("circleId", circleId)
+        model.addAttribute("mode", "edit")
+        model.addAttribute("member", members.getOne(memberId))
+        return "memberModify"
+    }
+
+    @PostMapping("/configure/{circleId}/members/edit")
+    fun editMember(@PathVariable circleId: Long,
+                   cme: @Valid CircleMemberEntity,
+                   @RequestParam id: Long,
+                   @RequestParam avatarFile: MultipartFile?,
+                   request: HttpServletRequest
+    ): String {
+        if (cannotEditCircleNoPR(circleId, request)) return "redirect:/configure/$circleId?error"
+
+        val original = members.getOne(id)
+        if (original.circle!!.id != circleId) return  "redirect:/configure/$circleId?error"
+
+        original.name = cme.name
+        original.precedence = cme.precedence
+        original.rank = cme.rank
+        original.sort = cme.sort
+        val file = avatarFile?.uploadFile("avatars")
+        if (file != null) original.avatar = "cdn/avatars/$file"
+
+        members.save(original)
         return "redirect:/configure/$circleId"
     }
 

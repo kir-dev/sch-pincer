@@ -64,7 +64,7 @@
                     th:text="#{lang.configure.title-item}">New item</a>
         </div>
         
-        <div class="highlighted dashboard latest" th:unless="${pr}">
+        <div class="highlighted dashboard members latest" th:unless="${pr}">
 			<table class="form full-table no-top-table">
 				<tr>
 					<th th:text="#{lang.configure.member-list}">Members</th>
@@ -75,13 +75,14 @@
 					<td th:text="*{name}">Test Person</td>
 					<td th:text="*{rank}">Member</td>
 					<td>
+						<a href="#" th:href="@{/configure/__${circleId}__/members/edit/__*{id}__}"><i class="material-icons">edit</i></a>
 						<a href="#" th:href="@{/configure/__${circleId}__/members/delete/__*{id}__}"><i class="material-icons">delete</i></a>
 					</td>
 				</tr>
 			</table>
 
             <a class="button" href="#" th:href="@{/configure/__${circleId}__/members/new}" 
-                    th:text="#{lang.configure.title-member}">New member</a>
+                    th:text="#{lang.configure.title-member-new}">New member</a>
 		</div>
 		
 		<div style="margin-top: 40px" th:if="${pr}"></div>
