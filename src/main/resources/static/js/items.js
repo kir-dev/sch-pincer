@@ -343,9 +343,9 @@ function showPopup(id) {
             $("#popup-custom").html(generateCustom(data.detailsConfigJson, data));
             $("#popup-timewindows").html(generateTimes(data.timeWindows, data.categoryMax)).css({display: data.timeWindows.length > 1 ? "block" : "none"});
             $("#popup-comment").val("");
-            $("#popup-orderable-block").css({display: data.orderable && !data.perosnallyOrderable ? "block" : "none"});
+            $("#popup-orderable-block").css({display: data.orderable && !data.personallyOrderable ? "block" : "none"});
             $("#popup-not-orderable").css({display: data.orderable || data.personallyOrderable ? "none" : "block"});
-            $("#popup-perosnally").css({display: data.personallyOrderable ? "block" : "none"});
+            $("#popup-personally").css({display: data.personallyOrderable ? "block" : "none"});
 
             $("#popup").removeClass("inactive");
             $("#blur-section").addClass("blur");
