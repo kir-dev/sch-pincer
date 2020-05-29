@@ -2,6 +2,7 @@ package hu.kirdev.schpincer.model
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo
 import com.fasterxml.jackson.annotation.JsonIdentityReference
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.ObjectIdGenerators.PropertyGenerator
 import java.io.Serializable
 import javax.persistence.*
@@ -14,9 +15,12 @@ data class TimeWindowEntity(
     @Column
     var id: Long? = null,
 
-    @JsonIdentityInfo(generator = PropertyGenerator::class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @field:JsonIdentityInfo(generator = PropertyGenerator::class, property = "id")
+    @field:JsonIdentityReference(alwaysAsId = true)
+    @field:ManyToOne(fetch = FetchType.LAZY)
+    @get:JsonIdentityInfo(generator = PropertyGenerator::class, property = "id")
+    @get:JsonIdentityReference(alwaysAsId = true)
+    @get:ManyToOne(fetch = FetchType.LAZY)
     var opening: OpeningEntity? = null,
 
     @Column
