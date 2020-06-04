@@ -1,38 +1,40 @@
 function showEdit() {
-    $("#room").css({display: "none"});
-    $("#room-edit").css({display: "none"});
-    $("#room-form").css({display: "block"});
-    $("#saved").css({display: "none"});
+    document.getElementById("room").style.display = "none";
+    document.getElementById("room-edit").style.display = "none";
+    document.getElementById("room-form").style.display = "block";
+    document.getElementById("saved").style.display = "none";
 }
 
 function showRoom(room) {
-    $("#room").text(room).css({display: "inline-block"});
-    $("#room-edit").css({display: "inline-block"});
-    $("#room-form").css({display: "none"});
-    $("#saved").css({display: "inline-block"});
+    const roomEl = document.getElementById("room");
+    roomEl.textContent = room;
+    roomEl.style.display = "inline-block";
+    document.getElementById("room").style.display = "inline-block";
+    document.getElementById("room-form").style.display = "none";
+    document.getElementById("saved").style.display = "inline-block";
 }
 
 function setRoom() {
-	$.post({
-		dataType: "text",
-		url: URL_BASE + "api/user/room",
-		data: {room: $("#room-setter").val()}
-	}).done(function() {
-    	showRoom($("#room-setter").val());
-	}).fail(function(e) {
-		console.error("Cannot send POST request.");
-	});
+    const room = document.getElementById("room-setter").value;
+    fetch(`${URL_BASE}api/user/room`,
+        method: "POST",
+        body: JSON.stringify({ room })
+    )
+    .then(() => showRoom(room))
+    .catch(e => {
+        console.error("Cannot send POST request.");
+        console.error(e);
+    });
 }
 
 function cancelItem(id) {
-	$.post({
-		dataType: "text",
-		url: URL_BASE + "api/order/delete",
-		data: {id: id}
-	}).done(function() {
-		location.reload();
-	}).fail(function(e) {
-		console.error(e);
-		console.error("Cannot send DELETE request.");
-	});
+    fetch(`${URL_BASE}api/order/delete`,
+        method: "POST",
+        body: JSON.stringify({ id })
+    )
+    .then(() => location.reload())
+    .catch(e => {
+        console.error("Cannot send DELETE request.");
+        console.error(e);
+    });
 }

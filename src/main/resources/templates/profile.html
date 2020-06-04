@@ -36,9 +36,9 @@
 					<td>
 						<span class="edit">
 							<ins id="room" th:text="${session.user?.room} ?: #{lang.profile.not-set}">SCH 1920</ins>
-							<a id="room-edit" href="#" onclick="showEdit(); return false"><i class="material-icons">edit</i></a>
-							<form id="room-form" style="display: none" onsubmit="setRoom(); return false" action="#" method="GET">
-								<input type="text" id="room-setter" maxlength="8" autocomplete="off" onfocusout="setRoom();" />
+							<a id="room-edit" href="#" onclick="showEdit"><i class="material-icons">edit</i></a>
+							<form id="room-form" style="display: none" onsubmit="setRoom" action="#" method="GET">
+								<input type="text" id="room-setter" maxlength="8" autocomplete="off" onfocusout="setRoom" />
 							</form>
 							<ins id="saved" th:text="#{lang.profile.saved}">Elmentve</ins>
 						</span>

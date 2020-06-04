@@ -6,51 +6,38 @@ var latestData;
 function appendNext(profile = 0) {
     if (page === 0)
         clearAll();
-    
-    $.ajax({
-        dataType : "json",
-        url : URL_BASE + "api/items/" + getFilter("/") + (profile !== Number(0) ? '?circle=' + profile : ''),
-        success : function(data) {
+    fetch(`${URL_BASE}api/items/${getFilter("/")}${(profile !== Number(0) ? '?circle=' + profile : ''}`)})
+        .then(res => res.json())
+        .then(data => {
             endReached = true;
             if (data.length === 0) {
-                $("#loading").css({
-                    display : "none"
-                });
-                $("#list-end").css({
-                    display : "none"
-                });
-                $("#no-results").css({
-                    display : "inline-block"
-                });
+                document.getElementById("loading").style.display = "none";
+                document.getElementById("list-end").style.display = "none";
+                document.getElementById("no-results").style.display = "inline-block";
                 return;
             }
             for (var item in data)
                 addItem(data[item]);
-            $("#list-end").css({display : "inline-block"});
-            $("#loading").css({display : "none"});
-        }
-    });
+            document.getElementById("list-end").style.display = "inline-block";
+            document.getElementById("loading").style.display = "none";
+        })
 }
 
 function getFilter(separator) {
 	if (location.search.includes("?now"))
-		return "now" + separator;
+		return `now${separator}`;
 	if (location.search.includes("?tomorrow"))
-		return "tomorrow" + separator;
+		return `tomorrow${separator}`;
 	return "";
 }
 
 function searchSubmit() {
-    searchFor($("#search-input").val());
+    searchFor(document.getElementById("search-input").value);
 }
 
 function showLoading() {
-    $("#loading").css({
-        display : "inline-block"
-    });
-    $("#list-end").css({
-        display : "none"
-    });
+    document.getElementById("search-input").style.display = "inline-block";
+    document.getElementById("list-end").style.display = "none";
 }
 
 function searchFor(keyword) {
@@ -66,51 +53,42 @@ function searchFor(keyword) {
     clearAll();
     updateUrl(keyword);
     showLoading();
-    
-    $.ajax({
-        dataType : "json",
-        url : URL_BASE + "api/search/?q=" + keyword,
-        success : function(data) {
+    fetch(`${URL_BASE}api/search/?q=${keyword}`)
+        .then(res => res.json())
+        .then(data => {
             endReached = true;
             if (data.length === 0) {
-                $("#loading").css({
-                    display : "none"
-                });
-                $("#list-end").css({
-                    display : "none"
-                });
-                $("#no-results").css({
-                    display : "inline-block"
-                });
+                document.getElementById("loading").style.display = "none";
+                document.getElementById("list-end").style.display = "none";
+                document.getElementById("no-results").style.display = "inline-block";
                 return;
             }
             for (var item in data)
                 addItem(data[item]);
-            $("#list-end").css({display : "inline-block"});
-            $("#loading").css({display : "none"});
-        }
-    });
+            document.getElementById("list-end").style.display = "inline-block";
+            document.getElementById("loading").style.display = "none";
+        });
 }
 
 function updateUrl(keyword) {
     if (keyword == null) {
         window.history.pushState({
-            route : "/items/" + getFilter("")
-        }, document.title, "/items/" + getFilter(""));        
+            route: `/items/${getFilter("")}`
+        }, document.title, `/items/${getFilter("")}`);
     } else {
         window.history.pushState({
-            route : "/items/?q=" + encodeURI(keyword)
-        }, document.title, "/items/?q=" + encodeURI(keyword));
+            route: `/items/?q=${encodeURI(keyword)}`
+        }, document.title, `/items/?q=${encodeURI(keyword)}`);
     }
 }
 
 function addItem(item) {
-    $("#item-set").append(formatItem(item));
+    document.getElementById("item-set").innerHTML += formatItem(item);
 }
 
 function clearAll() {
-    $("#no-results").css({display: "none"});
-    $("#item-set").html("");
+    document.getElementById("no-results").style.display = "none";
+    document.getElementById("item-set").innerHTML = "";
 }
 
 const STARS = [8, 100, 20, 21, 22, 23, 69, 2];
@@ -209,7 +187,7 @@ function generateCustom(json, item) {
             } else if (element.type === "ITEM_COUNT") {
                 result += generateItemCount(element);
             } else {
-                result += 'UNKNOWN TYPE: ' + element.type;
+                result += `UNKNOWN TYPE: ${element.type}`;
             }
         }
     });
@@ -253,8 +231,8 @@ function generatePizzaschSelect(element) {
         <label>${LANG[element.name]}</label>
         <select name="${element.name}" data-prices="${element.prices}" onchange="itemChangedPizzasch()" class="price-changer" id="pizzasch-select">`;
     for (var optionId = 0; optionId < element.values.length; optionId++) {
-        let value = element.values[optionId];
-        let price = element.prices[optionId];
+        const value = element.values[optionId];
+        const price = element.prices[optionId];
         result += `<option value="${optionId}">${value}${price !== 0 ? ' (+' + price + ' ' + LANG['currency'] + ')' : ''}</option>`;
     }
     result += `</select>`;
@@ -298,22 +276,22 @@ function generateExtraCheckbox(element) {
 }
 
 function itemChanged() {
-    var price = Number($("#popup-price").attr("data-base"));
+    let price = Number(document.getElementById("popup-price").getAttribute("data-base"));
     $(".form-order .price-changer").each(function(index, value) {
         if ($(this).attr("data-price"))
             price += $(this).is(':checked') ? Number($(this).attr("data-price")) : 0;
         else if ($(this).attr("data-prices"))
             price += Number($(this).attr("data-prices").split(',')[Number($(this).val())]);
     });
-    let countElement = $("#popup-count");
-    price = countElement.length !== 0 ? (price * countElement.val()) : price;
+    const countElement = document.getElementById("popup-count");
+    price = countElement.length !== 0 ? (price * countElement.value) : price;
 
-    $("#popup-price").text(price + " " + LANG['currency']);
+    document.getElementById("popup-price").textContent = `${price} ${LANG["currency"]}`;
 }
-
 
 function itemChangedPizzasch() {
 	itemChanged();
+//	document.getElementById("popup-timewindows").
     $("#popup-timewindows").html(generateTimes(latestData.timeWindows, latestData.categoryMax,$("#pizzasch-select").prop('selectedIndex') !== 0));
 }
 
@@ -368,14 +346,14 @@ function packDetails() {
         return "{answers: []}";
 
     let result = [];
-    let custom = JSON.parse(selectedItem.detailsConfigJson);
+    const custom = JSON.parse(selectedItem.detailsConfigJson);
     custom.forEach(element => {
         if (element.values !== undefined) {
             if (element.type === "EXTRA_SELECT") {
                 result.push({
             		type: "EXTRA_SELECT",
             		name: element.name,
-            		selected: [$(`select[name='${element.name}']`).val()]
+            		selected: [document.getElementById(`select[name='${element.name}']`).value]
             	});
             } else if (element.type === "EXTRA_CHECKBOX") {
                 result.push({
@@ -393,7 +371,7 @@ function packDetails() {
 	            result.push({
 	        		type: "PIZZASCH_SELECT",
 	        		name: element.name,
-	        		selected: [$(`select[name='${element.name}']`).val()]
+	        		selected: [document.getElementById(`select[name='${element.name}']`).value]
 	            });
             }
         }
@@ -477,16 +455,16 @@ function closeMessageBox() {
 }
 
 function showMessageBox(message) {
-	$("#messagebox-text").text(message);
+	document.getElementById("messagebox-text").textContent = message;
 	$(".messagebox").css({display: "inline-block"});
 }
 
 function disableScroll() {
-	$("body").css({"overflow-y": "hidden"});
+    document.getElementsByTagName("body")[0].style.overflow-y = "hidden";
 }
 
 function enableScroll() {
-	$("body").css({"overflow-y": "scroll"});
+    document.getElementsByTagName("body")[0].style.overflow-y = "scroll";
 }
 
 function limitNumber(element, min, max) {
@@ -496,25 +474,25 @@ function limitNumber(element, min, max) {
         element.value = min;
 }
 
-$(window).scroll(function() {
+window.addEventListener("scroll", function() {
     if ($(window).scrollTop() === $(document).height() - $(window).height() && !endReached) {
         appendNext();
     }
 });
 
-$(window).click(function() {
-    if (event.target === $("#popup")[0]) {
+window.addEventListener("click", function() {
+    if (event.target === document.getElementById("popup")) {
         closePopup();
     }
 });
 
-$(document).keyup(function (e) {
+document.addEventListener("keyup", e => {
     if (e.keyCode === 27) {
         closePopup();
     }
 });
 
 String.prototype.replaceAll = function(search, replacement) {
-    var target = this;
+    const target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
 };

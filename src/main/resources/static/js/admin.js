@@ -1,13 +1,11 @@
 function updateItem(id, status) {
-	$.post({
-		dataType: "text",
-		url: URL_BASE + "configure/order/update",
-        data: {id: id, status: status}
-	}).done(function(data) {
-		console.log(data);
-    	location.reload();
-	}).fail(function(e) {
-        console.error(e);
-		console.error("Cannot send UPDATE request.");
-	});
+    fetch(`${URL_BASE}configure/order/update`,
+        method: 'POST',
+        body: JSON.stringify({ id, status })
+    )
+    .then(() => location.reload())
+    .catch(err => {
+        console.error("Cannot send UPDATE request!");
+        console.error(err);
+    });
 }
