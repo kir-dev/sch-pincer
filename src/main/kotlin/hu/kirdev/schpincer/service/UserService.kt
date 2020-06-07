@@ -55,7 +55,7 @@ open class UserService {
         return true
     }
 
-    fun setRoom(userId: String, room: String) {
+    open fun setRoom(userId: String, room: String) {
         val user = getById(userId)
         user.room = room
         repo.save(user)

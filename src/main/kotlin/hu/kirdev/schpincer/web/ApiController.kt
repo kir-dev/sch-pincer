@@ -39,7 +39,7 @@ open class ApiController {
     @ResponseBody
     fun getItem(request: HttpServletRequest, @PathVariable id: Long): ItemEntityDto? {
         val item = items.getOne(id)
-        if (item == null || (request.hasUser() && !item.visibleWithoutLogin))
+        if (item == null || (!request.hasUser() && !item.visibleWithoutLogin))
             return null
         val loggedIn = request.hasUser() || request.isInInternalNetwork()
         return ItemEntityDto(item, openings.findNextOf(item.circle!!.id!!), loggedIn)
