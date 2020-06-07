@@ -393,7 +393,7 @@ open class ConfigureController {
         if (opening.circle!!.id != circleId) 
             return "redirect:/configure/$circleId?error"
         
-        model.addAttribute("exportTypes", listOf(ExportType.values()))
+        model.addAttribute("exportTypes", ExportType.values())
         model.addAttribute("openingId", opening.id)
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("orders", orders.findAllByOpening(openingId))
