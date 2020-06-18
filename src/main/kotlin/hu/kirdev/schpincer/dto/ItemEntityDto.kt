@@ -35,7 +35,7 @@ class ItemEntityDto(base: ItemEntity, opening: OpeningEntity?, loggedin: Boolean
         orderable = base.orderable && opening != null && opening.isInInterval(System.currentTimeMillis())
         service = base.service
         personallyOrderable = base.personallyOrderable
-        imageName = base.imageName
+        imageName = base.imageName ?: "/cdn/image/blank-null-item.jpg"
         nextOpeningDate = opening?.dateStart ?: 0
         timeWindows = opening?.timeWindows ?: listOf()
         orderStatus = ItemOrderableStatus.OK
