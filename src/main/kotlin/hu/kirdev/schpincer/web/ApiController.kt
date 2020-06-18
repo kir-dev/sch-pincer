@@ -176,7 +176,7 @@ open class ApiController {
     @ResponseBody
     fun setRoom(request: HttpServletRequest, @RequestParam(required = true) room: String): String {
         return try {
-            users.setRoom(request.getUserId(), room)
+            request.session.setAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME, users.setRoom(request.getUserId(), room))
             "ACK"
         } catch (e: Exception) {
             "REJECT"

@@ -70,7 +70,7 @@ data class ItemEntity(
         var personallyOrderable: Boolean = false,
 
         @Column
-        var imageName: String,
+        var imageName: String?,
 
         @Column
         var flag: Int = 0,
@@ -90,10 +90,4 @@ data class ItemEntity(
         @Column(nullable = false)
         var alias: String = ""
 
-) : Serializable {
-
-    // TODO: Remove deprecated
-    @Deprecated("Remove after java to kotlin refactor")
-    fun copy(): ItemEntity = this.copy(id = this.id)
-
-}
+) : Serializable

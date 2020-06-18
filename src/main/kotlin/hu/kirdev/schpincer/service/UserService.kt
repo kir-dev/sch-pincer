@@ -5,9 +5,9 @@ import hu.kirdev.schpincer.model.UserEntity
 import hu.kirdev.schpincer.web.sha256
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.security.NoSuchAlgorithmException
 import java.util.*
-import javax.transaction.Transactional
 
 
 @Service
@@ -55,10 +55,11 @@ open class UserService {
         return true
     }
 
-    open fun setRoom(userId: String, room: String) {
+    open fun setRoom(userId: String, room: String): UserEntity {
         val user = getById(userId)
         user.room = room
         repo.save(user)
+        return user
     }
 
 }

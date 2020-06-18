@@ -27,7 +27,7 @@
 		</div>
 		<div class="article-set">
 
-			<div th:each="circle,cStat : ${circlesRandom}" class="article orange" th:class="'article ' + ${circle.cssClassName}" th:unless="${cStat.index >= 1}">
+			<div th:each="circle,cStat : ${circlesRandom}" class="article orange" th:class="'article ' + ${circle.cssClassName}" th:unless="${cStat.index >= 1 || #lists.size(orders) != 0}">
 				<div class="picture">
 					<div class="overlay"></div>
 					<div class="image" style="background-image: url('../static/demo/pizzasch-bg.jpg')" 
@@ -49,12 +49,12 @@
 
 			<div class="article active-orders" th:if="${#lists.size(orders) > 0}">
 				<i class="material-icons background-overlay">hourglass_empty</i>
-				<h3>Aktív rendelések</h3>
+				<h3 th:text="#{lang.orders.active}">Aktív rendelések</h3>
 				<div class="order" th:each="order : ${orders}" th:object="${order}">
 					<b th:if="${order.count <= 1}" th:text="*{name}">Ördög pizza</b>
 					<b th:unless="${order.count <= 1}" th:text="|*{name} x *{count}|">Ördög pizza</b>
 					<br />
-					<ins th:text="${#dates.format(order.date, '__#{lang.date-no-year-format}__')}">Hétfő 22:00 - 22:30</ins>
+					<ins th:text="|${#dates.format(order.date, '__#{lang.date-no-year-format}__')} @ *{room}|">Hétfő 22:00 - 22:30 @ 1608</ins>
 					<div class="placeholder"></div>
 				</div>
 			</div>

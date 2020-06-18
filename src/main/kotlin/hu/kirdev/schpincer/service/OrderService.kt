@@ -123,13 +123,13 @@ open class OrderService {
         if (current.orderStart > System.currentTimeMillis() || current.orderEnd < System.currentTimeMillis())
             return responseOf(RESPONSE_NO_ORDERING)
 
-        val count = if (itemCount < details.minCount) {
+        val count = Math.max(1, if (itemCount < details.minCount) {
             details.minCount
         } else if (itemCount > details.maxCount) {
             details.maxCount
         } else {
             itemCount
-        }
+        })
 
         if (current.orderCount + count > current.maxOrder)
             return responseOf(RESPONSE_OVERALL_MAX_REACHED)
