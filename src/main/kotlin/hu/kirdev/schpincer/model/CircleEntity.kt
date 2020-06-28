@@ -52,7 +52,7 @@ data class CircleEntity(
         var homePageOrder: Int = 0,
 
         @Column(length = 30)
-        var cssClassName: @Size(max = 30) String,
+        var cssClassName: @Size(max = 30) String = "",
 
         @Column(length = 255)
         var facebookUrl: @Size(max = 255) String? = null,
@@ -61,7 +61,7 @@ data class CircleEntity(
         var websiteUrl: @Size(max = 255) String? = null,
 
         @Column(length = 255)
-        var backgroundUrl: @Size(max = 255) String,
+        var backgroundUrl: @Size(max = 255) String?,
 
         @Column(length = 255)
         var logoUrl: @Size(max = 255) String? = null,
