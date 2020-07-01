@@ -93,6 +93,7 @@ a {
 	background-color: #4c4c4d;
 	color: #FFFFFF;
 	border-bottom: 8px solid #383839;
+	overflow: auto;
 }
 
 .header span {
@@ -394,7 +395,7 @@ a {
 	display: inline-block;
 	text-transform: uppercase;
 	bottom: 40px;
-	margin: calc(100vh - 220px) 0 0 0;
+	margin: calc(80vh - 220px) 0 0 0;
 }
 
 .main-article .picture h2 {
@@ -429,10 +430,6 @@ a {
 	align-items: stretch;
 	align-content: stretch;
 	margin-bottom: 40px;
-}
-
-.article-set:after {
-	display: none;
 }
 
 .article {
@@ -971,10 +968,6 @@ a {
 	position: relative;
 	overflow-x: hidden;
 	max-height: 100vh;
-}
-
-.popup .popup-scroll-child {
-	scroll-y: scroll;
 }
 
 .popup .picture {
@@ -1767,6 +1760,10 @@ textarea {
 .full-table {
 	width: 100% !important;
 	max-width: 100% !important;
+	overflow-x: auto;
+}
+
+.scrollable-x {
 	overflow-x: auto;
 }
 
@@ -2810,6 +2807,10 @@ img.centered-mini {
 	.reviews {
 		display: table;
 	}
+
+	.rules {
+		display: table;
+	}
 }
 
 
@@ -2820,6 +2821,10 @@ img.centered-mini {
 	
 	.orders,
 	.reviews {
+		display: none;
+	}
+
+	.rules {
 		display: none;
 	}
 
@@ -2921,18 +2926,6 @@ img.centered-mini {
 	
 	.messagebox {
 		left: calc(50vw - 183px);
-	}
-}
-	
-@media only screen and (min-width: 1380px) {
-	.article {
-		min-width: 580px;
-	}
-	
-	.article-set:after {
-		display: block;
-		content: "  ";
-		flex: 999 999 auto;
 	}
 }
 

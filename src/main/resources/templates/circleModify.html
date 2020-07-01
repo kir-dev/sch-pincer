@@ -21,7 +21,8 @@
 				<i class="material-icons main">tune</i>
 			</div>
 			<h3 th:text="#{lang.admin.title-circle-__${mode}__}" class="topless">Modify Circle</h3>
-			<form action="#" th:action="${adminMode} ? @{/admin/circles/__${mode}__} : @{/configure/edit}" method="post" enctype="multipart/form-data">
+			<form action="#" class="scrollable-x" enctype="multipart/form-data"
+				  method="post" th:action="${adminMode} ? @{/admin/circles/__${mode}__} : @{/configure/edit}">
 				<table class="form full-table" th:object="${circle}">
 					<tr style="display: none">
 						<td colspan="2"><input type="hidden" name="circleId" th:value="*{id}" /></td>
