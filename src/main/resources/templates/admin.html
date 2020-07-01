@@ -44,9 +44,10 @@
 		</div>
 
 		<div class="highlighted dashboard latest">
-			<table class="form full-table">
+			<h3 th:text="#{lang.admin.roles-list}">Rules</h3>
+			<table class="form rules full-table">
 				<tr>
-					<th th:text="#{lang.admin.roles-list}">Rules</th>
+					<th th:text="#{lang.admin.roles.name}">Name</th>
 					<th></th>
 					<th th:text="#{lang.admin.roles-admin}">Admin</th>
 					<th th:text="#{lang.admin.roles.uid}">UID</th>
@@ -61,6 +62,29 @@
 					<td th:text="*{uidHash}" class="uid">XYZ</td>
 					<td th:text="*{permissions}"></td>
 				</tr>
+			</table>
+
+			<table class="responsive-table full-table">
+				<object th:each="role : ${roles}" th:object="${role}" th:remove="tag">
+					<tr>
+						<td th:text="*{name}">Test Name</td>
+						<td>
+							<a href="#" th:href="@{/admin/roles/edit/__*{uidHash}__}"><i class="material-icons">edit</i></a>
+						</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.admin.roles-admin}">Admin</td>
+						<td th:text="*{sysadmin} ? #{lang.yes} : #{lang.no}">No</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.admin.roles.uid}">UID</td>
+						<td th:text="*{uidHash}" class="uid">XYZ</td>
+					</tr>
+					<tr>
+						<td th:text="#{lang.admin.roles-permissions}">Permissions</td>
+						<td th:text="*{permissions}"></td>
+					</tr>
+				</object>
 			</table>
 		</div>
 	</div>
