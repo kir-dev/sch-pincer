@@ -2893,7 +2893,7 @@ img.centered-mini {
 	}
 }
 
-@media only screen and (max-height: 600px) {
+@media only screen and (max-height: 800px) {
 	.site-menu .container {
 		display: none;
 	}
