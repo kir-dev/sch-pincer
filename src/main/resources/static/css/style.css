@@ -1783,7 +1783,7 @@ textarea {
 	background-color: #3f3f40;
 }
 
-.responsive-table tr:nth-of-type(6n-5) {
+.responsive-table tr:nth-of-type(7n-6) {
 	border-top: 2px solid #383839;
 }
 
@@ -1831,7 +1831,8 @@ textarea {
 	display: block;
 }
 
-.highlighted .edit a {
+.highlighted .edit a,
+.highlighted .review-order a {
 	color: #FFFFFF;
 	opacity: 1;
 	text-decoration: none;
@@ -1839,8 +1840,9 @@ textarea {
 	position: relative;
 	top: 2px;
 }
-
-.highlighted .edit a:hover {
+te
+.highlighted .edit a:hover,
+.highlighted .review-order a:hover {
 	opacity: 0.5;
 }
 
