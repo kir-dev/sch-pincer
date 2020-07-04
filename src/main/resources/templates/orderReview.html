@@ -21,46 +21,46 @@
 				<i class="material-icons main">star</i>
 			</div>
 			<h3 th:text="#{lang.review.title}" class="topless">Review</h3>
-			<form action="#" th:action="@{/provider/__${selectedCircle?.id}__/review}" th:object="${review}" method="post">
+			<form action="#" th:action="@{/review/__${orderId}__}" th:object="${review}" method="post">
 				<table class="form">
 					<tr>
-						<td th:text="#{lang.review.circle}">Circle to review</td>
+						<td th:text="#{lang.review.order}">Circle to review</td>
 						<td th:text="${selectedCircle?.displayName}" class="highlight-text"></td>
 					</tr>
 					<tr>
-						<td style="padding-left: 0" colspan="2"><textarea th:field="*{review}" maxlength="1000"></textarea></td>
+						<td style="padding-left: 12px" colspan="2"><textarea th:field="*{review}" maxlength="1000"></textarea></td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.profile.quality}"></td>
+						<td th:text="#{lang.profile.quality}">Quality</td>
 						<td>
-							<i th:title="${count}" class="material-icons">star</i><span id="rate-1">x5</span>
-							<input id="stars-1" type="range" min="1" max="5" th:field="*{rateQuality}" onmousemove="updateStars(1)" />
+							<i th:title="${count}" class="material-icons">star</i><span id="rate-1">x3</span>
+							<input id="stars-1" type="range" min="1" max="5" th:field="*{rateQuality}" onmouseup="updateStars(1)" />
 						</td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.profile.price}"></td>
+						<td th:text="#{lang.profile.price}">Price</td>
 						<td>
-							<i th:title="${count}" class="material-icons">star</i><span id="rate-2">x5</span>
-							<input id="stars-2" type="range" min="1" max="5" th:field="*{ratePrice}" onmousemove="updateStars(2)" />
+							<i th:title="${count}" class="material-icons">star</i><span id="rate-2">x3</span>
+							<input id="stars-2" type="range" min="1" max="5" th:field="*{ratePrice}" onmouseup="updateStars(2)" />
 						</td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.profile.speed}"></td>
+						<td th:text="#{lang.profile.speed}">Speed</td>
 						<td>
-							<i th:title="${count}" class="material-icons">star</i><span id="rate-3">x5</span>
-							<input id="stars-3" type="range" min="1" max="5" th:field="*{rateSpeed}" onmousemove="updateStars(3)" />
+							<i th:title="${count}" class="material-icons">star</i><span id="rate-3">x3</span>
+							<input id="stars-3" type="range" min="1" max="5" th:field="*{rateSpeed}" onmouseup="updateStars(3)" />
 						</td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.profile.over-all}"></td>
+						<td th:text="#{lang.profile.over-all}">Overall</td>
 						<td>
-							<i th:title="${count}" class="material-icons">star</i><span id="rate-4">x5</span>
-							<input id="stars-4" type="range" min="1" max="5" th:field="*{rateOverAll}" onmousemove="updateStars(4)" />
+							<i th:title="${count}" class="material-icons">star</i><span id="rate-4">x3</span>
+							<input id="stars-4" type="range" min="1" max="5" th:field="*{rateOverAll}" onmouseup="updateStars(4)" />
 						</td>
 					</tr>
 				</table>
 
-				<a class="button" href="circleProfile.html" th:href="@{/provider/__${selectedCircle?.id}__}"
+				<a class="button" href="circleProfile.html" th:href="@{/profile}"
 						th:text="#{lang.review.cancel}">Back</a>
 				<input class="button" type="submit" th:value="#{lang.review.send}" />
 			</form>

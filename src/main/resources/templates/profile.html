@@ -68,6 +68,7 @@
 					<th th:text="#{lang.profile.orders-room}">Room</th>
 					<th th:text="#{lang.profile.orders-price}">Price</th>
 					<th th:text="#{lang.profile.orders-comment}">Comment</th>
+					<th th:text="#{lang.profile.orders-review}">Review</th>
 				</tr>
 				<tr th:each="order : ${orders}" th:object="${order}">
 					<td th:if="${order.count <= 1}" th:text="*{name}">Ördög pizza</td>
@@ -82,7 +83,9 @@
 						<i class="material-icons" th:if="${#strings.equals(order.status, 'CANCELLED')}"
 								th:title="#{lang.profile.status-cancelled}">do_not_disturb</i>
 
-						<a href="#" th:onclick="'cancelItem(' + ${order.id} + '); return false'" th:if="${order.cancelUntil >= T(java.lang.System).currentTimeMillis() && #strings.equals(order.status, 'ACCEPTED')}">
+						<a href="#"
+						   th:if="${order.cancelUntil >= T(java.lang.System).currentTimeMillis() && #strings.equals(order.status, 'ACCEPTED')}"
+						   th:onclick="'if (confirm(`'+ #{lang.profile.orders-cancel-confirm} +'`)) cancelItem('+ ${order.id} +'); return false'">
 							<i class="material-icons">delete</i>
 						</a>
 					</td>
@@ -92,6 +95,11 @@
 					<td th:text="*{room}">SCH 1037</td>
 					<td th:text="*{price} + ' ' + #{lang.currency}">800 JMF</td>
 					<td th:text="*{comment}" class="comment">Csípjen papa</td>
+					<td class="review-order">
+						<a href="orderReview.html" th:href="@{/review/__*{id}__}" th:if="${#strings.equals(order.status, 'SHIPPED')}">
+							<i class="material-icons">star_rate</i>
+						</a>
+					</td>
 				</tr>
 			</table>
 			
@@ -141,6 +149,15 @@
 				<tr>
 					<td th:text="#{lang.profile.orders-comment}">Comment</td>
 					<td th:text="*{comment}" class="comment">Csípjen papa</td>
+				</tr>
+
+				<tr>
+					<td th:text="#{lang.profile.orders-review}">Review</td>
+					<td>
+						<a href="orderReview.html" th:href="@{/review/__*{id}__}" th:if="${#strings.equals(order.status, 'SHIPPED')}">
+							<i class="material-icons">star_rate</i>
+						</a>
+					</td>
 				</tr>
 				</object>
 			</table>
