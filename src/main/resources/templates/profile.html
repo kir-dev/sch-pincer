@@ -96,9 +96,10 @@
 					<td th:text="*{price} + ' ' + #{lang.currency}">800 JMF</td>
 					<td th:text="*{comment}" class="comment">Csípjen papa</td>
 					<td class="review-order">
-						<a href="orderReview.html" th:href="@{/review/__*{id}__}" th:if="${#strings.equals(order.status, 'SHIPPED')}">
+						<a href="orderReview.html" th:href="@{/review/__*{id}__}" th:if="${#strings.equals(order.status, 'SHIPPED') && order.reviewId == null}">
 							<i class="material-icons">star_rate</i>
 						</a>
+						<i class="material-icons" th:if="${order.reviewId != null}">done</i>
 					</td>
 				</tr>
 			</table>
@@ -154,9 +155,10 @@
 				<tr>
 					<td th:text="#{lang.profile.orders-review}">Review</td>
 					<td>
-						<a href="orderReview.html" th:href="@{/review/__*{id}__}" th:if="${#strings.equals(order.status, 'SHIPPED')}">
+						<a href="orderReview.html" th:href="@{/review/__*{id}__}" th:if="${#strings.equals(order.status, 'SHIPPED') && order.reviewId == null}">
 							<i class="material-icons">star_rate</i>
 						</a>
+						<i class="material-icons" th:if="${order.reviewId != null}">done</i>
 					</td>
 				</tr>
 				</object>

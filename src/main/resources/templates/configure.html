@@ -24,6 +24,9 @@
 
             <a class="button" href="#" th:unless="${pr}" th:href="@{/configure/__${circleId}__/edit}" 
                     th:text="#{lang.configure.edit-circle}">Edit circle</a>
+			<br />
+			<a class="button" style="margin: 0 0 20px 0" href="#" th:href="@{/configure/__${circleId}__/reviews}"
+			   th:text="#{lang.configure.title-show-reviews}">Show Reviews</a>
 		</div>
 
 		<div class="highlighted dashboard">

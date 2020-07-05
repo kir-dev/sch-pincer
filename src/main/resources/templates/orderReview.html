@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="MainLayout :: head">
-	<meta charset="UTF-8" /> 
+	<meta charset="UTF-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
+	<link rel="stylesheet" th:href="@{/css/star-rating.css}" href="../static/css/star-rating.css" />
 </head>
 <body>
 	<div class="header" th:replace="MainLayout :: header">
@@ -23,39 +24,97 @@
 			<h3 th:text="#{lang.review.title}" class="topless">Review</h3>
 			<form action="#" th:action="@{/review/__${orderId}__}" th:object="${review}" method="post">
 				<table class="form">
+					<!--/* TODO: migrate this part into the html's own css file */-->
+					<style>
+						td {
+							padding-left: 12px !important;
+						}
+					</style>
 					<tr>
 						<td th:text="#{lang.review.order}">Circle to review</td>
-						<td th:text="${selectedCircle?.displayName}" class="highlight-text"></td>
+						<td th:text="${selectedCircle?.displayName}" style="color: #F4CF3B !important; text-align: right;"></td>
 					</tr>
 					<tr>
-						<td style="padding-left: 12px" colspan="2"><textarea th:field="*{review}" maxlength="1000"></textarea></td>
+						<td colspan="2"><textarea th:field="*{review}" maxlength="1000"></textarea></td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.profile.quality}">Quality</td>
 						<td>
-							<i th:title="${count}" class="material-icons">star</i><span id="rate-1">x3</span>
-							<input id="stars-1" type="range" min="1" max="5" th:field="*{rateQuality}" onmouseup="updateStars(1)" />
+							<fieldset class="star-rating">
+								<div class="star-rating__stars">
+									<input class="star-rating__input" type="radio" name="rateQuality" value="1" id="rating-1-quality" />
+									<label class="star-rating__label" for="rating-1-quality"></label>
+									<input class="star-rating__input" type="radio" name="rateQuality" value="2" id="rating-2-quality" />
+									<label class="star-rating__label" for="rating-2-quality"></label>
+									<input class="star-rating__input" type="radio" name="rateQuality" value="3" id="rating-3-quality" checked />
+									<label class="star-rating__label" for="rating-3-quality"></label>
+									<input class="star-rating__input" type="radio" name="rateQuality" value="4" id="rating-4-quality" />
+									<label class="star-rating__label" for="rating-4-quality"></label>
+									<input class="star-rating__input" type="radio" name="rateQuality" value="5" id="rating-5-quality" />
+									<label class="star-rating__label" for="rating-5-quality"></label>
+									<div class="star-rating__focus"></div>
+								</div>
+							</fieldset>
 						</td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.profile.price}">Price</td>
 						<td>
-							<i th:title="${count}" class="material-icons">star</i><span id="rate-2">x3</span>
-							<input id="stars-2" type="range" min="1" max="5" th:field="*{ratePrice}" onmouseup="updateStars(2)" />
+							<fieldset class="star-rating">
+								<div class="star-rating__stars">
+									<input class="star-rating__input" type="radio" name="ratePrice" value="1" id="rating-1-price" />
+									<label class="star-rating__label" for="rating-1-price"></label>
+									<input class="star-rating__input" type="radio" name="ratePrice" value="2" id="rating-2-price" />
+									<label class="star-rating__label" for="rating-2-price"></label>
+									<input class="star-rating__input" type="radio" name="ratePrice" value="3" id="rating-3-price" checked />
+									<label class="star-rating__label" for="rating-3-price"></label>
+									<input class="star-rating__input" type="radio" name="ratePrice" value="4" id="rating-4-price" />
+									<label class="star-rating__label" for="rating-4-price"></label>
+									<input class="star-rating__input" type="radio" name="ratePrice" value="5" id="rating-5-price" />
+									<label class="star-rating__label" for="rating-5-price"></label>
+									<div class="star-rating__focus"></div>
+								</div>
+							</fieldset>
 						</td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.profile.speed}">Speed</td>
 						<td>
-							<i th:title="${count}" class="material-icons">star</i><span id="rate-3">x3</span>
-							<input id="stars-3" type="range" min="1" max="5" th:field="*{rateSpeed}" onmouseup="updateStars(3)" />
+							<fieldset class="star-rating">
+								<div class="star-rating__stars">
+									<input class="star-rating__input" type="radio" name="rateSpeed" value="1" id="rating-1-speed" />
+									<label class="star-rating__label" for="rating-1-speed"></label>
+									<input class="star-rating__input" type="radio" name="rateSpeed" value="2" id="rating-2-speed" />
+									<label class="star-rating__label" for="rating-2-speed"></label>
+									<input class="star-rating__input" type="radio" name="rateSpeed" value="3" id="rating-3-speed" checked />
+									<label class="star-rating__label" for="rating-3-speed"></label>
+									<input class="star-rating__input" type="radio" name="rateSpeed" value="4" id="rating-4-speed" />
+									<label class="star-rating__label" for="rating-4-speed"></label>
+									<input class="star-rating__input" type="radio" name="rateSpeed" value="5" id="rating-5-speed" />
+									<label class="star-rating__label" for="rating-5-speed"></label>
+									<div class="star-rating__focus"></div>
+								</div>
+							</fieldset>
 						</td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.profile.over-all}">Overall</td>
 						<td>
-							<i th:title="${count}" class="material-icons">star</i><span id="rate-4">x3</span>
-							<input id="stars-4" type="range" min="1" max="5" th:field="*{rateOverAll}" onmouseup="updateStars(4)" />
+							<fieldset class="star-rating">
+								<div class="star-rating__stars">
+									<input class="star-rating__input" type="radio" name="rateOverAll" value="1" id="rating-1-overall" />
+									<label class="star-rating__label" for="rating-1-overall"></label>
+									<input class="star-rating__input" type="radio" name="rateOverAll" value="2" id="rating-2-overall" />
+									<label class="star-rating__label" for="rating-2-overall"></label>
+									<input class="star-rating__input" type="radio" name="rateOverAll" value="3" id="rating-3-overall" checked />
+									<label class="star-rating__label" for="rating-3-overall"></label>
+									<input class="star-rating__input" type="radio" name="rateOverAll" value="4" id="rating-4-overall" />
+									<label class="star-rating__label" for="rating-4-overall"></label>
+									<input class="star-rating__input" type="radio" name="rateOverAll" value="5" id="rating-5-overall" />
+									<label class="star-rating__label" for="rating-5-overall"></label>
+									<div class="star-rating__focus"></div>
+								</div>
+							</fieldset>
 						</td>
 					</tr>
 				</table>
@@ -66,12 +125,6 @@
 			</form>
 		</div>
 	</div>
-	
-	<script>
-		function updateStars(id) {
-			document.getElementById("rate-" + id).innerHTML = "x" + document.getElementById("stars-" + id).value;
-		}
-	</script>
 
 	<div th:replace="MainLayout :: footer"></div>
 </body>

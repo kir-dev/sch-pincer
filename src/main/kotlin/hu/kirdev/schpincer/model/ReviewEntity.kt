@@ -19,6 +19,13 @@ data class ReviewEntity(
         @ManyToOne(fetch = FetchType.LAZY)
         var circle: CircleEntity? = null,
 
+        @JsonIgnore
+        @ManyToOne(fetch = FetchType.LAZY)
+        var order: OrderEntity? = null,
+
+        @Column
+        var openingFeeling: String? = null,
+
         @Column
         var userName: String? = null,
 

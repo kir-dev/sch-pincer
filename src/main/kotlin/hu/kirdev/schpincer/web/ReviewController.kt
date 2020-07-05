@@ -4,6 +4,7 @@ import hu.kirdev.schpincer.model.OrderStatus
 import hu.kirdev.schpincer.model.ReviewEntity
 import hu.kirdev.schpincer.service.CircleService
 import hu.kirdev.schpincer.service.OrderService
+import hu.kirdev.schpincer.service.ReviewService
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
+import java.lang.Exception
 import javax.servlet.http.HttpServletRequest
 
 @Controller
@@ -22,13 +24,16 @@ open class ReviewController {
     @Autowired
     private lateinit var circles: CircleService
 
+    @Autowired
+    private lateinit var reviews: ReviewService
+
     @ApiOperation("Review order page")
     @GetMapping("/review/{orderId}")
-    fun rateOrder(@PathVariable orderId: Long, request: HttpServletRequest, model: Model): String {
+    fun rateOrder(@PathVariable orderId: Long, request: HttpServletRequest, model: Model): String? {
         val order = orders.getOne(orderId)
         val circleId = orders.getCircleIdByOrderId(orderId)
-        if (!request.hasUser() || order == null || order.status != OrderStatus.SHIPPED || circleId == null) {
-            return "redirect:/profile"
+        if (!request.hasUser() || order == null || order.status != OrderStatus.SHIPPED || circleId == null || order.reviewId != null) {
+            throw Exception("Requirements before reviewing order are not met!")
         }
 
         model.addAttribute("selectedCircle", circles.getOne(circleId))
@@ -39,13 +44,20 @@ open class ReviewController {
     }
 
     @ApiOperation("Send review of order")
-    @PostMapping("/review")
-    //@ResponseBody
-    fun rateOrder(request: HttpServletRequest, @RequestParam(required = true) orderId: Long) {
+    @PostMapping("/review/{orderId}")
+    fun rateOrder(@PathVariable orderId: Long,
+                  @RequestParam review: String?,
+                  @RequestParam(required = true) rateQuality: Int,
+                  @RequestParam(required = true) ratePrice: Int,
+                  @RequestParam(required = true) rateSpeed: Int,
+                  @RequestParam(required = true) rateOverAll: Int,
+                  request: HttpServletRequest): String?
+    {
         val order = orders.getOne(orderId)
-        if (!request.hasUser() || order == null || order.status != OrderStatus.SHIPPED) {
-            //return null
+        if (!request.hasUser() || order == null || order.status != OrderStatus.SHIPPED || order.reviewId != null) {
+            throw Exception("Requirements before reviewing order are not met!")
         }
-        //3. should I return anything? a string with ERROR if validation fails?
+        reviews.createReview(request, orderId, review, rateQuality, ratePrice, rateSpeed, rateOverAll)
+        return "redirect:/profile"
     }
 }
