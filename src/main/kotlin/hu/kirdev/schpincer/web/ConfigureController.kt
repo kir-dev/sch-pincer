@@ -46,6 +46,9 @@ open class ConfigureController {
     @Autowired
     private lateinit var orders: OrderService
 
+    @Autowired
+    private lateinit var reviews: ReviewService
+
     @Value("\${schpincer.external:/etc/schpincer/external}")
     private lateinit var uploadPath: String
 
@@ -414,6 +417,20 @@ open class ConfigureController {
         
         orders.updateOrder(id, OrderStatus[status])
         return "redirect:/configure/$circleId"
+    }
+
+    @GetMapping("/configure/{circleId}/reviews")
+    fun showReviews(@PathVariable circleId: Long, model: Model, request: HttpServletRequest): String? {
+        val reviewList = reviews.findAll(circleId)
+        model.addAttribute("reviews", reviewList)
+        model.addAttribute("circles", circles.findAllForMenu())
+        model.addAttribute("circle", circles.getOne(circleId))
+        model.addAttribute("reviewCount", reviewList.size)
+        model.addAttribute("avgQuality", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumBy { it.rateQuality } / reviewList.size.toFloat()) else null)
+        model.addAttribute("avgPrice", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumBy { it.ratePrice } / reviewList.size.toFloat()) else null)
+        model.addAttribute("avgSpeed", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumBy { it.rateSpeed } / reviewList.size.toFloat()) else null)
+        model.addAttribute("avgOverAll", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumBy { it.rateOverAll } / reviewList.size.toFloat()) else null)
+        return "circleReviews"
     }
 
     @GetMapping("/configure/table-export/{openingId}")

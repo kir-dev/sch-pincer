@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.bind.annotation.RequestParam
 import java.io.IOException
 import java.util.*
 import javax.servlet.http.HttpServletRequest
@@ -91,6 +92,12 @@ open class OrderService {
     open fun getCircleIdByOrderId(id: Long): Long? {
         val order: Optional<OrderEntity> = repo.findById(id)
         return order.map { orderEntity: OrderEntity -> openingRepo.getOne(orderEntity.openingId!!).circle?.id!! }.orElse(null)
+    }
+
+    open fun reviewOrder(id: Long, reviewId: Long) {
+        val order = getOne(id)!!
+        order.reviewId = reviewId
+        save(order)
     }
 
     /**

@@ -39,11 +39,6 @@ data class CircleEntity(
         var members: List<CircleMemberEntity>? = null,
 
         @Column
-        @OrderBy("date DESC")
-        @OneToMany(mappedBy = "circle", fetch = FetchType.LAZY, orphanRemoval = true)
-        var reviews: List<ReviewEntity>? = null,
-
-        @Column
         @OrderBy("dateStart ASC")
         @OneToMany(mappedBy = "circle", fetch = FetchType.LAZY, orphanRemoval = true)
         var openings: List<OpeningEntity>? = null,
@@ -65,21 +60,6 @@ data class CircleEntity(
 
         @Column(length = 255)
         var logoUrl: @Size(max = 255) String? = null,
-
-        @Column
-        var rateOverAll: Float = 0f,
-
-        @Column
-        var rateSpeed: Float = 0f,
-
-        @Column
-        var rateQuality: Float = 0f,
-
-        @Column
-        var ratePrice: Float = 0f,
-
-        @Column
-        var rateingCount: Float = 0f,
 
         @Column
         var webhookNewOrderUrl: String? = null,

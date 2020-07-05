@@ -57,7 +57,7 @@ interface OrderRepository : JpaRepository<OrderEntity, Long> {
 
 @Repository
 interface ReviewRepository : JpaRepository<ReviewEntity, Long> {
-    fun findAllByCircle_Id(circleId: Long): List<ReviewEntity>
+    fun findAllByCircle_IdOrderByDateDesc(circleId: Long): List<ReviewEntity>
 }
 
 @Repository

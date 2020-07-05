@@ -67,12 +67,6 @@ open class AdminController {
                        @RequestParam("background") background: MultipartFile?
     ): String {
 
-        circle.rateingCount = 0f
-        circle.rateOverAll = 0f
-        circle.ratePrice = 0f
-        circle.rateQuality = 0f
-        circle.rateSpeed = 0f
-
         var file = logo?.uploadFile("logos")
         circle.logoUrl = if (file == null) "image/blank-logo.svg" else "cdn/logos/$file"
 

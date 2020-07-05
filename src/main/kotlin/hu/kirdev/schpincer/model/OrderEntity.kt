@@ -79,6 +79,9 @@ data class OrderEntity(
     var priority: Int = 1,
     
     @Column(nullable = false)
-    var compactName: String = ""
+    var compactName: String = "",
+
+    @Column
+    var reviewId: Long? = null
 
 ) : Serializable

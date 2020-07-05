@@ -1,0 +1,73 @@
+/**
+ * Source: https://www.cssscript.com/star-rating-radio/
+ */
+.star-rating {
+    float: right;
+}
+
+.star-rating__stars {
+    position: relative;
+    height: 28px;
+    width: 140px;
+    background: url(../icons/star-off.svg);
+    background-size: 28px 28px;
+}
+
+.star-rating__label {
+    position: absolute;
+    height: 100%;
+    background-size: 28px 28px;
+    margin: 0;
+}
+
+.star-rating__input {
+    margin: 0;
+    position: absolute;
+    height: 1px; width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+}
+
+.star-rating__stars .star-rating__label:nth-of-type(1) {
+    z-index: 5;
+    width: 20%;
+}
+
+.star-rating__stars .star-rating__label:nth-of-type(2) {
+    z-index: 4;
+    width: 40%;
+}
+
+.star-rating__stars .star-rating__label:nth-of-type(3) {
+    z-index: 3;
+    width: 60%;
+}
+
+.star-rating__stars .star-rating__label:nth-of-type(4) {
+    z-index: 2;
+    width: 80%;
+}
+
+.star-rating__stars .star-rating__label:nth-of-type(5) {
+    z-index: 1;
+    width: 100%;
+}
+
+.star-rating__input:checked + .star-rating__label,
+.star-rating__input:focus + .star-rating__label,
+.star-rating__label:hover {
+    background-image: url(../icons/star-on.svg);
+}
+
+.star-rating__label:hover ~ .star-rating__label {
+    background-image: url(../icons/star-off.svg);
+}
+
+.star-rating__input:focus ~ .star-rating__focus {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    bottom: -1px;
+    left: -1px;
+    outline: 1px solid lightblue;
+}
