@@ -4,7 +4,10 @@ import com.itextpdf.text.*
 import com.itextpdf.text.pdf.PdfPCell
 import com.itextpdf.text.pdf.PdfPTable
 import com.itextpdf.text.pdf.PdfWriter
+import hu.kirdev.schpincer.dto.CircleMemberRole
+import hu.kirdev.schpincer.dto.CircleRoleEntryDto
 import hu.kirdev.schpincer.dto.OpeningEntityDto
+import hu.kirdev.schpincer.dto.RoleEntryDto
 import hu.kirdev.schpincer.model.*
 import hu.kirdev.schpincer.service.*
 import hu.kirdev.schpincer.web.component.ExportType
@@ -41,6 +44,9 @@ open class ConfigureController {
     private lateinit var items: ItemService
 
     @Autowired
+    private lateinit var users: UserService
+
+    @Autowired
     private lateinit var openings: OpeningService
 
     @Autowired
@@ -67,10 +73,54 @@ open class ConfigureController {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circle", circles.getOne(circleId!!))
         model.addAttribute("pr", isPR(circleId, request))
+        model.addAttribute("owner", isCircleOwner(circleId,request))
+        model.addAttribute("roles", users.findAllCircleRole(circleId).filter { it.permission !== CircleMemberRole.NONE})
         model.addAttribute("circleId", circleId)
         model.addAttribute("items", items.findAllByCircle(circleId))
         return "configure"
     }
+
+    @GetMapping("/configure/{circleId}/roles/list")
+    fun listUserRole(@PathVariable circleId: Long, model: Model): String? {
+        model.addAttribute("circles", circles.findAllForMenu())
+        model.addAttribute("circleId", circleId)
+        model.addAttribute("roles", users.findAllCircleRole(circleId));
+        return "circleRoleList"
+    }
+
+    @GetMapping("/configure/{circleId}/roles/edit/{uidHash}")
+    fun editUserRole(@PathVariable circleId: Long, @PathVariable uidHash: String, model: Model): String? {
+        model.addAttribute("circles", circles.findAllForMenu())
+        model.addAttribute("circleId", circleId)
+        model.addAttribute("role", users.FindPermissionByUidHash(uidHash,circleId));
+        return "circleRoleModify"
+    }
+
+    @PostMapping("/configure/{circleId}/roles/edit")
+    fun editUserRoles(@PathVariable circleId: Long,
+                      @RequestParam uidHash: String,
+                      @RequestParam permission: CircleMemberRole,
+                      request: HttpServletRequest
+    ): String {
+        val user = users.getByUidHash(uidHash) ?: return "redirect:/configure/${circleId}?error=invalidUidHash"
+        if (!isCircleOwner(circleId,request)) return "redirect:/configure/$circleId?error"
+
+        val tmp : MutableSet<String> = user.permissions.toMutableSet()
+        when(permission){
+            CircleMemberRole.NONE -> tmp.removeAll(listOf("CIRCLE_${circleId}","PR_${circleId}"))
+            CircleMemberRole.PR -> tmp.addAll(listOf("CIRCLE_${circleId}","PR_${circleId}","ROLE_LEADER"))
+            CircleMemberRole.LEADER -> {
+                tmp.addAll(listOf("CIRCLE_${circleId}","ROLE_LEADER"))
+                tmp.remove("PR_${circleId}")
+            }
+        }
+        if(tmp.count() == 1 && tmp.first() == "ROLE_LEADER") tmp.clear()
+        user.permissions = tmp
+        users.save(user)
+
+        return "redirect:/configure/$circleId/roles/list"
+    }
+
 
     @GetMapping("/configure/{circleId}/members/new")
     fun newMember(@PathVariable circleId: Long, model: Model): String? {
@@ -167,9 +217,9 @@ open class ConfigureController {
                    @RequestParam(required = false) background: MultipartFile?,
                    request: HttpServletRequest
     ): String? {
-        if (cannotEditCircleNoPR(circleId, request)) 
+        if (cannotEditCircleNoPR(circleId, request))
             return "redirect:/configure/$circleId?error=invalidPermissions"
-        
+
         val original = circles.getOne(circleId) ?: return "redirect:/configure/$circleId?error=invalidId"
         original.avgOpening = circle.avgOpening
         original.description = circle.description
@@ -180,15 +230,15 @@ open class ConfigureController {
         original.founded = circle.founded
         original.homePageDescription = circle.homePageDescription
         original.websiteUrl = circle.websiteUrl
-        
+
         val logoFile = logo?.uploadFile("logos")
-        if (logoFile != null) 
+        if (logoFile != null)
             original.logoUrl = "cdn/logos/$logoFile"
-        
+
         val backgroundFile = background?.uploadFile("backgrounds")
-        if (backgroundFile != null) 
+        if (backgroundFile != null)
             original.backgroundUrl = "cdn/backgrounds/$backgroundFile"
-        
+
         circles.save(original)
         return "redirect:/configure/$circleId"
     }
@@ -223,9 +273,9 @@ open class ConfigureController {
                 @RequestParam imageFile: MultipartFile?,
                 request: HttpServletRequest
     ): String {
-        if (cannotEditCircle(circleId, request)) 
+        if (cannotEditCircle(circleId, request))
             return "redirect:/configure/$circleId?error"
-        
+
         val circle = circles.getOne(circleId)
         ie.circle = circle
         val file: String? = imageFile?.uploadFile("items")
@@ -255,7 +305,7 @@ open class ConfigureController {
                  @RequestParam(required = false) imageFile: MultipartFile?,
                  request: HttpServletRequest
     ): String {
-        
+
         if (cannotEditCircle(circleId, request))
             return "redirect:/configure/$circleId?error=invalidPermissions"
 
@@ -373,7 +423,7 @@ open class ConfigureController {
                              @PathVariable openingId: Long?,
                              request: HttpServletRequest
     ): String {
-        if (cannotEditCircle(circleId, request)) 
+        if (cannotEditCircle(circleId, request))
             return "redirect:/configure/$circleId?error=invalidPermissions"
         val ie = openings.getOne(openingId!!)
         if (ie.circle!!.id == circleId) openings.delete(ie)
@@ -386,13 +436,13 @@ open class ConfigureController {
                      request: HttpServletRequest,
                      model: Model
     ): String {
-        if (cannotEditCircle(circleId, request)) 
+        if (cannotEditCircle(circleId, request))
             return "redirect:/configure/$circleId?error=invalidPermissions"
-        
+
         val opening = openings.getOne(openingId)
-        if (opening.circle!!.id != circleId) 
+        if (opening.circle!!.id != circleId)
             return "redirect:/configure/$circleId?error"
-        
+
         model.addAttribute("exportTypes", ExportType.values())
         model.addAttribute("openingId", opening.id)
         model.addAttribute("circles", circles.findAllForMenu())
@@ -408,10 +458,10 @@ open class ConfigureController {
                     request: HttpServletRequest
     ): String {
         val circleId = orders.getCircleIdByOrderId(id) ?: return "INVALID ID"
-        
-        if (cannotEditCircle(circleId, request)) 
+
+        if (cannotEditCircle(circleId, request))
             return "NO PERMISSION"
-        
+
         orders.updateOrder(id, OrderStatus[status])
         return "redirect:/configure/$circleId"
     }

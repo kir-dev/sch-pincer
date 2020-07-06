@@ -3,7 +3,9 @@ package hu.kirdev.schpincer.service
 import hu.kirdev.schpincer.dao.CircleRepository
 import hu.kirdev.schpincer.dao.OpeningRepository
 import hu.kirdev.schpincer.dto.CircleEntityInfoDto
+import hu.kirdev.schpincer.dto.RoleEntryDto
 import hu.kirdev.schpincer.model.CircleEntity
+import hu.kirdev.schpincer.web.sha256
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -46,6 +48,10 @@ open class CircleService {
 
     open fun findByAlias(alias: String): CircleEntity {
         return repo.findAllByAlias(alias)[0]
+    }
+
+    open fun findByvirGroupId(id: Long): CircleEntity? {
+        return repo.findOneByVirGroupId(id)
     }
 
     open fun findAllForInfo(): List<CircleEntityInfoDto> {

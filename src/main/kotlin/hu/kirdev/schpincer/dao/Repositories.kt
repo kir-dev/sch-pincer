@@ -16,6 +16,7 @@ interface CircleRepository : JpaRepository<CircleEntity, Long> {
     fun findByAlias(alias: String): CircleEntity
     fun findAllByVisibleTrueOrderByHomePageOrder(): List<CircleEntity>
     fun findAllByAlias(alias: String): List<CircleEntity>
+    fun findOneByVirGroupId(virGroupId: Long): CircleEntity?
 }
 
 @Repository

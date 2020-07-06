@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="MainLayout :: head">
-	<meta charset="UTF-8" /> 
+	<meta charset="UTF-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
@@ -11,7 +11,7 @@
 <body>
 	<div class="header" th:replace="MainLayout :: header">
 	</div>
-	
+
 	<div class="left-menu" th:replace="MainLayout :: left-menu">
 	</div>
 
@@ -22,7 +22,7 @@
 			</div>
             <h3 th:text="#{lang.configure.title}" class="topless">Leader Dashboard</h3>
 
-            <a class="button" href="#" th:unless="${pr}" th:href="@{/configure/__${circleId}__/edit}" 
+            <a class="button" href="#" th:unless="${pr}" th:href="@{/configure/__${circleId}__/edit}"
                     th:text="#{lang.configure.edit-circle}">Edit circle</a>
 		</div>
 
@@ -41,7 +41,7 @@
 				</tr>
 			</table>
 
-            <a class="button" href="#" th:href="@{/configure/__${circleId}__/openings/new}" 
+            <a class="button" href="#" th:href="@{/configure/__${circleId}__/openings/new}"
                     th:text="#{lang.configure.title-opening}">New opening</a>
 		</div>
 
@@ -60,10 +60,10 @@
 				</tr>
 			</table>
 
-            <a class="button" href="#" th:href="@{/configure/__${circleId}__/items/new}" 
+            <a class="button" href="#" th:href="@{/configure/__${circleId}__/items/new}"
                     th:text="#{lang.configure.title-item}">New item</a>
         </div>
-        
+
         <div class="highlighted dashboard members latest" th:unless="${pr}">
 			<table class="form full-table no-top-table">
 				<tr>
@@ -81,10 +81,26 @@
 				</tr>
 			</table>
 
-            <a class="button" href="#" th:href="@{/configure/__${circleId}__/members/new}" 
+            <a class="button" href="#" th:href="@{/configure/__${circleId}__/members/new}"
                     th:text="#{lang.configure.title-member-new}">New member</a>
 		</div>
-		
+
+		<div class="highlighted dashboard members latest" th:if="${owner}">
+			<table class="form full-table no-top-table">
+				<tr>
+					<th th:text="#{lang.configure.member-roles}">Roles</th>
+					<th></th>
+				</tr>
+				<tr th:each="role : ${roles}" th:object="${role}">
+					<td th:text="*{name}">Test Person</td>
+					<td th:text="*{permission}">LEADER</td>
+				</tr>
+			</table>
+
+			<a class="button" href="#" th:href="@{/configure/__${circleId}__/roles/list}"
+			   th:text="#{lang.configure.title-member-roles-add}">New role</a>
+		</div>
+
 		<div style="margin-top: 40px" th:if="${pr}"></div>
 	</div>
 
