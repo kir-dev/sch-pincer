@@ -1,5 +1,6 @@
 package hu.kirdev.schpincer.web
 
+import hu.kirdev.schpincer.dto.CircleMemberRole
 import hu.kirdev.schpincer.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -57,6 +58,8 @@ fun HttpServletRequest.getUserIfPresent() = if (hasUser()) DI.instance.users.get
 
 fun HttpServletRequest.getUserId() = this.session.getAttribute(USER_SESSION_ATTRIBUTE_NAME) as String
 
+fun HttpServletRequest.getOwnedCircles() = this.session.getAttribute(CIRCLE_OWNERSHIP_SESSION_ATTRIBUTE_NAME) as List<Long>
+
 @Throws(NoSuchAlgorithmException::class)
 fun String.sha256(): String {
     val digest = MessageDigest.getInstance("SHA-256")
@@ -75,6 +78,18 @@ fun cannotEditCircleNoPR(circleId: Long, request: HttpServletRequest): Boolean {
 
 fun isPR(circleId: Long, request: HttpServletRequest): Boolean {
     return request.getUser().permissions.contains("PR_$circleId")
+}
+
+fun isCircleOwner(circleId: Long, request: HttpServletRequest): Boolean{
+    return  request.getOwnedCircles().contains(circleId)
+}
+
+fun toReadableRole(permissions: Set<String>, circleID: Long): CircleMemberRole{
+    val isLeader = permissions.contains("ROLE_LEADER")
+    val isCircleOwner = permissions.contains("CIRCLE_${circleID}")
+    val isPr = permissions.contains("PR_${circleID}")
+    if (!isLeader || !isCircleOwner) return CircleMemberRole.NONE
+    else return if (isPr) CircleMemberRole.PR else CircleMemberRole.LEADER
 }
 
 val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm")

@@ -71,7 +71,10 @@ data class CircleEntity(
         var alias: String,
 
         @Column(nullable = false)
-        var visible: Boolean = false
+        var visible: Boolean = false,
+
+        @Column
+        var virGroupId: Long? = null
 
 ) : Serializable {
 

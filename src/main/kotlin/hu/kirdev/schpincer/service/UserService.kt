@@ -1,6 +1,8 @@
 package hu.kirdev.schpincer.service
 
 import hu.kirdev.schpincer.dao.UserRepository
+import hu.kirdev.schpincer.dto.CircleRoleEntryDto
+import hu.kirdev.schpincer.dto.RoleEntryDto
 import hu.kirdev.schpincer.model.UserEntity
 import hu.kirdev.schpincer.web.sha256
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,6 +33,18 @@ open class UserService {
 
     open fun findAll(): List<UserEntity> {
         return repo.findAll()
+    }
+
+
+    open fun findAllCircleRole(circle_id: Long): List<CircleRoleEntryDto>{
+        return repo.findAll()
+                .map { CircleRoleEntryDto(it,circle_id) }
+                .sortedWith(compareBy<CircleRoleEntryDto>{it.permission} .thenBy { it.name })
+    }
+
+    open fun FindPermissionByUidHash(uidHash: String,circle_id: Long): CircleRoleEntryDto? {
+        val user : UserEntity = getByUidHash(uidHash) ?: return  null
+        return CircleRoleEntryDto(user,circle_id)
     }
 
     open fun getByUidHash(uidHash: String): UserEntity? {
