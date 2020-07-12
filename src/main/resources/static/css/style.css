@@ -1,5 +1,9 @@
 /**
- * @author Schaman
+ * Instructions to developers:
+ *
+ * We follow mobile first design.
+ * Use MEDIA QUERIES at the end of this css file for further configuration of classes.
+ *
  */
 * {
 	margin: 0;
@@ -7,13 +11,15 @@
 	border: 0;
 }
 
-/** Thymeleaf fixes */
-
+/** Thymeleaf fixes
+ * @warning DEPRECATED: use th:block html tag instead. See Thymeleaf docs.
+ */
 object {
 	display: none;
 }
 
-/* CSS Content */
+
+/** SCAFFOLDING FOR PAGES **/
 
 body {
 	font-family: 'Roboto', 'Roboto-offline', sans-serif;
@@ -89,7 +95,7 @@ a {
 }
 
 .header {
-	padding: 10px 40px 10px 40px;
+	padding: 10px 20px 10px 20px;
 	background-color: #4c4c4d;
 	color: #FFFFFF;
 	border-bottom: 8px solid #383839;
@@ -97,7 +103,7 @@ a {
 }
 
 .header span {
-	font-size: 26px;
+	font-size: 24px;
 	font-weight: 900;
 	text-shadow: 0 2px 2px #111111;
 	cursor: pointer;
@@ -135,7 +141,7 @@ a {
 }
 
 .header nav a.icon {
-	padding: 4px 8px 8px 8px !important;
+	padding: 4px 4px 8px 4px !important;
 }
 
 .left-menu {
@@ -148,6 +154,7 @@ a {
 	text-align: center;
 	margin-bottom: 40px;
 }
+
 
 /** ITEMS MENU **/
 
@@ -374,6 +381,7 @@ a {
 .search i:hover {
 	opacity: 0.8;
 }
+
 
 /** MAIN PAGE **/
 
@@ -616,6 +624,7 @@ a {
 	margin: 10px 0;
 }
 
+
 /** CIRCLES **/
 
 .highlighted {
@@ -829,6 +838,7 @@ a {
 	color: #9d9d9e;
 }
 
+
 /** FOOTER **/
 
 .footer {
@@ -928,6 +938,7 @@ a {
 	filter: grayscale(1);
 	-webkit-filter: grayscale(1);
 }
+
 
 /** ITEM POPUP **/
 
@@ -1216,6 +1227,7 @@ a {
 	clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
 }
 
+
 /** FORM **/
 
 form input[type="number"],
@@ -1359,6 +1371,7 @@ form input[type="submit"]:hover {
 	filter: brightness(120%);
 }
 
+
 /** ORDER REVIEW **/
 
 .review td {
@@ -1453,6 +1466,9 @@ form input[type="submit"]:hover {
 }
 
 
+
+/** CIRCLE PROFILE **/
+
 .circle-profile {
 	margin-left: 0;
 	background-position: center;
@@ -1540,34 +1556,6 @@ form input[type="submit"]:hover {
 	text-align: center;
 }
 
-.dashboard .button,
-.page-button {
-	display: inline-block;
-	padding: 10px 20px;
-	text-transform: uppercase;
-	border: 4px solid #F4CF3B;
-	color: #F4CF3B;
-	background-color: #242425;
-	text-decoration: none;
-	margin: 40px 0;
-	transition: color ease 0.2s, background-color ease 0.2s;
-}
-
-.dashboard .button:hover,
-.page-button:hover {
-	color: #242425;
-	background-color: #F4CF3B;
-}
-
-.dashboard .button {
-	background-color: #4c4c4d;
-	margin: 20px 0;
-}
-
-.dashboard .button:hover {
-	color: #4c4c4d;
-	opacity: 1 !important;
-}
 
 /** REVIEW **/
 
@@ -1751,7 +1739,8 @@ textarea {
 	width: calc(100% - 32px);
 }
 
-/** OTHER **/
+
+/** OTHER (UNIVERSAL CLASSES) **/
 
 .error {
 	color: #AF0000;
@@ -1765,6 +1754,35 @@ textarea {
 
 .scrollable-x {
 	overflow-x: auto;
+}
+
+.dashboard .button,
+.page-button {
+	display: inline-block;
+	padding: 10px 20px;
+	text-transform: uppercase;
+	border: 4px solid #F4CF3B;
+	color: #F4CF3B;
+	background-color: #242425;
+	text-decoration: none;
+	margin: 40px 0;
+	transition: color ease 0.2s, background-color ease 0.2s;
+}
+
+.dashboard .button:hover,
+.page-button:hover {
+	color: #242425;
+	background-color: #F4CF3B;
+}
+
+.dashboard .button {
+	background-color: #4c4c4d;
+	margin: 20px 0;
+}
+
+.dashboard .button:hover {
+	color: #4c4c4d;
+	opacity: 1 !important;
 }
 
 .prompt table,
@@ -1869,7 +1887,7 @@ textarea {
 	position: relative;
 	top: 2px;
 }
-te
+
 .highlighted .edit a:hover,
 .highlighted .review-order a:hover {
 	opacity: 0.5;
@@ -1878,6 +1896,9 @@ te
 .highlighted .edit a i {
 	font-size: 18px;
 }
+
+
+/** PROFILE **/
 
 .profile {
 	margin-bottom: 0 !important;
@@ -1903,6 +1924,7 @@ te
 	margin: 0;
 	width: 60px;
 }
+
 
 /** ADMIN **/
 
@@ -1955,6 +1977,7 @@ img.centered-mini {
 .export-table tr:nth-last-of-type(2n) {
 	background-color: rgba(255,255,255,0.1);
 }
+
 
 /** DECORATION **/
 
@@ -2107,6 +2130,7 @@ img.centered-mini {
 	top: -2px !important;
 }
 
+
 /** RED **/
 
 .article.red .picture {
@@ -2150,6 +2174,7 @@ img.centered-mini {
 	color: #af0000 !important;
 }
 
+
 /** GREEN **/
 
 .article.green .picture {
@@ -2192,6 +2217,7 @@ img.centered-mini {
 .green .colored-light {
 	color: #6E9E06 !important;
 }
+
 
 /** YELLOW **/
 
@@ -2280,7 +2306,7 @@ img.centered-mini {
 	color: #027BE5 !important;
 }
 
-/** BLUE **/
+/** BLUE-DARK **/
 
 .article.blue-dark .picture {
 	background-color: #4674b3;
@@ -2322,6 +2348,7 @@ img.centered-mini {
 .blue-dark .colored {
 	color: #1D55A2 !important;
 }
+
 
 /** PURPLE **/
 
@@ -2366,7 +2393,7 @@ img.centered-mini {
 	color: #7E5BA0 !important;
 }
 
-/** PURPLE **/
+/** PURPLE 2 **/
 
 .article.purple2 .picture {
 	background-color: #884291;
@@ -2453,6 +2480,7 @@ img.centered-mini {
 	color: #ea9b1c !important;
 }
 
+
 /** CYAN **/
 
 .article.cyan .picture {
@@ -2495,6 +2523,7 @@ img.centered-mini {
 .cyan .colored-light {
 	color: #61E8E1 !important;
 }
+
 
 /** BLANK **/
 
@@ -2542,6 +2571,7 @@ img.centered-mini {
 .colored-white {
 	color: #FFFFFF !important;
 }
+
 
 /** MENU **/
 
@@ -2660,7 +2690,8 @@ img.centered-mini {
 	color: #9d9d9e;
 }
 
-/** MEDIA **/
+
+/** MEDIA QUERIES FOR RESPONSIVE UI **/
 
 @media only screen and (min-width: 400px) {
 	.item {
@@ -2790,7 +2821,11 @@ img.centered-mini {
 	.header nav .short {
 		display: none;
 	}
-	
+
+	.header {
+		padding: 10px 40px 10px 40px;
+	}
+
 	.header nav a.long {
 		display: inline-block;
 	}
