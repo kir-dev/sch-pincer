@@ -1366,73 +1366,99 @@ form input[type="submit"]:hover {
 	filter: brightness(120%);
 }
 
-/** REVIEW **/
+/** ORDER REVIEW **/
 
-.reviews h2 {
-	color: #FFFFFF;
-	font-size: 30px;
-	margin-top: 40px;
-	text-transform: uppercase;
+.review td {
+	padding-left: 12px !important;
 }
 
-.review {
-	display: -webkit-flex;
-	display: flex;
-	background-color: #4C4C4D;
-	border-bottom: 8px solid #383839;
-	color: #FFFFFF;
-	padding: 0 0 0 40px;
-	margin-top: 40px;
+/** CIRCLE REVIEWS **/
+
+.reviews td .material-icons {
+	font-size: 16px;
+	color: #F4CF3B;
+	margin: -2px;
 }
 
-.review .message {
-	flex: 1;
+.reviews .rating-column {
+	min-width: 80px;
 }
 
-.review .message p {
-	text-align: justify;
-	min-height: 112px;
-	margin-top: 10px;
-	padding-bottom: 30px;
-}
-
-.review .message span {
-	color: #9d9d9e;
-	margin: 32px 0 0 0;
-	display: block;
-	text-align: right;
+/**
+ * STAR RATING
+ * Source: https://www.cssscript.com/star-rating-radio/
+ */
+.star-rating {
 	float: right;
 }
 
-.review h3 {
-	text-align: left;
-	margin-top: 30px;
-	text-transform: uppercase;
-}
-
-.review .stars {
-	background-color: #111111;
-	padding: 20px 20px 24px 20px;
-	text-align: right;
-	color: #6c6c6d;
-	vertical-align: top;
-	display: inline-block;
-	margin-left: 40px;
-	flex: 0;
-	min-width: 270px;
-}
-
-.review .stars i {
+.star-rating__stars {
 	position: relative;
-	top: 4px;
-	color: #F4CF3B;
+	height: 28px;
+	width: 140px;
+	background: url(../icons/star-off.svg);
+	background-size: 28px 28px;
 }
 
-.review .stars span {
-	width: 120px;
-	display: inline-block;
-	text-align: left;
+.star-rating__label {
+	position: absolute;
+	height: 100%;
+	background-size: 28px 28px;
+	margin: 0;
 }
+
+.star-rating__input {
+	margin: 0;
+	position: absolute;
+	height: 1px; width: 1px;
+	overflow: hidden;
+	clip: rect(1px, 1px, 1px, 1px);
+}
+
+.star-rating__stars .star-rating__label:nth-of-type(1) {
+	z-index: 5;
+	width: 20%;
+}
+
+.star-rating__stars .star-rating__label:nth-of-type(2) {
+	z-index: 4;
+	width: 40%;
+}
+
+.star-rating__stars .star-rating__label:nth-of-type(3) {
+	z-index: 3;
+	width: 60%;
+}
+
+.star-rating__stars .star-rating__label:nth-of-type(4) {
+	z-index: 2;
+	width: 80%;
+}
+
+.star-rating__stars .star-rating__label:nth-of-type(5) {
+	z-index: 1;
+	width: 100%;
+}
+
+.star-rating__input:checked + .star-rating__label,
+.star-rating__input:focus + .star-rating__label,
+.star-rating__label:hover {
+	background-image: url(../icons/star-on.svg);
+}
+
+.star-rating__label:hover ~ .star-rating__label {
+	background-image: url(../icons/star-off.svg);
+}
+
+.star-rating__input:focus ~ .star-rating__focus {
+	position: absolute;
+	top: -1px;
+	right: -1px;
+	bottom: -1px;
+	left: -1px;
+	outline: 1px solid lightblue;
+}
+
 
 .circle-profile {
 	margin-left: 0;
@@ -1747,6 +1773,7 @@ textarea {
 .prompt table,
 .dashboard table,
 .orders,
+.reviews,
 .responsive-table {
 	border-spacing: 0;
 	border-collapse: collapse;
@@ -1755,6 +1782,7 @@ textarea {
 }
 
 .orders .comment,
+.reviews .comment,
 .responsive-table .comment {
 	text-transform: none;
 }
@@ -1762,6 +1790,7 @@ textarea {
 .prompt table th,
 .dashboard table th,
 .orders th,
+.reviews th,
 .responsive-table th {
 	border-bottom: 2px solid #888888;
 	text-align: left;
@@ -1772,6 +1801,7 @@ textarea {
 .prompt table td,
 .dashboard table td,
 .orders td,
+.reviews td,
 .responsive-table td {
 	text-align: left;
 	padding: 12px 14px !important;
@@ -1779,7 +1809,8 @@ textarea {
 
 .prompt table tr:nth-of-type(2n+1),
 .dashboard table tr:nth-of-type(2n+1),
-.orders tr:nth-of-type(2n+1) {
+.orders tr:nth-of-type(2n+1),
+.reviews tr:nth-of-type(2n+1) {
 	background-color: #3f3f40;
 }
 
@@ -1803,6 +1834,7 @@ textarea {
 }
 
 .orders td:first-of-type,
+.reviews td:first-of-type,
 .responsive-table td:first-of-type {
 	font-weight: bold;
 }
@@ -2774,7 +2806,8 @@ img.centered-mini {
 		display: none;
 	}
 	
-	.orders {
+	.orders,
+	.reviews {
 		display: table;
 	}
 }
@@ -2785,7 +2818,8 @@ img.centered-mini {
 		display: table;
 	}
 	
-	.orders {
+	.orders,
+	.reviews {
 		display: none;
 	}
 
