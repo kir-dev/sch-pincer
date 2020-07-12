@@ -3119,27 +3119,22 @@ input:checked+.form-slider:before {
 	display: none;
 }
 
-.animate {
-	transition: all 0.1s;
-}
-
 .action-button {
+	display: inline-block;
 	padding: 5px 10px;
-	margin: 5px 0px 5px 0px;
-	border-radius: 5px;
-	color: white;
+	text-transform: uppercase;
+	font-weight: 900;
+	border: 4px solid #F4CF3B;
+	color: #FFFFFF;
+	background-color: rgba(0, 0, 0, 0);
+	text-decoration: none;
+	transition: all 100ms ease;
+	cursor: pointer;
 }
 
 .action-button:active {
 	transform: translate(3px,6px);
-	border-bottom: 1px solid #4C4C4D;
-	margin: 5px 0px 9px 0px;
-}
-
-.grey-button {
-	background-color: #625f6b;
-	border-bottom: 5px solid #54525c;
-	text-transform: uppercase;
-	font-weight: 900;
-	cursor: pointer;
+	border-bottom: 4px solid #4C4C4D;
+	border-right: 4px solid #4C4C4D;
+	background-color: #F4CF3B;
 }
