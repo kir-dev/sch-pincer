@@ -20,10 +20,10 @@
 </head>
 <body>
 	<object th:fragment="header" th:remove="tag">
-	<div class="site-menu" id="site-menu">
+	<div class="site-menu invisible" id="site-menu">
 		<h1 th:text="#{lang.mobile-menu.title}">Menu</h1>
 		
-		<div class="close" onclick="document.getElementById('site-menu').style.display = 'none'">
+		<div class="close" onclick="document.getElementById('site-menu').classList.add('invisible')">
 			<i class="material-icons">close</i>
 		</div>
 		
