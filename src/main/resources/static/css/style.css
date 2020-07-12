@@ -2551,7 +2551,9 @@ img.centered-mini {
 	width: 100vw;
 	background-color: rgba(0, 0, 0, 0.9);
 	z-index: 70000;
-	display: none;
+	visibility: visible;
+	opacity: 1;
+	transition: visibility 200ms, opacity 200ms ease;
 }
 
 .site-menu h1 {
@@ -2643,6 +2645,11 @@ img.centered-mini {
 
 .site-menu .close i {
 	font-size: 36px;
+}
+
+.invisible {
+	visibility: hidden;
+	opacity: 0;
 }
 
 .uid {
