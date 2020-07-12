@@ -403,7 +403,7 @@ a {
 	display: inline-block;
 	text-transform: uppercase;
 	bottom: 40px;
-	margin: calc(80vh - 220px) 0 0 0;
+	margin: calc(100vh - 220px) 0 0 0;
 }
 
 .main-article .picture h2 {
@@ -1092,7 +1092,6 @@ a {
 
 .popup .info .image {
 	border-bottom: 4px solid #111111;
-/* 	cursor: pointer; */
 	height: 128px;
 	background-size: cover;
 	background-position: center;
@@ -1100,7 +1099,6 @@ a {
 }
 
 .popup .image .overlay {
-/* 	cursor: pointer; */
 	position: relative;
 	top: 0;
 	left: 0;
@@ -2964,7 +2962,7 @@ img.centered-mini {
 	}
 }
 
-@media only screen and (max-height: 800px) {
+@media only screen and (max-height: 700px) {
 	.site-menu .container {
 		display: none;
 	}
