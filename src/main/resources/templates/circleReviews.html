@@ -7,7 +7,6 @@
 	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
-	<link rel="stylesheet" th:href="@{/css/star-rating.css}" href="../static/css/star-rating.css" />
 </head>
 <body>
 	<div class="header" th:replace="MainLayout :: header">
@@ -56,18 +55,7 @@
 		<div class="highlighted latest">
 			<h3 th:text="#{lang.review.title-reviews}">Reviews</h3>
 
-			<table class="orders full-table">
-				<!--/* TODO: migrate this into the html's own css */-->
-				<style>
-					td .material-icons {
-						font-size: 16px;
-						color: #F4CF3B;
-						margin: -2px;
-					}
-					.rating-column {
-						min-width: 80px;
-					}
-				</style>
+			<table class="reviews full-table">
 				<tr>
 					<th th:text="#{lang.review.item-name}">Name</th>
 					<th th:text="#{lang.review.opening-name}">Opening</th>
@@ -80,8 +68,8 @@
 				</tr>
 				<tr th:each="review : ${reviews}" th:object="${review}">
 					<td th:text="*{order.compactName}">Tüzes Lángos</td>
-					<td th:text="*{openingFeeling}" class="comment">Konyhagyújtogatósch</td>
-					<td th:text="*{review}" class="comment">Minden fasza, srácok, leégette a nyelvem is.</td>
+					<td th:text="*{openingFeeling}" class="comment">General feeling</td>
+					<td th:text="*{review}" class="comment">Some long and interesting comment.</td>
 
 					<td class="rating-column">
 						<th:block th:each="i: ${#numbers.sequence(0, review.rateQuality - 1)}">

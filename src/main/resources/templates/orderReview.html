@@ -7,7 +7,6 @@
 	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
-	<link rel="stylesheet" th:href="@{/css/star-rating.css}" href="../static/css/star-rating.css" />
 </head>
 <body>
 	<div class="header" th:replace="MainLayout :: header">
@@ -23,13 +22,7 @@
 			</div>
 			<h3 th:text="#{lang.review.title}" class="topless">Review</h3>
 			<form action="#" th:action="@{/review/__${orderId}__}" th:object="${review}" method="post">
-				<table class="form">
-					<!--/* TODO: migrate this part into the html's own css file */-->
-					<style>
-						td {
-							padding-left: 12px !important;
-						}
-					</style>
+				<table class="form review">
 					<tr>
 						<td th:text="#{lang.review.order}">Circle to review</td>
 						<td th:text="${selectedCircle?.displayName}" style="color: #F4CF3B !important; text-align: right;"></td>
@@ -40,81 +33,25 @@
 					<tr>
 						<td th:text="#{lang.profile.quality}">Quality</td>
 						<td>
-							<fieldset class="star-rating">
-								<div class="star-rating__stars">
-									<input class="star-rating__input" type="radio" name="rateQuality" value="1" id="rating-1-quality" />
-									<label class="star-rating__label" for="rating-1-quality"></label>
-									<input class="star-rating__input" type="radio" name="rateQuality" value="2" id="rating-2-quality" />
-									<label class="star-rating__label" for="rating-2-quality"></label>
-									<input class="star-rating__input" type="radio" name="rateQuality" value="3" id="rating-3-quality" checked />
-									<label class="star-rating__label" for="rating-3-quality"></label>
-									<input class="star-rating__input" type="radio" name="rateQuality" value="4" id="rating-4-quality" />
-									<label class="star-rating__label" for="rating-4-quality"></label>
-									<input class="star-rating__input" type="radio" name="rateQuality" value="5" id="rating-5-quality" />
-									<label class="star-rating__label" for="rating-5-quality"></label>
-									<div class="star-rating__focus"></div>
-								</div>
-							</fieldset>
+							<th:block th:include="fragments/stars :: rate('Quality')"></th:block>
 						</td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.profile.price}">Price</td>
 						<td>
-							<fieldset class="star-rating">
-								<div class="star-rating__stars">
-									<input class="star-rating__input" type="radio" name="ratePrice" value="1" id="rating-1-price" />
-									<label class="star-rating__label" for="rating-1-price"></label>
-									<input class="star-rating__input" type="radio" name="ratePrice" value="2" id="rating-2-price" />
-									<label class="star-rating__label" for="rating-2-price"></label>
-									<input class="star-rating__input" type="radio" name="ratePrice" value="3" id="rating-3-price" checked />
-									<label class="star-rating__label" for="rating-3-price"></label>
-									<input class="star-rating__input" type="radio" name="ratePrice" value="4" id="rating-4-price" />
-									<label class="star-rating__label" for="rating-4-price"></label>
-									<input class="star-rating__input" type="radio" name="ratePrice" value="5" id="rating-5-price" />
-									<label class="star-rating__label" for="rating-5-price"></label>
-									<div class="star-rating__focus"></div>
-								</div>
-							</fieldset>
+							<th:block th:include="fragments/stars :: rate('Price')"></th:block>
 						</td>
 					</tr>
 					<tr>
 						<td th:text="#{lang.profile.speed}">Speed</td>
 						<td>
-							<fieldset class="star-rating">
-								<div class="star-rating__stars">
-									<input class="star-rating__input" type="radio" name="rateSpeed" value="1" id="rating-1-speed" />
-									<label class="star-rating__label" for="rating-1-speed"></label>
-									<input class="star-rating__input" type="radio" name="rateSpeed" value="2" id="rating-2-speed" />
-									<label class="star-rating__label" for="rating-2-speed"></label>
-									<input class="star-rating__input" type="radio" name="rateSpeed" value="3" id="rating-3-speed" checked />
-									<label class="star-rating__label" for="rating-3-speed"></label>
-									<input class="star-rating__input" type="radio" name="rateSpeed" value="4" id="rating-4-speed" />
-									<label class="star-rating__label" for="rating-4-speed"></label>
-									<input class="star-rating__input" type="radio" name="rateSpeed" value="5" id="rating-5-speed" />
-									<label class="star-rating__label" for="rating-5-speed"></label>
-									<div class="star-rating__focus"></div>
-								</div>
-							</fieldset>
+							<th:block th:include="fragments/stars :: rate('Speed')"></th:block>
 						</td>
 					</tr>
 					<tr>
-						<td th:text="#{lang.profile.over-all}">Overall</td>
+						<td th:text="#{lang.profile.over-all}">OverAll</td>
 						<td>
-							<fieldset class="star-rating">
-								<div class="star-rating__stars">
-									<input class="star-rating__input" type="radio" name="rateOverAll" value="1" id="rating-1-overall" />
-									<label class="star-rating__label" for="rating-1-overall"></label>
-									<input class="star-rating__input" type="radio" name="rateOverAll" value="2" id="rating-2-overall" />
-									<label class="star-rating__label" for="rating-2-overall"></label>
-									<input class="star-rating__input" type="radio" name="rateOverAll" value="3" id="rating-3-overall" checked />
-									<label class="star-rating__label" for="rating-3-overall"></label>
-									<input class="star-rating__input" type="radio" name="rateOverAll" value="4" id="rating-4-overall" />
-									<label class="star-rating__label" for="rating-4-overall"></label>
-									<input class="star-rating__input" type="radio" name="rateOverAll" value="5" id="rating-5-overall" />
-									<label class="star-rating__label" for="rating-5-overall"></label>
-									<div class="star-rating__focus"></div>
-								</div>
-							</fieldset>
+							<th:block th:include="fragments/stars :: rate('OverAll')"></th:block>
 						</td>
 					</tr>
 				</table>
