@@ -38,6 +38,7 @@ open class UserService {
 
     open fun findAllCircleRole(circle_id: Long): List<CircleRoleEntryDto>{
         return repo.findAll()
+                .filter { !it.sysadmin }
                 .map { CircleRoleEntryDto(it,circle_id) }
                 .sortedWith(compareBy<CircleRoleEntryDto>{it.permission} .thenBy { it.name })
     }
