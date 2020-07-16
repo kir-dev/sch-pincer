@@ -103,7 +103,7 @@ open class ConfigureController {
                       request: HttpServletRequest
     ): String {
         val user = users.getByUidHash(uidHash) ?: return "redirect:/configure/${circleId}?error=invalidUidHash"
-        if (!isCircleOwner(circleId,request)) return "redirect:/configure/$circleId?error"
+        if (!isCircleOwner(circleId,request) || user.sysadmin) return "redirect:/configure/$circleId?error"
 
         val tmp : MutableSet<String> = user.permissions.toMutableSet()
         when(permission){
