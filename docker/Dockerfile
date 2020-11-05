@@ -8,6 +8,7 @@ RUN cd /usr/src/app && ./mvnw -f pom.xml clean package
 FROM openjdk:8-jdk-alpine
 MAINTAINER gerviba@sch.bme.hu
 COPY --from=build /usr/src/app/target/schpincer.jar /opt/schpincer/
+COPY docker/application-docker.properties /opt/schpincer/application.properties
 WORKDIR /opt/schpincer
 ENTRYPOINT ["java", "-jar", "/opt/schpincer/schpincer.jar"]
 EXPOSE 80
