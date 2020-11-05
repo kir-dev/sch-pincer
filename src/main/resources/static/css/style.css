@@ -105,14 +105,14 @@ a {
 .header span {
 	font-size: 24px;
 	font-weight: 900;
-	text-shadow: 0 2px 2px #111111;
 	cursor: pointer;
+	text-shadow: 1px 1px 0 #383839, 2px 2px 0 #383839, 3px 3px 0 #383839, 4px 4px 0 #383839, 5px 5px 0 #383839, 6px 6px 0 #383839, 7px 7px 0 #383839, 8px 8px 0 #383839, 9px 9px 0 #383839, 10px 10px 0 #383839, 11px 11px 0 #383839, 12px 12px 0 #383839, 13px 13px 0 #383839, 14px 14px 0 #383839, 15px 15px 0 #383839, 16px 16px 0 #383839, 17px 17px 0 #383839, 18px 18px 0 #383839, 19px 19px 0 #383839, 20px 20px 0 #383839, 21px 21px 0 #383839, 22px 22px 0 #383839, 23px 23px 0 #383839, 24px 24px 0 #383839, 25px 25px 0 #383839, 26px 26px 0 #383839, 27px 27px 0 #383839, 28px 28px 0 #383839, 29px 29px 0 #383839, 30px 30px 0 #383839, 31px 31px 0 #383839, 32px 32px 0 #383839, 33px 33px 0 #383839, 34px 34px 0 #383839, 35px 35px 0 #383839, 36px 36px 0 #383839, 37px 37px 0 #383839, 38px 38px 0 #383839, 39px 39px 0 #383839, 40px 40px 0 #383839, 41px 41px 0 #383839, 42px 42px 0 #383839, 43px 43px 0 #383839, 44px 44px 0 #383839, 45px 45px 0 #383839, 46px 46px 0 #383839, 47px 47px 0 #383839, 48px 48px 0 #383839, 49px 49px 0 #383839, 50px 50px 0 #383839;
 }
 
 .header nav {
 	display: block;
 	float: right;
-	text-shadow: 1px 1px 2px #111111;
+	text-shadow: 0 2px 0 #111111;
 }
 
 .header nav a {
@@ -573,20 +573,21 @@ a {
 
 .article .button-holder a {
 	text-decoration: none;
-	color: #FFFFFF;
 	display: inline-block;
-	padding: 16px 20px;
+	color: #383839;
+	padding: 10px 12px;
 	text-transform: uppercase;
-	background-color: #9d9d9e;
-	font-weight: 900;
-	border-top: 0 solid #FFFFFF;
-	border-bottom: 4px solid #8d8d8e;
+	font-weight: 300;
 	margin-bottom: 20px;
+	border: 1px solid #383839 !important;
+	background-color: rgba(0,0,0,0) !important;
+	transition: all ease-in-out 0.2s;
 }
 
 .article .button-holder a:hover {
-	border-top: 4px solid #FFFFFF;
-	border-bottom-width: 0;
+	color: #FFFFFF;
+	background-color: #4c4c4d !important;
+	border: 1px solid #4c4c4d !important;
 }
 
 .article.news-article {
@@ -670,7 +671,7 @@ a {
 }
 
 .highlighted table td {
-	padding: 4px 12px 2px 12px;
+	padding: 4px 8px 2px 8px;
 }
 
 .highlighted table.circles-table td:nth-of-type(1) {
@@ -694,6 +695,7 @@ a {
 .highlighted p {
 	padding: 0 40px 40px 40px;
 	text-align: justify;
+	line-height: 1.4;
 }
 
 .highlighted p b {
@@ -722,9 +724,6 @@ a {
 	color: #4c4c4d;
 	background-color: rgba(0, 0, 0, 0.2);
 	padding: 20px 0;
-	-webkit-box-shadow: inset 0 -10px 30px -14px rgba(0, 0, 0, 0.75);
-	-moz-box-shadow: inset 0 -10px 30px -14px rgba(0, 0, 0, 0.75);
-	box-shadow: inset 0 -10px 30px -14px rgba(0, 0, 0, 0.75);
 }
 
 .bright h3 {
@@ -853,21 +852,22 @@ a {
 	text-decoration: none;
 	color: #6c6c6d;
 	opacity: 1;
-	transition: opacity ease 0.3s;
+	transition: color ease 0.3s;
 }
 
 .footer a:hover {
-	opacity: 0.7;
+	color: #FFFFFF;
 }
 
 .footer a img {
 	opacity: 0.7;
 	padding-bottom: 10px;
 	max-width: 200px;
+	transition: opacity ease 0.3s;
 }
 
 .footer a:hover img {
-	opacity: 0.6;
+	opacity: 0.9;
 }
 
 .footer a i {
@@ -878,11 +878,12 @@ a {
 }
 
 .footer h3 {
-	color: #6c6c6d;
+	color: #868686;
 	text-transform: uppercase;
 	font-weight: 300;
 	margin-bottom: 20px;
 	font-size: 24px;
+	margin-top: 20px;
 }
 
 .footer .wrapper {
@@ -902,34 +903,29 @@ a {
 	padding-bottom: 10px;
 }
 
-.footer .gerviba {
+.footer .foot {
 	display: inline-block;
 	margin: 0 auto;
 	padding: 10px 20px 0 20px;
-	opacity: 0;
 	width: 80%;
 	transition: opacity ease 2s;
 }
 
-.footer .gerviba:hover {
-	opacity: 1;
-}
-
-.footer .gerviba span i {
+.footer .foot span i {
 	font-size: 20px;
 	position: relative;
 	top: 4px;
 }
 
-.footer .gerviba span:first-of-type {
+.footer .foot span:first-of-type {
 	color: #6c6c6d;
 }
 
-.footer .gerviba span:nth-of-type(2) {
+.footer .foot span:nth-of-type(2) {
 	color: #af0000;
 }
 
-.footer .gerviba span a {
+.footer .foot span a {
 	text-decoration: none;
 	color: #6c6c6d;
 }
@@ -1474,7 +1470,7 @@ form input[type="submit"]:hover {
 .circle-profile h3 {
 	color: #FFFFFF;
 	font-size: 52px;
-	text-shadow: 0 2px 2px #111111;
+	text-shadow: 0 3px 0 #111111;
 	padding-top: 10vh;
 	text-transform: uppercase;
 }
@@ -2815,6 +2811,10 @@ img.centered-mini {
 	
 	.circles-table tr {
 		display: table-row;
+	}
+
+	.footer h3 {
+		margin-top: 0;
 	}
 }
 	

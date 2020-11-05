@@ -185,7 +185,7 @@ open class ApiController {
         }
     }
 
-    @ApiOperation("Hased user id")
+    @ApiOperation("Hashed user id")
     @GetMapping("/user/id")
     @ResponseBody
     fun setRoom(request: HttpServletRequest): String {

@@ -25,8 +25,8 @@ package:
 	./mvnw clean package spring-boot:repackage
 
 docker-build: package
-	cp target/schpincer-*.jar docker/schpincer-latest.jar
-	docker build --file=docker/Dockerfile --tag=schpincer:latest --rm=true docker/
+	cp target/schpincer.jar docker/schpincer-latest.jar
+	docker build --file=docker/Dockerfile --tag=schpincer:latest --rm=true .
 
 deploy: docker-build
 	docker tag schpincer registry.k8s.sch.bme.hu/schpincer/schpincer:$(version)

@@ -70,26 +70,32 @@
 	<div class="footer" th:fragment="footer">
 		<div class="wrapper">
 			<div>
-				<h3>Jogok</h3>
+				<h3 th:text="#{lang.footer.about-us}">Rólunk</h3>
+				<p th:text="#{lang.footer.about-us-long}">Az SCH-Pincér a KIR-DEV projektje</p>
+				<a href="https://kir-dev.sch.bme.hu/"><img src="../image/kirdev.svg" th:src="@{/image/kirdev.svg}" height="120" class="white" /></a><br />
+				<a href="https://kir-dev.sch.bme.hu/projects/schpincer" target="_blank"><i class="material-icons">link</i><span>TOVÁBBI INFROMÁCIÓ</span></a>
+			</div>
+			<div>
+				<h3 th:text="#{lang.footer.rights}">Jogok</h3>
 				<p>Copyright &copy; 2020 GNU/GPL 3.0</p>
-				<p>
+				<p th:text="#{lang.footer.rights-long}">
 					Az oldalon megjelenő képek szerzői joga minden esetben a forgalmazó kört illeti. 
 					A képek esetenként csak illusztrációk. A termékek leírásának helyességéért az adott körök felelősek.
 				</p>
 				<a href="https://docs.google.com/forms/d/e/1FAIpQLSe1XaJuDzGjPUWvSnud8XXsEgUCUOUGsCHeoud_AgVJb6qorA/viewform?usp=sf_link" target="_blank"><i class="material-icons">link</i><span>Visszajelzés küldése</span></a>
 			</div>
 			<div>
-				<h3>Partnerek</h3>
+				<h3 th:text="#{lang.footer.partners}">Partnerek</h3>
 				<a href="http://foodex.sch.bme.hu/"><img src="../image/foodex.png" th:src="@{/image/foodex.png}" class="white" /></a><br />
 				<a href="http://szor.sch.bme.hu/"><i class="material-icons">link</i><span>Szolgáltatói Reszort</span></a><br />
 				<ins th:text="#{lang.footer.app-by}">App by</ins>: <a href="https://kir-dev.sch.bme.hu/"><i class="material-icons">link</i><span>KIR-DEV</span></a><br />
 				<ins th:text="#{lang.footer.hosting}">Hosting</ins>: <a href="http://kszk.sch.bme.hu/"><i class="material-icons">link</i><span>KSZK</span></a>
 			</div>
 		</div>
-		<div class="gerviba">
+		<div class="foot">
 			<span><i class="material-icons">code</i></span>
 			with <span><i class="material-icons">favorite_border</i></span>
-			by <span><a href="#VESZTETTEM">SCHÁMÁN</a></span>
+			by <span><a href="#VESZTETTEM">SCHÁMI</a></span>
 		</div>
 
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-151909044-1"></script>
