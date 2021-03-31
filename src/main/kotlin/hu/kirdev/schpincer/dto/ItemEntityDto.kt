@@ -25,6 +25,7 @@ class ItemEntityDto(base: ItemEntity, opening: OpeningEntity?, loggedin: Boolean
     val categoryMax: Int
     val discountPrice: Int
     val keywords: String
+    val outOfStock: Boolean
 
     init {
         id = base.id
@@ -43,6 +44,7 @@ class ItemEntityDto(base: ItemEntity, opening: OpeningEntity?, loggedin: Boolean
         flag = base.flag
         discountPrice = base.discountPrice
         keywords = base.keywords?.replace(",", "") ?: ""
+        outOfStock = orderable && timeWindows.all { it.normalItemCount == 0 }
 
         circleId = base.circle?.id ?: 0L
         circleAlias = base.circle?.alias ?: "404"

@@ -44,8 +44,6 @@ function filterSearch() {
     updateUrl(keyword);
     clearAll();
 
-    console.log(searchResult);
-    console.log(keyword);
     const keywords = keyword.split(' ');
     searchResult.filter(val => keywords.some(k => keywordFilter(val, k)))
         .forEach(val => addItem(val));
@@ -110,7 +108,7 @@ function formatItem(item) {
                 <div class="item ${item.circleColor}">
                     <div class="picture" style="background-image: url('${URL_BASE}${item.imageName}');" onclick="showPopup(${item.id})">
                         ${item.flag === 0 ? '' : `<div class="flag" style="background-image: url('${URL_BASE}flags/flag${item.flag}.png')"></div>`}
-                        <div class="overlay"></div>
+                        <div class="overlay">${item.outOfStock ? `<span class="out-of-stock">${LANG['outOfStock']}</span>` : ''}</div>
                     </div>
                     <h3 onclick="showPopup(${item.id})">${item.name}</h3>
                     <table>
