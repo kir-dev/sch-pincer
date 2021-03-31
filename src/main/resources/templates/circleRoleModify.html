@@ -1,51 +1,51 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="MainLayout :: head">
-	<meta charset="UTF-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css"/>
 </head>
 <body>
-	<div class="header" th:replace="MainLayout :: header">
-	</div>
+<div class="header" th:replace="MainLayout :: header">
+</div>
 
-	<div class="left-menu" th:replace="MainLayout :: left-menu">
-	</div>
+<div class="left-menu" th:replace="MainLayout :: left-menu">
+</div>
 
-	<div class="page content">
-		<div class="highlighted latest prompt">
-			<div class="decoration admin">
-				<i class="material-icons main">security</i>
-			</div>
-			<h3 th:text="#{lang.configure.title-member-roles-modify}" class="topless">Prompt text comes here?</h3>
-            <form action="#" th:action="@{/configure/__${circleId}__/roles/edit}" method="post">
-				<table class="form full-table"  th:object="${role}">
-					<input type="hidden" name="uidHash" th:value="*{uidHash}" />
-					<tr>
-						<th th:text="#{lang.modify.property}">Property</th>
-						<th th:text="#{lang.modify.value}">Value</th>
-					</tr>
-					<tr>
-						<td th:text="#{lang.admin.roles.name}">Name</td>
-						<td><span th:text="*{name}">Test name</span></td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.admin.roles.roles}">Roles</td>
-						<td><select name="permission" th:field="*{permission}">
-							<option th:each="roleOpt : ${T(hu.kirdev.schpincer.dto.CircleMemberRole).values()}"
-									th:value="${roleOpt}" th:text="#{lang.configure.member.role.__${roleOpt}__}"></option>
-						</select>
-						</td>
-					</tr>
-				</table>
-				<input class="button" type="submit" th:value="#{lang.admin.title-roles}" />
-			</form>
-		</div>
-	</div>
+<div class="page content">
+    <div class="highlighted latest prompt">
+        <div class="decoration admin">
+            <i class="material-icons main">security</i>
+        </div>
+        <h3 th:text="#{lang.configure.title-member-roles-modify}" class="topless">Prompt text comes here?</h3>
+        <form action="#" th:action="@{/configure/__${circleId}__/roles/edit}" method="post">
+            <table class="form full-table" th:object="${role}">
+                <input type="hidden" name="uidHash" th:value="*{uidHash}"/>
+                <tr>
+                    <th th:text="#{lang.modify.property}">Property</th>
+                    <th th:text="#{lang.modify.value}">Value</th>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.admin.roles.name}">Name</td>
+                    <td><span th:text="*{name}">Test name</span></td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.admin.roles.roles}">Roles</td>
+                    <td><select name="permission" th:field="*{permission}">
+                        <option th:each="roleOpt : ${T(hu.kirdev.schpincer.dto.CircleMemberRole).values()}"
+                                th:value="${roleOpt}" th:text="#{lang.configure.member.role.__${roleOpt}__}"></option>
+                    </select>
+                    </td>
+                </tr>
+            </table>
+            <input class="button" type="submit" th:value="#{lang.admin.title-roles}"/>
+        </form>
+    </div>
+</div>
 
-	<div th:replace="MainLayout :: footer"></div>
+<div th:replace="MainLayout :: footer"></div>
 </body>
 </html>

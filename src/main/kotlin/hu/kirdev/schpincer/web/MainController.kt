@@ -50,22 +50,22 @@ open class MainController {
 
     @GetMapping("/items")
     fun items(@RequestParam(name = "q", defaultValue = "") keyword: String, model: Model): String {
-        model.addAttribute("circles",  circles.findAllForMenu())
-        model.addAttribute("searchMode",  "" != keyword)
-        model.addAttribute("keyword",  keyword)
+        model.addAttribute("circles", circles.findAllForMenu())
+        model.addAttribute("searchMode", "" != keyword)
+        model.addAttribute("keyword", keyword)
         return "items"
     }
-    
+
     @GetMapping("/szor")
     fun circle(model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circlesWithOpening", circles.findAllForInfo())
         return "circle"
     }
-    
+
     @GetMapping("/circle/{circle}")
     fun circleSpecific(@PathVariable circle: String, model: Model): String {
-        model.addAttribute("circles",  circles.findAllForMenu())
+        model.addAttribute("circles", circles.findAllForMenu())
         if (circle.matches("^\\d+$".toRegex())) {
             val id = circle.toLong()
             model.addAttribute("selectedCircle", circles.getOne(id))
@@ -73,7 +73,7 @@ open class MainController {
         } else {
             val circleEntity: CircleEntity = circles.findByAlias(circle)
             model.addAttribute("selectedCircle", circleEntity)
-            model.addAttribute("nextOpening", openings.findNextStartDateOf(circleEntity.id!!))
+            model.addAttribute("nextOpening", openings.findNextStartDateOf(circleEntity.id))
         }
         return "circleProfile"
     }
@@ -82,12 +82,12 @@ open class MainController {
     fun circleSpecificAlias(@PathVariable circle: String, model: Model): String {
         return circleSpecific(circle, model)
     }
-    
+
     @GetMapping("/profile")
     fun profile(request: HttpServletRequest, model: Model): String {
         model.addAttribute("orders", this.orders.findAll(request.getUserId()).asReversed())
         model.addAttribute("circles", circles.findAllForMenu())
         return "profile"
     }
-    
+
 }

@@ -1,37 +1,39 @@
-{"properties": [
-  {
-    "name": "webschop.external",
-    "type": "java.lang.String",
-    "description": "External files path, /cdn/** "
-  },
-  {
-    "name": "schpincer.external",
-    "type": "java.lang.String",
-    "description": "External files path, /cdn/** "
-  },
-  {
-    "name": "search.distance",
-    "type": "int",
-    "description": "HibernateSerach fuzzy search distance"
-  },
-  {
-    "name": "search.name-boost",
-    "type": "float",
-    "description": "Name match boost"
-  },
-  {
-    "name": "search.keyword-boost",
-    "type": "float",
-    "description": "Keyword match boost"
-  },
-  {
-    "name": "search.time-limit-sec",
-    "type": "int",
-    "description": "Timeout for search in secs"
-  },
-  {
-    "name": "search.min-matching",
-    "type": "float",
-    "description": "Timeout for search in secs"
-  }
-]}
+{
+  "properties": [
+    {
+      "name": "webschop.external",
+      "type": "java.lang.String",
+      "description": "External files path, /cdn/** "
+    },
+    {
+      "name": "schpincer.external",
+      "type": "java.lang.String",
+      "description": "External files path, /cdn/** "
+    },
+    {
+      "name": "search.distance",
+      "type": "int",
+      "description": "HibernateSerach fuzzy search distance"
+    },
+    {
+      "name": "search.name-boost",
+      "type": "float",
+      "description": "Name match boost"
+    },
+    {
+      "name": "search.keyword-boost",
+      "type": "float",
+      "description": "Keyword match boost"
+    },
+    {
+      "name": "search.time-limit-sec",
+      "type": "int",
+      "description": "Timeout for search in secs"
+    },
+    {
+      "name": "search.min-matching",
+      "type": "float",
+      "description": "Timeout for search in secs"
+    }
+  ]
+}

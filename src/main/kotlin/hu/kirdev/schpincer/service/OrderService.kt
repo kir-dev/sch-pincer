@@ -94,6 +94,7 @@ open class OrderService {
         return order.map { orderEntity: OrderEntity -> openingRepo.getOne(orderEntity.openingId!!).circle?.id!! }.orElse(null)
     }
 
+    @Transactional(readOnly = false)
     open fun reviewOrder(id: Long, reviewId: Long) {
         val order = getOne(id)!!
         order.reviewId = reviewId
@@ -103,15 +104,14 @@ open class OrderService {
     /**
      * TODO: Refactor: Make it to more smaller functions
      */
-    @Transactional
-    @Throws(IOException::class)
+    @Transactional(readOnly = false)
     open fun makeOrder(request: HttpServletRequest, id: Long, itemCount: Int, time: Long, comment: String, detailsJson: String): ResponseEntity<String> {
         val user = request.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
         if (user.room.isEmpty())
             return responseOf(RESPONSE_NO_ROOM_SET)
 
         val order = OrderEntity(
-                userId = user.uid!!,
+                userId = user.uid,
                 userName = user.name,
                 comment = "[${user.cardType.name}] $comment",
                 detailsJson = detailsJson,
@@ -170,7 +170,8 @@ open class OrderService {
                 if (current.usedLambda < current.maxLambda) current.usedLambda += count
                 else return responseOf(RESPONSE_CATEGORY_FULL)
 
-            ItemCategory.DEFAULT -> {}
+            ItemCategory.DEFAULT -> {
+            }
         }
 
         timewindow.normalItemCount = timewindow.normalItemCount - count
@@ -178,7 +179,7 @@ open class OrderService {
             timewindow.extraItemCount = timewindow.extraItemCount - count
 
         current.orderCount = current.orderCount + count
-        with (order) {
+        with(order) {
             date = timewindow.date
             price = order.price * count
             intervalMessage = timewindow.name
@@ -195,10 +196,7 @@ open class OrderService {
         return responseOf(RESPONSE_ACK)
     }
 
-    /**
-     * TODO: Why is it deprecated?
-     */
-    @Deprecated("")
+    @Transactional(readOnly = false)
     open fun cancelOrder(request: HttpServletRequest, id: Long): ResponseEntity<String> {
         return try {
             val order = getOne(id)
@@ -227,7 +225,8 @@ open class OrderService {
                 ItemCategory.GAMMA -> opening.usedGamma -= count
                 ItemCategory.DELTA -> opening.usedDelta -= count
                 ItemCategory.LAMBDA -> opening.usedLambda -= count
-                ItemCategory.DEFAULT -> {}
+                ItemCategory.DEFAULT -> {
+                }
             }
 
             timewindowRepo.save(timeWindow)
@@ -251,16 +250,17 @@ open class OrderService {
                     .map { intervals -> Pair(intervals.key, intervals.value.groupBy { it.room }) }
                     .toList()
                     .sortedBy { it.first }
-                    .map { intervals -> intervals.first to intervals.second
-                            .toList()
-                            .sortedBy { it.second.highestPriority }
-                            .flatMap { it.second } }
+                    .map { intervals ->
+                        intervals.first to intervals.second
+                                .toList()
+                                .sortedBy { it.second.highestPriority }
+                                .flatMap { it.second }
+                    }
                     .flatMap { it.second }
             )
 
             else -> appendArtificialId(repo.findAllByOpeningIdAndStatusNotOrderByPriorityDescDateAsc(openingId, OrderStatus.CANCELLED))
         }
-
     }
 
     private fun appendArtificialId(source: List<OrderEntity>): List<OrderEntity> {

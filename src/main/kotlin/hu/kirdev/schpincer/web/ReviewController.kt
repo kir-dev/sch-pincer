@@ -51,8 +51,7 @@ open class ReviewController {
                   @RequestParam(required = true) ratePrice: Int,
                   @RequestParam(required = true) rateSpeed: Int,
                   @RequestParam(required = true) rateOverAll: Int,
-                  request: HttpServletRequest): String?
-    {
+                  request: HttpServletRequest): String? {
         val order = orders.getOne(orderId)
         if (!request.hasUser() || order == null || order.status != OrderStatus.SHIPPED || order.reviewId != null) {
             throw Exception("Requirements before reviewing order are not met!")

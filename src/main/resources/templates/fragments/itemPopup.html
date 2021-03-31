@@ -1,72 +1,79 @@
 <html xmlns:th="http://www.thymeleaf.org/">
-	<body>	
-		<div th:fragment="popup">
-			<div class="done">
-				<div class="done-circle"><div class="done-tick"></div></div><br />
-			</div>
+<body>
+<div th:fragment="popup">
+    <div class="done">
+        <div class="done-circle">
+            <div class="done-tick"></div>
+        </div>
+        <br/>
+    </div>
 
-			<div class="messagebox" onclick="closeMessageBox()" style="display: none">
-				<p id="messagebox-text">This is the message to set.</p>
-				<span th:text="#{lang.msgbox.close-messagebox}">Click here to close</span>
-			</div>
+    <div class="messagebox" onclick="closeMessageBox()" style="display: none">
+        <p id="messagebox-text">This is the message to set.</p>
+        <span th:text="#{lang.msgbox.close-messagebox}">Click here to close</span>
+    </div>
 
-			<div class="popup-bg inactive" id="popup">
-				<div class="popup" id="popup-window">
-					<div class="popup-child">
-						<div class="picture border-colored" id="popup-header">
-							<div class="overlay">
-								<i class="material-icons" onclick="closePopup()">close</i>
-							</div>
-							<div class="logo">
-								<img src="icons/ecommerce_bag_check.svg" th:src="@{/icons/ecommerce_bag_check.svg}"/>
-							</div>
-						</div>
-						<h3 id="popup-title">Ördög pizza</h3>
-						<div class="body">
-							<div class="info">
-								<div class="image" id="popup-image" style="background-image:url('../demo/pizzasch-bg.jpg')">
-									<div class="overlay"></div>
-									<i class="material-icons">fullscreen</i>
-								</div>
-								<p id="popup-description">Jalapenos alap, csili, pick szalámi mittomén, izé</p><br />
-								<ins id="popup-price-container">
-									<h5 id="popup-price-tag" th:text="#{lang.items.price}">ÁR</h5>
-									<span class="colored-light" id="popup-price">800 JMF</span>
-								</ins>
-								<object th:remove="tag" th:if="${session.user} neq null and ${session.user.room} neq null and ${session.user.room.length()} gt 0">
-									<a th:href="@{/profile}"><p th:utext="#{lang.items.room-comment(${session.user.room})}"></p></a>
-								</object>
-								<p th:if="${session.user} neq null and (${session.user.room} eq null or ${session.user.room.length()} eq 0)"><a th:href="@{/profile}" th:text="#{lang.items.no-room-comment}"></a></p>
-							</div>
-							<form onsubmit="buySelectedItem(); return false;" action="#" method="GET" class="form-order">
-								<ins id="popup-custom"></ins>
-								<div id="popup-orderable-block">
-									<label th:text="#{lang.items.interval}">Time</label>
-									<select name="time" id="popup-timewindows">
-										<option value="0">18:00 - 18:30 (20 db)</option>
-										<option value="1">18:30 - 19:00 (16 db)</option>
-										<option value="2">19:00 - 19:30 (20 db)</option>
-										<option value="3">19:30 - 20:00 (20 db)</option>
-									</select>
-									<label th:text="#{lang.items.comment}">Comment</label>
-									<input id="popup-comment" type="text" name="comment" autocomplete="off" maxlength="200" />
-									<input type="submit" class="colored-light submit-button" value="Order"
-										   th:value="#{lang.items.buy}" th:unless="${session.user} eq null" />
-								</div>
-								<em th:text="#{lang.items.loggedin}" th:if="${session.user} eq null">
-									You need to be logged in to order
-								</em>
-								<em th:text="#{lang.msgbox.already-closed}" th:unless="${session.user} eq null" id="popup-not-orderable" style="display: none">
-									Not orderable right now
-								</em>
-								<em th:text="#{lang.items.personally-orderable}" style="display: none" id="popup-personally">
-									This item is orderable only personally
-								</em>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</body>
+    <div class="popup-bg inactive" id="popup">
+        <div class="popup" id="popup-window">
+            <div class="popup-child">
+                <div class="picture border-colored" id="popup-header">
+                    <div class="overlay">
+                        <i class="material-icons" onclick="closePopup()">close</i>
+                    </div>
+                    <div class="logo">
+                        <img src="icons/ecommerce_bag_check.svg" th:src="@{/icons/ecommerce_bag_check.svg}"/>
+                    </div>
+                </div>
+                <h3 id="popup-title">Ördög pizza</h3>
+                <div class="body">
+                    <div class="info">
+                        <div class="image" id="popup-image" style="background-image:url('../demo/pizzasch-bg.jpg')">
+                            <div class="overlay"></div>
+                            <i class="material-icons">fullscreen</i>
+                        </div>
+                        <p id="popup-description">Jalapenos alap, csili, pick szalámi mittomén, izé</p><br/>
+                        <ins id="popup-price-container">
+                            <h5 id="popup-price-tag" th:text="#{lang.items.price}">ÁR</h5>
+                            <span class="colored-light" id="popup-price">800 JMF</span>
+                        </ins>
+                        <object th:remove="tag"
+                                th:if="${session.user} neq null and ${session.user.room} neq null and ${session.user.room.length()} gt 0">
+                            <a th:href="@{/profile}"><p th:utext="#{lang.items.room-comment(${session.user.room})}"></p>
+                            </a>
+                        </object>
+                        <p th:if="${session.user} neq null and (${session.user.room} eq null or ${session.user.room.length()} eq 0)">
+                            <a th:href="@{/profile}" th:text="#{lang.items.no-room-comment}"></a></p>
+                    </div>
+                    <form onsubmit="buySelectedItem(); return false;" action="#" method="GET" class="form-order">
+                        <ins id="popup-custom"></ins>
+                        <div id="popup-orderable-block">
+                            <label th:text="#{lang.items.interval}">Time</label>
+                            <select name="time" id="popup-timewindows">
+                                <option value="0">18:00 - 18:30 (20 db)</option>
+                                <option value="1">18:30 - 19:00 (16 db)</option>
+                                <option value="2">19:00 - 19:30 (20 db)</option>
+                                <option value="3">19:30 - 20:00 (20 db)</option>
+                            </select>
+                            <label th:text="#{lang.items.comment}">Comment</label>
+                            <input id="popup-comment" type="text" name="comment" autocomplete="off" maxlength="200"/>
+                            <input type="submit" class="colored-light submit-button" value="Order"
+                                   th:value="#{lang.items.buy}" th:unless="${session.user} eq null"/>
+                        </div>
+                        <em th:text="#{lang.items.loggedin}" th:if="${session.user} eq null">
+                            You need to be logged in to order
+                        </em>
+                        <em th:text="#{lang.msgbox.already-closed}" th:unless="${session.user} eq null"
+                            id="popup-not-orderable" style="display: none">
+                            Not orderable right now
+                        </em>
+                        <em th:text="#{lang.items.personally-orderable}" style="display: none" id="popup-personally">
+                            This item is orderable only personally
+                        </em>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
 </html>

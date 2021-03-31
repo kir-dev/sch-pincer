@@ -57,11 +57,12 @@ open class HibernateSearchService(entityManagerFactory: EntityManagerFactory) {
         val matchingString = matching.trim()
         if (matchingString.length < 3) {
             return items.findAll()
-                    .map{ item -> ItemEntityDto(
-                            base = item,
-                            opening = cache.computeIfAbsent(item.circle?.id!!)
-                                    { i -> openings.findNextOf(i) },
-                            loggedin = loggedIn)
+                    .map { item ->
+                        ItemEntityDto(
+                                base = item,
+                                opening = cache.computeIfAbsent(item.circle?.id!!)
+                                { i -> openings.findNextOf(i) },
+                                loggedin = loggedIn)
                     }
         }
 

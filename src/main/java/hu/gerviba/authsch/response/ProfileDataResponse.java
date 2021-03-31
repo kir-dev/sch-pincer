@@ -1,11 +1,9 @@
 /**
- * 
  * "THE BEER-WARE LICENSE" (Revision 42):
- * 
- *  <gerviba@gerviba.hu> wrote this file. As long as you retain this notice you
+ * <p>
+ * <gerviba@gerviba.hu> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
  * this stuff is worth it, you can buy me a beer in return.       Szabó Gergely
- * 
  */
 package hu.gerviba.authsch.response;
 
@@ -31,7 +29,7 @@ public final class ProfileDataResponse implements Serializable {
     public static ProfileDataResponseBuilder newBuilder() {
         return new ProfileDataResponseBuilder();
     }
-    
+
     public static final class ProfileDataResponseBuilder {
         private UUID internalId = null;
         private String displayName = null;
@@ -49,7 +47,8 @@ public final class ProfileDataResponse implements Serializable {
         private List<String> admembership = new ArrayList<>();
         private List<BMEUnitScope> bmeunitscope = new ArrayList<>();
 
-        private ProfileDataResponseBuilder() {}
+        private ProfileDataResponseBuilder() {
+        }
 
         public ProfileDataResponseBuilder setInternalId(UUID internalId) {
             this.internalId = internalId;
@@ -144,10 +143,10 @@ public final class ProfileDataResponse implements Serializable {
     private final List<BMEUnitScope> bmeunitscope;
 
     private ProfileDataResponse(UUID internalId, String displayName, String surname, String givenName, String mail,
-            String neptun, Map<String, String> linkedAccounts, List<PersonEntitlement> eduPersonEntitlement,
-            String roomNumber, String mobile, List<String> courses, List<Entrant> entrants, 
-            List<String> admembership, List<BMEUnitScope> bmeunitscope) {
-        
+                                String neptun, Map<String, String> linkedAccounts, List<PersonEntitlement> eduPersonEntitlement,
+                                String roomNumber, String mobile, List<String> courses, List<Entrant> entrants,
+                                List<String> admembership, List<BMEUnitScope> bmeunitscope) {
+
         this.internalId = internalId;
         this.displayName = displayName;
         this.surname = surname;
@@ -227,12 +226,12 @@ public final class ProfileDataResponse implements Serializable {
 
     @Override
     public String toString() {
-        return "ProfileDataResponse [internalId=" + internalId + ", displayName=" + displayName 
-                + ", surname=" + surname + ", givenName=" + givenName + ", mail=" + mail + ", neptun=" 
-                + neptun + ", linkedAccounts=" + linkedAccounts + ", eduPersonEntitlement=" 
-                + eduPersonEntitlement + ", roomNumber=" + roomNumber + ", mobile=" + mobile 
+        return "ProfileDataResponse [internalId=" + internalId + ", displayName=" + displayName
+                + ", surname=" + surname + ", givenName=" + givenName + ", mail=" + mail + ", neptun="
+                + neptun + ", linkedAccounts=" + linkedAccounts + ", eduPersonEntitlement="
+                + eduPersonEntitlement + ", roomNumber=" + roomNumber + ", mobile=" + mobile
                 + ", courses=" + courses + ", entrants=" + entrants + ", admembership="
                 + admembership + ", bmeunitscope=" + bmeunitscope + "]";
     }
-    
+
 }

@@ -1,53 +1,54 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="MainLayout :: head">
-	<meta charset="UTF-8" /> 
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css"/>
 </head>
 <body>
-	<div class="header" th:replace="MainLayout :: header">
-	</div>
-	
-	<div class="left-menu" th:replace="MainLayout :: left-menu">
-	</div>
+<div class="header" th:replace="MainLayout :: header">
+</div>
 
-	<div class="page content">
-		<div class="highlighted latest dashboard">
-			<div class="decoration admin">
-				<i class="material-icons main">tune</i>
-			</div>
-			<h3 th:text="#{lang.leader.title}" class="topless">Leader Dashboard</h3>
+<div class="left-menu" th:replace="MainLayout :: left-menu">
+</div>
 
-		</div>
+<div class="page content">
+    <div class="highlighted latest dashboard">
+        <div class="decoration admin">
+            <i class="material-icons main">tune</i>
+        </div>
+        <h3 th:text="#{lang.leader.title}" class="topless">Leader Dashboard</h3>
 
-		<div class="highlighted dashboard">
-			<table class="form full-table">
-				<tr>
-					<th th:text="#{lang.admin.circle-list}">Circles</th>
-					<th></th>
-				</tr>
-				<tr th:each="circle : ${editable}" th:object="${circle}">
-					<td th:text="*{displayName}">Pizzásch</td>
-					<td>
-						<a href="#" th:href="@{/configure/__*{id}__}"><i class="material-icons">details</i></a>
-					</td>
-				</tr>
-			</table>
-		</div>
+    </div>
 
-		<div class="highlighted dashboard latest">
-			<h3>Közlemények és súgó</h3>
+    <div class="highlighted dashboard">
+        <table class="form full-table">
+            <tr>
+                <th th:text="#{lang.admin.circle-list}">Circles</th>
+                <th></th>
+            </tr>
+            <tr th:each="circle : ${editable}" th:object="${circle}">
+                <td th:text="*{displayName}">Pizzásch</td>
+                <td>
+                    <a href="#" th:href="@{/configure/__*{id}__}"><i class="material-icons">details</i></a>
+                </td>
+            </tr>
+        </table>
+    </div>
 
-			<a href="https://github.com/kir-dev/sch-pincer/wiki/SCH-PINCÉR-Ultimate-Guide-köröknek" target="_blank" class="form-button">Súgó</a><br />
-		</div>
+    <div class="highlighted dashboard latest">
+        <h3>Közlemények és súgó</h3>
 
-		
-	</div>
+        <a href="https://github.com/kir-dev/sch-pincer/wiki/SCH-PINCÉR-Ultimate-Guide-köröknek" target="_blank"
+           class="form-button">Súgó</a><br/>
+    </div>
 
-	<div th:replace="MainLayout :: footer"></div>
+
+</div>
+
+<div th:replace="MainLayout :: footer"></div>
 </body>
 </html>

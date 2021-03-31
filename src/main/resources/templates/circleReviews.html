@@ -1,109 +1,109 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="MainLayout :: head">
-	<meta charset="UTF-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css"/>
 </head>
 <body>
-	<div class="header" th:replace="MainLayout :: header">
-	</div>
-	
-	<div class="left-menu" th:replace="MainLayout :: left-menu">
-	</div>
+<div class="header" th:replace="MainLayout :: header">
+</div>
 
-	<div class="page content">
-		<div class="highlighted">
-			<h3 th:text="${circle.displayName}">Pizzásch</h3>
+<div class="left-menu" th:replace="MainLayout :: left-menu">
+</div>
 
-			<th:block th:if="${not #lists.isEmpty(reviews)}">
-				<h4 th:text="#{lang.review.title-stats}">Statistics</h4>
-				<table class="form">
-					<!--/* TODO: migrate this into the html's own css */-->
-					<style>
-						td {
-							padding-left: 12px !important;
-						}
-					</style>
-					<tr>
-						<td th:text="#{lang.review.stats.count-of-reviews}">Count of reviews</td>
-						<td style="text-align: right" th:text="${reviewCount}">42</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.review.stats.avg-of-quality}">Average rating of quality</td>
-						<td style="text-align: right" th:text="${avgQuality}">4.21</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.review.stats.avg-of-price}">Average rating of price</td>
-						<td style="text-align: right" th:text="${avgPrice}">3.34</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.review.stats.avg-of-speed}">Average rating of speed</td>
-						<td style="text-align: right" th:text="${avgSpeed}">5.00</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.review.stats.avg-of-overall}">Average rating of overall</td>
-						<td style="text-align: right" th:text="${avgOverAll}">4.56</td>
-					</tr>
-				</table>
-			</th:block>
-		</div>
+<div class="page content">
+    <div class="highlighted">
+        <h3 th:text="${circle.displayName}">Pizzásch</h3>
 
-		<div class="highlighted latest">
-			<h3 th:text="#{lang.review.title-reviews}">Reviews</h3>
+        <th:block th:if="${not #lists.isEmpty(reviews)}">
+            <h4 th:text="#{lang.review.title-stats}">Statistics</h4>
+            <table class="form">
+                <!--/* TODO: migrate this into the html's own css */-->
+                <style>
+                    td {
+                        padding-left: 12px !important;
+                    }
+                </style>
+                <tr>
+                    <td th:text="#{lang.review.stats.count-of-reviews}">Count of reviews</td>
+                    <td style="text-align: right" th:text="${reviewCount}">42</td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.review.stats.avg-of-quality}">Average rating of quality</td>
+                    <td style="text-align: right" th:text="${avgQuality}">4.21</td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.review.stats.avg-of-price}">Average rating of price</td>
+                    <td style="text-align: right" th:text="${avgPrice}">3.34</td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.review.stats.avg-of-speed}">Average rating of speed</td>
+                    <td style="text-align: right" th:text="${avgSpeed}">5.00</td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.review.stats.avg-of-overall}">Average rating of overall</td>
+                    <td style="text-align: right" th:text="${avgOverAll}">4.56</td>
+                </tr>
+            </table>
+        </th:block>
+    </div>
 
-			<table class="reviews full-table">
-				<tr>
-					<th th:text="#{lang.review.item-name}">Name</th>
-					<th th:text="#{lang.review.opening-name}">Opening</th>
-					<th th:text="#{lang.review.review}">Review</th>
-					<th class="rating-column" th:text="#{lang.review.rate-quality}">Quality</th>
-					<th class="rating-column" th:text="#{lang.review.rate-price}">Price</th>
-					<th class="rating-column" th:text="#{lang.review.rate-speed}">Speed</th>
-					<th class="rating-column" th:text="#{lang.review.rate-overall}">Overall</th>
-					<th th:text="#{lang.review.date}">Date</th>
-				</tr>
-				<tr th:each="review : ${reviews}" th:object="${review}">
-					<td th:text="*{order.compactName}">Tüzes Lángos</td>
-					<td th:text="*{openingFeeling}" class="comment">General feeling</td>
-					<td th:text="*{review}" class="comment">Some long and interesting comment.</td>
+    <div class="highlighted latest">
+        <h3 th:text="#{lang.review.title-reviews}">Reviews</h3>
 
-					<td class="rating-column">
-						<th:block th:each="i: ${#numbers.sequence(0, review.rateQuality - 1)}">
-							<i class="material-icons">star_rate</i>
-						</th:block>
-					</td>
-					<td class="rating-column">
-						<th:block th:each="i: ${#numbers.sequence(0, review.ratePrice - 1)}">
-							<i class="material-icons">star_rate</i>
-						</th:block>
-					</td>
-					<td class="rating-column">
-						<th:block th:each="i: ${#numbers.sequence(0, review.rateSpeed - 1)}">
-							<i class="material-icons">star_rate</i>
-						</th:block>
-					</td>
-					<td class="rating-column">
-						<th:block th:each="i: ${#numbers.sequence(0, review.rateOverAll - 1)}">
-							<i class="material-icons">star_rate</i>
-						</th:block>
-					</td>
-					<td th:text="${#dates.format(review.date, '__#{lang.date-no-year-format}__')}">MM.dd. HH:mm</td>
-				</tr>
-			</table>
+        <table class="reviews full-table">
+            <tr>
+                <th th:text="#{lang.review.item-name}">Name</th>
+                <th th:text="#{lang.review.opening-name}">Opening</th>
+                <th th:text="#{lang.review.review}">Review</th>
+                <th class="rating-column" th:text="#{lang.review.rate-quality}">Quality</th>
+                <th class="rating-column" th:text="#{lang.review.rate-price}">Price</th>
+                <th class="rating-column" th:text="#{lang.review.rate-speed}">Speed</th>
+                <th class="rating-column" th:text="#{lang.review.rate-overall}">Overall</th>
+                <th th:text="#{lang.review.date}">Date</th>
+            </tr>
+            <tr th:each="review : ${reviews}" th:object="${review}">
+                <td th:text="*{order.compactName}">Tüzes Lángos</td>
+                <td th:text="*{openingFeeling}" class="comment">General feeling</td>
+                <td th:text="*{review}" class="comment">Some long and interesting comment.</td>
 
-			<table class="responsive-table full-table">
-				<tr>
-					<td>Device screen is too low. Use desktop mode. This issue is going to be fixed.</td>
-				</tr>
-			</table>
-			<span th:if="${#lists.isEmpty(reviews)}" class="note" th:text="#{lang.review.no-reviews}">There are no orders yet</span>
-		</div>
-	</div>
+                <td class="rating-column">
+                    <th:block th:each="i: ${#numbers.sequence(0, review.rateQuality - 1)}">
+                        <i class="material-icons">star_rate</i>
+                    </th:block>
+                </td>
+                <td class="rating-column">
+                    <th:block th:each="i: ${#numbers.sequence(0, review.ratePrice - 1)}">
+                        <i class="material-icons">star_rate</i>
+                    </th:block>
+                </td>
+                <td class="rating-column">
+                    <th:block th:each="i: ${#numbers.sequence(0, review.rateSpeed - 1)}">
+                        <i class="material-icons">star_rate</i>
+                    </th:block>
+                </td>
+                <td class="rating-column">
+                    <th:block th:each="i: ${#numbers.sequence(0, review.rateOverAll - 1)}">
+                        <i class="material-icons">star_rate</i>
+                    </th:block>
+                </td>
+                <td th:text="${#dates.format(review.date, '__#{lang.date-no-year-format}__')}">MM.dd. HH:mm</td>
+            </tr>
+        </table>
 
-	<div th:replace="MainLayout :: footer"></div>
+        <table class="responsive-table full-table">
+            <tr>
+                <td>Device screen is too low. Use desktop mode. This issue is going to be fixed.</td>
+            </tr>
+        </table>
+        <span th:if="${#lists.isEmpty(reviews)}" class="note" th:text="#{lang.review.no-reviews}">There are no orders yet</span>
+    </div>
+</div>
+
+<div th:replace="MainLayout :: footer"></div>
 </body>
 </html>

@@ -2,7 +2,6 @@ package hu.kirdev.schpincer.web
 
 import hu.gerviba.authsch.AuthSchAPI
 import hu.gerviba.authsch.response.ProfileDataResponse
-import hu.gerviba.authsch.struct.PersonEntitlement
 import hu.gerviba.authsch.struct.Scope
 import hu.kirdev.schpincer.config.Role
 import hu.kirdev.schpincer.model.CardType
@@ -58,7 +57,7 @@ open class LoginController {
                     users.save(user)
                 }
                 val permissionsByVIR = getCirclePermissionList(ownedCircles)
-                if (!user.permissions.containsAll(permissionsByVIR)){
+                if (!user.permissions.containsAll(permissionsByVIR)) {
                     permissionsByVIR.addAll(user.permissions)
                     user.permissions = permissionsByVIR
                     users.save(user)
@@ -79,7 +78,7 @@ open class LoginController {
 
             request.session.setAttribute(USER_SESSION_ATTRIBUTE_NAME, user.uid)
             request.session.setAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME, user)
-            request.session.setAttribute(CIRCLE_OWNERSHIP_SESSION_ATTRIBUTE_NAME,ownedCircles)
+            request.session.setAttribute(CIRCLE_OWNERSHIP_SESSION_ATTRIBUTE_NAME, ownedCircles)
             SecurityContextHolder.getContext().authentication = auth
         } catch (e: Exception) {
             auth?.isAuthenticated = false
@@ -88,15 +87,15 @@ open class LoginController {
         return if (auth != null && auth.isAuthenticated) "redirect:/" else "redirect:/?error"
     }
 
-    private fun getOwnedCircleIds(profile: ProfileDataResponse): List<Long>{
+    private fun getOwnedCircleIds(profile: ProfileDataResponse): List<Long> {
         return profile.eduPersonEntitlements
                 .filter { it.status == "körvezető" }
-                .mapNotNull{circles.findByvirGroupId(it.id)?.id}
+                .mapNotNull { circles.findByVirGroupId(it.id)?.id }
     }
 
-    private fun getCirclePermissionList(circles: List<Long>): MutableSet<String>{
-        var permissions = mutableSetOf<String>()
-        if(circles.isNotEmpty()){
+    private fun getCirclePermissionList(circles: List<Long>): MutableSet<String> {
+        val permissions = mutableSetOf<String>()
+        if (circles.isNotEmpty()) {
             permissions.add("ROLE_LEADER")
             permissions.addAll(circles.map { "CIRCLE_${it}" })
         }

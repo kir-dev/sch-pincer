@@ -1,11 +1,9 @@
 /**
- * 
  * "THE BEER-WARE LICENSE" (Revision 42):
- * 
- *  <gerviba@gerviba.hu> wrote this file. As long as you retain this notice you
+ * <p>
+ * <gerviba@gerviba.hu> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
  * this stuff is worth it, you can buy me a beer in return.       Szabó Gergely
- * 
  */
 package hu.gerviba.authsch.struct;
 
@@ -17,7 +15,7 @@ import java.io.Serializable;
 public class Entrant implements Serializable {
 
     private static final long serialVersionUID = 461763126385555164L;
-    
+
     private final int groupId;
     private final String groupName;
     private final String entrantType;

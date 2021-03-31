@@ -1,11 +1,9 @@
 /**
- * 
  * "THE BEER-WARE LICENSE" (Revision 42):
- * 
- *  <gerviba@gerviba.hu> wrote this file. As long as you retain this notice you
+ * <p>
+ * <gerviba@gerviba.hu> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
  * this stuff is worth it, you can buy me a beer in return.       Szabó Gergely
- * 
  */
 package hu.gerviba.authsch;
 
@@ -33,7 +31,7 @@ import hu.gerviba.authsch.struct.Scope;
  * <h1>How to init:</h1>
  * Set client id and key with {@link #setClientIdentifier(String)} and {@link #setClientKey(String)}.
  * Store it in application scope.
- * 
+ *
  * @author Gerviba
  * @see {@link #validateAuthentication(String)}
  * @see {@link #refreshToken(String)}
@@ -49,11 +47,12 @@ public class AuthSchAPI implements Serializable {
     private String clientIdentifier = "testclient";
     private String clientKey = "testpass";
 
-    public AuthSchAPI() {}
+    public AuthSchAPI() {
+    }
 
     /**
      * Token endpoint url
-     * 
+     *
      * @return Default: https://auth.sch.bme.hu/oauth2/token
      */
     public String getTokenUrlBase() {
@@ -62,7 +61,7 @@ public class AuthSchAPI implements Serializable {
 
     /**
      * Sets token endpoint url
-     * 
+     *
      * @param tokenUrlBase (default: https://auth.sch.bme.hu/oauth2/token)
      */
     public void setTokenUrlBase(String tokenUrlBase) {
@@ -71,7 +70,7 @@ public class AuthSchAPI implements Serializable {
 
     /**
      * Login base url
-     * 
+     *
      * @return Default: https://auth.sch.bme.hu/site/login
      */
     public String getLoginUrlBase() {
@@ -80,7 +79,7 @@ public class AuthSchAPI implements Serializable {
 
     /**
      * Sets login base url
-     * 
+     *
      * @param loginUrlBase (default: https://auth.sch.bme.hu/site/login)
      */
     public void setLoginUrlBase(String loginUrlBase) {
@@ -89,7 +88,7 @@ public class AuthSchAPI implements Serializable {
 
     /**
      * API endpoint base url
-     * 
+     *
      * @return Default: https://auth.sch.bme.hu/api
      */
     public String getApiUrlBase() {
@@ -98,7 +97,7 @@ public class AuthSchAPI implements Serializable {
 
     /**
      * Sets API endpoint base url
-     * 
+     *
      * @param apiUrlBase (default: https://auth.sch.bme.hu/api)
      */
     public void setApiUrlBase(String apiUrlBase) {
@@ -107,7 +106,7 @@ public class AuthSchAPI implements Serializable {
 
     /**
      * Sets client's identifier
-     * 
+     *
      * @param clientIdentifier about 20 digit numbers
      */
     public void setClientIdentifier(String clientIdentifier) {
@@ -116,7 +115,7 @@ public class AuthSchAPI implements Serializable {
 
     /**
      * Sets client's secret key
-     * 
+     *
      * @param clientKey about 80 chars [a-zA-Z0-9]
      */
     public void setClientKey(String clientKey) {
@@ -133,7 +132,7 @@ public class AuthSchAPI implements Serializable {
 
     /**
      * Validate authentication
-     * 
+     *
      * @param code Received `code` value from HTTPS parameters
      * @throws AuthSchResponseException
      */
@@ -143,7 +142,7 @@ public class AuthSchAPI implements Serializable {
 
     /**
      * Validate authentication
-     * 
+     *
      * @param code Received `code` value from HTTPS parameters
      * @throws AuthSchResponseException
      */
@@ -153,7 +152,7 @@ public class AuthSchAPI implements Serializable {
 
     /**
      * Login URL generator
-     * 
+     *
      * @param uniqueId A unique identifier for the user. Must be hashed! (eg. sha256(JSESSIONID))
      * @param scopes A list of used scopes
      * @return Generated login url
@@ -165,7 +164,7 @@ public class AuthSchAPI implements Serializable {
 
     /**
      * Login URL generator
-     * 
+     *
      * @param uniqueId A unique identifier for the user. Must be hashed! (eg. sha256(JSESSIONID))
      * @param scopes A list of used scopes
      * @return Generated login url
@@ -177,7 +176,7 @@ public class AuthSchAPI implements Serializable {
 
     /**
      * Load profile info
-     * 
+     *
      * @param accessToken
      * @throws AuthSchResponseException
      */
@@ -213,13 +212,13 @@ public class AuthSchAPI implements Serializable {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode obj = objectMapper.readTree(rawJson);
-            
+
             ProfileDataResponseBuilder response = ProfileDataResponse.newBuilder();
 
             for (Scope scope : Scope.values())
                 if (scope.canApply(obj))
                     scope.apply(response, obj);
-            
+
             return response.build();
         } catch (NullPointerException e) {
             throw new AuthSchResponseException("Failed to parse auth response", e);

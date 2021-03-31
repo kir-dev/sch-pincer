@@ -2,7 +2,6 @@ package hu.kirdev.schpincer.service
 
 import hu.kirdev.schpincer.dao.UserRepository
 import hu.kirdev.schpincer.dto.CircleRoleEntryDto
-import hu.kirdev.schpincer.dto.RoleEntryDto
 import hu.kirdev.schpincer.model.UserEntity
 import hu.kirdev.schpincer.web.sha256
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,48 +10,52 @@ import org.springframework.transaction.annotation.Transactional
 import java.security.NoSuchAlgorithmException
 import java.util.*
 
-
 @Service
-@Transactional
 open class UserService {
 
     @Autowired
     private lateinit var repo: UserRepository
 
+    @Transactional(readOnly = true)
     open fun getById(uid: String): UserEntity {
         return repo.getOne(uid)
     }
 
+    @Transactional(readOnly = true)
     open fun exists(uid: String): Boolean {
         return repo.existsById(uid)
     }
 
+    @Transactional(readOnly = false)
     open fun save(user: UserEntity) {
         repo.save(user)
     }
 
+    @Transactional(readOnly = true)
     open fun findAll(): List<UserEntity> {
         return repo.findAll()
     }
 
-
-    open fun findAllCircleRole(circle_id: Long): List<CircleRoleEntryDto>{
+    @Transactional(readOnly = true)
+    open fun findAllCircleRole(circle_id: Long): List<CircleRoleEntryDto> {
         return repo.findAll()
                 .filter { !it.sysadmin }
-                .map { CircleRoleEntryDto(it,circle_id) }
-                .sortedWith(compareBy<CircleRoleEntryDto>{it.permission} .thenBy { it.name })
+                .map { CircleRoleEntryDto(it, circle_id) }
+                .sortedWith(compareBy<CircleRoleEntryDto> { it.permission }.thenBy { it.name })
     }
 
-    open fun FindPermissionByUidHash(uidHash: String,circle_id: Long): CircleRoleEntryDto? {
-        val user : UserEntity = getByUidHash(uidHash) ?: return  null
-        return CircleRoleEntryDto(user,circle_id)
+    @Transactional(readOnly = true)
+    open fun findPermissionByUidHash(uidHash: String, circle_id: Long): CircleRoleEntryDto? {
+        val user: UserEntity = getByUidHash(uidHash) ?: return null
+        return CircleRoleEntryDto(user, circle_id)
     }
 
+    @Transactional(readOnly = true)
     open fun getByUidHash(uidHash: String): UserEntity? {
         val users: List<UserEntity> = repo.findAll()
         return users.stream().filter {
             try {
-                return@filter it.uid?.sha256().equals(uidHash, ignoreCase = true)
+                return@filter it.uid.sha256().equals(uidHash, ignoreCase = true)
             } catch (e: NoSuchAlgorithmException) {
                 e.printStackTrace()
             }
@@ -60,6 +63,7 @@ open class UserService {
         }.findAny().orElse(null)
     }
 
+    @Transactional(readOnly = false)
     open fun grantAdmin(uid: String): Boolean {
         val req: Optional<UserEntity> = repo.findById(uid)
         if (!req.isPresent())
@@ -70,6 +74,7 @@ open class UserService {
         return true
     }
 
+    @Transactional(readOnly = false)
     open fun setRoom(userId: String, room: String): UserEntity {
         val user = getById(userId)
         user.room = room

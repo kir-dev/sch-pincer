@@ -1,11 +1,9 @@
 /**
- * 
  * "THE BEER-WARE LICENSE" (Revision 42):
- * 
- *  <gerviba@gerviba.hu> wrote this file. As long as you retain this notice you
+ * <p>
+ * <gerviba@gerviba.hu> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
  * this stuff is worth it, you can buy me a beer in return.       Szabó Gergely
- * 
  */
 package hu.gerviba.authsch.struct;
 
@@ -33,7 +31,7 @@ public enum Scope {
         public boolean canApply(JsonNode obj) {
             return true;
         }
-        
+
         @Override
         public void apply(ProfileDataResponseBuilder response, JsonNode obj) {
             response.setInternalId(UUID.fromString(obj.get("internal_id").asText()));
@@ -101,7 +99,7 @@ public enum Scope {
         @Override
         public void apply(ProfileDataResponseBuilder response, JsonNode obj) {
             obj.path(getScope()).fields()
-                .forEachRemaining(x -> response.addLinkedAccount(x.getKey(), x.getValue().asText()));
+                    .forEachRemaining(x -> response.addLinkedAccount(x.getKey(), x.getValue().asText()));
         }
     },
     /**
@@ -177,7 +175,7 @@ public enum Scope {
         @Override
         public void apply(ProfileDataResponseBuilder response, JsonNode obj) {
             obj.path(Scope.ACTIVE_DIRECTORY_MEMBERSHIP.getScope()).elements()
-                .forEachRemaining(x -> response.addADMembership(x.asText()));
+                    .forEachRemaining(x -> response.addADMembership(x.asText()));
         }
     },
     /**
@@ -189,12 +187,12 @@ public enum Scope {
         @Override
         public void apply(ProfileDataResponseBuilder response, JsonNode obj) {
             obj.path(Scope.BME_UNIT_SCOPE.getScope()).elements()
-                .forEachRemaining(x -> response.addBmeUnitScope(BMEUnitScope.valueOf(x.asText())));
+                    .forEachRemaining(x -> response.addBmeUnitScope(BMEUnitScope.valueOf(x.asText())));
         }
     };
-    
+
     private final String scope;
-    
+
     private Scope(String scope) {
         this.scope = scope;
     }
@@ -205,16 +203,16 @@ public enum Scope {
                 return s;
         return BASIC;
     }
-    
+
     public String getScope() {
         return scope;
     }
-    
+
     public static String buildForUrl(List<Scope> scopes) {
         return String.join("+", scopes.stream()
                 .map(x -> x.scope).collect(Collectors.toList()));
     }
-    
+
     public static String buildForUrl(Scope... scopes) {
         return String.join("+", Arrays.asList(scopes).stream()
                 .map(x -> x.scope).collect(Collectors.toList()));
@@ -225,12 +223,12 @@ public enum Scope {
                 .map(x -> Scope.byScope(x))
                 .collect(Collectors.toList());
     }
-    
+
     public boolean canApply(JsonNode obj) {
-        return obj.get(getScope()) != null 
+        return obj.get(getScope()) != null
                 && !obj.get(getScope()).isNull();
     }
-    
+
     public abstract void apply(ProfileDataResponseBuilder builder, JsonNode obj);
-    
+
 }

@@ -18,11 +18,11 @@ data class ItemEntity(
         @Id
         @Column
         @GeneratedValue(strategy = GenerationType.AUTO)
-        var id: Long? = null,
+        var id: Long = 0,
 
         @Field(termVector = TermVector.YES)
         @Column
-        var name: String,
+        var name: String = "",
 
         @JsonIdentityInfo(generator = PropertyGenerator::class, property = "id")
         @JsonIdentityReference(alwaysAsId = true)
@@ -32,12 +32,12 @@ data class ItemEntity(
         @Lob
         @Column
         @Field(termVector = TermVector.YES)
-        var description: String,
+        var description: String = "",
 
         @Lob
         @Field(termVector = TermVector.YES)
-        @Column 
-        var ingredients: String,
+        @Column
+        var ingredients: String = "",
 
         @JsonIgnore
         @Field(termVector = TermVector.YES)
@@ -46,7 +46,7 @@ data class ItemEntity(
 
         @Lob
         @Column
-        var detailsConfigJson: String,
+        var detailsConfigJson: String = "[]",
 
         @Column
         var price: Int = 0,
@@ -70,7 +70,7 @@ data class ItemEntity(
         var personallyOrderable: Boolean = false,
 
         @Column
-        var imageName: String?,
+        var imageName: String? = "",
 
         @Column
         var flag: Int = 0,

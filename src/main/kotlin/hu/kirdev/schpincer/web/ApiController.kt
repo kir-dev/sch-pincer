@@ -4,13 +4,11 @@ import hu.kirdev.schpincer.dto.ItemEntityDto
 import hu.kirdev.schpincer.model.CircleEntity
 import hu.kirdev.schpincer.model.ItemEntity
 import hu.kirdev.schpincer.model.OpeningEntity
-import hu.kirdev.schpincer.model.OrderStatus
 import hu.kirdev.schpincer.service.*
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -44,7 +42,7 @@ open class ApiController {
         if (item == null || (!request.hasUser() && !item.visibleWithoutLogin))
             return null
         val loggedIn = request.hasUser() || request.isInInternalNetwork()
-        return ItemEntityDto(item, openings.findNextOf(item.circle!!.id!!), loggedIn)
+        return ItemEntityDto(item, openings.findNextOf(item.circle!!.id), loggedIn)
     }
 
     @ApiOperation("List of items")
@@ -62,7 +60,7 @@ open class ApiController {
                     .filter(ItemEntity::visible)
                     .map { item: ItemEntity ->
                         ItemEntityDto(item,
-                                cache.computeIfAbsent(item.circle!!.id!!) { openings.findNextOf(it) },
+                                cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
                                 loggedIn || request.isInInternalNetwork())
                     }
                     .collect(Collectors.toList())
@@ -74,7 +72,7 @@ open class ApiController {
                 .filter(ItemEntity::visible)
                 .map { item: ItemEntity ->
                     ItemEntityDto(item,
-                            cache.computeIfAbsent(item.circle!!.id!!) { openings.findNextOf(it) },
+                            cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
                             loggedIn || request.isInInternalNetwork())
                 }
                 .collect(Collectors.toList())
@@ -91,8 +89,8 @@ open class ApiController {
                 .filter { it.visibleWithoutLogin || loggedIn }
                 .filter(ItemEntity::visibleInAll)
                 .map { item: ItemEntity ->
-                    ItemEntityDto(item, 
-                            cache.computeIfAbsent(item.circle!!.id!!) { openings.findNextOf(it) },
+                    ItemEntityDto(item,
+                            cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
                             loggedIn || request.isInInternalNetwork())
                 }
                 .collect(Collectors.toList())
@@ -109,8 +107,8 @@ open class ApiController {
                 .filter { it.visibleWithoutLogin || loggedIn }
                 .filter(ItemEntity::visibleInAll)
                 .map { item: ItemEntity ->
-                    ItemEntityDto(item, 
-                            cache.computeIfAbsent(item.circle!!.id!!) { openings.findNextOf(it) },
+                    ItemEntityDto(item,
+                            cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
                             loggedIn || request.isInInternalNetwork())
                 }
                 .collect(Collectors.toList())
@@ -127,8 +125,8 @@ open class ApiController {
                 .filter { it.visibleWithoutLogin || loggedIn }
                 .filter(ItemEntity::visibleInAll)
                 .map { item: ItemEntity ->
-                    ItemEntityDto(item, 
-                            cache.computeIfAbsent(item.circle!!.id!!) { openings.findNextOf(it) },
+                    ItemEntityDto(item,
+                            cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
                             loggedIn || request.isInInternalNetwork())
                 }
                 .collect(Collectors.toList())
@@ -159,26 +157,30 @@ open class ApiController {
         return ResponseEntity(page, HttpStatus.OK)
     }
 
+    data class NewOrderRequest(var id: Long = -1,
+                               var time: Int = -1,
+                               var comment: String = "",
+                               var count: Int = 1,
+                               var detailsJson: String = "{}")
+
     @ApiOperation("New order")
     @PostMapping("/order")
     @ResponseBody
     @Throws(Exception::class)
-    fun newOrder(request: HttpServletRequest,
-                 @RequestParam(required = true) id: Long,
-                 @RequestParam(required = true) time: Int,
-                 @RequestParam(required = true) comment: String,
-                 @RequestParam(defaultValue = "1") count: Int,
-                 @RequestParam(required = true) detailsJson: String
-    ): ResponseEntity<String> {
-        return orders.makeOrder(request, id, count, time.toLong(), comment, detailsJson)
+    fun newOrder(request: HttpServletRequest, @RequestBody requestBody: NewOrderRequest): ResponseEntity<String> {
+        if (requestBody.id < 0 || requestBody.time < 0 || requestBody.detailsJson == "{}")
+            return ResponseEntity(RESPONSE_INTERNAL_ERROR, HttpStatus.OK)
+        return orders.makeOrder(request, requestBody.id, requestBody.count, requestBody.time.toLong(), requestBody.comment, requestBody.detailsJson)
     }
+
+    data class RoomChangeRequest(var room: String = "")
 
     @ApiOperation("Set room code")
     @PostMapping("/user/room")
     @ResponseBody
-    fun setRoom(request: HttpServletRequest, @RequestParam(required = true) room: String): String {
+    fun setRoom(request: HttpServletRequest, @RequestBody(required = true) requestBody: RoomChangeRequest): String {
         return try {
-            request.session.setAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME, users.setRoom(request.getUserId(), room))
+            request.session.setAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME, users.setRoom(request.getUserId(), requestBody.room))
             "ACK"
         } catch (e: Exception) {
             "REJECT"

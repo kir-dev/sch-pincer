@@ -5,9 +5,7 @@ import com.itextpdf.text.pdf.PdfPCell
 import com.itextpdf.text.pdf.PdfPTable
 import com.itextpdf.text.pdf.PdfWriter
 import hu.kirdev.schpincer.dto.CircleMemberRole
-import hu.kirdev.schpincer.dto.CircleRoleEntryDto
 import hu.kirdev.schpincer.dto.OpeningEntityDto
-import hu.kirdev.schpincer.dto.RoleEntryDto
 import hu.kirdev.schpincer.model.*
 import hu.kirdev.schpincer.service.*
 import hu.kirdev.schpincer.web.component.ExportType
@@ -74,10 +72,10 @@ open class ConfigureController {
     @GetMapping("/configure/{circleId}")
     fun configure(@PathVariable circleId: Long, model: Model, request: HttpServletRequest): String? {
         model.addAttribute("circles", circles.findAllForMenu())
-        model.addAttribute("circle", circles.getOne(circleId!!))
+        model.addAttribute("circle", circles.getOne(circleId))
         model.addAttribute("pr", isPR(circleId, request))
-        model.addAttribute("owner", isCircleOwner(circleId,request))
-        model.addAttribute("roles", users.findAllCircleRole(circleId).filter { it.permission !== CircleMemberRole.NONE})
+        model.addAttribute("owner", isCircleOwner(circleId, request))
+        model.addAttribute("roles", users.findAllCircleRole(circleId).filter { it.permission !== CircleMemberRole.NONE })
         model.addAttribute("circleId", circleId)
         model.addAttribute("items", items.findAllByCircle(circleId))
         return "configure"
@@ -87,7 +85,7 @@ open class ConfigureController {
     fun listUserRole(@PathVariable circleId: Long, model: Model): String? {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circleId", circleId)
-        model.addAttribute("roles", users.findAllCircleRole(circleId));
+        model.addAttribute("roles", users.findAllCircleRole(circleId))
         return "circleRoleList"
     }
 
@@ -95,7 +93,7 @@ open class ConfigureController {
     fun editUserRole(@PathVariable circleId: Long, @PathVariable uidHash: String, model: Model): String? {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circleId", circleId)
-        model.addAttribute("role", users.FindPermissionByUidHash(uidHash,circleId));
+        model.addAttribute("role", users.findPermissionByUidHash(uidHash, circleId))
         return "circleRoleModify"
     }
 
@@ -106,24 +104,23 @@ open class ConfigureController {
                       request: HttpServletRequest
     ): String {
         val user = users.getByUidHash(uidHash) ?: return "redirect:/configure/${circleId}?error=invalidUidHash"
-        if (!isCircleOwner(circleId,request) || user.sysadmin) return "redirect:/configure/$circleId?error"
+        if (!isCircleOwner(circleId, request) || user.sysadmin) return "redirect:/configure/$circleId?error"
 
-        val tmp : MutableSet<String> = user.permissions.toMutableSet()
-        when(permission){
-            CircleMemberRole.NONE -> tmp.removeAll(listOf("CIRCLE_${circleId}","PR_${circleId}"))
-            CircleMemberRole.PR -> tmp.addAll(listOf("CIRCLE_${circleId}","PR_${circleId}","ROLE_LEADER"))
+        val tmp: MutableSet<String> = user.permissions.toMutableSet()
+        when (permission) {
+            CircleMemberRole.NONE -> tmp.removeAll(listOf("CIRCLE_${circleId}", "PR_${circleId}"))
+            CircleMemberRole.PR -> tmp.addAll(listOf("CIRCLE_${circleId}", "PR_${circleId}", "ROLE_LEADER"))
             CircleMemberRole.LEADER -> {
-                tmp.addAll(listOf("CIRCLE_${circleId}","ROLE_LEADER"))
+                tmp.addAll(listOf("CIRCLE_${circleId}", "ROLE_LEADER"))
                 tmp.remove("PR_${circleId}")
             }
         }
-        if(tmp.count() == 1 && tmp.first() == "ROLE_LEADER") tmp.clear()
+        if (tmp.count() == 1 && tmp.first() == "ROLE_LEADER") tmp.clear()
         user.permissions = tmp
         users.save(user)
 
         return "redirect:/configure/$circleId/roles/list"
     }
-
 
     @GetMapping("/configure/{circleId}/members/new")
     fun newMember(@PathVariable circleId: Long, model: Model): String? {
@@ -169,7 +166,7 @@ open class ConfigureController {
         if (cannotEditCircleNoPR(circleId, request)) return "redirect:/configure/$circleId?error"
 
         val original = members.getOne(id)
-        if (original.circle!!.id != circleId) return  "redirect:/configure/$circleId?error"
+        if (original.circle!!.id != circleId) return "redirect:/configure/$circleId?error"
 
         original.name = cme.name
         original.precedence = cme.precedence
@@ -199,7 +196,7 @@ open class ConfigureController {
                             @PathVariable memberId: Long,
                             request: HttpServletRequest): String {
         if (cannotEditCircleNoPR(circleId, request)) return "redirect:/configure/$circleId?error"
-        val cme = members.getOne(memberId!!)
+        val cme = members.getOne(memberId)
         if (cme.circle!!.id == circleId) members.delete(cme)
         return "redirect:/configure/$circleId"
     }
@@ -253,19 +250,12 @@ open class ConfigureController {
         model.addAttribute("itemId", -1)
         model.addAttribute("mode", "new")
         val ie = ItemEntity(
-                detailsConfigJson = "[]",
                 orderable = true,
                 visible = true,
                 service = false,
                 visibleInAll = true,
                 personallyOrderable = false,
-                visibleWithoutLogin = true,
-                flag = 0,
-                description = "", // TODO: Make them the default value
-                imageName = "",
-                alias = "",
-                name = "",
-                ingredients = "")
+                visibleWithoutLogin = true)
         model.addAttribute("item", ie)
         return "itemModify"
     }
@@ -297,7 +287,7 @@ open class ConfigureController {
 
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("mode", "edit")
-        model.addAttribute("item", items.getOne(itemId!!)?.copy())
+        model.addAttribute("item", items.getOne(itemId)?.copy())
         return "itemModify"
     }
 
@@ -362,7 +352,7 @@ open class ConfigureController {
                           request: HttpServletRequest
     ): String {
         if (cannotEditCircle(circleId, request)) return "redirect:/configure/$circleId?error"
-        val ie = items.getOne(itemId!!)
+        val ie = items.getOne(itemId)
         if (ie!!.circle!!.id == circleId) items.delete(ie)
         return "redirect:/configure/$circleId"
     }
@@ -383,22 +373,22 @@ open class ConfigureController {
     ): String {
         if (cannotEditCircle(circleId, request)) return "redirect:/configure/$circleId?error"
         val eo = OpeningEntity(
-            feeling = oed.feeling,
-            circle = circles.getOne(circleId),
-            dateStart = parseDate(oed.dateStart),
-            dateEnd = parseDate(oed.dateEnd),
-            orderStart = parseDate(oed.orderStart),
-            orderEnd = parseDate(oed.orderEnd),
-            timeIntervals = oed.timeIntervals,
-            maxOrder = oed.maxOrder,
-            maxOrderPerInterval = oed.maxOrderPerInterval,
-            maxExtraPerInterval = oed.maxExtraPerInterval,
-            intervalLength = oed.intervalLength,
-            maxAlpha = oed.maxAlpha,
-            maxBeta = oed.maxBeta,
-            maxGamma = oed.maxGamma,
-            maxDelta = oed.maxDelta,
-            maxLambda = oed.maxLambda
+                feeling = oed.feeling,
+                circle = circles.getOne(circleId),
+                dateStart = parseDate(oed.dateStart),
+                dateEnd = parseDate(oed.dateEnd),
+                orderStart = parseDate(oed.orderStart),
+                orderEnd = parseDate(oed.orderEnd),
+                timeIntervals = oed.timeIntervals,
+                maxOrder = oed.maxOrder,
+                maxOrderPerInterval = oed.maxOrderPerInterval,
+                maxExtraPerInterval = oed.maxExtraPerInterval,
+                intervalLength = oed.intervalLength,
+                maxAlpha = oed.maxAlpha,
+                maxBeta = oed.maxBeta,
+                maxGamma = oed.maxGamma,
+                maxDelta = oed.maxDelta,
+                maxLambda = oed.maxLambda
         )
         val file = prFile?.uploadFile("pr")
         eo.prUrl = if (file == null) "image/blank-pr.jpg" else "cdn/pr/$file"
@@ -506,7 +496,7 @@ open class ConfigureController {
             model: Model
     ): String {
         val circle = openings.getOne(openingId).circle
-        if (cannotEditCircle(circle!!.id!!, request))
+        if (cannotEditCircle(circle!!.id, request))
             return "redirect:/configure/${circle.id}?error"
 
         model.addAttribute("artificialId", artificialId != "off")
@@ -537,7 +527,7 @@ open class ConfigureController {
                      request: HttpServletRequest
     ): String {
         val opening = openings.getOne(openingId)
-        if (cannotEditCircle(opening.circle!!.id!!, request))
+        if (cannotEditCircle(opening.circle!!.id, request))
             return "redirect:/configure/" + opening.circle!!.id + "?error"
 
         val document = Document()
@@ -592,7 +582,7 @@ open class ConfigureController {
     }
 
     private fun addOrderRows(table: PdfPTable, export: ExportType, opening: OpeningEntity): Int {
-        val ordersList: List<OrderEntity> = orders.findToExport(opening.id!!, export.orderByFunction)
+        val ordersList: List<OrderEntity> = orders.findToExport(opening.id, export.orderByFunction)
         for (i in ordersList.indices)
             ordersList[i].artificialTransientId = i + 1
 
@@ -615,7 +605,7 @@ open class ConfigureController {
             export.fields.forEach { _ ->
                 val cell = PdfPCell()
                 cell.phrase = Phrase(" ") // NOTE: Empty phrases are ignored. Therefore at least
-                                                 // one whitespace character is needed to be added.
+                // one whitespace character is needed to be added.
                 cell.isNoWrap = false
                 table.addCell(cell)
             }

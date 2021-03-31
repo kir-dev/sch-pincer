@@ -1,98 +1,99 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="MainLayout :: head">
-	<meta charset="UTF-8" /> 
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css"/>
 </head>
 <body>
-	<div class="header" th:replace="MainLayout :: header">
-	</div>
-	
-	<div class="left-menu" th:replace="MainLayout :: left-menu">
-	</div>
+<div class="header" th:replace="MainLayout :: header">
+</div>
 
-	<div class="page content">
-		<div class="highlighted latest dashboard">
-			<div class="decoration admin">
-				<i class="material-icons main">tune</i>
-			</div>
-			<h3 th:text="#{lang.configure.title-opening}" class="topless">Modify Opening</h3>
-			<form action="#" th:action="@{/configure/__${circleId}__/openings/new}" method="post" enctype="multipart/form-data" class="scrollable-x">
-				<table class="form full-table" th:object="${opening}">
-					<tr>
-						<th th:text="#{lang.modify.property}">Property</th>
-						<th th:text="#{lang.modify.value}">Value</th>
-					</tr>
-					<tr>
-						<td th:text="#{lang.configure.opening.feeling}">Feeling</td>
-						<td><input type="text" th:field="*{feeling}"/></td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.configure.opening.date-start}">Date start</td>
-						<td><input type="datetime-local" th:field="*{dateStart}"/></td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.configure.opening.date-end}">Date end</td>
-						<td><input type="datetime-local" th:field="*{dateEnd}"/></td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.configure.opening.order-start}">Order start</td>
-						<td><input type="datetime-local" th:field="*{orderStart}"/></td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.configure.opening.order-end}">Order end</td>
-						<td><input type="datetime-local" th:field="*{orderEnd}"/></td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.configure.opening.order-max}">Order max</td>
-						<td><input type="number" th:field="*{maxOrder}"/></td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.configure.opening.order-max-per}">Order max per interval</td>
-						<td><input type="number" th:field="*{maxOrderPerInterval}"/></td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.configure.opening.order-extra-max-per}">Order max extra per interval</td>
-						<td><input type="number" th:field="*{maxExtraPerInterval}"/></td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.configure.opening.interval-length}">Interval length</td>
-						<td><input type="number" th:field="*{intervalLength}"/></td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.configure.opening.cat-alpha}">Alpha category</td>
-						<td><input type="number" th:field="*{maxAlpha}"/></td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.configure.opening.cat-beta}">Beta category</td>
-						<td><input type="number" th:field="*{maxBeta}"/></td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.configure.opening.cat-gamma}">Gamma category</td>
-						<td><input type="number" th:field="*{maxGamma}"/></td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.configure.opening.cat-delta}">Delta category</td>
-						<td><input type="number" th:field="*{maxDelta}"/></td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.configure.opening.cat-lambda}">Lambda category</td>
-						<td><input type="number" th:field="*{maxLambda}"/></td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.configure.opening.pr}">PR picture</td>
-						<td><input type="file" name="prFile"/></td>
-					</tr>
-				</table>
-				<input class="button" type="submit" th:value="#{lang.configure.title-opening}" /> 
-			</form>
-		</div>
-	</div>
+<div class="left-menu" th:replace="MainLayout :: left-menu">
+</div>
 
-	<div th:replace="MainLayout :: footer"></div>
+<div class="page content">
+    <div class="highlighted latest dashboard">
+        <div class="decoration admin">
+            <i class="material-icons main">tune</i>
+        </div>
+        <h3 th:text="#{lang.configure.title-opening}" class="topless">Modify Opening</h3>
+        <form action="#" th:action="@{/configure/__${circleId}__/openings/new}" method="post"
+              enctype="multipart/form-data" class="scrollable-x">
+            <table class="form full-table" th:object="${opening}">
+                <tr>
+                    <th th:text="#{lang.modify.property}">Property</th>
+                    <th th:text="#{lang.modify.value}">Value</th>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.feeling}">Feeling</td>
+                    <td><input type="text" th:field="*{feeling}"/></td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.date-start}">Date start</td>
+                    <td><input type="datetime-local" th:field="*{dateStart}"/></td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.date-end}">Date end</td>
+                    <td><input type="datetime-local" th:field="*{dateEnd}"/></td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.order-start}">Order start</td>
+                    <td><input type="datetime-local" th:field="*{orderStart}"/></td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.order-end}">Order end</td>
+                    <td><input type="datetime-local" th:field="*{orderEnd}"/></td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.order-max}">Order max</td>
+                    <td><input type="number" th:field="*{maxOrder}"/></td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.order-max-per}">Order max per interval</td>
+                    <td><input type="number" th:field="*{maxOrderPerInterval}"/></td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.order-extra-max-per}">Order max extra per interval</td>
+                    <td><input type="number" th:field="*{maxExtraPerInterval}"/></td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.interval-length}">Interval length</td>
+                    <td><input type="number" th:field="*{intervalLength}"/></td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.cat-alpha}">Alpha category</td>
+                    <td><input type="number" th:field="*{maxAlpha}"/></td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.cat-beta}">Beta category</td>
+                    <td><input type="number" th:field="*{maxBeta}"/></td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.cat-gamma}">Gamma category</td>
+                    <td><input type="number" th:field="*{maxGamma}"/></td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.cat-delta}">Delta category</td>
+                    <td><input type="number" th:field="*{maxDelta}"/></td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.cat-lambda}">Lambda category</td>
+                    <td><input type="number" th:field="*{maxLambda}"/></td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.pr}">PR picture</td>
+                    <td><input type="file" name="prFile"/></td>
+                </tr>
+            </table>
+            <input class="button" type="submit" th:value="#{lang.configure.title-opening}"/>
+        </form>
+    </div>
+</div>
+
+<div th:replace="MainLayout :: footer"></div>
 </body>
 </html>

@@ -1,342 +1,386 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/">
 <head>
-	<meta charset="UTF-8" th:remove="all"/> 
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" th:remove="all"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" th:remove="all"/>
-	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet" th:remove="all">
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" th:remove="all">
-	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" th:remove="all"/>
-	<object th:include="MainLayout :: head" th:remove="tag"></object>
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js" 
-		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" 
-		crossorigin="anonymous"></script>
-	<script src="../static/js/profile.js" th:src="@{/js/profile.js}"></script>
-	<script src="../static/js/admin.js" th:src="@{/js/admin.js}"></script>
-	<script th:inline="javascript">
-		var URL_BASE = /*[[ @{/} ]]*/ "/";
-	</script>
+    <meta charset="UTF-8" th:remove="all"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" th:remove="all"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" th:remove="all"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet"
+          th:remove="all">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" th:remove="all">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" th:remove="all"/>
+    <object th:include="MainLayout :: head" th:remove="tag"></object>
+    <script src="../static/js/profile.js" th:src="@{/js/profile.js}"></script>
+    <script src="../static/js/admin.js" th:src="@{/js/admin.js}"></script>
+    <script th:inline="javascript">
+        const URL_BASE = /*[[ @{/} ]]*/ "/";
+    </script>
 </head>
 <body>
-	<div class="header" th:replace="MainLayout :: header">
-	</div>
-	
-	<div class="left-menu" th:replace="MainLayout :: left-menu">
-	</div>
+<div class="header" th:replace="MainLayout :: header">
+</div>
 
-	<div class="page content">
+<div class="left-menu" th:replace="MainLayout :: left-menu">
+</div>
 
-		<div class="highlighted dashboard">
-			<h3 th:text="#{lang.opening-info.title}">Opening info</h3>
-			<table class="form full-table">
-				<tr>
-					<td th:text="#{lang.configure.opening.feeling}">Feeling</td>
-					<td><ins th:text="${opening.feeling}"></ins></td>
-				</tr>
-				<tr>
-					<td th:text="#{lang.configure.opening.date-start}">Date start</td>
-					<td><ins th:text="${#dates.format(opening.dateStart, '__#{lang.date-format}__')}"></ins></td>
-				</tr>
-				<tr>
-					<td th:text="#{lang.configure.opening.date-end}">Date end</td>
-					<td><ins th:text="${#dates.format(opening.dateEnd, '__#{lang.date-format}__')}"></ins></td>
-				</tr>
-				<tr>
-					<td th:text="#{lang.configure.opening.order-start}">Order start</td>
-					<td><ins th:text="${#dates.format(opening.orderStart, '__#{lang.date-format}__')}"></ins></td>
-				</tr>
-				<tr>
-					<td th:text="#{lang.configure.opening.order-end}">Order end</td>
-					<td><ins th:text="${#dates.format(opening.orderEnd, '__#{lang.date-format}__')}"></ins></td>
-				</tr>
-				<tr>
-					<td th:text="#{lang.configure.opening.order-max}">Order max</td>
-					<td><ins th:text="${opening.maxOrder}"></ins></td>
-				</tr>
-				<tr>
-					<td th:text="#{lang.configure.opening.order-max-per}">Order max per interval</td>
-					<td><ins th:text="${opening.maxOrderPerInterval}"></ins></td>
-				</tr>
-				<tr>
-					<td th:text="#{lang.configure.opening.order-extra-max-per}">Order max extra per interval</td>
-					<td><ins th:text="${opening.maxExtraPerInterval}"></ins></td>
-				</tr>
-				<tr>
-					<td th:text="#{lang.configure.opening.interval-length}">Interval length</td>
-					<td><ins th:text="${opening.intervalLength}"></ins></td>
-				</tr>
-				<tr>
-					<td th:text="#{lang.configure.opening.cat-alpha}">Alpha category</td>
-					<td><ins th:text="${opening.maxAlpha}"></ins></td>
-				</tr>
-				<tr>
-					<td th:text="#{lang.configure.opening.cat-beta}">Beta category</td>
-					<td><ins th:text="${opening.maxBeta}"></ins></td>
-				</tr>
-				<tr>
-					<td th:text="#{lang.configure.opening.cat-gamma}">Gamma category</td>
-					<td><ins th:text="${opening.maxGamma}"></ins></td>
-				</tr>
-				<tr>
-					<td th:text="#{lang.configure.opening.cat-delta}">Delta category</td>
-					<td><ins th:text="${opening.maxDelta}"></ins></td>
-				</tr>
-				<tr>
-					<td th:text="#{lang.configure.opening.cat-lambda}">Lambda category</td>
-					<td><ins th:text="${opening.maxLambda}"></ins></td>
-				</tr>
-				<tr>
-					<td th:text="#{lang.configure.opening.pr}">Lambda category</td>
-					<td><img class="centered-mini" th:src="|@{/}${opening.prUrl}|" width="300" alt=""></td>
-				</tr>
-			</table>
-		</div>
+<div class="page content">
 
-		<div class="highlighted">
-			<h3 th:text="#{lang.export.title}">Export</h3>
-			<form th:action="@{/configure/export}" method="get">
-				<div style="display: inline-block">
-					<span class="note" style="margin-bottom: 0" th:text="#{lang.export.scheme}">Select scheme:</span>
-					<select name="type">
-						<option th:each="et : ${exportTypes}" th:object="${et}" th:value="*{name()}" th:text="*{displayName}">Dzsájrosz</option>
-					</select>
-				</div>
-				<div style="display: inline-block">
-					<span class="note" style="margin-bottom: 0" th:text="#{lang.export.page-orientation}">Select page orientation:</span>
-					<select name="pageOrientation">
-						<option selected th:value="${T(hu.kirdev.schpincer.web.PageTypes).LANDSCAPE.orientation}" th:text="#{lang.export.landscape}">
-							Landscape
-						</option>
-						<option th:value="${T(hu.kirdev.schpincer.web.PageTypes).PORTRAIT.orientation}" th:text="#{lang.export.portrait}">
-							Portrait
-						</option>
-					</select>
-				</div>
-				<div style="display: inline-block">
-					<span class="note" style="margin-bottom: 0" th:text="#{lang.export.empty-rows}">Add empty rows:</span>
-					<input name="emptyRows" type="number" th:value="${opening.maxOrder - #lists.size(orders)}" min="0" max="200"/>
-				</div>
-				<div style="display: inline-block">
-					<input type="hidden" name="openingId" value="0" th:value="${openingId}" />
-					<input class="button" type="submit" value="Export" th:value="#{lang.export.pdf}">
-				</div>
-			</form>
-		</div>
+    <div class="highlighted dashboard">
+        <h3 th:text="#{lang.opening-info.title}">Opening info</h3>
+        <table class="form full-table">
+            <tr>
+                <td th:text="#{lang.configure.opening.feeling}">Feeling</td>
+                <td>
+                    <ins th:text="${opening.feeling}"></ins>
+                </td>
+            </tr>
+            <tr>
+                <td th:text="#{lang.configure.opening.date-start}">Date start</td>
+                <td>
+                    <ins th:text="${#dates.format(opening.dateStart, '__#{lang.date-format}__')}"></ins>
+                </td>
+            </tr>
+            <tr>
+                <td th:text="#{lang.configure.opening.date-end}">Date end</td>
+                <td>
+                    <ins th:text="${#dates.format(opening.dateEnd, '__#{lang.date-format}__')}"></ins>
+                </td>
+            </tr>
+            <tr>
+                <td th:text="#{lang.configure.opening.order-start}">Order start</td>
+                <td>
+                    <ins th:text="${#dates.format(opening.orderStart, '__#{lang.date-format}__')}"></ins>
+                </td>
+            </tr>
+            <tr>
+                <td th:text="#{lang.configure.opening.order-end}">Order end</td>
+                <td>
+                    <ins th:text="${#dates.format(opening.orderEnd, '__#{lang.date-format}__')}"></ins>
+                </td>
+            </tr>
+            <tr>
+                <td th:text="#{lang.configure.opening.order-max}">Order max</td>
+                <td>
+                    <ins th:text="${opening.maxOrder}"></ins>
+                </td>
+            </tr>
+            <tr>
+                <td th:text="#{lang.configure.opening.order-max-per}">Order max per interval</td>
+                <td>
+                    <ins th:text="${opening.maxOrderPerInterval}"></ins>
+                </td>
+            </tr>
+            <tr>
+                <td th:text="#{lang.configure.opening.order-extra-max-per}">Order max extra per interval</td>
+                <td>
+                    <ins th:text="${opening.maxExtraPerInterval}"></ins>
+                </td>
+            </tr>
+            <tr>
+                <td th:text="#{lang.configure.opening.interval-length}">Interval length</td>
+                <td>
+                    <ins th:text="${opening.intervalLength}"></ins>
+                </td>
+            </tr>
+            <tr>
+                <td th:text="#{lang.configure.opening.cat-alpha}">Alpha category</td>
+                <td>
+                    <ins th:text="${opening.maxAlpha}"></ins>
+                </td>
+            </tr>
+            <tr>
+                <td th:text="#{lang.configure.opening.cat-beta}">Beta category</td>
+                <td>
+                    <ins th:text="${opening.maxBeta}"></ins>
+                </td>
+            </tr>
+            <tr>
+                <td th:text="#{lang.configure.opening.cat-gamma}">Gamma category</td>
+                <td>
+                    <ins th:text="${opening.maxGamma}"></ins>
+                </td>
+            </tr>
+            <tr>
+                <td th:text="#{lang.configure.opening.cat-delta}">Delta category</td>
+                <td>
+                    <ins th:text="${opening.maxDelta}"></ins>
+                </td>
+            </tr>
+            <tr>
+                <td th:text="#{lang.configure.opening.cat-lambda}">Lambda category</td>
+                <td>
+                    <ins th:text="${opening.maxLambda}"></ins>
+                </td>
+            </tr>
+            <tr>
+                <td th:text="#{lang.configure.opening.pr}">Lambda category</td>
+                <td><img class="centered-mini" th:src="|@{/}${opening.prUrl}|" width="300" alt=""></td>
+            </tr>
+        </table>
+    </div>
 
-		<div class="highlighted dashboard">
-			<h3 th:text="#{lang.export.title-table}">Table export</h3>
+    <div class="highlighted">
+        <h3 th:text="#{lang.export.title}">Export</h3>
+        <form th:action="@{/configure/export}" method="get">
+            <div style="display: inline-block">
+                <span class="note" style="margin-bottom: 0" th:text="#{lang.export.scheme}">Select scheme:</span>
+                <select name="type">
+                    <option th:each="et : ${exportTypes}" th:object="${et}" th:value="*{name()}"
+                            th:text="*{displayName}">Dzsájrosz
+                    </option>
+                </select>
+            </div>
+            <div style="display: inline-block">
+                <span class="note" style="margin-bottom: 0" th:text="#{lang.export.page-orientation}">Select page orientation:</span>
+                <select name="pageOrientation">
+                    <option selected th:value="${T(hu.kirdev.schpincer.web.PageTypes).LANDSCAPE.orientation}"
+                            th:text="#{lang.export.landscape}">
+                        Landscape
+                    </option>
+                    <option th:value="${T(hu.kirdev.schpincer.web.PageTypes).PORTRAIT.orientation}"
+                            th:text="#{lang.export.portrait}">
+                        Portrait
+                    </option>
+                </select>
+            </div>
+            <div style="display: inline-block">
+                <span class="note" style="margin-bottom: 0" th:text="#{lang.export.empty-rows}">Add empty rows:</span>
+                <input name="emptyRows" type="number" th:value="${opening.maxOrder - #lists.size(orders)}" min="0"
+                       max="200"/>
+            </div>
+            <div style="display: inline-block">
+                <input type="hidden" name="openingId" value="0" th:value="${openingId}"/>
+                <input class="button" type="submit" value="Export" th:value="#{lang.export.pdf}">
+            </div>
+        </form>
+    </div>
 
-			<form th:action="@{/configure/table-export/__${openingId}__}" method="get" class="export scrollable-x">
+    <div class="highlighted dashboard">
+        <h3 th:text="#{lang.export.title-table}">Table export</h3>
 
-				<table class="form full-table">
-					<tr>
-						<td th:text="#{lang.export.custom-field.artificial-id}">artificialId</td>
-						<td>
-							<label class="form-switch">
-								<input type="checkbox" name="artificialId" checked>
-								<ins class="form-slider"></ins>
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.export.custom-field.user-name}">userName</td>
-						<td>
-							<label class="form-switch">
-								<input type="checkbox" name="userName" checked>
-								<ins class="form-slider"></ins>
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.export.custom-field.name}">name</td>
-						<td>
-							<label class="form-switch">
-								<input type="checkbox" name="name">
-								<ins class="form-slider"></ins>
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.export.custom-field.count}">count</td>
-						<td>
-							<label class="form-switch">
-								<input type="checkbox" name="count">
-								<ins class="form-slider"></ins>
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.export.custom-field.compact-name}">compactName</td>
-						<td>
-							<label class="form-switch">
-								<input type="checkbox" name="compactName" checked>
-								<ins class="form-slider"></ins>
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.export.custom-field.interval-id}">intervalId</td>
-						<td>
-							<label class="form-switch">
-								<input type="checkbox" name="intervalId">
-								<ins class="form-slider"></ins>
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.export.custom-field.comment}">comment</td>
-						<td>
-							<label class="form-switch">
-								<input type="checkbox" name="comment" checked>
-								<ins class="form-slider"></ins>
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.export.custom-field.room}">room</td>
-						<td>
-							<label class="form-switch">
-								<input type="checkbox" name="room" checked>
-								<ins class="form-slider"></ins>
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.export.custom-field.extra}">extra</td>
-						<td>
-							<label class="form-switch">
-								<input type="checkbox" name="extra">
-								<ins class="form-slider"></ins>
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.export.custom-field.extraTag}">extraTag</td>
-						<td>
-							<label class="form-switch">
-								<input type="checkbox" name="extraTag">
-								<ins class="form-slider"></ins>
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.export.custom-field.price}">price</td>
-						<td>
-							<label class="form-switch">
-								<input type="checkbox" name="price" checked>
-								<ins class="form-slider"></ins>
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.export.custom-field.status}">status</td>
-						<td>
-							<label class="form-switch">
-								<input type="checkbox" name="status">
-								<ins class="form-slider"></ins>
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.export.custom-field.category}">category</td>
-						<td>
-							<label class="form-switch">
-								<input type="checkbox" name="category">
-								<ins class="form-slider"></ins>
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.export.custom-field.system-comment}">systemComment</td>
-						<td>
-							<label class="form-switch">
-								<input type="checkbox" name="systemComment">
-								<ins class="form-slider"></ins>
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.export.order-by}">Order by</td>
-						<td>
-							<select name="orderby">
-								<option th:text="#{lang.export.order.absolute}" th:value="${T(hu.kirdev.schpincer.service.OrderStrategy).ORDER_ABSOLUTE.representation}">Absolute order</option>
-								<option th:text="#{lang.export.order.grouped}" th:value="${T(hu.kirdev.schpincer.service.OrderStrategy).ORDER_GROUPED.representation}">Grouped timelines</option>
-								<option th:text="#{lang.export.order.rooms}" th:value="${T(hu.kirdev.schpincer.service.OrderStrategy).ORDER_ROOMS.representation}">Grouped timelines and rooms</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td th:text="#{lang.export.field-order}">Field order</td>
-						<td>
-							<select name="fields">
-								<option value="default">Default</option>
-								<option value="americano">Americano</option>
-							</select>
-						</td>
-					</tr>
-				</table>
+        <form th:action="@{/configure/table-export/__${openingId}__}" method="get" class="export scrollable-x">
 
-				<input class="button" type="submit" th:value="#{lang.export.table}" />
-			</form>
+            <table class="form full-table">
+                <tr>
+                    <td th:text="#{lang.export.custom-field.artificial-id}">artificialId</td>
+                    <td>
+                        <label class="form-switch">
+                            <input type="checkbox" name="artificialId" checked>
+                            <ins class="form-slider"></ins>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.export.custom-field.user-name}">userName</td>
+                    <td>
+                        <label class="form-switch">
+                            <input type="checkbox" name="userName" checked>
+                            <ins class="form-slider"></ins>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.export.custom-field.name}">name</td>
+                    <td>
+                        <label class="form-switch">
+                            <input type="checkbox" name="name">
+                            <ins class="form-slider"></ins>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.export.custom-field.count}">count</td>
+                    <td>
+                        <label class="form-switch">
+                            <input type="checkbox" name="count">
+                            <ins class="form-slider"></ins>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.export.custom-field.compact-name}">compactName</td>
+                    <td>
+                        <label class="form-switch">
+                            <input type="checkbox" name="compactName" checked>
+                            <ins class="form-slider"></ins>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.export.custom-field.interval-id}">intervalId</td>
+                    <td>
+                        <label class="form-switch">
+                            <input type="checkbox" name="intervalId">
+                            <ins class="form-slider"></ins>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.export.custom-field.comment}">comment</td>
+                    <td>
+                        <label class="form-switch">
+                            <input type="checkbox" name="comment" checked>
+                            <ins class="form-slider"></ins>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.export.custom-field.room}">room</td>
+                    <td>
+                        <label class="form-switch">
+                            <input type="checkbox" name="room" checked>
+                            <ins class="form-slider"></ins>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.export.custom-field.extra}">extra</td>
+                    <td>
+                        <label class="form-switch">
+                            <input type="checkbox" name="extra">
+                            <ins class="form-slider"></ins>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.export.custom-field.extraTag}">extraTag</td>
+                    <td>
+                        <label class="form-switch">
+                            <input type="checkbox" name="extraTag">
+                            <ins class="form-slider"></ins>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.export.custom-field.price}">price</td>
+                    <td>
+                        <label class="form-switch">
+                            <input type="checkbox" name="price" checked>
+                            <ins class="form-slider"></ins>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.export.custom-field.status}">status</td>
+                    <td>
+                        <label class="form-switch">
+                            <input type="checkbox" name="status">
+                            <ins class="form-slider"></ins>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.export.custom-field.category}">category</td>
+                    <td>
+                        <label class="form-switch">
+                            <input type="checkbox" name="category">
+                            <ins class="form-slider"></ins>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.export.custom-field.system-comment}">systemComment</td>
+                    <td>
+                        <label class="form-switch">
+                            <input type="checkbox" name="systemComment">
+                            <ins class="form-slider"></ins>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.export.order-by}">Order by</td>
+                    <td>
+                        <select name="orderby">
+                            <option th:text="#{lang.export.order.absolute}"
+                                    th:value="${T(hu.kirdev.schpincer.service.OrderStrategy).ORDER_ABSOLUTE.representation}">
+                                Absolute order
+                            </option>
+                            <option th:text="#{lang.export.order.grouped}"
+                                    th:value="${T(hu.kirdev.schpincer.service.OrderStrategy).ORDER_GROUPED.representation}">
+                                Grouped timelines
+                            </option>
+                            <option th:text="#{lang.export.order.rooms}"
+                                    th:value="${T(hu.kirdev.schpincer.service.OrderStrategy).ORDER_ROOMS.representation}">
+                                Grouped timelines and rooms
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.export.field-order}">Field order</td>
+                    <td>
+                        <select name="fields">
+                            <option value="default">Default</option>
+                            <option value="americano">Americano</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
 
-		</div>
+            <input class="button" type="submit" th:value="#{lang.export.table}"/>
+        </form>
 
-		<div class="highlighted latest">
-			<h3 th:text="#{lang.profile.orders}">Orders</h3>
-			
-			<table class="orders full-table">
-				<tr>
-					<th th:text="#{lang.profile.orders-username}">Username</th>
-					<th th:text="#{lang.profile.orders-name}">Name</th>
-					<th th:text="#{lang.profile.orders-time}">Time</th>
-					<th th:text="#{lang.profile.orders-room}">Room</th>
-					<th th:text="#{lang.profile.orders-price}">Price</th>
-					<th th:text="#{lang.profile.orders-comment}">Comment</th>
-					<th th:text="#{lang.profile.orders-status}">Status</th>
-				</tr>
-				<tr th:each="order : ${orders}" th:object="${order}">
-					<td th:text="*{userName}">Test name</td>
-					<td th:text="*{name}">Ördög pizza</td>
-					<td th:text="${#dates.format(order.date, '__#{lang.date-short-format}__')} + ' ' + *{intervalMessage}">
-						10:00 - 10:30
-					</td>
-					<td th:text="*{room}">SCH 1037</td>
-					<td th:text="*{price} + ' ' + #{lang.currency}">800 JMF</td>
-					<td th:text="*{comment}" class="comment">Csípjen papa</td>
-					<td>
-						<i class="material-icons" th:if="${#strings.equals(order.status, 'SHIPPED')}" 
-								th:title="#{lang.profile.status-shipped}">done</i>
-						<i class="material-icons" th:if="${#strings.equals(order.status, 'INTERPRETED')}"
-								th:title="#{lang.profile.status-interpreted}">local_shipping</i>
-						<i class="material-icons" th:if="${#strings.equals(order.status, 'ACCEPTED')}"
-								th:title="#{lang.profile.status-accepted}">shopping_cart</i>
-						<i class="material-icons" th:if="${#strings.equals(order.status, 'CANCELLED')}"
-								th:title="#{lang.profile.status-cancelled}">do_not_disturb</i>
-								
-						|
-								
-						<a href="#" th:onclick="'updateItem(' + ${order.id} + ', \'INTERPRETED\'); return false'" th:unless="${#strings.equals(order.status, 'SHIPPED')}">
-							<i class="material-icons" th:title="#{lang.configure.orders.working}">restaurant_menu</i>
-						</a>
-						<a href="#" th:onclick="'updateItem(' + ${order.id} + ', \'SHIPPED\'); return false'" th:unless="${#strings.equals(order.status, 'SHIPPED')}">
-							<i class="material-icons" th:title="#{lang.configure.orders.shipped}">local_shipping</i>
-						</a>
-						<a href="#" th:onclick="'updateItem(' + ${order.id} + ', \'CANCELLED\'); return false'" th:unless="${#strings.equals(order.status, 'CANCELLED')}">
-							<i class="material-icons" th:title="#{lang.configure.orders.cancel}">delete_forever</i>
-						</a>
-					</td>
-				</tr>
-			</table>
+    </div>
 
-			<table class="responsive-table full-table">
-				<tr>
-					<td>Device screen is too low. Use desktop mode. This issue is going to be fixed.</td>
-				</tr>
-			</table>
-			<span th:if="${#lists.isEmpty(orders)}" class="note" th:text="#{lang.orders.no-orders}">There are no orders yet</span>
-		</div>
-	</div>
+    <div class="highlighted latest">
+        <h3 th:text="#{lang.profile.orders}">Orders</h3>
 
-	<div th:replace="MainLayout :: footer"></div>
+        <table class="orders full-table">
+            <tr>
+                <th th:text="#{lang.profile.orders-username}">Username</th>
+                <th th:text="#{lang.profile.orders-name}">Name</th>
+                <th th:text="#{lang.profile.orders-time}">Time</th>
+                <th th:text="#{lang.profile.orders-room}">Room</th>
+                <th th:text="#{lang.profile.orders-price}">Price</th>
+                <th th:text="#{lang.profile.orders-comment}">Comment</th>
+                <th th:text="#{lang.profile.orders-status}">Status</th>
+            </tr>
+            <tr th:each="order : ${orders}" th:object="${order}">
+                <td th:text="*{userName}">Test name</td>
+                <td th:text="*{name}">Ördög pizza</td>
+                <td th:text="${#dates.format(order.date, '__#{lang.date-short-format}__')} + ' ' + *{intervalMessage}">
+                    10:00 - 10:30
+                </td>
+                <td th:text="*{room}">SCH 1037</td>
+                <td th:text="*{price} + ' ' + #{lang.currency}">800 JMF</td>
+                <td th:text="*{comment}" class="comment">Csípjen papa</td>
+                <td>
+                    <i class="material-icons" th:if="${#strings.equals(order.status, 'SHIPPED')}"
+                       th:title="#{lang.profile.status-shipped}">done</i>
+                    <i class="material-icons" th:if="${#strings.equals(order.status, 'INTERPRETED')}"
+                       th:title="#{lang.profile.status-interpreted}">local_shipping</i>
+                    <i class="material-icons" th:if="${#strings.equals(order.status, 'ACCEPTED')}"
+                       th:title="#{lang.profile.status-accepted}">shopping_cart</i>
+                    <i class="material-icons" th:if="${#strings.equals(order.status, 'CANCELLED')}"
+                       th:title="#{lang.profile.status-cancelled}">do_not_disturb</i>
+
+                    |
+
+                    <a href="#" th:onclick="'updateItem(' + ${order.id} + ', \'INTERPRETED\'); return false'"
+                       th:unless="${#strings.equals(order.status, 'SHIPPED')}">
+                        <i class="material-icons" th:title="#{lang.configure.orders.working}">restaurant_menu</i>
+                    </a>
+                    <a href="#" th:onclick="'updateItem(' + ${order.id} + ', \'SHIPPED\'); return false'"
+                       th:unless="${#strings.equals(order.status, 'SHIPPED')}">
+                        <i class="material-icons" th:title="#{lang.configure.orders.shipped}">local_shipping</i>
+                    </a>
+                    <a href="#" th:onclick="'updateItem(' + ${order.id} + ', \'CANCELLED\'); return false'"
+                       th:unless="${#strings.equals(order.status, 'CANCELLED')}">
+                        <i class="material-icons" th:title="#{lang.configure.orders.cancel}">delete_forever</i>
+                    </a>
+                </td>
+            </tr>
+        </table>
+
+        <table class="responsive-table full-table">
+            <tr>
+                <td>Device screen is too low. Use desktop mode. This issue is going to be fixed.</td>
+            </tr>
+        </table>
+        <span th:if="${#lists.isEmpty(orders)}" class="note"
+              th:text="#{lang.orders.no-orders}">There are no orders yet</span>
+    </div>
+</div>
+
+<div th:replace="MainLayout :: footer"></div>
 </body>
 </html>

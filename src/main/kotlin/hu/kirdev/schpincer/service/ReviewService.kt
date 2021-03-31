@@ -5,11 +5,10 @@ import hu.kirdev.schpincer.model.ReviewEntity
 import hu.kirdev.schpincer.web.getUserIfPresent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import javax.servlet.http.HttpServletRequest
-import javax.transaction.Transactional
 
 @Service
-@Transactional
 open class ReviewService {
 
     @Autowired
@@ -24,21 +23,24 @@ open class ReviewService {
     @Autowired
     private lateinit var openings: OpeningService
 
+    @Transactional(readOnly = true)
     open fun findAll(): List<ReviewEntity> {
         return repo.findAll()
     }
 
-    open fun save(review: ReviewEntity) {
+    private fun save(review: ReviewEntity) {
         repo.save(review)
     }
 
+    @Transactional(readOnly = true)
     open fun findAll(circleId: Long): List<ReviewEntity> {
         return repo.findAllByCircle_IdOrderByDateDesc(circleId)
     }
 
+    @Transactional(readOnly = false)
     open fun createReview(request: HttpServletRequest, orderId: Long, review: String?, rateQuality: Int, ratePrice: Int,
-                         rateSpeed: Int, rateOverAll: Int)
-    {
+                          rateSpeed: Int, rateOverAll: Int
+    ) {
         val circleId = orders.getCircleIdByOrderId(orderId)!!
         val user = request.getUserIfPresent()!!
         val order = orders.getOne(orderId)
@@ -48,14 +50,16 @@ open class ReviewService {
                 order = order,
                 openingFeeling = openings.getOne(order?.openingId!!).feeling,
                 userName = user.name,
-                review = review,
-                rateSpeed = rateSpeed,
-                rateQuality = rateQuality,
-                ratePrice = ratePrice,
-                rateOverAll = rateOverAll,
+                review = review ?: "",
+                rateSpeed = rateSpeed.between(1, 5),
+                rateQuality = rateQuality.between(1, 5),
+                ratePrice = ratePrice.between(1, 5),
+                rateOverAll = rateOverAll.between(1, 5),
                 date = System.currentTimeMillis()
         )
         save(fullReview)
-        orders.reviewOrder(orderId, fullReview.id!!)
+        orders.reviewOrder(orderId, fullReview.id)
     }
 }
+
+private fun Int.between(from: Int, to: Int) = Math.max(from, Math.min(to, this))

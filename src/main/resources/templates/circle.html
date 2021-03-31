@@ -1,153 +1,157 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="MainLayout :: head">
-	<meta charset="UTF-8" /> 
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css"/>
 </head>
 <body>
-	<div class="header" th:replace="MainLayout :: header">
-	</div>
-	
-	<div class="left-menu" th:replace="MainLayout :: left-menu">
-	</div>
+<div class="header" th:replace="MainLayout :: header">
+</div>
 
-	<div class="content page">
-		<div class="highlighted bright">
-			<h2 th:text="#{lang.circle.title}">Szolgáltató Reszort</h2>
-			<h3 th:text="#{lang.circle.sub-title}">A Schönherz szolgálatában 2004 óta</h3>
-		
-			<p th:utext="#{lang.circle.description}">Lorem ipsum dolor sit amet</p>
-		</div>
-		
-		<h2 th:text="#{lang.circle.circles}" class="naked-title">Kajás Köreink</h2>
-		
-		<div class="circles">
-			<div th:each="circle : ${circlesWithOpening}" th:object="${circle.circleEntity}" th:class="'article ' + *{cssClassName}" class="article orange">
-				<div class="picture border-colored">
-					<div class="overlay"></div>
-					<div class="image" style="background-image: url('http://wemagazin.com/assets/images/olaszgasztro1pizza.jpg')"
-							th:style="'background-image: url(\'' + *{backgroundUrl} + '\');'">
-					</div>
-				</div>
-				<div class="message">
-					<h3 th:text="*{displayName}" th:onclick="'location.href = \'' + @{/provider/__*{alias}__/} + '\''">Pizzásch</h3>
-					<p th:text="*{homePageDescription}">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-						Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
-						Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim 
-						luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat 
-						euismod ut eget erat.
-					</p>
-					<span class="colored-white">
+<div class="left-menu" th:replace="MainLayout :: left-menu">
+</div>
+
+<div class="content page">
+    <div class="highlighted bright">
+        <h2 th:text="#{lang.circle.title}">Szolgáltató Reszort</h2>
+        <h3 th:text="#{lang.circle.sub-title}">A Schönherz szolgálatában 2004 óta</h3>
+
+        <p th:utext="#{lang.circle.description}">Lorem ipsum dolor sit amet</p>
+    </div>
+
+    <h2 th:text="#{lang.circle.circles}" class="naked-title">Kajás Köreink</h2>
+
+    <div class="circles">
+        <div th:each="circle : ${circlesWithOpening}" th:object="${circle.circleEntity}"
+             th:class="'article ' + *{cssClassName}" class="article orange">
+            <div class="picture border-colored">
+                <div class="overlay"></div>
+                <div class="image"
+                     style="background-image: url('http://wemagazin.com/assets/images/olaszgasztro1pizza.jpg')"
+                     th:style="'background-image: url(\'' + *{backgroundUrl} + '\');'">
+                </div>
+            </div>
+            <div class="message">
+                <h3 th:text="*{displayName}" th:onclick="'location.href = \'' + @{/provider/__*{alias}__/} + '\''">
+                    Pizzásch</h3>
+                <p th:text="*{homePageDescription}">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis
+                    tincidunt.
+                    Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim
+                    luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat
+                    euismod ut eget erat.
+                </p>
+                <span class="colored-white">
 						<b>Következő nyitás:</b>
 						<em th:if="${circle.nextOpening != null}" class="border-colored"
-							th:text="${#dates.format(circle.nextOpening.dateStart, #messages.msg('lang.date-format'))}">2018.04.12. 18:00</em>
+                            th:text="${#dates.format(circle.nextOpening.dateStart, #messages.msg('lang.date-format'))}">2018.04.12. 18:00</em>
 						<em th:unless="${circle.nextOpening != null}" class="border-colored"
-							th:text="#{lang.profile.date-not-set}">Nincs beütemezve</em>
+                            th:text="#{lang.profile.date-not-set}">Nincs beütemezve</em>
 					</span>
-				</div>
-			</div>
-			
-			<div class="article green" th:remove="all">
-				<div class="picture">
-					<div class="overlay"></div>
-					<div class="image" style="background-image: url('../static/demo/dzsajrosz-bg.jpg')"></div>
-				</div>
-				<h3>Dzsájrosz</h3>
-				<p>
-					Donec est turpis, pellentesque at dictum ut, aliquam at turpis. In et turpis at risus lobortis 
-					egestas. Mauris tellus dolor, porta id dictum tristique, rutrum sit amet leo. Donec non turpis 
-					nulla. Aliquam eget nisi id orci sollicitudin sodales a non enim. Etiam ultrices enim vel 
-					nulla gravida viverra.
-				</p>
-				<span class="colored">
+            </div>
+        </div>
+
+        <div class="article green" th:remove="all">
+            <div class="picture">
+                <div class="overlay"></div>
+                <div class="image" style="background-image: url('../static/demo/dzsajrosz-bg.jpg')"></div>
+            </div>
+            <h3>Dzsájrosz</h3>
+            <p>
+                Donec est turpis, pellentesque at dictum ut, aliquam at turpis. In et turpis at risus lobortis
+                egestas. Mauris tellus dolor, porta id dictum tristique, rutrum sit amet leo. Donec non turpis
+                nulla. Aliquam eget nisi id orci sollicitudin sodales a non enim. Etiam ultrices enim vel
+                nulla gravida viverra.
+            </p>
+            <span class="colored">
 					<b>Következő nyitás:</b>
 					<em>2018.04.12. 18:00</em>
 				</span>
-			</div>
-			
-			<div class="article blue" th:remove="all">
-				<div class="picture">
-					<div class="overlay"></div>
-					<div class="image" style="background-image: url('../static/demo/americano-bg.jpg')"></div>
-				</div>
-				<h3>Americano</h3>
-				<p>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-					Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
-					Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim 
-					luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat 
-					euismod ut eget erat.
-				</p>
-				<span class="colored">
+        </div>
+
+        <div class="article blue" th:remove="all">
+            <div class="picture">
+                <div class="overlay"></div>
+                <div class="image" style="background-image: url('../static/demo/americano-bg.jpg')"></div>
+            </div>
+            <h3>Americano</h3>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
+                Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim
+                luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat
+                euismod ut eget erat.
+            </p>
+            <span class="colored">
 					<b>Következő nyitás:</b>
 					<em>2018.04.12. 18:00</em>
 				</span>
-			</div>
-			
-			<div class="article purple" th:remove="all">
-				<div class="picture">
-					<div class="overlay"></div>
-					<div class="image" style="background-image: url('../static/demo/vodor-bg.jpg')"></div>
-				</div>
-				<h3>Vödör</h3>
-				<p>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-					Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
-					Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim 
-					luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat 
-					euismod ut eget erat.
-				</p>
-				<span class="colored">
+        </div>
+
+        <div class="article purple" th:remove="all">
+            <div class="picture">
+                <div class="overlay"></div>
+                <div class="image" style="background-image: url('../static/demo/vodor-bg.jpg')"></div>
+            </div>
+            <h3>Vödör</h3>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
+                Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim
+                luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat
+                euismod ut eget erat.
+            </p>
+            <span class="colored">
 					<b>Következő nyitás:</b>
 					<em>2018.04.12. 18:00</em>
 				</span>
-			</div>
-			
-			<div class="article red" th:remove="all">
-				<div class="picture">
-					<div class="overlay"></div>
-					<div class="image" style="background-image: url('../static/demo/kakas-bg.jpg')"></div>
-				</div>
-				<h3>Kakas</h3>
-				<p>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-					Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
-					Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim 
-					luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat 
-					euismod ut eget erat.
-				</p>
-				<span class="colored">
+        </div>
+
+        <div class="article red" th:remove="all">
+            <div class="picture">
+                <div class="overlay"></div>
+                <div class="image" style="background-image: url('../static/demo/kakas-bg.jpg')"></div>
+            </div>
+            <h3>Kakas</h3>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
+                Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim
+                luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat
+                euismod ut eget erat.
+            </p>
+            <span class="colored">
 					<b>Következő nyitás:</b>
 					<em>2018.04.12. 18:00</em>
 				</span>
-			</div>
-			
-			<div class="article yellow" th:remove="all">
-				<div class="picture">
-					<div class="overlay"></div>
-					<div class="image" style="background-image: url('../static/demo/langosch-bg.jpg')"></div>
-				</div>
-				<h3>Lángosch</h3>
-				<p>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-					Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
-					Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim 
-					luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat 
-					euismod ut eget erat.
-				</p>
-				<span class="colored">
+        </div>
+
+        <div class="article yellow" th:remove="all">
+            <div class="picture">
+                <div class="overlay"></div>
+                <div class="image" style="background-image: url('../static/demo/langosch-bg.jpg')"></div>
+            </div>
+            <h3>Lángosch</h3>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
+                Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim
+                luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat
+                euismod ut eget erat.
+            </p>
+            <span class="colored">
 					<b>Következő nyitás:</b>
 					<em>2018.04.12. 18:00</em>
 				</span>
-			</div>
-		</div>
-	</div>
-	
-	<div th:replace="MainLayout :: footer"></div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="MainLayout :: footer"></div>
 </body>
 </html>

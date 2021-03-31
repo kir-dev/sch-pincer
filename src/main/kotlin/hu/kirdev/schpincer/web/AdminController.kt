@@ -37,7 +37,7 @@ open class AdminController {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circlesToEdit", circles.findAll())
         val roles: List<RoleEntryDto> = users.findAll()
-                .map { RoleEntryDto(it.uid?.sha256() ?: "", it) }
+                .map { RoleEntryDto(it.uid.sha256(), it) }
                 .sortedBy { it.name }
         model.addAttribute("roles", roles)
         return "admin"
@@ -105,7 +105,7 @@ open class AdminController {
         }
         val original = circles.getOne(circleId) ?: return "redirect:/admin/?error=invalidCircleId"
 
-        with (original) {
+        with(original) {
             avgOpening = circle.avgOpening
             cssClassName = circle.cssClassName
             description = circle.description
@@ -192,5 +192,5 @@ open class AdminController {
         itemSorter.reorder()
         return "ok"
     }
-    
+
 }

@@ -17,20 +17,20 @@ class RoleEntryDto(val uidHash: String, ue: UserEntity) {
 
 }
 
-enum class CircleMemberRole() {
+enum class CircleMemberRole {
     LEADER,
     PR,
     NONE;
 }
 
-class CircleRoleEntryDto(ue: UserEntity, circleId: Long){
+class CircleRoleEntryDto(ue: UserEntity, circleId: Long) {
     val uidHash: String
-    val name:String
+    val name: String
     val permission: CircleMemberRole
 
-    init{
-        uidHash = ue.uid?.sha256() ?: ""
+    init {
+        uidHash = ue.uid.sha256()
         name = ue.name
-        permission = toReadableRole(ue.permissions,circleId)
+        permission = toReadableRole(ue.permissions, circleId)
     }
 }
