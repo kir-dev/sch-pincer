@@ -3149,3 +3149,14 @@ input:checked + .form-slider:before {
     border-right: 4px solid #4C4C4D;
     background-color: #F4CF3B;
 }
+
+.out-of-stock {
+    display: inline !important;
+    margin: 0 auto;
+    padding: 2px 8px;
+    position: relative !important;
+    top: 20px;
+    width: auto;
+    height: auto;
+    border-bottom: 4px solid #222222;
+}

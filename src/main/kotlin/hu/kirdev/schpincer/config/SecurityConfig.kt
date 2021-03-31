@@ -30,7 +30,6 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .antMatchers("/profile", "/profile/**").hasRole(Role.USER.name)
                 .antMatchers("/configure/**").hasAnyRole(Role.LEADER.name, Role.ADMIN.name)
                 .antMatchers("/admin", "/admin/**").hasRole(Role.ADMIN.name)
-                .antMatchers("/admin", "/admin/**").hasRole(Role.USER.name)
                 .and()
                 .formLogin()
                 .loginPage("/login")

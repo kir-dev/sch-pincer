@@ -1,7 +1,6 @@
 function updateItem(id, status) {
     postForJsonObject('configure/order/update', {id: id, status: status})
         .then(function (data) {
-            console.log(data);
             location.reload();
         }).catch(function (e) {
         console.error(e);
