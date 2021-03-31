@@ -17,7 +17,7 @@ data class OpeningEntity(
         @Id
         @Column
         @GeneratedValue(strategy = GenerationType.AUTO)
-        var id: Long? = null,
+        var id: Long = 0,
 
         @Column
         var timeIntervals: Int = 0,
@@ -116,7 +116,7 @@ data class OpeningEntity(
     }
 
     private fun appendTimeWindow(openings: OpeningService, time: Long) {
-        val tw = TimeWindowEntity(null, this,
+        val tw = TimeWindowEntity(0, this,
                 OpeningService.DATE_FORMATTER_HH_MM.format(time)
                         + " - " + OpeningService.DATE_FORMATTER_HH_MM.format(time + this.intervalLength * MILLIS_TO_MINS),
                 time,

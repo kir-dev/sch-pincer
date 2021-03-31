@@ -1,17 +1,17 @@
 <html xmlns:th="http://www.thymeleaf.org/">
-	<body>
-		<div th:fragment="rate(name)">
-			<fieldset class="star-rating">
-				<div class="star-rating__stars">
-					<th:block th:each="i: ${#numbers.sequence(1, 5)}">
-						<input class="star-rating__input" type="radio" th:name="'rate' + ${name}"
-							   th:value="${i}" th:id="'rating-' + ${i} + '-' + ${name}"
-							   th:checked="${i == 3}" />
-						<label class="star-rating__label" th:for="'rating-' + ${i} + '-' + ${name}"></label>
-					</th:block>
-					<div class="star-rating__focus"></div>
-				</div>
-			</fieldset>
-		</div>
-	</body>
+<body>
+<div th:fragment="rate(name)">
+    <fieldset class="star-rating">
+        <div class="star-rating__stars">
+            <th:block th:each="i: ${#numbers.sequence(1, 5)}">
+                <input class="star-rating__input" type="radio" th:name="'rate' + ${name}"
+                       th:value="${i}" th:id="'rating-' + ${i} + '-' + ${name}"
+                       th:checked="${i == 3}"/>
+                <label class="star-rating__label" th:for="'rating-' + ${i} + '-' + ${name}"></label>
+            </th:block>
+            <div class="star-rating__focus"></div>
+        </div>
+    </fieldset>
+</div>
+</body>
 </html>

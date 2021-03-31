@@ -10,11 +10,11 @@ data class CircleEntity(
         @Id
         @Column
         @GeneratedValue(strategy = GenerationType.AUTO)
-        var id: Long? = null,
+        var id: Long = 0,
 
         @Size(min = 2, max = 32)
         @Column(length = 32)
-        var displayName: @Size(min = 2, max = 32) String,
+        var displayName: @Size(min = 2, max = 32) String = "",
 
         @Lob
         @Size(max = 1000)
@@ -56,7 +56,7 @@ data class CircleEntity(
         var websiteUrl: @Size(max = 255) String? = null,
 
         @Column(length = 255)
-        var backgroundUrl: @Size(max = 255) String?,
+        var backgroundUrl: @Size(max = 255) String? = "",
 
         @Column(length = 255)
         var logoUrl: @Size(max = 255) String? = null,
@@ -68,7 +68,7 @@ data class CircleEntity(
         var webhookOrderDoneUrl: String? = null,
 
         @Column
-        var alias: String,
+        var alias: String = "",
 
         @Column(nullable = false)
         var visible: Boolean = false,
@@ -77,10 +77,6 @@ data class CircleEntity(
         var virGroupId: Long? = null
 
 ) : Serializable {
-
-    // TODO: Remove after full refactor
-    @Deprecated("Remove after java to kotlin refactor")
-    constructor() : this(id = null, displayName = "", cssClassName = "", backgroundUrl = "", alias = "")
 
     /**
      * This is for testing
@@ -111,9 +107,5 @@ data class CircleEntity(
             visible = visible,
             webhookNewOrderUrl = ""
     )
-
-
-    @Deprecated("Remove after java to kotlin refactor")
-    fun copy(): CircleEntity = copy(id = this.id)
 
 }

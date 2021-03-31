@@ -10,10 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
+import org.springframework.transaction.annotation.Transactional
 
 @Service
-@Transactional
 open class CircleService {
 
     @Autowired
@@ -22,45 +21,56 @@ open class CircleService {
     @Autowired
     private lateinit var openings: OpeningRepository
 
+    @Transactional(readOnly = true)
     open fun findAll(pageable: Pageable): Page<CircleEntity> {
         return repo.findAll(pageable)
     }
 
+    @Transactional(readOnly = true)
     open fun findAll(): List<CircleEntity> {
         return repo.findAll()
     }
 
+    @Transactional(readOnly = true)
     open fun findAllForMenu(): List<CircleEntity> {
         return repo.findAllByVisibleTrueOrderByHomePageOrder()
     }
 
+    @Transactional(readOnly = false)
     open fun save(circleEntity: CircleEntity) {
         repo.save(circleEntity)
     }
 
+    @Transactional(readOnly = true)
     open fun getOne(id: Long): CircleEntity? {
         return repo.getOne(id)
     }
 
+    @Transactional(readOnly = true)
     open fun delete(ce: CircleEntity) {
         repo.delete(ce)
     }
 
+    @Transactional(readOnly = true)
     open fun findByAlias(alias: String): CircleEntity {
         return repo.findAllByAlias(alias)[0]
     }
 
-    open fun findByvirGroupId(id: Long): CircleEntity? {
+    @Transactional(readOnly = true)
+    open fun findByVirGroupId(id: Long): CircleEntity? {
         return repo.findOneByVirGroupId(id)
     }
 
+    @Transactional(readOnly = true)
     open fun findAllForInfo(): List<CircleEntityInfoDto> {
         return repo.findAllByVisibleTrueOrderByHomePageOrder().asSequence()
                 .map { CircleEntityInfoDto(it) }
-                .onEach { it.nextOpening = openings
-                        .findFirstByCircle_IdAndDateEndGreaterThanOrderByDateStart(
-                                it.circleEntity.id!!, System.currentTimeMillis())
-                        .orElse(null) }
+                .onEach {
+                    it.nextOpening = openings
+                            .findFirstByCircle_IdAndDateEndGreaterThanOrderByDateStart(
+                                    it.circleEntity.id, System.currentTimeMillis())
+                            .orElse(null)
+                }
                 .toList()
     }
 

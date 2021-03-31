@@ -1,34 +1,36 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="MainLayout :: head">
-	<meta charset="UTF-8" /> 
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css"/>
 </head>
 <body>
-	<div class="header" th:replace="MainLayout :: header">
-	</div>
-	
-	<div class="left-menu" th:replace="MainLayout :: left-menu">
-	</div>
+<div class="header" th:replace="MainLayout :: header">
+</div>
 
-	<div class="page content">
-		<div class="highlighted latest prompt">
-			<div class="decoration warning">
-				<i class="material-icons main">delete_forever</i>
-			</div>
-			<h3 th:text="#{lang.admin.prompt-__${topic}__}" class="topless">Prompt text comes here?</h3>
-            <p th:text="#{lang.admin.prompt-msg-__${topic}__(${arg})}">Whould you like to delete circle 'Pizzásch'?</p>
-            <form th:action="@{/__${ok}__}" method="post">
-                <input class="button form-button" type="submit" value="Yes" th:value="#{lang.admin.prompt-button-__${topic}__}" />
-                <a class="button" href="#" th:href="@{/__${cancel}__}" th:text="#{lang.admin.prompt-back-__${topic}__}">Back</a>
-            </form>
-		</div>
-	</div>
+<div class="left-menu" th:replace="MainLayout :: left-menu">
+</div>
 
-	<div th:replace="MainLayout :: footer"></div>
+<div class="page content">
+    <div class="highlighted latest prompt">
+        <div class="decoration warning">
+            <i class="material-icons main">delete_forever</i>
+        </div>
+        <h3 th:text="#{lang.admin.prompt-__${topic}__}" class="topless">Prompt text comes here?</h3>
+        <p th:text="#{lang.admin.prompt-msg-__${topic}__(${arg})}">Whould you like to delete circle 'Pizzásch'?</p>
+        <form th:action="@{/__${ok}__}" method="post">
+            <input class="button form-button" type="submit" value="Yes"
+                   th:value="#{lang.admin.prompt-button-__${topic}__}"/>
+            <a class="button" href="#" th:href="@{/__${cancel}__}"
+               th:text="#{lang.admin.prompt-back-__${topic}__}">Back</a>
+        </form>
+    </div>
+</div>
+
+<div th:replace="MainLayout :: footer"></div>
 </body>
 </html>

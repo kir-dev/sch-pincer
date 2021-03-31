@@ -13,7 +13,7 @@ data class ReviewEntity(
         @Id
         @Column
         @GeneratedValue(strategy = GenerationType.AUTO)
-        var id: Long? = null,
+        var id: Long = 0,
 
         @JsonIgnore
         @ManyToOne(fetch = FetchType.LAZY)
@@ -31,7 +31,7 @@ data class ReviewEntity(
 
         @Lob
         @Column
-        var review: @NotBlank String? = null,
+        var review: @NotBlank String = "",
 
         @Column
         var date: Long = 0,

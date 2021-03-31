@@ -14,7 +14,7 @@ data class CircleMemberEntity(
         @Id
         @Column
         @GeneratedValue(strategy = GenerationType.AUTO)
-        var id: Long? = null,
+        var id: Long = 0,
 
         @JsonIdentityInfo(generator = PropertyGenerator::class, property = "id")
         @JsonIdentityReference(alwaysAsId = true)

@@ -1,86 +1,93 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="MainLayout :: head">
-	<meta charset="UTF-8" /> 
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css"/>
 </head>
 <body>
-	<div class="header" th:replace="MainLayout :: header">
-	</div>
-	
-	<div class="left-menu" th:replace="MainLayout :: left-menu">
-	</div>
+<div class="header" th:replace="MainLayout :: header">
+</div>
 
-	<div class="content page">
-		<div class="main-article" th:if="${opener} neq null" th:onclick="'location.href=\'' + @{/} + 'provider/' + ${opener?.circle?.id} + '\''">
-			<div class="picture" style="background-image: url('../static/demo/dzsajrosz-pr.jpg')"
-					th:style="'background-image: url(\'' + ${opener?.prUrl} + '\');'">
-				<div th:class="|holder black-white ${opener?.circle?.cssClassName}|" class="holder black-white">
-					<span class="border-colored" th:text="#{lang.opener-next}">Ma nyit</span><br />
-					<h2 class="border-colored" th:text="${opener?.circle?.displayName}">DZSÁJROSZ</h2>
-				</div>
-			</div>
-		</div>
-		<div class="article-set">
+<div class="left-menu" th:replace="MainLayout :: left-menu">
+</div>
 
-			<div th:each="circle,cStat : ${circlesRandom}" class="article orange" th:class="'article ' + ${circle.cssClassName}" th:unless="${cStat.index >= 1 || #lists.size(orders) != 0}">
-				<div class="picture">
-					<div class="overlay"></div>
-					<div class="image" style="background-image: url('../static/demo/pizzasch-bg.jpg')" 
-							th:style="'background-image: url(\'' + ${circle.backgroundUrl} + '\');'"></div>
-				</div>
-				<h3 th:text="${circle.displayName}">Pizzásch</h3>
-				<p th:text="${circle.homePageDescription}">
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-					Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
-					Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim 
-					luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat 
-					euismod ut eget erat.
-				</p>
-				<div class="button-holder">
-					<a href="#" th:href="@{/provider/__${circle.alias}__}"
-							th:text="#{lang.article.circle-button}">More info</a>
-				</div>
-			</div>
+<div class="content page">
+    <div class="main-article" th:if="${opener} neq null"
+         th:onclick="'location.href=\'' + @{/} + 'provider/' + ${opener?.circle?.id} + '\''">
+        <div class="picture" style="background-image: url('../static/demo/dzsajrosz-pr.jpg')"
+             th:style="'background-image: url(\'' + ${opener?.prUrl} + '\');'">
+            <div th:class="|holder black-white ${opener?.circle?.cssClassName}|" class="holder black-white">
+                <span class="border-colored" th:text="#{lang.opener-next}">Ma nyit</span><br/>
+                <h2 class="border-colored" th:text="${opener?.circle?.displayName}">DZSÁJROSZ</h2>
+            </div>
+        </div>
+    </div>
+    <div class="article-set">
 
-			<div class="article active-orders" th:if="${#lists.size(orders) > 0}">
-				<i class="material-icons background-overlay">hourglass_empty</i>
-				<h3 th:text="#{lang.orders.active}">Aktív rendelések</h3>
-				<div class="order" th:each="order : ${orders}" th:object="${order}">
-					<b th:if="${order.count <= 1}" th:text="*{name}">Ördög pizza</b>
-					<b th:unless="${order.count <= 1}" th:text="|*{name} x *{count}|">Ördög pizza</b>
-					<br />
-					<ins th:text="|${#dates.format(order.date, '__#{lang.date-no-year-format}__')} @ *{room}|">Hétfő 22:00 - 22:30 @ 1608</ins>
-					<div class="placeholder"></div>
-				</div>
-			</div>
+        <div th:each="circle,cStat : ${circlesRandom}" class="article orange"
+             th:class="'article ' + ${circle.cssClassName}" th:unless="${cStat.index >= 1 || #lists.size(orders) != 0}">
+            <div class="picture">
+                <div class="overlay"></div>
+                <div class="image" style="background-image: url('../static/demo/pizzasch-bg.jpg')"
+                     th:style="'background-image: url(\'' + ${circle.backgroundUrl} + '\');'"></div>
+            </div>
+            <h3 th:text="${circle.displayName}">Pizzásch</h3>
+            <p th:text="${circle.homePageDescription}">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Quisque eu nibh et mi egestas pretium at eget elit. Vestibulum et felis eget dui facilisis tincidunt.
+                Maecenas vel nibh aliquam, luctus massa vel, venenatis elit. Integer et finibus eros. Nullam a enim
+                luctus, volutpat nisl a, vulputate leo. Nulla facilisi. Praesent in neque eget lectus consequat
+                euismod ut eget erat.
+            </p>
+            <div class="button-holder">
+                <a href="#" th:href="@{/provider/__${circle.alias}__}"
+                   th:text="#{lang.article.circle-button}">More info</a>
+            </div>
+        </div>
 
-			<div th:replace="news/news_2020_01_08 :: article"></div>
+        <div class="article active-orders" th:if="${#lists.size(orders) > 0}">
+            <i class="material-icons background-overlay">hourglass_empty</i>
+            <h3 th:text="#{lang.orders.active}">Aktív rendelések</h3>
+            <div class="order" th:each="order : ${orders}" th:object="${order}">
+                <b th:if="${order.count <= 1}" th:text="*{name}">Ördög pizza</b>
+                <b th:unless="${order.count <= 1}" th:text="|*{name} x *{count}|">Ördög pizza</b>
+                <br/>
+                <ins th:text="|${#dates.format(order.date, '__#{lang.date-no-year-format}__')} @ *{room}|">Hétfő 22:00 -
+                    22:30 @ 1608
+                </ins>
+                <div class="placeholder"></div>
+            </div>
+        </div>
 
-		</div>
+        <div th:replace="news/news_2020_01_08 :: article"></div>
 
-		<div class="highlighted latest">
-			<h2 th:text="#{lang.circle.next-openings}">Következő nyitások</h2>
-			
-			<table class="circles-table">
-				<tr th:each="opening : ${openings}" th:object="${opening}" th:class="*{circle.cssClassName}" class="purple">
-					<td class="border-colored">
-						<a href="#" th:text="*{circle.displayName}" th:href="@{/provider/__*{circle.alias}__/}">Vödör</a>
-					</td>
-					<td th:text="#{lang.weekday-__${#dates.dayOfWeekNameShort(opening.dateStart)}__}">Hetfő</td>
-					<td class="date" th:text="${#dates.format(opening.dateStart, '__#{lang.date-opening-format}__')}">18:00 (18-04-09)</td>
-					<td class="feeling" th:text="*{feeling}">Lorem ispsum dolor sit amet.</td>
-					<td class="arrow"><a href="#" th:href="@{/provider/__*{circle.id}__/}"><i class="material-icons">navigate_next</i></a></td>
-				</tr>
-			</table>
-		</div>
-		
-	</div>
-	
-	<div th:replace="MainLayout :: footer"></div>
+    </div>
+
+    <div class="highlighted latest">
+        <h2 th:text="#{lang.circle.next-openings}">Következő nyitások</h2>
+
+        <table class="circles-table">
+            <tr th:each="opening : ${openings}" th:object="${opening}" th:class="*{circle.cssClassName}" class="purple">
+                <td class="border-colored">
+                    <a href="#" th:text="*{circle.displayName}" th:href="@{/provider/__*{circle.alias}__/}">Vödör</a>
+                </td>
+                <td th:text="#{lang.weekday-__${#dates.dayOfWeekNameShort(opening.dateStart)}__}">Hetfő</td>
+                <td class="date" th:text="${#dates.format(opening.dateStart, '__#{lang.date-opening-format}__')}">18:00
+                    (18-04-09)
+                </td>
+                <td class="feeling" th:text="*{feeling}">Lorem ispsum dolor sit amet.</td>
+                <td class="arrow"><a href="#" th:href="@{/provider/__*{circle.id}__/}"><i class="material-icons">navigate_next</i></a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+<div th:replace="MainLayout :: footer"></div>
 </body>
 </html>

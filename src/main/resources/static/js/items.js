@@ -1,116 +1,105 @@
-var page = 0;
-var endReached = false;
-var selectedItem = null;
-var latestData;
+let page = 0;
+let endReached = false;
+let selectedItem = null;
+let latestData;
+let searchResult = [];
 
 function appendNext(profile = 0) {
     if (page === 0)
         clearAll();
-    
-    $.ajax({
-        dataType : "json",
-        url : URL_BASE + "api/items/" + getFilter("/") + (profile !== Number(0) ? '?circle=' + profile : ''),
-        success : function(data) {
+
+    getForJsonObject('api/items/' + getFilter('/') + (profile !== parseInt(0) ? '?circle=' + profile : ''))
+        .then(function (data) {
             endReached = true;
             if (data.length === 0) {
-                $("#loading").css({
-                    display : "none"
-                });
-                $("#list-end").css({
-                    display : "none"
-                });
-                $("#no-results").css({
-                    display : "inline-block"
-                });
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('list-end').style.display = 'none';
+                document.getElementById('no-results').style.display = 'inline-block';
                 return;
             }
-            for (var item in data)
-                addItem(data[item]);
-            $("#list-end").css({display : "inline-block"});
-            $("#loading").css({display : "none"});
-        }
-    });
+            searchResult = data;
+            data.forEach(val => addItem(val));
+            document.getElementById('list-end').style.display = 'inline-block';
+            document.getElementById('loading').style.display = 'none';
+        });
+}
+
+function keywordFilter(val, keyword) {
+    return keyword !== "" && (val.name.toLocaleLowerCase().includes(keyword)
+        || val.ingredients.toLocaleLowerCase().includes(keyword)
+        || val.circleName.toLocaleLowerCase().includes(keyword)
+        || val.keywords.toLocaleLowerCase().includes(keyword));
+}
+
+function filterSearch() {
+    const keyword = document.getElementById('search-input').value.toLocaleLowerCase();
+
+    if (keyword.length === 0) {
+        updateUrl(null);
+        clearAll();
+        searchResult.forEach(val => addItem(val));
+        return;
+    }
+
+    updateUrl(keyword);
+    clearAll();
+
+    console.log(searchResult);
+    console.log(keyword);
+    const keywords = keyword.split(' ');
+    searchResult.filter(val => keywords.some(k => keywordFilter(val, k)))
+        .forEach(val => addItem(val));
 }
 
 function getFilter(separator) {
-	if (location.search.includes("?now"))
-		return "now" + separator;
-	if (location.search.includes("?tomorrow"))
-		return "tomorrow" + separator;
-	return "";
+    if (location.search.includes('?now'))
+        return 'now' + separator;
+    if (location.search.includes('?tomorrow'))
+        return 'tomorrow' + separator;
+    return '';
 }
 
 function searchSubmit() {
-    searchFor($("#search-input").val());
+    // NOTE: We use client side filtering now
+    //searchFor(document.getElementById('search-input').value);
 }
 
 function showLoading() {
-    $("#loading").css({
-        display : "inline-block"
-    });
-    $("#list-end").css({
-        display : "none"
-    });
+    document.getElementById('loading').style.display = 'inline-block';
+    document.getElementById('list-end').style.display = 'none';
 }
 
 function searchFor(keyword) {
-    if (keyword.length === 0) {
-        endReached = false;
-        page = 0;
-        appendNext();
-        showLoading();
-        updateUrl(null);
-        return;
-    }
-        
-    clearAll();
-    updateUrl(keyword);
-    showLoading();
-    
-    $.ajax({
-        dataType : "json",
-        url : URL_BASE + "api/search/?q=" + keyword,
-        success : function(data) {
-            endReached = true;
-            if (data.length === 0) {
-                $("#loading").css({
-                    display : "none"
-                });
-                $("#list-end").css({
-                    display : "none"
-                });
-                $("#no-results").css({
-                    display : "inline-block"
-                });
-                return;
-            }
-            for (var item in data)
-                addItem(data[item]);
-            $("#list-end").css({display : "inline-block"});
-            $("#loading").css({display : "none"});
-        }
-    });
+    getForJsonObject('api/search/?q=')
+        .then(function (data) {
+            searchResult = data;
+            data.forEach(val => addItem(val));
+            document.getElementById('search-input').value = keyword;
+            filterSearch();
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('list-end').style.display = 'block';
+        });
 }
 
 function updateUrl(keyword) {
     if (keyword == null) {
         window.history.pushState({
-            route : "/items/" + getFilter("")
-        }, document.title, "/items/" + getFilter(""));        
+            route: '/items/' + getFilter('')
+        }, document.title, '/items/' + getFilter(''));
     } else {
         window.history.pushState({
-            route : "/items/?q=" + encodeURI(keyword)
-        }, document.title, "/items/?q=" + encodeURI(keyword));
+            route: '/items/?q=' + encodeURI(keyword)
+        }, document.title, '/items/?q=' + encodeURI(keyword));
     }
 }
 
 function addItem(item) {
-    $("#item-set").append(formatItem(item));
+    document.getElementById('item-set').insertAdjacentHTML('beforeend', formatItem(item));
 }
 
 function clearAll() {
-    $("#no-results").css({display: "none"});
-    $("#item-set").html("");
+    document.getElementById('no-results').style.display = 'none';
+    document.getElementById('item-set').innerHTML = '';
 }
 
 const STARS = [8, 100, 20, 21, 22, 23, 69, 2];
@@ -133,12 +122,12 @@ ${appendCustom(item.detailsConfigJson)}
 ${item.price !== -1 ? `
                         <tr>
                             <td>${LANG['price']}:</td>
-                            <td>${item.discountPrice === 0 
-                                ? `<em class="normal-price">${item.price} ${LANG['currency']}</em>` 
-                                : `<em class="strike">${item.price} ${LANG['currency']}</em> <em class="discount"><i class="material-icons">trending_down</i> ${item.discountPrice} ${LANG['currency']}</em>`} 
+                            <td>${item.discountPrice === 0
+        ? `<em class="normal-price">${item.price} ${LANG['currency']}</em>`
+        : `<em class="strike">${item.price} ${LANG['currency']}</em> <em class="discount"><i class="material-icons">trending_down</i> ${item.discountPrice} ${LANG['currency']}</em>`} 
                             </td>
                         </tr>
-`: ''}
+` : ''}
                     </table>
                     <span>
 					    ${!item.orderable ? '' : `
@@ -163,21 +152,30 @@ function appendCustom(json) {
         custom = JSON.parse(json);
     } catch (e) {
         console.error(e);
-        return "<tr><td colspan='2'>Invalid descriptor</td></tr>";
+        return '<tr><td colspan="2">Invalid descriptor</td></tr>';
     }
 
-    let result = "";
+    let result = '';
     custom.forEach(element => {
         if (element.values !== undefined && !element._hide) {
             result += `
                         <tr>
                             <td>${LANG[element.name]}:</td>
-                            <td>${element._display ? element._display.replace("{pieces}",LANG.pieces) : element.values.join(", ")}</td>
+                            <td>${element._display ? element._display.replace('{pieces}', LANG.pieces) : element.values.join(', ')}</td>
                         </tr>`;
         }
     });
     return result;
 }
+
+const InputType = {
+    EXTRA_SELECT: 'EXTRA_SELECT',
+    EXTRA_CHECKBOX: 'EXTRA_CHECKBOX',
+    AMERICANO_EXTRA: 'AMERICANO_EXTRA',
+    AMERICANO_SELECT: 'AMERICANO_SELECT',
+    PIZZASCH_SELECT: 'PIZZASCH_SELECT',
+    ITEM_COUNT: 'ITEM_COUNT'
+};
 
 function generateCustom(json, item) {
     let custom;
@@ -187,26 +185,26 @@ function generateCustom(json, item) {
         console.error(e);
         return;
     }
-    let result = "";
+    let result = '';
     custom.forEach(element => {
-        if (element.values !== undefined) {
+        if (typeof element.values !== 'undefined') {
             if (item.price < 0) {
                 for (let i = 0; i < element.values.length; i++) {
                     element.prices[i] = 0;
                 }
             }
 
-            if (element.type === "EXTRA_SELECT") {
+            if (element.type === InputType.EXTRA_SELECT) {
                 result += generateExtraSelect(element);
-            } else if (element.type === "EXTRA_CHECKBOX") {
+            } else if (element.type === InputType.EXTRA_CHECKBOX) {
                 result += generateExtraCheckbox(element);
-            } else if (element.type === "AMERICANO_SELECT") {
+            } else if (element.type === InputType.AMERICANO_SELECT) {
                 result += generateExtraCheckbox(element);
-            } else if (element.type === "EXTRA_SELECT") {
+            } else if (element.type === InputType.EXTRA_SELECT) {
                 result += generateExtraSelect(element);
-            } else if (element.type === "PIZZASCH_SELECT") {
+            } else if (element.type === InputType.PIZZASCH_SELECT) {
                 result += generatePizzaschSelect(element);
-            } else if (element.type === "ITEM_COUNT") {
+            } else if (element.type === InputType.ITEM_COUNT) {
                 result += generateItemCount(element);
             } else {
                 result += 'UNKNOWN TYPE: ' + element.type;
@@ -217,7 +215,7 @@ function generateCustom(json, item) {
 }
 
 function generateTimes(timeWindows, categoryMax, extra = false) {
-    let result = "";
+    let result = '';
     timeWindows.forEach(element => {
         if (element.name !== undefined) {
             result += `<option value="${element.id}">${element.name} (${extra ? element.extraItemCount : Math.min(element.normalItemCount, categoryMax)}${LANG.pieces})</option>`;
@@ -227,11 +225,11 @@ function generateTimes(timeWindows, categoryMax, extra = false) {
 }
 
 function generateExtraSelect(element) {
-    let result = "";
+    let result = '';
     result += `
         <label>${LANG[element.name]}</label>
         <select name="${element.name}" data-prices="${element.prices}" onchange="itemChanged()" class="price-changer">`;
-    for (var optionId = 0; optionId < element.values.length; optionId++) {
+    for (let optionId = 0; optionId < element.values.length; optionId++) {
         let value = element.values[optionId];
         let price = element.prices[optionId];
         result += `
@@ -240,29 +238,29 @@ function generateExtraSelect(element) {
     result += `
         </select>`;
     if (element._comment) {
-    	result += `
+        result += `
 		<span class="comment">${element._comment}</span>`;
     }
     return result;
-    
+
 }
 
 function generatePizzaschSelect(element) {
-    let result = "";
+    let result = '';
     result += `
         <label>${LANG[element.name]}</label>
         <select name="${element.name}" data-prices="${element.prices}" onchange="itemChangedPizzasch()" class="price-changer" id="pizzasch-select">`;
-    for (var optionId = 0; optionId < element.values.length; optionId++) {
-        let value = element.values[optionId];
-        let price = element.prices[optionId];
-        result += `<option value="${optionId}">${value}${price !== 0 ? ' (+' + price + ' ' + LANG['currency'] + ')' : ''}</option>`;
+    for (let optionId = 0; optionId < element.values.length; optionId++) {
+        const value = element.values[optionId];
+        const price = element.prices[optionId];
+        result += `<option value="${optionId}">${value}${price !== 0 ? (' (+' + price + ' ' + LANG['currency'] + ')') : ''}</option>`;
     }
     result += `</select>`;
     if (element._comment) {
-    	result += `<span class="comment">${element._comment}</span>`;
+        result += `<span class="comment">${element._comment}</span>`;
     }
     return result;
-    
+
 }
 
 function generateItemCount(element) {
@@ -277,11 +275,11 @@ function generateItemCount(element) {
 }
 
 function generateExtraCheckbox(element) {
-    let result = "";
+    let result = '';
     result += `<label>${LANG[element.name]}</label><div class="component">`;
-    for (var optionId = 0; optionId < element.values.length; optionId++) {
-        let value = element.values[optionId];
-        let price = element.prices[optionId];
+    for (let optionId = 0; optionId < element.values.length; optionId++) {
+        const value = element.values[optionId];
+        const price = element.prices[optionId];
         result += `
             <label class="checkcontainer">${value}${price !== 0 ? ' (+' + price + ' ' + LANG['currency'] + ')' : ''}
                 <input type="checkbox" name="${element.name}_${optionId}" data-price="${price}" onchange="itemChanged()" class="price-changer"/>
@@ -289,112 +287,117 @@ function generateExtraCheckbox(element) {
             </label>`;
     }
     if (element._comment) {
-    	result += `
-    		<span class="comment">${element._comment}</span>`;
+        result += `<span class="comment">${element._comment}</span>`;
     }
-    result += `
-        </div>`;
+    result += `</div>`;
     return result;
 }
 
 function itemChanged() {
-    var price = Number($("#popup-price").attr("data-base"));
-    $(".form-order .price-changer").each(function(index, value) {
-        if ($(this).attr("data-price"))
-            price += $(this).is(':checked') ? Number($(this).attr("data-price")) : 0;
-        else if ($(this).attr("data-prices"))
-            price += Number($(this).attr("data-prices").split(',')[Number($(this).val())]);
+    let price = parseInt(document.getElementById('popup-price').getAttribute('data-base'));
+    document.querySelectorAll('.form-order .price-changer').forEach(element => {
+        if (element.getAttribute('data-price'))
+            price += element.checked ? parseInt(element.getAttribute('data-price')) : 0;
+        else if (element.getAttribute('data-prices'))
+            price += parseInt(element.getAttribute('data-prices').split(',')[parseInt(element.value)]);
     });
-    let countElement = $("#popup-count");
-    price = countElement.length !== 0 ? (price * countElement.val()) : price;
+    let countElement = document.getElementById('popup-count');
+    price = countElement !== null ? (price * countElement.value) : price;
 
-    $("#popup-price").text(price + " " + LANG['currency']);
+    document.getElementById('popup-price').innerText = `${price} ${LANG['currency']}`;
 }
 
 
 function itemChangedPizzasch() {
-	itemChanged();
-    $("#popup-timewindows").html(generateTimes(latestData.timeWindows, latestData.categoryMax,$("#pizzasch-select").prop('selectedIndex') !== 0));
+    itemChanged();
+    document.getElementById('popup-timewindows').innerHTML = generateTimes(latestData.timeWindows, latestData.categoryMax, false);
 }
 
 function showPopup(id) {
-    $.ajax({
-        dataType: "json",
-        url: URL_BASE + "api/item/" + id,
-        success: function(data) {
-        	disableScroll();
-        	latestData = data;
-            $("#popup-title").text(data.name);
-            $("#popup-header").css({"background-image": "url('" + URL_BASE + data.circleIcon + "')"});
-            $("#popup-image").css({"background-image": "url('" + URL_BASE + data.imageName + "')"});
-            $("#popup-description").html(data.description
-                .replaceAll("#h#", "<h5>")
-                .replaceAll("#/h#", "</h5><br>")
-                .replaceAll("#ls#", "<li>- ")
-                .replaceAll("#/ls#", "</li>")
-                .replaceAll("#br#", "</br>")
-                .replaceAll("#b#", "<b>")
-                .replaceAll("#/b#", "</b>"));
-            $("#popup-price-container").css({display: data.price !== -1 ? "inline": "none"});
-            let price = data.discountPrice === 0 ? data.price : data.discountPrice;
-            $("#popup-price").text(price + " " + LANG['currency']).attr("data-base", price);
-            $("#popup-price-tag").text(LANG[data.discountPrice === 0 ? 'price' : 'priceDiscounted']);
-            $("#popup-window").addClass(data.circleColor);
-            $("#popup-custom").html(generateCustom(data.detailsConfigJson, data));
-            $("#popup-timewindows").html(generateTimes(data.timeWindows, data.categoryMax)).css({display: data.timeWindows.length > 1 ? "block" : "none"});
-            $("#popup-comment").val("");
-            $("#popup-orderable-block").css({display: data.orderable && !data.personallyOrderable ? "block" : "none"});
-            $("#popup-not-orderable").css({display: data.orderable || data.personallyOrderable ? "none" : "block"});
-            $("#popup-personally").css({display: data.personallyOrderable ? "block" : "none"});
+    getForJsonObject('api/item/' + id)
+        .then(function (data) {
+            disableScroll();
+            latestData = data;
+            document.getElementById('popup-title').innerText = data.name;
+            document.getElementById('popup-header').style.backgroundImage = `url('${URL_BASE}${data.circleIcon}')`;
+            document.getElementById('popup-image').style.backgroundImage = `url('${URL_BASE}${data.imageName}')`;
+            document.getElementById('popup-description').innerHTML = (data.description
+                .replaceAll('#h#', '<h5>')
+                .replaceAll('#/h#', '</h5><br>')
+                .replaceAll('#ls#', '<li>- ')
+                .replaceAll('#/ls#', '</li>')
+                .replaceAll('#br#', '</br>')
+                .replaceAll('#b#', '<b>')
+                .replaceAll('#/b#', '</b>'));
+            document.getElementById('popup-price-container').style.display = data.price !== -1 ? 'inline' : 'none';
+            const price = data.discountPrice === 0 ? data.price : data.discountPrice;
 
-            $("#popup").removeClass("inactive");
-            $("#blur-section").addClass("blur");
+            const priceElement = document.getElementById('popup-price');
+            priceElement.innerText = `${price} ${LANG['currency']}`;
+            priceElement.setAttribute('data-base', price);
+
+            document.getElementById('popup-price-tag').innerText = LANG[data.discountPrice === 0 ? 'price' : 'priceDiscounted'];
+            document.getElementById('popup-window').classList.add(data.circleColor);
+            document.getElementById('popup-custom').innerHTML = generateCustom(data.detailsConfigJson, data);
+
+            const timeWindowsElement = document.getElementById('popup-timewindows');
+            timeWindowsElement.innerHTML = generateTimes(data.timeWindows, data.categoryMax);
+            timeWindowsElement.style.display = data.timeWindows.length > 1 ? 'block' : 'none';
+
+            document.getElementById('popup-comment').value = '';
+            document.getElementById('popup-orderable-block').style.display = data.orderable && !data.personallyOrderable ? 'block' : 'none';
+            if (document.getElementById('popup-not-orderable'))
+                document.getElementById('popup-not-orderable').style.display = data.orderable || data.personallyOrderable ? 'none' : 'block';
+            if (document.getElementById('popup-personally'))
+                document.getElementById('popup-personally').style.display = data.personallyOrderable ? 'block' : 'none';
+
+            document.getElementById('popup').classList.remove('inactive');
+            document.getElementById('blur-section').classList.add('blur');
             selectedItem = data;
-        }
-    });
+        });
 }
 
 function closePopup(purchased = false) {
     if (!purchased)
-    $("#blur-section").removeClass("blur");
-    $("#popup").addClass("inactive");
-    $("#popup-window").attr("class", "popup");
+        document.getElementById('blur-section').classList.remove('blur');
+    document.getElementById('popup').classList.add('inactive');
+    document.getElementById('popup-window').classList = 'popup';
     selectedItem = null;
     enableScroll();
 }
 
 function packDetails() {
     if (selectedItem === null)
-        return "{answers: []}";
+        return '{answers: []}';
 
     let result = [];
     let custom = JSON.parse(selectedItem.detailsConfigJson);
     custom.forEach(element => {
         if (element.values !== undefined) {
-            if (element.type === "EXTRA_SELECT") {
+            if (element.type === InputType.EXTRA_SELECT) {
                 result.push({
-            		type: "EXTRA_SELECT",
-            		name: element.name,
-            		selected: [$(`select[name='${element.name}']`).val()]
-            	});
-            } else if (element.type === "EXTRA_CHECKBOX") {
-                result.push({
-            		type: "EXTRA_CHECKBOX",
-            		name: element.name,
-                	selected: getCheckboxChecked(element.name, element.values.length)
+                    type: InputType.EXTRA_SELECT,
+                    name: element.name,
+                    selected: [document.querySelector(`select[name='${element.name}']`).value]
                 });
-            } else if (element.type === "AMERICANO_EXTRA") {
+            } else if (element.type === InputType.EXTRA_CHECKBOX) {
                 result.push({
-            		type: "AMERICANO_EXTRA",
-            		name: element.name,
-                	selected: getCheckboxChecked(element.name, element.values.length)
+                    type: InputType.EXTRA_CHECKBOX,
+                    name: element.name,
+                    selected: getCheckboxChecked(element.name, element.values.length)
                 });
-            } else if (element.type === "PIZZASCH_SELECT") {
-	            result.push({
-	        		type: "PIZZASCH_SELECT",
-	        		name: element.name,
-	        		selected: [$(`select[name='${element.name}']`).val()]
-	            });
+            } else if (element.type === InputType.AMERICANO_EXTRA) {
+                result.push({
+                    type: InputType.AMERICANO_EXTRA,
+                    name: element.name,
+                    selected: getCheckboxChecked(element.name, element.values.length)
+                });
+            } else if (element.type === InputType.PIZZASCH_SELECT) {
+                result.push({
+                    type: InputType.PIZZASCH_SELECT,
+                    name: element.name,
+                    selected: [document.querySelector(`select[name='${element.name}']`).value]
+                });
             }
         }
     });
@@ -403,90 +406,101 @@ function packDetails() {
 }
 
 function getCheckboxChecked(name, count) {
-	let result = [];
-	for (let i = 0; i < count; i++) {
-		if ($(`input[name=${name}_${i}]`).is(':checked')){
-			result.push(Number(i));
-		}
-	}
-	return result;
+    let result = [];
+    for (let i = 0; i < count; i++) {
+        if (document.querySelector(`input[name=${name}_${i}]`).checked) {
+            result.push(parseInt(i));
+        }
+    }
+    return result;
 }
 
+const ResponseType = {
+    ACK: 'ACK',
+    INTERNAL_ERROR: 'INTERNAL_ERROR',
+    OVERALL_MAX_REACHED: 'OVERALL_MAX_REACHED',
+    MAX_REACHED: 'MAX_REACHED',
+    MAX_REACHED_EXTRA: 'MAX_REACHED_EXTRA',
+    NO_ORDERING: 'NO_ORDERING',
+    NO_ROOM_SET: 'NO_ROOM_SET',
+    CATEGORY_FULL: 'CATEGORY_FULL'
+};
+
 function buySelectedItem() {
-    $.post({
-        dataType: "text",
-        url: URL_BASE + "api/order",
-        data: {
-            id: selectedItem.id,
-            time: $("select[name='time']").val(),
-            comment: $("#popup-comment").val(),
-            count: $('#popup-count').length ? $('#popup-count').val() : 1,
-            detailsJson: packDetails()
-        }
-    }).done(function(data) {
-    	if (data === "ACK") {
-	        closePopup(true);
-	        doneOrder();
-	    } else if (data === "INTERNAL_ERROR") {
-	    	showMessageBox(LANG.internal);
-	    } else if (data === "OVERALL_MAX_REACHED") {
-	    	showMessageBox(LANG.orderFull);
-	    } else if (data === "MAX_REACHED") {
-	    	showMessageBox(LANG.intervalFull);
-	    } else if (data === "MAX_REACHED_EXTRA") {
-	    	showMessageBox(LANG.intervalFullExtra);
-	    } else if (data === "NO_ORDERING") {
-	    	showMessageBox(LANG.alreadyClosed);
-	    } else if (data === "NO_ROOM_SET") {
-	    	showMessageBox(LANG.noRoom);
-        } else if (data === "CATEGORY_FULL") {
+    postForString('api/order', {
+        id: selectedItem.id,
+        time: document.querySelector('select[name="time"]').value,
+        comment: document.getElementById('popup-comment').value,
+        count: document.getElementById('popup-count') !== null ? document.getElementById('popup-count').value : 1,
+        detailsJson: packDetails()
+    }).then(function (data) {
+        if (data === ResponseType.ACK) {
+            closePopup(true);
+            doneOrder();
+        } else if (data === ResponseType.INTERNAL_ERROR) {
+            showMessageBox(LANG.internal);
+        } else if (data === ResponseType.OVERALL_MAX_REACHED) {
+            showMessageBox(LANG.orderFull);
+        } else if (data === ResponseType.MAX_REACHED) {
+            showMessageBox(LANG.intervalFull);
+        } else if (data === ResponseType.MAX_REACHED_EXTRA) {
+            showMessageBox(LANG.intervalFullExtra);
+        } else if (data === ResponseType.NO_ORDERING) {
+            showMessageBox(LANG.alreadyClosed);
+        } else if (data === ResponseType.NO_ROOM_SET) {
+            showMessageBox(LANG.noRoom);
+        } else if (data === ResponseType.CATEGORY_FULL) {
             showMessageBox(LANG.categoryFull);
-	    } else {
-	    	showMessageBox(data);
-	    }
-	    
-    }).fail(function(e) {
-    	showMessageBox(LANG.noInternetConnection);
-        console.error("Cannot send POST request.");
+        } else {
+            showMessageBox(data);
+        }
+
+    }).catch(function (e) {
+        showMessageBox(LANG.noInternetConnection);
+        console.error('Cannot send POST request.');
+        console.error(e)
     });
 }
 
 function doneOrder() {
-    $(".done").css({"display": "block"});
+    document.querySelector('.done').style.display = 'block';
     setTimeout(() => {
-        $(".done-circle").css({"background-size": "100%"});
+        document.querySelector('.done-circle').style.backgroundSize = '100%';
     }, 10);
     setTimeout(() => {
-        $(".done-tick").css({"-webkit-clip-path": "polygon(0 0, 100% 0, 100% 100%, 0 100%)", 
-                "clip-path": "polygon(0 0, 100% 0, 100% 100%, 0 100%)"});
+        document.querySelector('.done-tick').style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
     }, 100);
     setTimeout(() => {
-        $(".done").css({"top": "20vh", "opacity": "0"});
-        $(".done-tick").css({"-webkit-clip-path": "polygon(0 0, 0 0, 0 100%, 0% 100%)", 
-                "clip-path": "polygon(0 0, 0 0, 0 100%, 0% 100%)"});
-        $("#blur-section").removeClass("blur");
+        let doneElement = document.querySelector('.done');
+        doneElement.style.top = '20vh';
+        doneElement.style.opacity = '0';
+        document.querySelector('.done-tick').style.clipPath = 'polygon(0 0, 0 0, 0 100%, 0% 100%)';
+        document.getElementById('blur-section').classList.remove('blur');
     }, 2000);
     setTimeout(() => {
-        $(".done-circle").css({"background-size": "0.1%"});
-        $(".done").css({"top": "50vh", "opacity": "1", "display": "none"});
+        document.querySelector('.done-circle').style.backgroundSize = '0.1%';
+        let doneElement = document.querySelector('.done');
+        doneElement.style.top = '50vh';
+        doneElement.style.opacity = '1';
+        doneElement.style.display = 'none';
     }, 3500);
 }
 
 function closeMessageBox() {
-	$(".messagebox").css({display: "none"});
+    document.querySelector('.messagebox').style.display = 'none';
 }
 
 function showMessageBox(message) {
-	$("#messagebox-text").text(message);
-	$(".messagebox").css({display: "inline-block"});
+    document.getElementById('messagebox-text').innerText = message;
+    document.querySelector('.messagebox').style.display = 'inline-block';
 }
 
 function disableScroll() {
-	$("body").css({"overflow-y": "hidden"});
+    document.body.style.overflowY = 'hidden';
 }
 
 function enableScroll() {
-	$("body").css({"overflow-y": "scroll"});
+    document.body.style.overflowY = 'scroll';
 }
 
 function limitNumber(element, min, max) {
@@ -496,25 +510,62 @@ function limitNumber(element, min, max) {
         element.value = min;
 }
 
-$(window).scroll(function() {
-    if ($(window).scrollTop() === $(document).height() - $(window).height() && !endReached) {
-        appendNext();
-    }
+function getForJsonObject(path) {
+    return fetch(URL_BASE + path, {
+        method: 'GET',
+        mode: 'no-cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+            'Accept': 'application/json'
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+    }).then(response => response.json());
+}
+
+function postForJsonObject(path, data) {
+    return fetch(URL_BASE + path, {
+        method: 'POST',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+            'Accept': 'application/json',
+            'Content-type': 'application/json;charset=UTF-8'
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        body: JSON.stringify(data)
+    }).then(response => response.json());
+}
+
+function postForString(path, data) {
+    return fetch(URL_BASE + path, {
+        method: 'POST',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+            'Accept': 'text/plain;charset=UTF-8',
+            'Content-type': 'application/json;charset=UTF-8'
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        body: JSON.stringify(data)
+    }).then(response => response.text());
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    window.addEventListener('click', event => {
+        if (event.target === document.getElementById('popup'))
+            closePopup();
+    });
+    document.addEventListener('keyup', event => {
+        if (event.keyCode === 27)
+            closePopup();
+    });
 });
 
-$(window).click(function() {
-    if (event.target === $("#popup")[0]) {
-        closePopup();
-    }
-});
-
-$(document).keyup(function (e) {
-    if (e.keyCode === 27) {
-        closePopup();
-    }
-});
-
-String.prototype.replaceAll = function(search, replacement) {
-    var target = this;
+String.prototype.replaceAll = function (search, replacement) {
+    const target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
 };

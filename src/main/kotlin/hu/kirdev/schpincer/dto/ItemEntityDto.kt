@@ -24,9 +24,10 @@ class ItemEntityDto(base: ItemEntity, opening: OpeningEntity?, loggedin: Boolean
     val circleIcon: String
     val categoryMax: Int
     val discountPrice: Int
+    val keywords: String
 
     init {
-        id = base.id!!
+        id = base.id
         name = base.name
         description = base.description
         ingredients = base.ingredients
@@ -41,6 +42,7 @@ class ItemEntityDto(base: ItemEntity, opening: OpeningEntity?, loggedin: Boolean
         orderStatus = ItemOrderableStatus.OK
         flag = base.flag
         discountPrice = base.discountPrice
+        keywords = base.keywords?.replace(",", "") ?: ""
 
         circleId = base.circle?.id ?: 0L
         circleAlias = base.circle?.alias ?: "404"

@@ -18,7 +18,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
-@Component class DI {
+@Component
+class DI {
     companion object {
         lateinit var instance: DI
     }
@@ -27,15 +28,17 @@ import javax.servlet.http.HttpServletRequest
         instance = this
     }
 
-    @Autowired lateinit var users: UserService
-    @Value("\${schpincer.external:/etc/schpincer/external}") lateinit var uploadPath: String
+    @Autowired
+    lateinit var users: UserService
+    @Value("\${schpincer.external:/etc/schpincer/external}")
+    lateinit var uploadPath: String
 }
 
 fun MultipartFile.uploadFile(target: String): String? {
     if (this.isEmpty || this.contentType == null)
         return null
     var path = if (!DI.instance.uploadPath.startsWith("/")) System.getProperty("user.dir") + "/" + DI.instance.uploadPath
-            else DI.instance.uploadPath
+    else DI.instance.uploadPath
     val dir = File(path, target)
     dir.mkdirs()
     val originalFilename = this.originalFilename ?: ""
@@ -80,11 +83,11 @@ fun isPR(circleId: Long, request: HttpServletRequest): Boolean {
     return request.getUser().permissions.contains("PR_$circleId")
 }
 
-fun isCircleOwner(circleId: Long, request: HttpServletRequest): Boolean{
-    return  request.getOwnedCircles().contains(circleId)
+fun isCircleOwner(circleId: Long, request: HttpServletRequest): Boolean {
+    return request.getOwnedCircles().contains(circleId)
 }
 
-fun toReadableRole(permissions: Set<String>, circleID: Long): CircleMemberRole{
+fun toReadableRole(permissions: Set<String>, circleID: Long): CircleMemberRole {
     val isLeader = permissions.contains("ROLE_LEADER")
     val isCircleOwner = permissions.contains("CIRCLE_${circleID}")
     val isPr = permissions.contains("PR_${circleID}")

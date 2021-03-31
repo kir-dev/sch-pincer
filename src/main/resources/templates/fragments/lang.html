@@ -1,135 +1,139 @@
-<html xmlns:th="http://www.thymeleaf.org/">
-<head>	
-	<object th:fragment="script()">
-	<script th:if="${searchMode}" th:inline="javascript">
-		var LANG = {
-			"size": /*[[ #{lang.items.custom-size} ]]*/ "size",
-			"sauce": /*[[ #{lang.items.custom-sauce} ]]*/ "Sauce",
-			"count": /*[[ #{lang.items.custom-count} ]]*/ "Count",
-			"extra": /*[[ #{lang.items.custom-extra} ]]*/ "Extra",
-			"contain": /*[[ #{lang.items.custom-contain} ]]*/ "Contain",
-			"onion": /*[[ #{lang.items.custom-onion} ]]*/ "Onion",
-			"type": /*[[ #{lang.items.custom-type} ]]*/ "Type",
-			"potato": /*[[ #{lang.items.custom-potato} ]]*/ "Potato",
-			"panzo": /*[[ #{lang.items.custom-panzo} ]]*/ "Panzo",
-			"stbpanzo": /*[[ #{lang.items.custom-stbpanzo} ]]*/ "STB. Panzo",
-			"cheese": /*[[ #{lang.items.custom-cheese} ]]*/ "Cheese",
-			"price": /*[[ #{lang.items.price} ]]*/ "Price",
-			"pieces": /*[[ #{lang.items.pieces} ]]*/ "pieces",
-			"ingred": /*[[ #{lang.items.ingredients} ]]*/ "Ingredients",
-			"intervalFull": /*[[ #{lang.msgbox.interval-full} ]]*/ "This time window is full",
-			"intervalFullExtra": /*[[ #{lang.msgbox.interval-full-extra} ]]*/ "This time window is full",
-			"orderFull": /*[[ #{lang.msgbox.order-full} ]]*/ "This time window is full",
-			"alreadyClosed": /*[[ #{lang.msgbox.already-closed} ]]*/ "There is currently no ordering period",
-			"noRoom": /*[[ #{lang.msgbox.no-room} ]]*/ "You haven't set your room",
-			"categoryFull": /*[[ #{lang.msgbox.category-full} ]]*/ "This category is full",
-			"internal": /*[[ #{lang.msgbox.internal} ]]*/ "Internal server error occurred",
-			"noInternetConnection": /*[[ #{lang.msgbox.no-internet-connection} ]]*/ "No internet connection",
-			"currency": /*[[ #{lang.currency} ]]*/ "Ft",
-			"priceDiscounted": /*[[ #{lang.items.price-discounted} ]]*/ "Discounted price"
-		};
-		var URL_BASE = /*[[ @{/} ]]*/ "/";
-		$(document).ready(function() { 
-			searchFor(/*[[ ${keyword} ]]*/ ""); 
-			if ((/*[[ ${keyword} ]]*/ "").length === 0) appendNext(); 
-		});
-	</script>
-	<script th:unless="${searchMode}" th:inline="javascript">
-		var LANG = {
-			"size": /*[[ #{lang.items.custom-size} ]]*/ "size",
-			"sauce": /*[[ #{lang.items.custom-sauce} ]]*/ "Sauce",
-			"count": /*[[ #{lang.items.custom-count} ]]*/ "Count",
-			"extra": /*[[ #{lang.items.custom-extra} ]]*/ "Extra",
-			"contain": /*[[ #{lang.items.custom-contain} ]]*/ "Contain",
-			"onion": /*[[ #{lang.items.custom-onion} ]]*/ "Onion",
-			"type": /*[[ #{lang.items.custom-type} ]]*/ "Type",
-			"potato": /*[[ #{lang.items.custom-potato} ]]*/ "Potato",
-			"panzo": /*[[ #{lang.items.custom-panzo} ]]*/ "Panzo",
-			"stbpanzo": /*[[ #{lang.items.custom-stbpanzo} ]]*/ "STB. Panzo",
-			"cheese": /*[[ #{lang.items.custom-cheese} ]]*/ "Cheese",
-			"price": /*[[ #{lang.items.price} ]]*/ "Price",
-			"pieces": /*[[ #{lang.items.pieces} ]]*/ "pieces",
-			"ingred": /*[[ #{lang.items.ingredients} ]]*/ "Ingredients",
-			"intervalFull": /*[[ #{lang.msgbox.interval-full} ]]*/ "This time window is full",
-			"intervalFullExtra": /*[[ #{lang.msgbox.interval-full-extra} ]]*/ "This time window is full",
-			"orderFull": /*[[ #{lang.msgbox.order-full} ]]*/ "This time window is full",
-			"alreadyClosed": /*[[ #{lang.msgbox.already-closed} ]]*/ "There is currently no ordering period",
-			"noRoom": /*[[ #{lang.msgbox.no-room} ]]*/ "You haven't set your room",
-			"categoryFull": /*[[ #{lang.msgbox.category-full} ]]*/ "This category is full",
-			"internal": /*[[ #{lang.msgbox.internal} ]]*/ "Internal server error occurred",
-			"noInternetConnection": /*[[ #{lang.msgbox.no-internet-connection} ]]*/ "No internet connection",
-			"currency": /*[[ #{lang.currency} ]]*/ "Ft",
-			"priceDiscounted": /*[[ #{lang.items.price-discounted} ]]*/ "Discounted price"
-		};
-		var URL_BASE = /*[[ @{/} ]]*/ "/";
-		$(document).ready(function() { appendNext(); });
-	</script>
-	</object>
-	
-	<object th:fragment="scriptProfile(profile)">
-	<script th:if="${searchMode}" th:inline="javascript">
-		var LANG = {
-			"size": /*[[ #{lang.items.custom-size} ]]*/ "size",
-			"sauce": /*[[ #{lang.items.custom-sauce} ]]*/ "Sauce",
-			"count": /*[[ #{lang.items.custom-count} ]]*/ "Count",
-			"extra": /*[[ #{lang.items.custom-extra} ]]*/ "Extra",
-			"contain": /*[[ #{lang.items.custom-contain} ]]*/ "Contain",
-			"onion": /*[[ #{lang.items.custom-onion} ]]*/ "Onion",
-			"type": /*[[ #{lang.items.custom-type} ]]*/ "Type",
-			"potato": /*[[ #{lang.items.custom-potato} ]]*/ "Potato",
-			"panzo": /*[[ #{lang.items.custom-panzo} ]]*/ "Panzo",
-			"stbpanzo": /*[[ #{lang.items.custom-stbpanzo} ]]*/ "STB. Panzo",
-			"cheese": /*[[ #{lang.items.custom-cheese} ]]*/ "Cheese",
-			"price": /*[[ #{lang.items.price} ]]*/ "Price",
-			"pieces": /*[[ #{lang.items.pieces} ]]*/ "pieces",
-			"ingred": /*[[ #{lang.items.ingredients} ]]*/ "Ingredients",
-			"intervalFull": /*[[ #{lang.msgbox.interval-full} ]]*/ "This time window is full",
-			"intervalFullExtra": /*[[ #{lang.msgbox.interval-full-extra} ]]*/ "This time window is full",
-			"orderFull": /*[[ #{lang.msgbox.order-full} ]]*/ "This time window is full",
-			"alreadyClosed": /*[[ #{lang.msgbox.already-closed} ]]*/ "There is currently no ordering period",
-			"noRoom": /*[[ #{lang.msgbox.no-room} ]]*/ "You haven't set your room",
-			"categoryFull": /*[[ #{lang.msgbox.category-full} ]]*/ "This category is full",
-			"internal": /*[[ #{lang.msgbox.internal} ]]*/ "Internal server error occurred",
-			"noInternetConnection": /*[[ #{lang.msgbox.no-internet-connection} ]]*/ "No internet connection",
-			"currency": /*[[ #{lang.currency} ]]*/ "Ft",
-			"priceDiscounted": /*[[ #{lang.items.price-discounted} ]]*/ "Discounted price"
-		};
-		var URL_BASE = /*[[ @{/} ]]*/ "/";
-		$(document).ready(function() { 
-			searchFor(/*[[ ${keyword} ]]*/ ""); 
-			if ((/*[[ ${keyword} ]]*/ "").length === 0) appendNext(/*[[ ${profile} ]]*/ "0"); 
-		});
-	</script>
-	<script th:unless="${searchMode}" th:inline="javascript">
-		var LANG = {
-			"size": /*[[ #{lang.items.custom-size} ]]*/ "size",
-			"sauce": /*[[ #{lang.items.custom-sauce} ]]*/ "Sauce",
-			"count": /*[[ #{lang.items.custom-count} ]]*/ "Count",
-			"extra": /*[[ #{lang.items.custom-extra} ]]*/ "Extra",
-			"contain": /*[[ #{lang.items.custom-contain} ]]*/ "Contain",
-			"onion": /*[[ #{lang.items.custom-onion} ]]*/ "Onion",
-			"type": /*[[ #{lang.items.custom-type} ]]*/ "Type",
-			"potato": /*[[ #{lang.items.custom-potato} ]]*/ "Potato",
-			"panzo": /*[[ #{lang.items.custom-panzo} ]]*/ "Panzo",
-			"stbpanzo": /*[[ #{lang.items.custom-stbpanzo} ]]*/ "STB. Panzo",
-			"cheese": /*[[ #{lang.items.custom-cheese} ]]*/ "Cheese",
-			"price": /*[[ #{lang.items.price} ]]*/ "Price",
-			"pieces": /*[[ #{lang.items.pieces} ]]*/ "pieces",
-			"ingred": /*[[ #{lang.items.ingredients} ]]*/ "Ingredients",
-			"intervalFull": /*[[ #{lang.msgbox.interval-full} ]]*/ "This time window is full",
-			"intervalFullExtra": /*[[ #{lang.msgbox.interval-full-extra} ]]*/ "This time window is full",
-			"orderFull": /*[[ #{lang.msgbox.order-full} ]]*/ "This time window is full",
-			"alreadyClosed": /*[[ #{lang.msgbox.already-closed} ]]*/ "There is currently no ordering period",
-			"noRoom": /*[[ #{lang.msgbox.no-room} ]]*/ "You haven't set your room",
-			"categoryFull": /*[[ #{lang.msgbox.category-full} ]]*/ "This category is full",
-			"internal": /*[[ #{lang.msgbox.internal} ]]*/ "Internal server error occurred",
-			"noInternetConnection": /*[[ #{lang.msgbox.no-internet-connection} ]]*/ "No internet connection",
-			"currency": /*[[ #{lang.currency} ]]*/ "Ft",
-			"priceDiscounted": /*[[ #{lang.items.price-discounted} ]]*/ "Discounted price"
-		};
-		var URL_BASE = /*[[ @{/} ]]*/ "/";
-		$(document).ready(function() { appendNext(/*[[ ${profile} ]]*/ "0"); });
-	</script>
-	</object>
+<html xmlns:th='http://www.thymeleaf.org/'>
+<head>
+    <object th:fragment='script()'>
+        <script th:if='${searchMode}' th:inline='javascript'>
+            const LANG = {
+                'size': /*[[ #{lang.items.custom-size} ]]*/ 'size',
+                'sauce': /*[[ #{lang.items.custom-sauce} ]]*/ 'Sauce',
+                'count': /*[[ #{lang.items.custom-count} ]]*/ 'Count',
+                'extra': /*[[ #{lang.items.custom-extra} ]]*/ 'Extra',
+                'contain': /*[[ #{lang.items.custom-contain} ]]*/ 'Contain',
+                'onion': /*[[ #{lang.items.custom-onion} ]]*/ 'Onion',
+                'type': /*[[ #{lang.items.custom-type} ]]*/ 'Type',
+                'potato': /*[[ #{lang.items.custom-potato} ]]*/ 'Potato',
+                'panzo': /*[[ #{lang.items.custom-panzo} ]]*/ 'Panzo',
+                'stbpanzo': /*[[ #{lang.items.custom-stbpanzo} ]]*/ 'STB. Panzo',
+                'cheese': /*[[ #{lang.items.custom-cheese} ]]*/ 'Cheese',
+                'price': /*[[ #{lang.items.price} ]]*/ 'Price',
+                'pieces': /*[[ #{lang.items.pieces} ]]*/ 'pieces',
+                'ingred': /*[[ #{lang.items.ingredients} ]]*/ 'Ingredients',
+                'intervalFull': /*[[ #{lang.msgbox.interval-full} ]]*/ 'This time window is full',
+                'intervalFullExtra': /*[[ #{lang.msgbox.interval-full-extra} ]]*/ 'This time window is full',
+                'orderFull': /*[[ #{lang.msgbox.order-full} ]]*/ 'This time window is full',
+                'alreadyClosed': /*[[ #{lang.msgbox.already-closed} ]]*/ 'There is currently no ordering period',
+                'noRoom': /*[[ #{lang.msgbox.no-room} ]]*/ 'You haven\'t set your room',
+                'categoryFull': /*[[ #{lang.msgbox.category-full} ]]*/ 'This category is full',
+                'internal': /*[[ #{lang.msgbox.internal} ]]*/ 'Internal server error occurred',
+                'noInternetConnection': /*[[ #{lang.msgbox.no-internet-connection} ]]*/ 'No internet connection',
+                'currency': /*[[ #{lang.currency} ]]*/ 'Ft',
+                'priceDiscounted': /*[[ #{lang.items.price-discounted} ]]*/ 'Discounted price'
+            };
+            const URL_BASE = /*[[ @{/} ]]*/ '/';
+            document.addEventListener('DOMContentLoaded', function () {
+                searchFor(/*[[ ${keyword} ]]*/ '');
+                if ((/*[[ ${keyword} ]]*/ '').length === 0) appendNext();
+            });
+        </script>
+        <script th:unless='${searchMode}' th:inline='javascript'>
+            const LANG = {
+                'size': /*[[ #{lang.items.custom-size} ]]*/ 'size',
+                'sauce': /*[[ #{lang.items.custom-sauce} ]]*/ 'Sauce',
+                'count': /*[[ #{lang.items.custom-count} ]]*/ 'Count',
+                'extra': /*[[ #{lang.items.custom-extra} ]]*/ 'Extra',
+                'contain': /*[[ #{lang.items.custom-contain} ]]*/ 'Contain',
+                'onion': /*[[ #{lang.items.custom-onion} ]]*/ 'Onion',
+                'type': /*[[ #{lang.items.custom-type} ]]*/ 'Type',
+                'potato': /*[[ #{lang.items.custom-potato} ]]*/ 'Potato',
+                'panzo': /*[[ #{lang.items.custom-panzo} ]]*/ 'Panzo',
+                'stbpanzo': /*[[ #{lang.items.custom-stbpanzo} ]]*/ 'STB. Panzo',
+                'cheese': /*[[ #{lang.items.custom-cheese} ]]*/ 'Cheese',
+                'price': /*[[ #{lang.items.price} ]]*/ 'Price',
+                'pieces': /*[[ #{lang.items.pieces} ]]*/ 'pieces',
+                'ingred': /*[[ #{lang.items.ingredients} ]]*/ 'Ingredients',
+                'intervalFull': /*[[ #{lang.msgbox.interval-full} ]]*/ 'This time window is full',
+                'intervalFullExtra': /*[[ #{lang.msgbox.interval-full-extra} ]]*/ 'This time window is full',
+                'orderFull': /*[[ #{lang.msgbox.order-full} ]]*/ 'This time window is full',
+                'alreadyClosed': /*[[ #{lang.msgbox.already-closed} ]]*/ 'There is currently no ordering period',
+                'noRoom': /*[[ #{lang.msgbox.no-room} ]]*/ 'You haven\'t set your room',
+                'categoryFull': /*[[ #{lang.msgbox.category-full} ]]*/ 'This category is full',
+                'internal': /*[[ #{lang.msgbox.internal} ]]*/ 'Internal server error occurred',
+                'noInternetConnection': /*[[ #{lang.msgbox.no-internet-connection} ]]*/ 'No internet connection',
+                'currency': /*[[ #{lang.currency} ]]*/ 'Ft',
+                'priceDiscounted': /*[[ #{lang.items.price-discounted} ]]*/ 'Discounted price'
+            };
+            const URL_BASE = /*[[ @{/} ]]*/ '/';
+            document.addEventListener('DOMContentLoaded', function () {
+                appendNext();
+            });
+        </script>
+    </object>
+
+    <object th:fragment='scriptProfile(profile)'>
+        <script th:if='${searchMode}' th:inline='javascript'>
+            const LANG = {
+                'size': /*[[ #{lang.items.custom-size} ]]*/ 'size',
+                'sauce': /*[[ #{lang.items.custom-sauce} ]]*/ 'Sauce',
+                'count': /*[[ #{lang.items.custom-count} ]]*/ 'Count',
+                'extra': /*[[ #{lang.items.custom-extra} ]]*/ 'Extra',
+                'contain': /*[[ #{lang.items.custom-contain} ]]*/ 'Contain',
+                'onion': /*[[ #{lang.items.custom-onion} ]]*/ 'Onion',
+                'type': /*[[ #{lang.items.custom-type} ]]*/ 'Type',
+                'potato': /*[[ #{lang.items.custom-potato} ]]*/ 'Potato',
+                'panzo': /*[[ #{lang.items.custom-panzo} ]]*/ 'Panzo',
+                'stbpanzo': /*[[ #{lang.items.custom-stbpanzo} ]]*/ 'STB. Panzo',
+                'cheese': /*[[ #{lang.items.custom-cheese} ]]*/ 'Cheese',
+                'price': /*[[ #{lang.items.price} ]]*/ 'Price',
+                'pieces': /*[[ #{lang.items.pieces} ]]*/ 'pieces',
+                'ingred': /*[[ #{lang.items.ingredients} ]]*/ 'Ingredients',
+                'intervalFull': /*[[ #{lang.msgbox.interval-full} ]]*/ 'This time window is full',
+                'intervalFullExtra': /*[[ #{lang.msgbox.interval-full-extra} ]]*/ 'This time window is full',
+                'orderFull': /*[[ #{lang.msgbox.order-full} ]]*/ 'This time window is full',
+                'alreadyClosed': /*[[ #{lang.msgbox.already-closed} ]]*/ 'There is currently no ordering period',
+                'noRoom': /*[[ #{lang.msgbox.no-room} ]]*/ 'You haven\'t set your room',
+                'categoryFull': /*[[ #{lang.msgbox.category-full} ]]*/ 'This category is full',
+                'internal': /*[[ #{lang.msgbox.internal} ]]*/ 'Internal server error occurred',
+                'noInternetConnection': /*[[ #{lang.msgbox.no-internet-connection} ]]*/ 'No internet connection',
+                'currency': /*[[ #{lang.currency} ]]*/ 'Ft',
+                'priceDiscounted': /*[[ #{lang.items.price-discounted} ]]*/ 'Discounted price'
+            };
+            const URL_BASE = /*[[ @{/} ]]*/ '/';
+            document.addEventListener('DOMContentLoaded', function () {
+                searchFor(/*[[ ${keyword} ]]*/ '');
+                if ((/*[[ ${keyword} ]]*/ '').length === 0) appendNext(/*[[ ${profile} ]]*/ '0');
+            });
+        </script>
+        <script th:unless='${searchMode}' th:inline='javascript'>
+            const LANG = {
+                'size': /*[[ #{lang.items.custom-size} ]]*/ 'size',
+                'sauce': /*[[ #{lang.items.custom-sauce} ]]*/ 'Sauce',
+                'count': /*[[ #{lang.items.custom-count} ]]*/ 'Count',
+                'extra': /*[[ #{lang.items.custom-extra} ]]*/ 'Extra',
+                'contain': /*[[ #{lang.items.custom-contain} ]]*/ 'Contain',
+                'onion': /*[[ #{lang.items.custom-onion} ]]*/ 'Onion',
+                'type': /*[[ #{lang.items.custom-type} ]]*/ 'Type',
+                'potato': /*[[ #{lang.items.custom-potato} ]]*/ 'Potato',
+                'panzo': /*[[ #{lang.items.custom-panzo} ]]*/ 'Panzo',
+                'stbpanzo': /*[[ #{lang.items.custom-stbpanzo} ]]*/ 'STB. Panzo',
+                'cheese': /*[[ #{lang.items.custom-cheese} ]]*/ 'Cheese',
+                'price': /*[[ #{lang.items.price} ]]*/ 'Price',
+                'pieces': /*[[ #{lang.items.pieces} ]]*/ 'pieces',
+                'ingred': /*[[ #{lang.items.ingredients} ]]*/ 'Ingredients',
+                'intervalFull': /*[[ #{lang.msgbox.interval-full} ]]*/ 'This time window is full',
+                'intervalFullExtra': /*[[ #{lang.msgbox.interval-full-extra} ]]*/ 'This time window is full',
+                'orderFull': /*[[ #{lang.msgbox.order-full} ]]*/ 'This time window is full',
+                'alreadyClosed': /*[[ #{lang.msgbox.already-closed} ]]*/ 'There is currently no ordering period',
+                'noRoom': /*[[ #{lang.msgbox.no-room} ]]*/ 'You haven\'t set your room',
+                'categoryFull': /*[[ #{lang.msgbox.category-full} ]]*/ 'This category is full',
+                'internal': /*[[ #{lang.msgbox.internal} ]]*/ 'Internal server error occurred',
+                'noInternetConnection': /*[[ #{lang.msgbox.no-internet-connection} ]]*/ 'No internet connection',
+                'currency': /*[[ #{lang.currency} ]]*/ 'Ft',
+                'priceDiscounted': /*[[ #{lang.items.price-discounted} ]]*/ 'Discounted price'
+            };
+            const URL_BASE = /*[[ @{/} ]]*/ '/';
+            document.addEventListener('DOMContentLoaded', function () {
+                appendNext(/*[[ ${profile} ]]*/ '0');
+            });
+        </script>
+    </object>
 </head>
 </html>

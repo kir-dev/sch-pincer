@@ -1,111 +1,125 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/" lang="hu">
 <head th:fragment="head">
-	<meta charset="UTF-8" /> 
-	<title th:text="#{lang.header}">SCH Pincér</title>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-	<link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" />
-	<meta name="theme-color" content="#4C4C4D">
-	<meta name="msapplication-navbutton-color" content="#4C4C4D" />
-	<meta name="apple-mobile-web-app-status-bar-style" content="#4C4C4D" />
-	<meta name="msapplication-tap-highlight" content="no">
-	<meta property="og:title" th:content="#{lang.header}">
-	<meta property="og:image" content="https://schpincer.sch.bme.hu/image/ogimage.jpg">
-	<link rel="icon" href="/favicon.ico">
-	<meta name="description" content=""	th:content="#{lang.head.description}">
-	<link rel="manifest" href="/manifest.json">
+    <meta charset="UTF-8"/>
+    <title th:text="#{lang.header}">SCH Pincér</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css"/>
+    <meta name="theme-color" content="#4C4C4D">
+    <meta name="msapplication-navbutton-color" content="#4C4C4D"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="#4C4C4D"/>
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta property="og:title" th:content="#{lang.header}">
+    <meta property="og:image" content="https://schpincer.sch.bme.hu/image/ogimage.jpg">
+    <link rel="icon" href="/favicon.ico">
+    <meta name="description" content="" th:content="#{lang.head.description}">
+    <link rel="manifest" href="/manifest.json">
 </head>
 <body>
-	<object th:fragment="header" th:remove="tag">
-	<div class="site-menu invisible" id="site-menu">
-		<h1 th:text="#{lang.mobile-menu.title}">Menu</h1>
-		
-		<div class="close" onclick="document.getElementById('site-menu').classList.add('invisible')">
-			<i class="material-icons">close</i>
-		</div>
-		
-		<div class="nav">
-			<a href="index.html"    th:href="@{/}"       th:text="#{lang.nav.home}">Home</a>
-			<a href="circle.html"   th:href="@{/szor}"   th:text="#{lang.nav.circle}">Circles</a>
-			<a href="items.html"    th:href="@{/items}"  th:text="#{lang.nav.items}">Items</a>
-	
-			<a th:if="${session.user} neq null" th:href="@{/profile}" th:text="${session.user?.name.substring(session.user?.name.trim().lastIndexOf(' ')+1)}">Test User</a>
-			<a th:if="${session.user} eq null" href="#login" th:href="@{/login}" th:text="#{lang.nav.login}">Login</a>
-		</div>
-		
-		<div class="container">
-			<a th:each="circle : ${circles}" th:href="@{/provider/__${circle.alias}__}" class="icons">
-				<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{/__${circle.logoUrl}__}" width="40" height="40" alt="logo" />
-				<span th:text="${circle.displayName}">Vödör</span>
-			</a>
-		</div>
-	</div>
+<object th:fragment="header" th:remove="tag">
+    <div class="site-menu invisible" id="site-menu">
+        <h1 th:text="#{lang.mobile-menu.title}">Menu</h1>
 
-	<div class="header">
-		<a href="#" th:href="@{/}"><span th:text="#{lang.header}">SCH-PINCÉR</span></a>
-		<ins th:if="${#arrays.contains(@environment.getActiveProfiles(),'demo')}" class="profile-badge">DEMO</ins>
-		<nav>
-			<object th:include="fragments/menu :: menu(${user})" th:remove="tag"></object>
-		</nav>
-	</div>
-	</object>
-	
-	<div class="left-menu" th:fragment="left-menu">
-		<div class="scroll-child">
-			<a th:each="circle : ${circles}" th:href="@{/provider/__${circle.alias}__}">
-				<img src="../static/icons/ecommerce_bag_check.svg" th:src="@{/__${circle.logoUrl}__}" width="80" height="80" th:alt="${circle.displayName}" />
-				<span th:text="${circle.displayName}">Vödör</span>
-			</a>
-			<a th:remove="all"><img src="../static/icons/ecommerce_gift.svg" />Americano</a>
-			<a th:remove="all"><img src="../static/icons/ecommerce_graph_increase.svg" />Pizzásch</a>
-			<a th:remove="all"><img src="../static/icons/ecommerce_money.svg" />Gyros</a>
-			<a th:remove="all"><img src="../static/icons/ecommerce_safe.svg" />Kakas</a>
-			<a th:remove="all"><img src="../static/icons/ecommerce_sale.svg" />Lángosch</a>
-		</div>
-	</div>
-	
-	<div class="footer" th:fragment="footer">
-		<div class="wrapper">
-			<div>
-				<h3 th:text="#{lang.footer.about-us}">Rólunk</h3>
-				<p th:text="#{lang.footer.about-us-long}">Az SCH-Pincér a KIR-DEV projektje</p>
-				<a href="https://kir-dev.sch.bme.hu/"><img src="../image/kirdev.svg" th:src="@{/image/kirdev.svg}" height="120" class="white" /></a><br />
-				<a href="https://kir-dev.sch.bme.hu/projects/schpincer" target="_blank"><i class="material-icons">link</i><span>TOVÁBBI INFROMÁCIÓ</span></a>
-			</div>
-			<div>
-				<h3 th:text="#{lang.footer.rights}">Jogok</h3>
-				<p>Copyright &copy; 2020 GNU/GPL 3.0</p>
-				<p th:text="#{lang.footer.rights-long}">
-					Az oldalon megjelenő képek szerzői joga minden esetben a forgalmazó kört illeti. 
-					A képek esetenként csak illusztrációk. A termékek leírásának helyességéért az adott körök felelősek.
-				</p>
-				<a href="https://docs.google.com/forms/d/e/1FAIpQLSe1XaJuDzGjPUWvSnud8XXsEgUCUOUGsCHeoud_AgVJb6qorA/viewform?usp=sf_link" target="_blank"><i class="material-icons">link</i><span>Visszajelzés küldése</span></a>
-			</div>
-			<div>
-				<h3 th:text="#{lang.footer.partners}">Partnerek</h3>
-				<a href="http://foodex.sch.bme.hu/"><img src="../image/foodex.png" th:src="@{/image/foodex.png}" class="white" /></a><br />
-				<a href="http://szor.sch.bme.hu/"><i class="material-icons">link</i><span>Szolgáltatói Reszort</span></a><br />
-				<ins th:text="#{lang.footer.app-by}">App by</ins>: <a href="https://kir-dev.sch.bme.hu/"><i class="material-icons">link</i><span>KIR-DEV</span></a><br />
-				<ins th:text="#{lang.footer.hosting}">Hosting</ins>: <a href="http://kszk.sch.bme.hu/"><i class="material-icons">link</i><span>KSZK</span></a>
-			</div>
-		</div>
-		<div class="foot">
-			<span><i class="material-icons">code</i></span>
-			with <span><i class="material-icons">favorite_border</i></span>
-			by <span><a href="#VESZTETTEM">SCHÁMI, TRISZ, BENI, BERCI</a></span>
-		</div>
+        <div class="close" onclick="document.getElementById('site-menu').classList.add('invisible')">
+            <i class="material-icons">close</i>
+        </div>
 
-		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-151909044-1"></script>
-		<script>
-			window.dataLayer = window.dataLayer || [];
-			function gtag(){dataLayer.push(arguments);}
-			gtag('js', new Date());
+        <div class="nav">
+            <a href="index.html" th:href="@{/}" th:text="#{lang.nav.home}">Home</a>
+            <a href="circle.html" th:href="@{/szor}" th:text="#{lang.nav.circle}">Circles</a>
+            <a href="items.html" th:href="@{/items}" th:text="#{lang.nav.items}">Items</a>
 
-			gtag('config', 'UA-151909044-1');
-		</script>
-	</div>
+            <a th:if="${session.user} neq null" th:href="@{/profile}"
+               th:text="${session.user?.name.substring(session.user?.name.trim().lastIndexOf(' ')+1)}">Test User</a>
+            <a th:if="${session.user} eq null" href="#login" th:href="@{/login}" th:text="#{lang.nav.login}">Login</a>
+        </div>
+
+        <div class="container">
+            <a th:each="circle : ${circles}" th:href="@{/provider/__${circle.alias}__}" class="icons">
+                <img src="../static/icons/ecommerce_bag_check.svg" th:src="@{/__${circle.logoUrl}__}" width="40"
+                     height="40" alt="logo"/>
+                <span th:text="${circle.displayName}">Vödör</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="header">
+        <a href="#" th:href="@{/}"><span th:text="#{lang.header}">SCH-PINCÉR</span></a>
+        <ins th:if="${#arrays.contains(@environment.getActiveProfiles(),'demo')}" class="profile-badge">DEMO</ins>
+        <nav>
+            <object th:include="fragments/menu :: menu(${user})" th:remove="tag"></object>
+        </nav>
+    </div>
+</object>
+
+<div class="left-menu" th:fragment="left-menu">
+    <div class="scroll-child">
+        <a th:each="circle : ${circles}" th:href="@{/provider/__${circle.alias}__}">
+            <img src="../static/icons/ecommerce_bag_check.svg" th:src="@{/__${circle.logoUrl}__}" width="80" height="80"
+                 th:alt="${circle.displayName}"/>
+            <span th:text="${circle.displayName}">Vödör</span>
+        </a>
+        <a th:remove="all"><img src="../static/icons/ecommerce_gift.svg"/>Americano</a>
+        <a th:remove="all"><img src="../static/icons/ecommerce_graph_increase.svg"/>Pizzásch</a>
+        <a th:remove="all"><img src="../static/icons/ecommerce_money.svg"/>Gyros</a>
+        <a th:remove="all"><img src="../static/icons/ecommerce_safe.svg"/>Kakas</a>
+        <a th:remove="all"><img src="../static/icons/ecommerce_sale.svg"/>Lángosch</a>
+    </div>
+</div>
+
+<div class="footer" th:fragment="footer">
+    <div class="wrapper">
+        <div>
+            <h3 th:text="#{lang.footer.about-us}">Rólunk</h3>
+            <p th:text="#{lang.footer.about-us-long}">Az SCH-Pincér a KIR-DEV projektje</p>
+            <a href="https://kir-dev.sch.bme.hu/"><img src="../image/kirdev.svg" th:src="@{/image/kirdev.svg}"
+                                                       height="120" class="white"/></a><br/>
+            <a href="https://kir-dev.sch.bme.hu/projects/schpincer" target="_blank"><i
+                    class="material-icons">link</i><span>TOVÁBBI INFROMÁCIÓ</span></a>
+        </div>
+        <div>
+            <h3 th:text="#{lang.footer.rights}">Jogok</h3>
+            <p>Copyright &copy; 2020 GNU/GPL 3.0</p>
+            <p th:text="#{lang.footer.rights-long}">
+                Az oldalon megjelenő képek szerzői joga minden esetben a forgalmazó kört illeti.
+                A képek esetenként csak illusztrációk. A termékek leírásának helyességéért az adott körök felelősek.
+            </p>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSe1XaJuDzGjPUWvSnud8XXsEgUCUOUGsCHeoud_AgVJb6qorA/viewform?usp=sf_link"
+               target="_blank"><i class="material-icons">link</i><span>Visszajelzés küldése</span></a>
+        </div>
+        <div>
+            <h3 th:text="#{lang.footer.partners}">Partnerek</h3>
+            <a href="http://foodex.sch.bme.hu/"><img src="../image/foodex.png" th:src="@{/image/foodex.png}"
+                                                     class="white"/></a><br/>
+            <a href="http://szor.sch.bme.hu/"><i
+                    class="material-icons">link</i><span>Szolgáltatói Reszort</span></a><br/>
+            <ins th:text="#{lang.footer.app-by}">App by</ins>
+            : <a href="https://kir-dev.sch.bme.hu/"><i class="material-icons">link</i><span>KIR-DEV</span></a><br/>
+            <ins th:text="#{lang.footer.hosting}">Hosting</ins>
+            : <a href="http://kszk.sch.bme.hu/"><i class="material-icons">link</i><span>KSZK</span></a>
+        </div>
+    </div>
+    <div class="foot">
+        <span><i class="material-icons">code</i></span>
+        with <span><i class="material-icons">favorite_border</i></span>
+        by <span><a href="#VESZTETTEM">SCHÁMI, TRISZ, BENI, BERCI</a></span>
+    </div>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-151909044-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'UA-151909044-1');
+    </script>
+</div>
 </body>
 </html>

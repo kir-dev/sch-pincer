@@ -1,11 +1,9 @@
 /**
- * 
  * "THE BEER-WARE LICENSE" (Revision 42):
- * 
- *  <gerviba@gerviba.hu> wrote this file. As long as you retain this notice you
+ * <p>
+ * <gerviba@gerviba.hu> wrote this file. As long as you retain this notice you
  * can do whatever you want with this stuff. If we meet some day, and you think
  * this stuff is worth it, you can buy me a beer in return.       Szabó Gergely
- * 
  */
 package hu.gerviba.authsch.struct;
 
@@ -23,7 +21,7 @@ public enum BMEUnitScope {
     private final boolean vik;
     private final boolean active;
     private final boolean newbie;
-    
+
     private BMEUnitScope(boolean bme, boolean vik, boolean active, boolean newbie) {
         this.bme = bme;
         this.vik = vik;
@@ -46,5 +44,5 @@ public enum BMEUnitScope {
     public boolean isNewbie() {
         return newbie;
     }
-    
+
 }

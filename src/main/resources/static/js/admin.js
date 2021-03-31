@@ -1,13 +1,26 @@
 function updateItem(id, status) {
-	$.post({
-		dataType: "text",
-		url: URL_BASE + "configure/order/update",
-        data: {id: id, status: status}
-	}).done(function(data) {
-		console.log(data);
-    	location.reload();
-	}).fail(function(e) {
+    postForJsonObject('configure/order/update', {id: id, status: status})
+        .then(function (data) {
+            console.log(data);
+            location.reload();
+        }).catch(function (e) {
         console.error(e);
-		console.error("Cannot send UPDATE request.");
-	});
+        console.error("Cannot send UPDATE request.");
+    });
+}
+
+function postForJsonObject(path, data) {
+    return fetch(URL_BASE + path, {
+        method: 'POST',
+        mode: 'no-cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+            'Accept': 'text/plain',
+            'Content-type': 'application/json;charset=UTF-8'
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        body: JSON.stringify(data)
+    });
 }

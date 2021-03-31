@@ -13,7 +13,7 @@ data class UserEntity(
 
         @Id
         @Column(unique = true)
-        var uid: String? = null,
+        var uid: String = "",
 
         @Column
         var name: String,
