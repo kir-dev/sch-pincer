@@ -10,6 +10,7 @@ import hu.kirdev.schpincer.service.CircleService
 import hu.kirdev.schpincer.service.UserService
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
@@ -36,6 +37,9 @@ open class LoginController {
 
     @Autowired
     private lateinit var circles: CircleService
+
+    @Value("\${schpincer.sysadmins:}")
+    private lateinit var systemAdmins: String
 
     @ApiOperation("Login re-entry point")
     @GetMapping("/loggedin")
@@ -73,7 +77,10 @@ open class LoginController {
                         1)
                 users.save(user)
             }
-            println(profile.internalId)
+
+            if (systemAdmins.split(",").contains(user.uid))
+                user.sysadmin = true
+
             auth = UsernamePasswordAuthenticationToken(code, state, getAuthorities(user))
 
             request.session.setAttribute(USER_SESSION_ATTRIBUTE_NAME, user.uid)

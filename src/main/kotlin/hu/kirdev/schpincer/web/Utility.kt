@@ -95,7 +95,7 @@ fun toReadableRole(permissions: Set<String>, circleID: Long): CircleMemberRole {
     else return if (isPr) CircleMemberRole.PR else CircleMemberRole.LEADER
 }
 
-val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm")
+val dateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm")
 
 fun parseDate(dateToParse: String): Long {
     val date: Date
