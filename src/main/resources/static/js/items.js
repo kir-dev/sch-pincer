@@ -198,8 +198,6 @@ function generateCustom(json, item) {
                 result += generateExtraCheckbox(element);
             } else if (element.type === InputType.AMERICANO_SELECT) {
                 result += generateExtraCheckbox(element);
-            } else if (element.type === InputType.EXTRA_SELECT) {
-                result += generateExtraSelect(element);
             } else if (element.type === InputType.PIZZASCH_SELECT) {
                 result += generatePizzaschSelect(element);
             } else if (element.type === InputType.ITEM_COUNT) {

@@ -14,6 +14,8 @@ import kotlin.math.sign
 
 @Component
 @Profile("test")
+@SuppressWarnings("kotlin:S1192" // ignore duplicated string
+)
 class TestingConfig {
 
     @Autowired
@@ -354,6 +356,8 @@ class TestingConfig {
                 month, weekStart + day, hh, mm)).toEpochMilli()
     }
 
+    @SuppressWarnings("kotlin:S1144" // future feature
+    )
     private fun fromNow(minutes: Int): Long {
         return System.currentTimeMillis() + minutes * 60000
     }

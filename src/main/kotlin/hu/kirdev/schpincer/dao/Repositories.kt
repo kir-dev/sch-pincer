@@ -19,6 +19,9 @@ interface CircleRepository : JpaRepository<CircleEntity, Long> {
     fun findOneByVirGroupId(virGroupId: Long): CircleEntity?
 }
 
+@SuppressWarnings("kotlin:S100", // ignore underscores in queries
+                        "kotlin:S1192" // ignore duplicated strings
+    )
 @Repository
 interface ItemRepository : JpaRepository<ItemEntity, Long> {
     fun findAllByCircle_Id(circleId: Long): List<ItemEntity>
@@ -34,6 +37,8 @@ interface ItemRepository : JpaRepository<ItemEntity, Long> {
     fun findAllByCircle_IdOrderByManualPrecedenceDesc(circleId: Long): List<ItemEntity>
 }
 
+@SuppressWarnings("kotlin:S100" // ignore underscores in queries
+)
 @Repository
 interface OpeningRepository : JpaRepository<OpeningEntity, Long> {
     fun findAllByOrderByDateStart(): List<OpeningEntity>
@@ -56,6 +61,8 @@ interface OrderRepository : JpaRepository<OrderEntity, Long> {
     fun findAllByOpeningIdAndStatusNot(openingId: Long, status: OrderStatus): List<OrderEntity>
 }
 
+@SuppressWarnings("kotlin:S100"// ignore underscores in queries
+)
 @Repository
 interface ReviewRepository : JpaRepository<ReviewEntity, Long> {
     fun findAllByCircle_IdOrderByDateDesc(circleId: Long): List<ReviewEntity>

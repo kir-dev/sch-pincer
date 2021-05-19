@@ -6,6 +6,7 @@ import hu.kirdev.schpincer.model.ItemEntity
 import hu.kirdev.schpincer.model.OpeningEntity
 import hu.kirdev.schpincer.service.*
 import io.swagger.annotations.ApiOperation
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -18,6 +19,8 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @RequestMapping("/api")
 open class ApiController {
+
+    private val log = LoggerFactory.getLogger(javaClass)
 
     @Autowired
     private lateinit var circles: CircleService
@@ -170,7 +173,14 @@ open class ApiController {
     fun newOrder(request: HttpServletRequest, @RequestBody requestBody: NewOrderRequest): ResponseEntity<String> {
         if (requestBody.id < 0 || requestBody.time < 0 || requestBody.detailsJson == "{}")
             return ResponseEntity(RESPONSE_INTERNAL_ERROR, HttpStatus.OK)
-        return orders.makeOrder(request, requestBody.id, requestBody.count, requestBody.time.toLong(), requestBody.comment, requestBody.detailsJson)
+        val user = request.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
+        try {
+            return orders.makeOrder(user, requestBody.id, requestBody.count, requestBody.time.toLong(),
+                    requestBody.comment, requestBody.detailsJson)
+        } catch (e: FailedOrderException) {
+            log.warn("Failed to make new order by '${request.getUserIfPresent()?.uid ?: "n/a"}' reason: ${e.response}")
+            return responseOf(e.response)
+        }
     }
 
     data class RoomChangeRequest(var room: String = "")
@@ -199,7 +209,14 @@ open class ApiController {
     @PostMapping("/order/delete")
     @ResponseBody
     fun deleteOrder(request: HttpServletRequest, @RequestParam(required = true) id: Long): ResponseEntity<String> {
-        return orders.cancelOrder(request, id)
+        val user = request.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
+        try {
+            return orders.cancelOrder(user, id)
+        } catch (e: FailedOrderException) {
+            log.warn("Failed to cancel order by '${request.getUserIfPresent()?.uid ?: "n/a"}' reason: ${e.response}")
+            return responseOf(e.response)
+        }
+
     }
 
     @GetMapping("/version")
