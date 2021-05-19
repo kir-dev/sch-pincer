@@ -1,5 +1,6 @@
 package hu.kirdev.schpincer.web
 
+import hu.kirdev.schpincer.model.CardType
 import hu.kirdev.schpincer.model.CircleEntity
 import hu.kirdev.schpincer.model.OrderStatus
 import hu.kirdev.schpincer.service.CircleService
@@ -49,10 +50,11 @@ open class MainController {
     }
 
     @GetMapping("/items")
-    fun items(@RequestParam(name = "q", defaultValue = "") keyword: String, model: Model): String {
+    fun items(@RequestParam(name = "q", defaultValue = "") keyword: String, model: Model, request: HttpServletRequest): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("searchMode", "" != keyword)
         model.addAttribute("keyword", keyword)
+        model.addAttribute("card", (request.getUserIfPresent()?.cardType ?: CardType.DO).name)
         return "items"
     }
 
@@ -64,8 +66,9 @@ open class MainController {
     }
 
     @GetMapping("/circle/{circle}")
-    fun circleSpecific(@PathVariable circle: String, model: Model): String {
+    fun circleSpecific(@PathVariable circle: String, model: Model, request: HttpServletRequest): String {
         model.addAttribute("circles", circles.findAllForMenu())
+        model.addAttribute("card", (request.getUserIfPresent()?.cardType ?: CardType.DO).name)
         if (circle.matches("^\\d+$".toRegex())) {
             val id = circle.toLong()
             model.addAttribute("selectedCircle", circles.getOne(id))
@@ -79,8 +82,8 @@ open class MainController {
     }
 
     @GetMapping(path = ["/provider/{circle}", "/p/{circle}"])
-    fun circleSpecificAlias(@PathVariable circle: String, model: Model): String {
-        return circleSpecific(circle, model)
+    fun circleSpecificAlias(@PathVariable circle: String, model: Model, request: HttpServletRequest): String {
+        return circleSpecific(circle, model, request)
     }
 
     @GetMapping("/profile")

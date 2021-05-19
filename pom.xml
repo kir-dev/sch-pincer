@@ -11,7 +11,7 @@
     <groupId>hu.gerviba</groupId>
     <artifactId>schpincer</artifactId>
     <packaging>jar</packaging>
-    <version>1.1.14</version>
+    <version>1.2.15</version>
     <name>SCH-Pincer</name>
 
     <properties>

@@ -17,6 +17,9 @@
                 'price': /*[[ #{lang.items.price} ]]*/ 'Price',
                 'pieces': /*[[ #{lang.items.pieces} ]]*/ 'pieces',
                 'ingred': /*[[ #{lang.items.ingredients} ]]*/ 'Ingredients',
+                'ab_extra': /*[[ #{lang.items.ab-extra} ]]*/ 'AB Extra',
+                'kb_extra': /*[[ #{lang.items.kb-extra} ]]*/ 'KB Extra',
+                'ab_kb_extra': /*[[ #{lang.items.ab-kb-extra} ]]*/ 'AB, KB Extra',
                 'intervalFull': /*[[ #{lang.msgbox.interval-full} ]]*/ 'This time window is full',
                 'intervalFullExtra': /*[[ #{lang.msgbox.interval-full-extra} ]]*/ 'This time window is full',
                 'orderFull': /*[[ #{lang.msgbox.order-full} ]]*/ 'This time window is full',
@@ -34,6 +37,7 @@
                 searchFor(/*[[ ${keyword} ]]*/ '');
                 if ((/*[[ ${keyword} ]]*/ '').length === 0) appendNext();
             });
+            const card = /*[[ ${card} ]]*/ 'DO';
         </script>
         <script th:unless='${searchMode}' th:inline='javascript'>
             const LANG = {
@@ -51,6 +55,9 @@
                 'price': /*[[ #{lang.items.price} ]]*/ 'Price',
                 'pieces': /*[[ #{lang.items.pieces} ]]*/ 'pieces',
                 'ingred': /*[[ #{lang.items.ingredients} ]]*/ 'Ingredients',
+                'ab_extra': /*[[ #{lang.items.ab-extra} ]]*/ 'AB Extra',
+                'kb_extra': /*[[ #{lang.items.kb-extra} ]]*/ 'KB Extra',
+                'ab_kb_extra': /*[[ #{lang.items.ab-kb-extra} ]]*/ 'AB, KB Extra',
                 'intervalFull': /*[[ #{lang.msgbox.interval-full} ]]*/ 'This time window is full',
                 'intervalFullExtra': /*[[ #{lang.msgbox.interval-full-extra} ]]*/ 'This time window is full',
                 'orderFull': /*[[ #{lang.msgbox.order-full} ]]*/ 'This time window is full',
@@ -67,6 +74,7 @@
             document.addEventListener('DOMContentLoaded', function () {
                 appendNext();
             });
+            const card = /*[[ ${card} ]]*/ 'DO';
         </script>
     </object>
 
@@ -87,6 +95,9 @@
                 'price': /*[[ #{lang.items.price} ]]*/ 'Price',
                 'pieces': /*[[ #{lang.items.pieces} ]]*/ 'pieces',
                 'ingred': /*[[ #{lang.items.ingredients} ]]*/ 'Ingredients',
+                'ab_extra': /*[[ #{lang.items.ab-extra} ]]*/ 'AB Extra',
+                'kb_extra': /*[[ #{lang.items.kb-extra} ]]*/ 'KB Extra',
+                'ab_kb_extra': /*[[ #{lang.items.ab-kb-extra} ]]*/ 'AB, KB Extra',
                 'intervalFull': /*[[ #{lang.msgbox.interval-full} ]]*/ 'This time window is full',
                 'intervalFullExtra': /*[[ #{lang.msgbox.interval-full-extra} ]]*/ 'This time window is full',
                 'orderFull': /*[[ #{lang.msgbox.order-full} ]]*/ 'This time window is full',
@@ -104,6 +115,7 @@
                 searchFor(/*[[ ${keyword} ]]*/ '');
                 if ((/*[[ ${keyword} ]]*/ '').length === 0) appendNext(/*[[ ${profile} ]]*/ '0');
             });
+            const card = /*[[ ${card} ]]*/ 'DO';
         </script>
         <script th:unless='${searchMode}' th:inline='javascript'>
             const LANG = {
@@ -121,6 +133,9 @@
                 'price': /*[[ #{lang.items.price} ]]*/ 'Price',
                 'pieces': /*[[ #{lang.items.pieces} ]]*/ 'pieces',
                 'ingred': /*[[ #{lang.items.ingredients} ]]*/ 'Ingredients',
+                'ab_extra': /*[[ #{lang.items.ab-extra} ]]*/ 'AB Extra',
+                'kb_extra': /*[[ #{lang.items.kb-extra} ]]*/ 'KB Extra',
+                'ab_kb_extra': /*[[ #{lang.items.ab-kb-extra} ]]*/ 'AB, KB Extra',
                 'intervalFull': /*[[ #{lang.msgbox.interval-full} ]]*/ 'This time window is full',
                 'intervalFullExtra': /*[[ #{lang.msgbox.interval-full-extra} ]]*/ 'This time window is full',
                 'orderFull': /*[[ #{lang.msgbox.order-full} ]]*/ 'This time window is full',
@@ -137,6 +152,7 @@
             document.addEventListener('DOMContentLoaded', function () {
                 appendNext(/*[[ ${profile} ]]*/ '0');
             });
+            const card = /*[[ ${card} ]]*/ 'DO';
         </script>
     </object>
 </head>
