@@ -172,7 +172,19 @@ const InputType = {
     AMERICANO_EXTRA: 'AMERICANO_EXTRA',
     AMERICANO_SELECT: 'AMERICANO_SELECT',
     PIZZASCH_SELECT: 'PIZZASCH_SELECT',
-    ITEM_COUNT: 'ITEM_COUNT'
+    ITEM_COUNT: 'ITEM_COUNT',
+    KB_SELECT: 'KB_SELECT',
+    AB_SELECT: 'AB_SELECT',
+    AB_KB_SELECT: 'AB_KB_SELECT',
+    KB_CHECKBOX: 'KB_CHECKBOX',
+    AB_CHECKBOX: 'AB_CHECKBOX',
+    AB_KB_CHECKBOX: 'AB_KB_CHECKBOX'
+};
+
+const CardType = {
+    DO: 'DO',
+    AB: 'AB',
+    KB: 'KB'
 };
 
 function generateCustom(json, item) {
@@ -194,8 +206,26 @@ function generateCustom(json, item) {
 
             if (element.type === InputType.EXTRA_SELECT) {
                 result += generateExtraSelect(element);
+            } else if (element.type === InputType.KB_SELECT) {
+                if (card === CardType.KB)
+                    result += generateExtraSelect(element);
+            } else if (element.type === InputType.AB_SELECT) {
+                if (card === CardType.AB)
+                    result += generateExtraSelect(element);
+            } else if (element.type === InputType.KB_AB_SELECT) {
+                if (card === CardType.KB || card === CardType.AB)
+                    result += generateExtraSelect(element);
             } else if (element.type === InputType.EXTRA_CHECKBOX) {
                 result += generateExtraCheckbox(element);
+            } else if (element.type === InputType.AB_CHECKBOX) {
+                if (card === CardType.AB)
+                    result += generateExtraCheckbox(element);
+            } else if (element.type === InputType.KB_CHECKBOX) {
+                if (card === CardType.KB)
+                    result += generateExtraCheckbox(element);
+            } else if (element.type === InputType.AB_KB_CHECKBOX) {
+                if (card === CardType.KB || card === CardType.AB)
+                    result += generateExtraCheckbox(element);
             } else if (element.type === InputType.AMERICANO_SELECT) {
                 result += generateExtraCheckbox(element);
             } else if (element.type === InputType.PIZZASCH_SELECT) {
@@ -222,14 +252,14 @@ function generateTimes(timeWindows, categoryMax, extra = false) {
 
 function generateExtraSelect(element) {
     let result = '';
-    result += `
-        <label>${LANG[element.name]}</label>
-        <select name="${element.name}" data-prices="${element.prices}" onchange="itemChanged()" class="price-changer">`;
+    if (element.name.length > 0)
+        result += `<label>${LANG[element.name]}</label>`;
+    result += `<select name="${element.name}" data-prices="${element.prices}" onchange="itemChanged()" class="price-changer">`;
     for (let optionId = 0; optionId < element.values.length; optionId++) {
         let value = element.values[optionId];
         let price = element.prices[optionId];
         result += `
-            <option value="${optionId}">${value}${price !== 0 ? ' (+' + price + ' ' + LANG['currency'] + ')' : ''}</option>`;
+            <option value="${optionId}">${value}${price !== 0 ? ' (' + (price > 0 ? '+' : '') + price + ' ' + LANG['currency'] + ')' : ''}</option>`;
     }
     result += `
         </select>`;
@@ -243,13 +273,13 @@ function generateExtraSelect(element) {
 
 function generatePizzaschSelect(element) {
     let result = '';
-    result += `
-        <label>${LANG[element.name]}</label>
-        <select name="${element.name}" data-prices="${element.prices}" onchange="itemChangedPizzasch()" class="price-changer" id="pizzasch-select">`;
+    if (element.name.length > 0)
+        result += `<label>${LANG[element.name]}</label>`;
+    result += `<select name="${element.name}" data-prices="${element.prices}" onchange="itemChangedPizzasch()" class="price-changer" id="pizzasch-select">`;
     for (let optionId = 0; optionId < element.values.length; optionId++) {
         const value = element.values[optionId];
         const price = element.prices[optionId];
-        result += `<option value="${optionId}">${value}${price !== 0 ? (' (+' + price + ' ' + LANG['currency'] + ')') : ''}</option>`;
+        result += `<option value="${optionId}">${value}${price !== 0 ? (' (' + (price > 0 ? '+' : '') + price + ' ' + LANG['currency'] + ')') : ''}</option>`;
     }
     result += `</select>`;
     if (element._comment) {
@@ -260,10 +290,10 @@ function generatePizzaschSelect(element) {
 }
 
 function generateItemCount(element) {
-    let result = `
-        <label>${LANG[element.name]}</label>
-        <input type="number" min="${element.min}" max="${element.max}" name="${element.name}" value="${element.min}" id="popup-count" onkeypress="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" onmousedown="limitNumber(this, ${element.min}, ${element.max}); itemChanged()"  onmouseup="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" onchange="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" />
-    `;
+    let result = '';
+    if (element.name.length > 0)
+        result += `<label>${LANG[element.name]}</label>`;
+    result += `<input type="number" min="${element.min}" max="${element.max}" name="${element.name}" value="${element.min}" id="popup-count" onkeypress="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" onmousedown="limitNumber(this, ${element.min}, ${element.max}); itemChanged()"  onmouseup="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" onchange="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" />`;
     if (element._comment) {
         result += `<span class="comment">${element._comment}</span>`;
     }
@@ -272,12 +302,14 @@ function generateItemCount(element) {
 
 function generateExtraCheckbox(element) {
     let result = '';
-    result += `<label>${LANG[element.name]}</label><div class="component">`;
+    if (element.name.length > 0)
+        result += `<label>${LANG[element.name]}</label>`;
+    result += `<div class="component">`;
     for (let optionId = 0; optionId < element.values.length; optionId++) {
         const value = element.values[optionId];
         const price = element.prices[optionId];
         result += `
-            <label class="checkcontainer">${value}${price !== 0 ? ' (+' + price + ' ' + LANG['currency'] + ')' : ''}
+            <label class="checkcontainer">${value}${price !== 0 ? ' (' + (price > 0 ? '+' : '') + price + ' ' + LANG['currency'] + ')' : ''}
                 <input type="checkbox" name="${element.name}_${optionId}" data-price="${price}" onchange="itemChanged()" class="price-changer"/>
                 <span class="checkmark"></span>
             </label>`;

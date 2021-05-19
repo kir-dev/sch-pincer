@@ -37,7 +37,7 @@ class MakeOrderProcedure (
         createOrderEntity()
         loadTargetItem()
 
-        details = calculateExtra(detailsJson, order, item)
+        details = calculateExtra(detailsJson, order, item, user)
         updateBasicDetails()
         current = openings.findNextOf(item.circle?.id!!) ?: throw FailedOrderException(RESPONSE_INTERNAL_ERROR)
         validateOrderable(System.currentTimeMillis())

@@ -22,6 +22,11 @@ open class UserService {
     }
 
     @Transactional(readOnly = true)
+    open fun getByIdOrNull(uid: String): UserEntity? {
+        return repo.findById(uid).orElse(null)
+    }
+
+    @Transactional(readOnly = true)
     open fun exists(uid: String): Boolean {
         return repo.existsById(uid)
     }

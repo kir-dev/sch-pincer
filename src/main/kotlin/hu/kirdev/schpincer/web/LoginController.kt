@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
-
 const val USER_SESSION_ATTRIBUTE_NAME = "user_id"
 const val USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME = "user"
 const val CIRCLE_OWNERSHIP_SESSION_ATTRIBUTE_NAME = "circles"
@@ -56,6 +55,8 @@ open class LoginController {
             val ownedCircles = getOwnedCircleIds(profile)
             if (users.exists(profile.internalId.toString())) {
                 user = users.getById(profile.internalId.toString())
+                if (systemAdmins.split(",").contains(user.uid))
+                    user.sysadmin = true
                 val card = cardTypeLookup(profile)
                 if (user.cardType !== card) {
                     user.cardType = card
@@ -73,14 +74,11 @@ open class LoginController {
                         profile.surname + " " + profile.givenName,
                         profile.mail,
                         "",
-                        false,
+                    systemAdmins.split(",").contains(profile.internalId.toString()),
                         card, getCirclePermissionList(ownedCircles),
                         1)
                 users.save(user)
             }
-
-            if (systemAdmins.split(",").contains(user.uid))
-                user.sysadmin = true
 
             auth = UsernamePasswordAuthenticationToken(code, state, getAuthorities(user))
 
