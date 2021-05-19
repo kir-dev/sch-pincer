@@ -46,7 +46,7 @@ open class CircleService {
         return repo.getOne(id)
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = false)
     open fun delete(ce: CircleEntity) {
         repo.delete(ce)
     }

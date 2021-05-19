@@ -148,7 +148,7 @@ open class AdminController {
             request: HttpServletRequest
     ): String {
         items.deleteByCircle(circleId)
-        circles.delete(circles.getOne(circleId)!!) // TODO: deleteById?
+        circles.delete(circles.getOne(circleId)!!)
         return REDIRECT_TO_ADMIN
     }
 

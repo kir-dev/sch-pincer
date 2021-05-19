@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
+
 const val USER_SESSION_ATTRIBUTE_NAME = "user_id"
 const val USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME = "user"
 const val CIRCLE_OWNERSHIP_SESSION_ATTRIBUTE_NAME = "circles"
@@ -149,6 +150,14 @@ open class LoginController {
     @ApiOperation("Logout user")
     @GetMapping("/logout")
     fun logout(request: HttpServletRequest): String {
+        request.getSession(false)
+        SecurityContextHolder.clearContext()
+        val session = request.getSession(false)
+        session?.invalidate()
+        for (cookie in request.cookies) {
+            cookie.maxAge = 0
+        }
+
         request.removeAttribute(USER_SESSION_ATTRIBUTE_NAME)
         request.removeAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME)
         request.removeAttribute(CIRCLE_OWNERSHIP_SESSION_ATTRIBUTE_NAME)

@@ -36,6 +36,10 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
         http.csrf().ignoringAntMatchers("/api/**", "/configure/order/update")
     }
 
+    override fun configure(auth: AuthenticationManagerBuilder?) {
+        auth?.eraseCredentials(true)
+    }
+
     @Bean
     @ConfigurationProperties(prefix = "authsch")
     open fun authSchApi(): AuthSchAPI {
