@@ -339,7 +339,7 @@ open class ConfigureController {
                    model: Model
     ): String {
         model.addAttribute("circles", circles.findAllForMenu())
-        model.addAttribute("topic", "member")
+        model.addAttribute("topic", "item")
         model.addAttribute("arg", items.getOne(itemId)!!.name)
         model.addAttribute("ok", "configure/$circleId/items/delete/$itemId/confirm")
         model.addAttribute("cancel", "configure/$circleId")
