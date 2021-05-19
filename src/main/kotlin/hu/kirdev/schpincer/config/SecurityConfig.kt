@@ -36,11 +36,6 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
         http.csrf().ignoringAntMatchers("/api/**", "/configure/order/update")
     }
 
-    @Autowired
-    @Throws(Exception::class)
-    open fun configureGlobal(auth: AuthenticationManagerBuilder?) {
-    }
-
     @Bean
     @ConfigurationProperties(prefix = "authsch")
     open fun authSchApi(): AuthSchAPI {

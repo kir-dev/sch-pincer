@@ -110,14 +110,14 @@ public enum Scope {
     EDU_PERSON_ENTILEMENT("eduPersonEntitlement") {
         @Override
         public void apply(ProfileDataResponseBuilder response, JsonNode obj) {
-            obj.path(getScope()).elements().forEachRemaining(entrant -> {
+            obj.path(getScope()).elements().forEachRemaining(entrant ->
                 response.addEduPersonEntitlement(new PersonEntitlement(
                         entrant.get("id").asInt(),
                         entrant.get("name").asText(),
                         entrant.get("status").asText(),
                         entrant.get("start").asText(),
-                        entrant.get("end").isNull() ? null : entrant.get("end").asText()));
-            });
+                        entrant.get("end").isNull() ? null : entrant.get("end").asText()))
+            );
         }
     },
     /**
@@ -160,12 +160,12 @@ public enum Scope {
     ENTRANTS("entrants") {
         @Override
         public void apply(ProfileDataResponseBuilder response, JsonNode obj) {
-            obj.path(Scope.ENTRANTS.getScope()).elements().forEachRemaining(entrant -> {
+            obj.path(Scope.ENTRANTS.getScope()).elements().forEachRemaining(entrant ->
                 response.addEntrant(new Entrant(
                         entrant.get("groupId").asInt(),
                         entrant.get("groupName").asText(),
-                        entrant.get("entrantType").asText()));
-            });
+                        entrant.get("entrantType").asText()))
+            );
         }
     },
     /**
@@ -220,7 +220,7 @@ public enum Scope {
 
     public static List<Scope> listFromString(String delimiter, String scopes) {
         return Arrays.asList(scopes.split(delimiter)).stream()
-                .map(x -> Scope.byScope(x))
+                .map(Scope::byScope)
                 .collect(Collectors.toList());
     }
 

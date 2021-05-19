@@ -1,12 +1,10 @@
 package hu.kirdev.schpincer.model
 
-import lombok.NoArgsConstructor
 import org.hibernate.annotations.Proxy
 import java.io.Serializable
 import javax.persistence.*
 
 @Entity
-@NoArgsConstructor
 @Table(name = "users")
 @Proxy(lazy = false)
 data class UserEntity(

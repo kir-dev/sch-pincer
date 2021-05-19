@@ -20,6 +20,8 @@ import javax.validation.Valid
 @RequestMapping("/admin")
 open class AdminController {
 
+    private val REDIRECT_TO_ADMIN = "redirect:/admin/"
+
     @Autowired
     private lateinit var circles: CircleService
 
@@ -74,7 +76,7 @@ open class AdminController {
         circle.backgroundUrl = if (file == null) "image/blank-background.jpg" else "cdn/backgrounds/$file"
 
         circles.save(circle)
-        return "redirect:/admin/"
+        return REDIRECT_TO_ADMIN
     }
 
     @GetMapping("/circles/edit/{circleId}")
@@ -127,7 +129,7 @@ open class AdminController {
                 backgroundUrl = "cdn/backgrounds/$file"
         }
         circles.save(original)
-        return "redirect:/admin/"
+        return REDIRECT_TO_ADMIN
     }
 
     @GetMapping("/circles/delete/{circleId}")
@@ -147,7 +149,7 @@ open class AdminController {
     ): String {
         items.deleteByCircle(circleId)
         circles.delete(circles.getOne(circleId)!!) // TODO: deleteById?
-        return "redirect:/admin/"
+        return REDIRECT_TO_ADMIN
     }
 
     @GetMapping("/roles/edit/{uidHash}")
@@ -183,7 +185,7 @@ open class AdminController {
         user.permissions = permissions
         user.orderingPriority = priority
         users.save(user)
-        return "redirect:/admin/"
+        return REDIRECT_TO_ADMIN
     }
 
     @ResponseBody

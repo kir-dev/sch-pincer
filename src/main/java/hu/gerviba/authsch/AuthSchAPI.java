@@ -40,15 +40,13 @@ import hu.gerviba.authsch.struct.Scope;
 public class AuthSchAPI implements Serializable {
 
     private static final long serialVersionUID = 3441712708900902459L;
+    private static final String FAILED_TO_PARSE_AUTH_RESPONSE = "Failed to parse auth response";
 
     private String tokenUrlBase = "https://auth.sch.bme.hu/oauth2/token";
     private String loginUrlBase = "https://auth.sch.bme.hu/site/login";
     private String apiUrlBase = "https://auth.sch.bme.hu/api";
     private String clientIdentifier = "testclient";
     private String clientKey = "testpass";
-
-    public AuthSchAPI() {
-    }
 
     /**
      * Token endpoint url
@@ -220,10 +218,8 @@ public class AuthSchAPI implements Serializable {
                     scope.apply(response, obj);
 
             return response.build();
-        } catch (NullPointerException e) {
-            throw new AuthSchResponseException("Failed to parse auth response", e);
-        } catch (IOException e) {
-            throw new AuthSchResponseException("Failed to parse auth response", e);
+        } catch (NullPointerException | IOException e) {
+            throw new AuthSchResponseException(FAILED_TO_PARSE_AUTH_RESPONSE, e);
         }
     }
 
@@ -261,6 +257,8 @@ public class AuthSchAPI implements Serializable {
         return con;
     }
 
+    @SuppressWarnings("java:S2647" // ignore Http basic authentication
+    )
     private void setPostHeaders(HttpsURLConnection con) {
         con.setRequestProperty("User-Agent", System.getProperty("authsch.useragent", "AuthSchJavaAPI"));
         con.setRequestProperty("Accept", "application/json");
@@ -280,10 +278,14 @@ public class AuthSchAPI implements Serializable {
     }
 
     private String readData(HttpsURLConnection con) {
-        String inputLine, response = "";
+        String inputLine;
+        String response;
+        final StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
-            while ((inputLine = in.readLine()) != null)
-                response += inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                stringBuilder.append(inputLine);
+            }
+            response = stringBuilder.toString();
         } catch (IOException e) {
             throw new AuthSchResponseException("Failed to write post data", e);
         }
@@ -313,10 +315,8 @@ public class AuthSchAPI implements Serializable {
                     obj.get("token_type").asText(),
                     Scope.listFromString(" ", obj.get("scope").asText()),
                     obj.get("refresh_token").asText());
-        } catch (NullPointerException e) {
-            throw new AuthSchResponseException("Failed to parse auth response", e);
-        } catch (IOException e) {
-            throw new AuthSchResponseException("Failed to parse auth response", e);
+        } catch (NullPointerException | IOException e) {
+            throw new AuthSchResponseException(FAILED_TO_PARSE_AUTH_RESPONSE, e);
         }
     }
 
@@ -330,10 +330,8 @@ public class AuthSchAPI implements Serializable {
                     obj.get("token_type").asText(),
                     Scope.listFromString(" ", obj.get("scope").asText()),
                     parameters.substring(parameters.lastIndexOf('=') + 1));
-        } catch (NullPointerException e) {
-            throw new AuthSchResponseException("Failed to parse auth response", e);
-        } catch (IOException e) {
-            throw new AuthSchResponseException("Failed to parse auth response", e);
+        } catch (NullPointerException | IOException e) {
+            throw new AuthSchResponseException(FAILED_TO_PARSE_AUTH_RESPONSE, e);
         }
     }
 

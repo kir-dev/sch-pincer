@@ -1,6 +1,9 @@
 SCH-PINCÉR
 ===
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=kir-dev_sch-pincer&metric=alert_status)](https://sonarcloud.io/dashboard?id=kir-dev_sch-pincer)
+
+
 ## Setup dev env
 
 - Open the project (for IDEA users: don't use import, use open)

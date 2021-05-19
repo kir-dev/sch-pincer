@@ -73,7 +73,7 @@ open class LoginController {
                         1)
                 users.save(user)
             }
-
+            println(profile.internalId)
             auth = UsernamePasswordAuthenticationToken(code, state, getAuthorities(user))
 
             request.session.setAttribute(USER_SESSION_ATTRIBUTE_NAME, user.uid)

@@ -22,6 +22,8 @@ import hu.gerviba.authsch.struct.PersonEntitlement;
  * @author Gerviba
  * @see #newBuilder()
  */
+@SuppressWarnings({"java:S107", "java:S1874", "java:S1123" // backward compatiblity
+})
 public final class ProfileDataResponse implements Serializable {
 
     private static final long serialVersionUID = 216528239480860425L;

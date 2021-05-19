@@ -37,17 +37,17 @@ open class UserService {
     }
 
     @Transactional(readOnly = true)
-    open fun findAllCircleRole(circle_id: Long): List<CircleRoleEntryDto> {
+    open fun findAllCircleRole(circleId: Long): List<CircleRoleEntryDto> {
         return repo.findAll()
                 .filter { !it.sysadmin }
-                .map { CircleRoleEntryDto(it, circle_id) }
+                .map { CircleRoleEntryDto(it, circleId) }
                 .sortedWith(compareBy<CircleRoleEntryDto> { it.permission }.thenBy { it.name })
     }
 
     @Transactional(readOnly = true)
-    open fun findPermissionByUidHash(uidHash: String, circle_id: Long): CircleRoleEntryDto? {
+    open fun findPermissionByUidHash(uidHash: String, circleId: Long): CircleRoleEntryDto? {
         val user: UserEntity = getByUidHash(uidHash) ?: return null
-        return CircleRoleEntryDto(user, circle_id)
+        return CircleRoleEntryDto(user, circleId)
     }
 
     @Transactional(readOnly = true)
