@@ -212,7 +212,7 @@ function generateCustom(json, item) {
             } else if (element.type === InputType.AB_SELECT) {
                 if (card === CardType.AB)
                     result += generateExtraSelect(element);
-            } else if (element.type === InputType.KB_AB_SELECT) {
+            } else if (element.type === InputType.AB_KB_SELECT) {
                 if (card === CardType.KB || card === CardType.AB)
                     result += generateExtraSelect(element);
             } else if (element.type === InputType.EXTRA_CHECKBOX) {
@@ -265,7 +265,7 @@ function generateExtraSelect(element) {
         </select>`;
     if (element._comment) {
         result += `
-		<span class="comment">${element._comment}</span>`;
+		<span class="comment select-comment">${element._comment}</span>`;
     }
     return result;
 
@@ -283,7 +283,7 @@ function generatePizzaschSelect(element) {
     }
     result += `</select>`;
     if (element._comment) {
-        result += `<span class="comment">${element._comment}</span>`;
+        result += `<span class="comment select-comment">${element._comment}</span>`;
     }
     return result;
 
@@ -295,7 +295,7 @@ function generateItemCount(element) {
         result += `<label>${LANG[element.name]}</label>`;
     result += `<input type="number" min="${element.min}" max="${element.max}" name="${element.name}" value="${element.min}" id="popup-count" onkeypress="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" onmousedown="limitNumber(this, ${element.min}, ${element.max}); itemChanged()"  onmouseup="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" onchange="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" />`;
     if (element._comment) {
-        result += `<span class="comment">${element._comment}</span>`;
+        result += `<span class="comment count-comment">${element._comment}</span>`;
     }
     return result;
 }
@@ -315,7 +315,7 @@ function generateExtraCheckbox(element) {
             </label>`;
     }
     if (element._comment) {
-        result += `<span class="comment">${element._comment}</span>`;
+        result += `<span class="comment checkbox-comment">${element._comment}</span>`;
     }
     result += `</div>`;
     return result;

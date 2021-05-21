@@ -40,8 +40,10 @@
                                   method="GET">
 								<input type="text" id="room-setter" maxlength="8" autocomplete="off"
                                        onfocusout="setRoom(); return false"/>
+                                <ins id="saved" th:text="#{lang.profile.room-number-hint}">(Szám vagy terem neve)</ins>
 							</form>
 							<ins id="saved" th:text="#{lang.profile.saved}">Elmentve</ins>
+                            <br>
 						</span>
                 </td>
             </tr>

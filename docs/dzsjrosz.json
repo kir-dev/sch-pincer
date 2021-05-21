@@ -1,0 +1,120 @@
+[
+  {
+    "type": "EXTRA_CHECKBOX",
+    "name": "onion",
+    "_hide": true,
+    "values": [
+      "Lilahagyma",
+      "Pirított hagyma"
+    ],
+    "prices": [
+      0,
+      0
+    ],
+    "aliases": [
+      "LH",
+      "PH"
+    ]
+  },
+  {
+    "type": "EXTRA_CHECKBOX",
+    "name": "sauce",
+    "_hide": true,
+    "values": [
+      "Sima",
+      "Fokhagymás",
+      "Csípős"
+    ],
+    "prices": [
+      0,
+      0,
+      0
+    ],
+    "aliases": [
+      "S",
+      "F",
+      "CS"
+    ]
+  },
+  {
+    "type": "EXTRA_SELECT",
+    "name": "cheese",
+    "_hide": true,
+    "values": [
+      "Nem kérek",
+      "Normál sajt",
+      "Dupla sajt"
+    ],
+    "prices": [
+      0,
+      100,
+      200
+    ],
+    "aliases": [
+      "NE",
+      "x1",
+      "x2"
+    ]
+  },
+  {
+    "type": "EXTRA_CHECKBOX",
+    "name": "extra",
+    "_hide": true,
+    "values": [
+      "Extra hús",
+      "Extra csípős"
+    ],
+    "prices": [
+      200,
+      50
+    ],
+    "aliases": [
+      "+HÚS",
+      "+CSÍP"
+    ],
+    "_comment": "Extra csípős: mindenféle különleges esszenciát bevetve egyenesen a pokolból"
+  },
+  {
+    "type": "ITEM_COUNT",
+    "name": "count",
+    "min": 1,
+    "max": 5,
+    "values": [],
+    "_hide": true
+  },
+  {
+    "type": "EXTRA_CHECKBOX",
+    "name": "cutlery",
+    "_hide": true,
+    "values": [
+      "Villa"
+    ],
+    "prices": [
+      20
+    ],
+    "aliases": [
+      "V"
+    ],
+    "_comment": "Védjük a bálnákat és fókákat. Ha van villád, ne kérj műanyagot."
+  },
+  {
+    "type": "AB_KB_SELECT",
+    "name": "ab_kb_extra",
+    "_hide": true,
+    "values": [
+      "Nem veszem igénybe",
+      "Extra sajt",
+      "Extra dupla sajt"
+    ],
+    "prices": [
+      0,
+      0,
+      100
+    ],
+    "aliases": [
+      "",
+      "x1",
+      "x2"
+    ]
+  }
+]
