@@ -82,7 +82,7 @@ open class UserService {
     @Transactional(readOnly = false)
     open fun setRoom(userId: String, room: String): UserEntity {
         val user = getById(userId)
-        user.room = room
+        user.room = room.replace(Regex("[^A-Za-z0-9 -_()]"), "")
         repo.save(user)
         return user
     }

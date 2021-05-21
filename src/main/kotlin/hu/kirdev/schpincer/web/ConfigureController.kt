@@ -216,7 +216,7 @@ open class ConfigureController {
                    @RequestParam(required = false) logo: MultipartFile?,
                    @RequestParam(required = false) background: MultipartFile?,
                    request: HttpServletRequest
-    ): String? {
+    ): String {
         if (cannotEditCircleNoPR(circleId, request))
             return "redirect:/configure/$circleId?error=invalidPermissions"
 

@@ -26,10 +26,83 @@
             vertical-align: top;
             top: 0;
         }
+
+        .emoji {
+            width: 100%;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .emoji .face {
+            height: 15vh;
+        }
+
+        .emoji .left-hand {
+            height: 10vh;
+            top: -20px;
+            position: relative;
+            animation-name: is-for-me-left;
+            animation-iteration-count: infinite;
+            animation-duration: 1s;
+            animation-timing-function: ease-in-out;
+        }
+
+        .emoji .right-hand {
+            height: 10vh;
+            top: -20px;
+            position: relative;
+            animation-iteration-count: infinite;
+            animation-name: is-for-me-right;
+            animation-duration: 1s;
+            animation-timing-function: ease-in-out;
+        }
+
+        table {
+            margin: 0 auto !important;
+        }
+
+        h1, h2, h3 {
+            font-weight: 300;
+            text-align: center;
+        }
+
+        h3 {
+            padding: 10px 0 20px 0;
+        }
+
+        h1 {
+            padding: 0 0 20px 0;
+        }
+
+        a {
+            color: #eead45;
+        }
+
+        @keyframes is-for-me-left {
+            0%   {left: 0;}
+            30%  {left: -20px;}
+            100% {left: 0;}
+        }
+
+        @keyframes is-for-me-right {
+            0%   {left: 0;}
+            30%  {left: 20px;}
+            100% {left: 0;}
+        }
     </style>
 </head>
 <body class="dashboard">
-<h3>Error Page - Ha azt gondolod, hogy ennek működnie kellene, reportold a hibát</h3>
+
+<div class="emoji">
+    <img th:src="@{/image/face.png}" alt="is" src="../static/image/face.png" class="face"><br>
+    <img th:src="@{/image/hand-left.png}" alt="is" src="../static/image/hand-left.png" class="left-hand">
+    <img th:src="@{/image/hand-right.png}" alt="is" src="../static/image/hand-right.png" class="right-hand">
+</div>
+<h2>Hupszi, dupszi! Ezt frankón benéztük...</h2>
+<h3>Ha azt gondolod, hogy ennek működnie kellene, <a target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSe1XaJuDzGjPUWvSnud8XXsEgUCUOUGsCHeoud_AgVJb6qorA/viewform">reportold</a> a hibát!</h3>
+
+<h1 th:text="${error}">404</h1>
+
 <table>
     <tr>
         <td>Date</td>

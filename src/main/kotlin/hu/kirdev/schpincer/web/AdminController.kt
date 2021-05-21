@@ -1,6 +1,7 @@
 package hu.kirdev.schpincer.web
 
 import hu.kirdev.schpincer.dto.RoleEntryDto
+import hu.kirdev.schpincer.model.CardType
 import hu.kirdev.schpincer.model.CircleEntity
 import hu.kirdev.schpincer.service.CircleService
 import hu.kirdev.schpincer.service.ItemPrecedenceService
@@ -192,6 +193,15 @@ open class AdminController {
     @GetMapping("/circles/api/reorder")
     fun reorder(): String {
         itemSorter.reorder()
+        return "ok"
+    }
+
+    @ResponseBody
+    @GetMapping("/debug/card/{card}")
+    fun changeCard(@PathVariable card: String, request: HttpServletRequest): String {
+        val user = request.getUserIfPresent() ?: return "failed"
+        user.cardType = CardType.valueOf(card)
+        users.save(user)
         return "ok"
     }
 
