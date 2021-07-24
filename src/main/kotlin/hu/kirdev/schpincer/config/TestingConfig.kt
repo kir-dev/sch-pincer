@@ -249,7 +249,7 @@ class TestingConfig {
                 "Izé, hozé, bigyó és return 4, lorem ipsum dolor sit amet",
                 "Izé, hozé, bigyó és return 4",
                 "burger asd",
-                "[{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"sauce\",\"values\":[\"Ketchup\",\"Majonéz\",\"Mustár\"],\"prices\":[0,50,150]}]",
+                "[{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"extra\",\"_hide\":false,\"values\":[\"Csípős szósz\",\"Jalapeno paprika\",\"Tükörtojás\",\"Pirított hagyma\"],\"prices\":[50,50,50,0],\"aliases\":[\"CSIP\",\"JAL\",\"TOJ\",\"PH\"]},{\"type\":\"ITEM_COUNT\",\"name\":\"count\",\"min\":1,\"max\":10,\"values\":[],\"_hide\":true}]",
                 600, true, true, false, true, false, false, "cdn/items/4.jpg", 0))
         openings.save(OpeningEntity(0, 30, convert(2, 16, 0), convert(2, 20, 0), convert(2, 0, 0), convert(2, 14, 0),
                 "demo/americano-pr.jpg", "Ez egy Americano nyitás. Ez a szöveg program sch-ra lesz exportálva.",

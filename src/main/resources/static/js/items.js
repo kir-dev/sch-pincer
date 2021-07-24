@@ -293,11 +293,26 @@ function generateItemCount(element) {
     let result = '';
     if (element.name.length > 0)
         result += `<label>${LANG[element.name]}</label>`;
-    result += `<input type="number" min="${element.min}" max="${element.max}" name="${element.name}" value="${element.min}" id="popup-count" onkeypress="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" onmousedown="limitNumber(this, ${element.min}, ${element.max}); itemChanged()"  onmouseup="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" onchange="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" />`;
+    result += `<div class="count-wrapper">
+                <button class="input-count" onclick="changeCount(-1); return false">-</button>
+                <input type="number" min="${element.min}" max="${element.max}" name="${element.name}" value="${element.min}" id="popup-count" 
+                onkeypress="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" 
+                onmousedown="limitNumber(this, ${element.min}, ${element.max}); itemChanged()"
+                onmouseup="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" 
+                onchange="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" />
+                <button class="input-count" onclick="changeCount(1); return false">+</button>
+            </div>`;
     if (element._comment) {
         result += `<span class="comment count-comment">${element._comment}</span>`;
     }
     return result;
+}
+
+function changeCount(count) {
+    let popupCount = document.getElementById('popup-count');
+    popupCount.value = (popupCount.value === "" ? 1 : parseInt(popupCount.value)) + parseInt(count);
+    limitNumber(popupCount, parseInt(popupCount.min), parseInt(popupCount.max));
+    itemChanged();
 }
 
 function generateExtraCheckbox(element) {
@@ -330,11 +345,10 @@ function itemChanged() {
             price += parseInt(element.getAttribute('data-prices').split(',')[parseInt(element.value)]);
     });
     let countElement = document.getElementById('popup-count');
-    price = countElement !== null ? (price * countElement.value) : price;
+    price = (countElement !== null && typeof countElement !== "undefined" && countElement.value !== "") ? (price * countElement.value) : price;
 
     document.getElementById('popup-price').innerText = `${price} ${LANG['currency']}`;
 }
-
 
 function itemChangedPizzasch() {
     itemChanged();
@@ -532,6 +546,8 @@ function enableScroll() {
 }
 
 function limitNumber(element, min, max) {
+    if (element.value === "")
+        return;
     if (element.value > max)
         element.value = max;
     else if (element.value < min)
