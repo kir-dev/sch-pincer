@@ -44,6 +44,7 @@ open class MainController {
         if (request.hasUser()) {
             model.addAttribute("orders", orders.findAll(request.getUserId())
                     .filter { it.status === OrderStatus.ACCEPTED }
+                    .filter { it.date >= (System.currentTimeMillis() - (1000 * 60 * 60 * 24 * 7 * 3)) }
                     .take(3))
         }
         return "index"

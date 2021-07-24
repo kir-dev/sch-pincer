@@ -94,7 +94,7 @@
 
             </div>
 
-            <div class="item-set" id="item-set" style="width: 110%;margin-left: -5%" th:remove="body"></div>
+            <div class="item-set" id="item-set" th:remove="body"></div>
 
             <div class="highlighted latest" th:unless="${#lists.isEmpty(selectedCircle.members)}">
                 <h3 th:text="#{lang.profile.members}">Members</h3>
