@@ -57,7 +57,7 @@ class TestingConfig {
                 "https://www.facebook.com/pizzasch/", "https://pizzasch.hu/pizzas", true).also { circle = it })
         var opening: OpeningEntity
         //        Original:
-        openings.save(OpeningEntity(0, 30, convert(3, 18, 0), convert(4, 0, 0), convert(3, 0, 0), convert(3, 18, 0),
+        openings.save(OpeningEntity(0, 30, fromNow(200), fromNow(260), fromNow(-30), fromNow(120),
                 "demo/pizzasch-pr.jpg", "Ez egy Pizzásch nyitás. Ez a szöveg program sch-ra lesz exportálva.",
                 "Jack pls mit írjak ide?", circle, mutableListOf(), 100, 20, 2, 30).also { opening = it })
         //        openings.save(opening = new OpeningEntity(convert(3, 18, 0), convert(4, 0, 0), fromNow(0), fromNow(100),
@@ -85,7 +85,7 @@ class TestingConfig {
                 "Fokhagymás alap, Pick szalámi, Lilahagyma, Kukorica, Mozzarella",
                 "Fokhagymás alap, Pick szalámi, Lilahagyma, Kukorica, Mozzarella",
                 " pizza pizzasch albino batman",
-                "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"aliases\":[\"kis\",\"nagy\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]",
+                "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\"],\"aliases\":[\"normál\"],\"prices\":[0]},{\"type\":\"ITEM_COUNT\",\"name\":\"count\",\"min\":1,\"max\":10,\"values\":[],\"_hide\":true},{\"type\":\"AB_KB_SELECT\",\"name\":\"kb_extra\",\"values\":[\"Nem kérek\",\"+ Gomba\",\"+ Kukorica\",\"+ Ananász\"],\"aliases\":[\"-\",\"GOMBA\",\"KUKOR\",\"ANANS\"],\"prices\":[0,0,0,0],\"_hide\":true},{\"type\":\"AB_SELECT\",\"name\":\"ab_extra\",\"values\":[\"Nem kérek\",\"+ Gomba\",\"+ Kukorica\",\"+ Ananász\"],\"aliases\":[\"-\",\"GOMBA\",\"KUKOR\",\"ANANS\"],\"prices\":[0,0,0,0],\"_hide\":true}]",
                 800, true, true, false, true, false, false, "cdn/items/pizzasch_blank.jpeg", 0))
         items.save(ItemEntity(0, "BBQ", circle,
                 "BBQ alap, Bacon, Sonka, Lilahagyma, Mozzarella",
@@ -352,12 +352,10 @@ class TestingConfig {
             hh += 24
             day -= 1
         }
-        return Instant.parse(String.format("2019-%02d-%02dT%02d:%02d:00Z",
+        return Instant.parse(String.format("2021-%02d-%02dT%02d:%02d:00Z",
                 month, weekStart + day, hh, mm)).toEpochMilli()
     }
 
-    @SuppressWarnings("kotlin:S1144" // future feature
-    )
     private fun fromNow(minutes: Int): Long {
         return System.currentTimeMillis() + minutes * 60000
     }
