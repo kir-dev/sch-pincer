@@ -440,6 +440,42 @@ function packDetails() {
                     name: element.name,
                     selected: [document.querySelector(`select[name='${element.name}']`).value]
                 });
+            } else if (element.type === InputType.AB_SELECT) {
+                result.push({
+                    type: InputType.AB_SELECT,
+                    name: element.name,
+                    selected: [document.querySelector(`select[name='${element.name}']`).value]
+                });
+            } else if (element.type === InputType.KB_SELECT) {
+                result.push({
+                    type: InputType.KB_SELECT,
+                    name: element.name,
+                    selected: [document.querySelector(`select[name='${element.name}']`).value]
+                });
+            } else if (element.type === InputType.AB_KB_SELECT) {
+                result.push({
+                    type: InputType.AB_KB_SELECT,
+                    name: element.name,
+                    selected: [document.querySelector(`select[name='${element.name}']`).value]
+                });
+            } else if (element.type === InputType.AB_CHECKBOX) {
+                result.push({
+                    type: InputType.AB_CHECKBOX,
+                    name: element.name,
+                    selected: getCheckboxChecked(element.name, element.values.length)
+                });
+            } else if (element.type === InputType.KB_CHECKBOX) {
+                result.push({
+                    type: InputType.KB_CHECKBOX,
+                    name: element.name,
+                    selected: getCheckboxChecked(element.name, element.values.length)
+                });
+            } else if (element.type === InputType.AB_KB_CHECKBOX) {
+                result.push({
+                    type: InputType.AB_KB_CHECKBOX,
+                    name: element.name,
+                    selected: getCheckboxChecked(element.name, element.values.length)
+                });
             }
         }
     });

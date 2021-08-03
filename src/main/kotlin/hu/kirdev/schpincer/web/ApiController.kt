@@ -204,14 +204,16 @@ open class ApiController {
         return request.getUserIfPresent()?.uid?.sha256() ?: "ERROR"
     }
 
+    data class DeleteRequestDto(var id: Long = 0)
+
     @Deprecated("There is an issue with allowed item counts, DO NOT remove this functionallity")
     @ApiOperation("Delete order")
     @PostMapping("/order/delete")
     @ResponseBody
-    fun deleteOrder(request: HttpServletRequest, @RequestParam(required = true) id: Long): ResponseEntity<String> {
+    fun deleteOrder(request: HttpServletRequest, @RequestBody(required = true) body: DeleteRequestDto): ResponseEntity<String> {
         val user = request.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
         try {
-            return orders.cancelOrder(user, id)
+            return orders.cancelOrder(user, body.id)
         } catch (e: FailedOrderException) {
             log.warn("Failed to cancel order by '${request.getUserIfPresent()?.uid ?: "n/a"}' reason: ${e.response}")
             return responseOf(e.response)

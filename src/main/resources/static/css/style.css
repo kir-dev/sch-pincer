@@ -57,6 +57,9 @@ input:focus,
 button:focus,
 select:focus,
 textarea:focus,
+a:focus,
+fieldset,
+fieldset:focus,
 a {
     outline: 0 !important;
 }
@@ -1481,7 +1484,7 @@ form input[type="submit"]:hover {
     right: -1px;
     bottom: -1px;
     left: -1px;
-    outline: 1px solid lightblue;
+    outline: 0;
 }
 
 
