@@ -11,7 +11,6 @@ function updateItem(id, status) {
 function postForJsonObject(path, data) {
     return fetch(URL_BASE + path, {
         method: 'POST',
-        mode: 'no-cors',
         cache: 'no-cache',
         credentials: 'same-origin',
         headers: {

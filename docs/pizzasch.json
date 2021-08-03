@@ -1,0 +1,69 @@
+[
+  {
+    "type": "PIZZASCH_SELECT",
+    "name": "size",
+    "values": [
+      "32"
+    ],
+    "aliases": [
+      "normál"
+    ],
+    "prices": [
+      0
+    ]
+  },
+  {
+    "type": "ITEM_COUNT",
+    "name": "count",
+    "min": 1,
+    "max": 10,
+    "values": [],
+    "_hide": true
+  },
+  {
+    "type": "AB_KB_SELECT",
+    "name": "kb_extra",
+    "values": [
+      "Nem kérek",
+      "+ Gomba",
+      "+ Kukorica",
+      "+ Ananász"
+    ],
+    "aliases": [
+      "-",
+      "GOMBA",
+      "KUKOR",
+      "ANANS"
+    ],
+    "prices": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "_hide": true
+  },
+  {
+    "type": "AB_SELECT",
+    "name": "ab_extra",
+    "values": [
+      "Nem kérek",
+      "+ Gomba",
+      "+ Kukorica",
+      "+ Ananász"
+    ],
+    "aliases": [
+      "-",
+      "GOMBA",
+      "KUKOR",
+      "ANANS"
+    ],
+    "prices": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "_hide": true
+  }
+]

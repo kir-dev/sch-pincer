@@ -29,6 +29,8 @@ enum class PageTypes(val orientation: String) {
     LANDSCAPE("landscape")
 }
 
+data class OrderUpdateDto(val id: Long, val status: String)
+
 @Controller
 open class ConfigureController {
 
@@ -446,16 +448,15 @@ open class ConfigureController {
 
     @PostMapping("/configure/order/update")
     @ResponseBody
-    fun updateOrder(@RequestParam id: Long,
-                    @RequestParam status: String,
+    fun updateOrder(@RequestBody body: OrderUpdateDto,
                     request: HttpServletRequest
     ): String {
-        val circleId = orders.getCircleIdByOrderId(id) ?: return "INVALID ID"
+        val circleId = orders.getCircleIdByOrderId(body.id) ?: return "INVALID ID"
 
         if (cannotEditCircle(circleId, request))
             return "NO PERMISSION"
 
-        orders.updateOrder(id, OrderStatus[status])
+        orders.updateOrder(body.id, OrderStatus[body.status])
         return "redirect:/configure/$circleId"
     }
 

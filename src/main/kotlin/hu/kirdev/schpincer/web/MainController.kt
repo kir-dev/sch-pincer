@@ -89,7 +89,7 @@ open class MainController {
 
     @GetMapping("/profile")
     fun profile(request: HttpServletRequest, model: Model): String {
-        model.addAttribute("orders", this.orders.findAll(request.getUserId()).asReversed())
+        model.addAttribute("orders", this.orders.findAll(request.getUserId()))
         model.addAttribute("circles", circles.findAllForMenu())
         return "profile"
     }
