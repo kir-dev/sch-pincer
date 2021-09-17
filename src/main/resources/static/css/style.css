@@ -187,6 +187,16 @@ a {
     animation-name: animFadeFromTop_;
     animation-duration: 0.2s;
     animation-iteration-count: 1;
+    outline-style: solid;
+    outline-color: rgba(0,0,0,0.4);
+    outline-width: 0;
+    transition: outline ease 0.3s;
+    cursor: pointer;
+}
+
+.item:hover {
+    outline-width: 8px;
+    outline-color: rgba(0,0,0,0.4);
 }
 
 .item .picture {
@@ -318,6 +328,10 @@ a {
     top: 2px;
 }
 
+.item-out-of-stock {
+    filter: grayscale(1) brightness(0.8) opacity(0.5);
+}
+
 .list-end {
     color: #4c4c4d;
     text-transform: uppercase;
@@ -368,6 +382,12 @@ a {
     display: inline-block;
     padding: 8px 16px 8px 16px;
     vertical-align: top;
+    outline: 0 solid rgba(0,0,0,0.4);
+    transition: outline ease 0.3s;
+}
+
+.search input[type="text"]:active {
+    outline: 8px solid rgba(0,0,0,0.4);
 }
 
 .search i {
@@ -1116,6 +1136,7 @@ a {
     padding: 4px 12px;
     font-size: 20px;
     color: #FFFFFF;
+    cursor: pointer;
 }
 
 .popup button.input-count:hover {
@@ -2156,12 +2177,12 @@ img.centered-mini {
 
 .article.red .picture {
     background-color: #be2e2e;
-    border-bottom-color: #af0000;
+    border-bottom-color: #cc0202;
 }
 
 .article.red a {
     background-color: #be2e2e;
-    border-bottom-color: #af0000;
+    border-bottom-color: #cc0202;
 }
 
 .article.red .picture .overlay,
@@ -2172,7 +2193,7 @@ img.centered-mini {
 }
 
 .item.red .picture {
-    border-color: #af0000;
+    border-color: #cc0202;
 }
 
 .item.red .picture .overlay {
@@ -2180,15 +2201,15 @@ img.centered-mini {
 }
 
 .item.red span a:last-of-type {
-    color: #af0000;
+    color: #cc0202;
 }
 
 .red .colored {
-    color: #af0000 !important;
+    color: #cc0202 !important;
 }
 
 .red .border-colored {
-    border-color: #af0000 !important;
+    border-color: #cc0202 !important;
 }
 
 .red .colored-light {
@@ -2732,10 +2753,6 @@ img.centered-mini {
         background-size: 100% auto;
     }
 
-    .item .picture:hover {
-        background-size: 120% auto;
-    }
-
     .messagebox {
         left: calc(50vw - 200px);
         max-width: 352px;
@@ -2962,6 +2979,14 @@ img.centered-mini {
         box-sizing: content-box;
     }
 
+    .left-menu .scroll-child:hover a {
+        opacity: 0.6;
+    }
+
+    .left-menu .scroll-child a:hover {
+        opacity: 1;
+    }
+
     .left-menu a {
         text-decoration: none;
         display: block;
@@ -2978,15 +3003,6 @@ img.centered-mini {
         margin-bottom: 10px;
         cursor: pointer;
         transition: filter ease 0.2s;
-        filter: brightness(1) sepia(0) hue-rotate(9.5deg) saturate(2.6) brightness(1.15) opacity(1);
-    }
-
-    .left-menu a:hover {
-        color: #F4CF3B;
-    }
-
-    .left-menu a:hover img {
-        filter: brightness(0.6) sepia(1) hue-rotate(9.5deg) saturate(2.6) brightness(1.15) opacity(0.95);
     }
 
     .content {

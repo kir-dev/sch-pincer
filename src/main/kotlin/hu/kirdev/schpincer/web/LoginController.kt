@@ -62,6 +62,8 @@ open class LoginController {
                     user.cardType = card
                     users.save(user)
                 }
+                if (user.orderingPriority == 0)
+                    user.orderingPriority = 1
                 val permissionsByVIR = getCirclePermissionList(ownedCircles)
                 if (!user.permissions.containsAll(permissionsByVIR)) {
                     permissionsByVIR.addAll(user.permissions)

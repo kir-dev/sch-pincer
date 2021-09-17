@@ -105,8 +105,8 @@ const FLAGS = [1010, 1069];
 
 function formatItem(item) {
     return `
-                <div class="item ${item.circleColor}">
-                    <div class="picture" style="background-image: url('${URL_BASE}${item.imageName}');" onclick="showPopup(${item.id})">
+                <div class="item ${item.circleColor}${item.outOfStock ? ' item-out-of-stock' : ''}" onclick="showPopup(${item.id})">
+                    <div class="picture" style="background-image: url('${URL_BASE}${item.imageName}');">
                         ${item.flag === 0 ? '' : `<div class="flag" style="background-image: url('${URL_BASE}flags/flag${item.flag}.png')"></div>`}
                         <div class="overlay">${item.outOfStock ? `<span class="out-of-stock">${LANG['outOfStock']}</span>` : ''}</div>
                     </div>
@@ -295,7 +295,7 @@ function generateItemCount(element) {
         result += `<label>${LANG[element.name]}</label>`;
     result += `<div class="count-wrapper">
                 <button class="input-count" onclick="changeCount(-1); return false">-</button>
-                <input type="number" min="${element.min}" max="${element.max}" name="${element.name}" value="${element.min}" id="popup-count" 
+                <input type="text" readonly min="${element.min}" max="${element.max}" name="${element.name}" value="${element.min}" id="popup-count" 
                 onkeypress="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" 
                 onmousedown="limitNumber(this, ${element.min}, ${element.max}); itemChanged()"
                 onmouseup="limitNumber(this, ${element.min}, ${element.max}); itemChanged()" 

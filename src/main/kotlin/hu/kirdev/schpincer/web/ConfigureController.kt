@@ -570,7 +570,7 @@ open class ConfigureController {
 
     private fun addTableHeader(table: PdfPTable, export: ExportType) {
         table.headerRows = 1
-        val font = Font(Font.FontFamily.UNDEFINED, 10.0f)
+        val font = Font(Font.FontFamily.UNDEFINED, export.fontSize)
         export.header.forEach(Consumer { columnTitle ->
             val header = PdfPCell()
             header.horizontalAlignment = Element.ALIGN_CENTER
@@ -587,15 +587,17 @@ open class ConfigureController {
         for (i in ordersList.indices)
             ordersList[i].artificialTransientId = i + 1
 
-        val font = Font(Font.FontFamily.UNDEFINED, 10.0f)
+        val font = Font(Font.FontFamily.UNDEFINED, export.fontSize)
         for (order in ordersList) {
-            for (column in export.fields) {
-                val cell = PdfPCell()
-                cell.horizontalAlignment = Element.ALIGN_CENTER
-                cell.verticalAlignment = Element.ALIGN_CENTER
-                cell.phrase = Phrase(column(order), font)
-                cell.isNoWrap = false
-                table.addCell(cell)
+            for (id in 0 until order.count) {
+                for (column in export.fields) {
+                    val cell = PdfPCell()
+                    cell.horizontalAlignment = Element.ALIGN_CENTER
+                    cell.verticalAlignment = Element.ALIGN_CENTER
+                    cell.phrase = Phrase(column(order), font)
+                    cell.isNoWrap = false
+                    table.addCell(cell)
+                }
             }
         }
         return ordersList.size

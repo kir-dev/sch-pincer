@@ -13,7 +13,8 @@ enum class ExportType(
         val orderByFunction: String,
         val header: List<String>,
         val widths: IntArray,
-        val fields: List<(OrderEntity) -> String>
+        val fields: List<(OrderEntity) -> String>,
+        val fontSize: Float = 10.0f
 ) {
 
 
@@ -55,21 +56,34 @@ enum class ExportType(
                     { it.price.toString() }
             )),
     PIZZASCH(false, "Pizzasch", OrderStrategy.ORDER_GROUPED.representation,
-            listOf("ID", "NÉV", TIME_WINDOW_HEADER, PRODUCT_HEADER, COMMENT_HEADER, "ÁR"), intArrayOf(3, 8, 5, 10, 10, 4),
+            listOf("ID", "NÉV", "SZOBA", TIME_WINDOW_HEADER, PRODUCT_HEADER, COMMENT_HEADER, "ÁR"), intArrayOf(3, 8, 4, 5, 10, 10, 4),
             listOf<(OrderEntity) -> String>(
                     { it.artificialTransientId.toString() },
                     { it.userName },
+                    { it.room.uppercase().replace("SCH ", "").replace("SCH-", "") },
                     { it.intervalMessage },
-                    { (_, _, _, _, _, _, _, name, _, _, _, _, _, _, _, extra) -> name + " " + extra.toUpperCase() },
+                    { (_, _, _, _, _, _, _, name, _, _, _, _, _, _, _, extra) -> name + " " + extra.uppercase() },
                     { it.comment },
                     { it.price.toString() }
             )),
+    PIZZASCH2(false, "Pizzasch2", OrderStrategy.ORDER_GROUPED.representation,
+            listOf("ID", "NÉV", "SZOBA", TIME_WINDOW_HEADER, PRODUCT_HEADER, COMMENT_HEADER, "ÁR"), intArrayOf(3, 8, 4, 5, 10, 10, 4),
+            listOf<(OrderEntity) -> String>(
+                    { it.artificialTransientId.toString() },
+                    { it.userName },
+                    { it.room.uppercase().replace("SCH ", "").replace("SCH-", "") },
+                    { it.intervalMessage },
+                    { (_, _, _, _, _, _, _, name, _, _, _, _, _, _, _, extra) -> name + " " + extra.uppercase() },
+                    { it.comment },
+                    { it.price.toString() }
+            ), 16f),
     FOODEX(true, "Foodex", OrderStrategy.ORDER_GROUPED.representation,
-            listOf("ID", "NÉV", PRODUCT_HEADER, COMMENT_HEADER, "ÁR"), intArrayOf(3, 8, 5, 10, 4),
+            listOf("ID", "NÉV", PRODUCT_HEADER, "SZOBA", COMMENT_HEADER, "ÁR"), intArrayOf(3, 8, 5, 4, 10, 4),
             listOf<(OrderEntity) -> String>(
                     { it.artificialTransientId.toString() },
                     { it.userName },
                     { it.name },
+                    { it.room },
                     { it.comment },
                     { it.price.toString() }
             ))

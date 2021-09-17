@@ -62,4 +62,6 @@ docker-volume-create:
 	docker volume create --name schpincer-permanent-storage
 	docker volume create --name schpincer-lucene-cache
 
-	
+new-publish:
+	docker build -t schpincer/schpincer -f docker/standalone-Dockerfile .
+	docker push schpincer/schpincer
