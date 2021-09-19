@@ -48,6 +48,7 @@ interface OpeningRepository : JpaRepository<OpeningEntity, Long> {
     fun findFirstByCircle_IdAndDateEndGreaterThanOrderByDateStart(id: Long, time: Long): Optional<OpeningEntity>
     fun findAllByOrderStartLessThanAndOrderEndGreaterThan(currentTime1: Long, currentTime2: Long): List<OpeningEntity>
     fun findAllByOrderEndGreaterThanOrderByDateStart(currentTimeMillis: Long): List<OpeningEntity>
+    fun findAllByCircle_IdAndOrderStartLessThanAndOrderEndGreaterThan(circleId: Long, startTime: Long, endTime: Long): List<OpeningEntity>
 }
 
 @Repository
@@ -73,3 +74,7 @@ interface TimeWindowRepository : JpaRepository<TimeWindowEntity, Long>
 
 @Repository
 interface UserRepository : JpaRepository<UserEntity, String>
+
+interface AccelerationRepository : JpaRepository<AccelerationEntity, Long> {
+    fun findAllByCircle_IdAndCreatedAtGreaterThanEqualAndCreatedAtLessThanEqual(circleId: Long, startTime: Long, endTime: Long): List<AccelerationEntity>
+}

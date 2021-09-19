@@ -48,3 +48,7 @@ function postForJsonObject(path, data) {
         body: JSON.stringify(data)
     });
 }
+
+function submitForm() {
+    document.getElementById("the__form").submit();
+}

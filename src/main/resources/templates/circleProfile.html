@@ -68,7 +68,11 @@
                         <tr th:if="${session.user} neq null">
                             <td th:text="#{lang.speedupbutton.label}">Speed the work up</td>
                             <td>
-                                <button th:text="#{lang.speedupbutton.button}" class="action-button">Work up!</button>
+                                <form th:action="'/accelerate/' + ${selectedCircle?.alias}" th:method="'post'" target="dummyframe" id="the__form">
+                                    <button th:text="#{lang.speedupbutton.button}" class="action-button" onclick="submitForm">
+                                        Work up!
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     </table>
@@ -116,6 +120,7 @@
     <span class="list-end" id="no-results"></span>
 
     <div th:replace="MainLayout :: footer"></div>
+    <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
 </div>
 </body>
 </html>
