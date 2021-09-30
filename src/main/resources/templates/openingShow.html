@@ -11,6 +11,8 @@
     <object th:include="MainLayout :: head" th:remove="tag"></object>
     <script src="../static/js/profile.js" th:src="@{/js/profile.js}"></script>
     <script src="../static/js/admin.js" th:src="@{/js/admin.js}"></script>
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script th:inline="javascript">
         const URL_BASE = /*[[ @{/} ]]*/ "/";
     </script>
@@ -26,96 +28,99 @@
 
     <div class="highlighted dashboard">
         <h3 th:text="#{lang.opening-info.title}">Opening info</h3>
-        <table class="form full-table">
-            <tr>
-                <td th:text="#{lang.configure.opening.feeling}">Feeling</td>
-                <td>
-                    <ins th:text="${opening.feeling}"></ins>
-                </td>
-            </tr>
-            <tr>
-                <td th:text="#{lang.configure.opening.date-start}">Date start</td>
-                <td>
-                    <ins th:text="${#dates.format(opening.dateStart, '__#{lang.date-format}__')}"></ins>
-                </td>
-            </tr>
-            <tr>
-                <td th:text="#{lang.configure.opening.date-end}">Date end</td>
-                <td>
-                    <ins th:text="${#dates.format(opening.dateEnd, '__#{lang.date-format}__')}"></ins>
-                </td>
-            </tr>
-            <tr>
-                <td th:text="#{lang.configure.opening.order-start}">Order start</td>
-                <td>
-                    <ins th:text="${#dates.format(opening.orderStart, '__#{lang.date-format}__')}"></ins>
-                </td>
-            </tr>
-            <tr>
-                <td th:text="#{lang.configure.opening.order-end}">Order end</td>
-                <td>
-                    <ins th:text="${#dates.format(opening.orderEnd, '__#{lang.date-format}__')}"></ins>
-                </td>
-            </tr>
-            <tr>
-                <td th:text="#{lang.configure.opening.order-max}">Order max</td>
-                <td>
-                    <ins th:text="${opening.maxOrder}"></ins>
-                </td>
-            </tr>
-            <tr>
-                <td th:text="#{lang.configure.opening.order-max-per}">Order max per interval</td>
-                <td>
-                    <ins th:text="${opening.maxOrderPerInterval}"></ins>
-                </td>
-            </tr>
-            <tr>
-                <td th:text="#{lang.configure.opening.order-extra-max-per}">Order max extra per interval</td>
-                <td>
-                    <ins th:text="${opening.maxExtraPerInterval}"></ins>
-                </td>
-            </tr>
-            <tr>
-                <td th:text="#{lang.configure.opening.interval-length}">Interval length</td>
-                <td>
-                    <ins th:text="${opening.intervalLength}"></ins>
-                </td>
-            </tr>
-            <tr>
-                <td th:text="#{lang.configure.opening.cat-alpha}">Alpha category</td>
-                <td>
-                    <ins th:text="${opening.maxAlpha}"></ins>
-                </td>
-            </tr>
-            <tr>
-                <td th:text="#{lang.configure.opening.cat-beta}">Beta category</td>
-                <td>
-                    <ins th:text="${opening.maxBeta}"></ins>
-                </td>
-            </tr>
-            <tr>
-                <td th:text="#{lang.configure.opening.cat-gamma}">Gamma category</td>
-                <td>
-                    <ins th:text="${opening.maxGamma}"></ins>
-                </td>
-            </tr>
-            <tr>
-                <td th:text="#{lang.configure.opening.cat-delta}">Delta category</td>
-                <td>
-                    <ins th:text="${opening.maxDelta}"></ins>
-                </td>
-            </tr>
-            <tr>
-                <td th:text="#{lang.configure.opening.cat-lambda}">Lambda category</td>
-                <td>
-                    <ins th:text="${opening.maxLambda}"></ins>
-                </td>
-            </tr>
-            <tr>
-                <td th:text="#{lang.configure.opening.pr}">Lambda category</td>
-                <td><img class="centered-mini" th:src="|@{/}${opening.prUrl}|" width="300" alt=""></td>
-            </tr>
-        </table>
+        <form method="post" th:action="|@{/configure/}${circleId}/openings/${opening.id}/edit|" >
+            <table class="form full-table">
+                <tr>
+                    <td th:text="#{lang.configure.opening.feeling}">Feeling</td>
+                    <td>
+                        <input type="text" th:field="${opening.feeling}" maxlength="255"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.date-start}">Date start</td>
+                    <td>
+                        <ins th:text="${#dates.format(opening.dateStart, '__#{lang.date-format}__')}"></ins>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.date-end}">Date end</td>
+                    <td>
+                        <ins th:text="${#dates.format(opening.dateEnd, '__#{lang.date-format}__')}"></ins>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.order-start}">Order start</td>
+                    <td>
+                        <input type="text" class="datetime-picker" name="orderStart" id="orderStart" th:value="${#dates.format(opening.orderStart, '__#{lang.date-format2}__')}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.order-end}">Order end</td>
+                    <td>
+                        <input type="text" class="datetime-picker" name="orderEnd" id="orderEnd" th:value="${#dates.format(opening.orderEnd, '__#{lang.date-format2}__')}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.order-max}">Order max</td>
+                    <td>
+                        <input type="number" th:field="${opening.maxOrder}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.order-max-per}">Order max per interval</td>
+                    <td>
+                        <ins th:text="${opening.maxOrderPerInterval}"></ins>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.order-extra-max-per}">Order max extra per interval</td>
+                    <td>
+                        <ins th:text="${opening.maxExtraPerInterval}"></ins>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.interval-length}">Interval length</td>
+                    <td>
+                        <ins th:text="${opening.intervalLength}"></ins>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.cat-alpha}">Alpha category</td>
+                    <td>
+                        <input type="number" th:field="${opening.maxAlpha}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.cat-beta}">Beta category</td>
+                    <td>
+                        <input type="number" th:field="${opening.maxBeta}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.cat-gamma}">Gamma category</td>
+                    <td>
+                        <input type="number" th:field="${opening.maxGamma}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.cat-delta}">Delta category</td>
+                    <td>
+                        <input type="number" th:field="${opening.maxDelta}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.cat-lambda}">Lambda category</td>
+                    <td>
+                        <input type="number" th:field="${opening.maxLambda}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.configure.opening.pr}">PR image</td>
+                    <td><img class="centered-mini" th:src="|@{/}${opening.prUrl}|" width="300" alt=""></td>
+                </tr>
+            </table>
+            <input class="button" type="submit" th:value="#{lang.configure.edit-opening}"/>
+        </form>
     </div>
 
     <div class="highlighted">
@@ -382,5 +387,12 @@
 </div>
 
 <div th:replace="MainLayout :: footer"></div>
+<script>
+    flatpickr(".datetime-picker", {
+        minDate: "today",
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+    });
+</script>
 </body>
 </html>
