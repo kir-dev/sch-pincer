@@ -571,25 +571,40 @@ open class ConfigureController {
     private fun addTableHeader(table: PdfPTable, export: ExportType) {
         table.headerRows = 1
         val font = Font(Font.FontFamily.UNDEFINED, export.fontSize)
-        export.header.forEach(Consumer { columnTitle ->
+        export.header.forEach({ columnTitle ->
             val header = PdfPCell()
             header.horizontalAlignment = Element.ALIGN_CENTER
             header.verticalAlignment = Element.ALIGN_CENTER
             header.phrase = Phrase(columnTitle, font)
             header.borderWidthBottom = 1.5f
-            header.fixedHeight = 15.0f
+            header.fixedHeight = 15f * (export.fontSize / 10f)
             table.addCell(header)
         })
     }
 
     private fun addOrderRows(table: PdfPTable, export: ExportType, opening: OpeningEntity): Int {
         val ordersList: List<OrderEntity> = orders.findToExport(opening.id, export.orderByFunction)
-        for (i in ordersList.indices)
-            ordersList[i].artificialTransientId = i + 1
+        var accumulator = 1
+        for (i in ordersList.indices) {
+            ordersList[i].artificialTransientId = accumulator
+            accumulator += if (export.denormalizeOrders) ordersList[i].count else 1
+        }
 
         val font = Font(Font.FontFamily.UNDEFINED, export.fontSize)
         for (order in ordersList) {
-            for (id in 0 until order.count) {
+            if (export.denormalizeOrders) {
+                for (id in 0 until order.count) {
+                    for (column in export.fields) {
+                        val cell = PdfPCell()
+                        cell.horizontalAlignment = Element.ALIGN_CENTER
+                        cell.verticalAlignment = Element.ALIGN_CENTER
+                        cell.phrase = Phrase(column(order), font)
+                        cell.isNoWrap = false
+                        table.addCell(cell)
+                    }
+                    order.artificialTransientId++
+                }
+            } else {
                 for (column in export.fields) {
                     val cell = PdfPCell()
                     cell.horizontalAlignment = Element.ALIGN_CENTER
@@ -608,7 +623,8 @@ open class ConfigureController {
             export.fields.forEach { _ ->
                 val cell = PdfPCell()
                 cell.phrase = Phrase(" ") // NOTE: Empty phrases are ignored. Therefore at least
-                // one whitespace character is needed to be added.
+                                                // one whitespace character is needed to be added.
+                cell.fixedHeight = 15f * (export.fontSize / 10f)
                 cell.isNoWrap = false
                 table.addCell(cell)
             }

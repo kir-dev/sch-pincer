@@ -14,9 +14,9 @@ enum class ExportType(
         val header: List<String>,
         val widths: IntArray,
         val fields: List<(OrderEntity) -> String>,
-        val fontSize: Float = 10.0f
+        val fontSize: Float = 10.0f,
+        val denormalizeOrders: Boolean = false
 ) {
-
 
     DEFAULT(false, "Default", OrderStrategy.ORDER_GROUPED.representation,
             listOf("ID", "NÉV", TIME_WINDOW_HEADER, PRODUCT_HEADER, "EXTRA", COMMENT_HEADER, "ÁR"), intArrayOf(3, 8, 5, 10, 5, 10, 4),
@@ -70,13 +70,13 @@ enum class ExportType(
             listOf("ID", "NÉV", "SZOBA", TIME_WINDOW_HEADER, PRODUCT_HEADER, COMMENT_HEADER, "ÁR"), intArrayOf(3, 8, 4, 5, 10, 10, 4),
             listOf<(OrderEntity) -> String>(
                     { it.artificialTransientId.toString() },
-                    { it.userName },
+                    { it.userName.replace(Regex(" ?x ?[0-9]+"), "") },
                     { it.room.uppercase().replace("SCH ", "").replace("SCH-", "") },
-                    { it.intervalMessage },
-                    { (_, _, _, _, _, _, _, name, _, _, _, _, _, _, _, extra) -> name + " " + extra.uppercase() },
+                    { it.intervalMessage.replace(" ", "") },
+                    { (_, _, _, _, _, _, _, name, _, _, _, _, _, _, _, extra) -> name + " " + extra },
                     { it.comment },
-                    { it.price.toString() }
-            ), 16f),
+                    { (it.price / it.count).toString() }
+            ), 16f, true),
     FOODEX(true, "Foodex", OrderStrategy.ORDER_GROUPED.representation,
             listOf("ID", "NÉV", PRODUCT_HEADER, "SZOBA", COMMENT_HEADER, "ÁR"), intArrayOf(3, 8, 5, 4, 10, 4),
             listOf<(OrderEntity) -> String>(
