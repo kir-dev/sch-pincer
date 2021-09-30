@@ -91,6 +91,7 @@ open class ApiController {
         val list = items.findAllByOrderableNow().stream()
                 .filter { it.visibleWithoutLogin || loggedIn }
                 .filter(ItemEntity::visibleInAll)
+                .filter(ItemEntity::visible)
                 .map { item: ItemEntity ->
                     ItemEntityDto(item,
                             cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
@@ -109,6 +110,7 @@ open class ApiController {
         val list = items.findAllByOrerableTomorrow().stream()
                 .filter { it.visibleWithoutLogin || loggedIn }
                 .filter(ItemEntity::visibleInAll)
+                .filter(ItemEntity::visible)
                 .map { item: ItemEntity ->
                     ItemEntityDto(item,
                             cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
@@ -118,9 +120,10 @@ open class ApiController {
         return ResponseEntity(list, HttpStatus.OK)
     }
 
-    @ApiOperation("Page of items")
-    @GetMapping("/items/{page}")
-    @ResponseBody
+// Disabled due to previous change in handling items
+//    @ApiOperation("Page of items")
+//    @GetMapping("/items/{page}")
+//    @ResponseBody
     fun getItems(request: HttpServletRequest, @PathVariable page: Int): ResponseEntity<List<ItemEntityDto>> {
         val loggedIn = request.hasUser()
         val cache: MutableMap<Long, OpeningEntity?> = HashMap()
