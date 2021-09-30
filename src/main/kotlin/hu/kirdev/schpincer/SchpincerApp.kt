@@ -7,14 +7,7 @@ import java.util.*
 import javax.annotation.PostConstruct
 
 @SpringBootApplication(exclude = [UserDetailsServiceAutoConfiguration::class])
-open class SchpincerApp {
-
-    @PostConstruct
-    fun init() {
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT+2:00"))
-    }
-
-}
+open class SchpincerApp
 
 fun main(args: Array<String>) {
     runApplication<SchpincerApp>(*args)
