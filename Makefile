@@ -5,7 +5,7 @@
 
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 mkfile_dir := $(dir $(mkfile_path))
-version := $(shell cat $(mkfile_dir)pom.xml | grep '<version>' | head -1 | cut -d \> -f 2 | cut -d \< -f 1)
+version := $(shell cat $(mkfile_dir)pom.xml | grep '<version>' | head -2 | tail -1 | cut -d \> -f 2 | cut -d \< -f 1)
 
 .PHONY: all
 all: install
@@ -30,7 +30,9 @@ docker-build: package
 
 deploy: docker-build
 	docker tag schpincer registry.k8s.sch.bme.hu/schpincer/schpincer:$(version)
+	docker tag schpincer registry.k8s.sch.bme.hu/schpincer/schpincer:latest
 	docker push registry.k8s.sch.bme.hu/schpincer/schpincer:$(version)
+	docker push registry.k8s.sch.bme.hu/schpincer/schpincer:latest
 	@echo
 	@echo VERSION: $(version) | STATUS: DONE
 	@echo

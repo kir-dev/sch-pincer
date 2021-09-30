@@ -109,7 +109,7 @@ class TestingConfig {
                 "Paradicsomos alap, Pick szalámi, Bacon, Lilahagyma, Mozzarella",
                 "Paradicsomos alap, Pick szalámi, Bacon, Lilahagyma, Mozzarella",
                 " pizza pizzasch joker",
-                "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"aliases\":[\"kis\",\"nagy\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]",
+                "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\"],\"aliases\":[\"normál\"],\"prices\":[0]},{\"type\":\"EXTRA_CHECKBOX\",\"name\":\"extra\",\"values\":[\"6db Grissini\",\"Fokhagymás szósz\",\"Paradicsomos szósz\"],\"prices\":[200,100,100],\"aliases\":[\"griss\",\"sz:fokh\",\"sz:para\"],\"_hide\":true,\"_extra\":false},{\"type\":\"ITEM_COUNT\",\"name\":\"count\",\"min\":1,\"max\":10,\"values\":[],\"_hide\":true},{\"type\":\"AB_KB_SELECT\",\"name\":\"kb_extra\",\"values\":[\"Nem kérek\",\"+ Gomba\",\"+ Kukorica\",\"+ Ananász\"],\"aliases\":[\"-\",\"GOMBA\",\"KUKOR\",\"ANANS\"],\"prices\":[0,0,0,0],\"_hide\":true},{\"type\":\"AB_SELECT\",\"name\":\"ab_extra\",\"values\":[\"Nem kérek\",\"+ Gomba\",\"+ Kukorica\",\"+ Ananász\"],\"aliases\":[\"-\",\"GOMBA\",\"KUKOR\",\"ANANS\"],\"prices\":[0,0,0,0],\"_hide\":true}]",
                 800, true, true, false, true, false, false, "cdn/items/joker.jpeg", 0))
         items.save(ItemEntity(0, "Kusza", circle,
                 "Paradicsomos alap, Pick szalámi, Kukorica, Mozzarella",

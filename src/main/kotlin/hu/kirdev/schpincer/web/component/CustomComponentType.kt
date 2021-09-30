@@ -73,6 +73,21 @@ enum class CustomComponentType {
         }
     },
 
+    DO_SELECT {
+        override fun processPrices(cca: CustomComponentAnswer, oe: OrderEntity, ccm: CustomComponentModel, user: UserEntity): Int {
+            if (user.cardType == CardType.DO)
+                return ccm.prices.get(cca.selected.get(0))
+            return 0
+        }
+
+        override fun processMessage(cca: CustomComponentAnswer, oe: OrderEntity, ccm: CustomComponentModel, user: UserEntity): List<String> {
+            val list: MutableList<String> = ArrayList()
+            if (user.cardType == CardType.DO)
+                list.add(ccm.aliases.get(cca.selected.get(0)))
+            return list
+        }
+    },
+
     KB_SELECT {
         override fun processPrices(cca: CustomComponentAnswer, oe: OrderEntity, ccm: CustomComponentModel, user: UserEntity): Int {
             if (user.cardType == CardType.KB)
@@ -115,6 +130,24 @@ enum class CustomComponentType {
             if (user.cardType == CardType.KB || user.cardType == CardType.AB)
                 list.add(ccm.aliases.get(cca.selected.get(0)))
             return list
+        }
+    },
+
+    DO_CHECKBOX {
+        override fun processPrices(cca: CustomComponentAnswer, oe: OrderEntity, ccm: CustomComponentModel, user: UserEntity): Int {
+            var result = 0
+            if (user.cardType == CardType.DO)
+                for (index in cca.selected)
+                    result += ccm.prices[index]
+            return result
+        }
+
+        override fun processMessage(cca: CustomComponentAnswer, oe: OrderEntity, ccm: CustomComponentModel, user: UserEntity): List<String> {
+            val result: MutableList<String> = ArrayList()
+            if (user.cardType == CardType.DO)
+                for (index in cca.selected)
+                    result.add(ccm.aliases[index])
+            return result
         }
     },
 
