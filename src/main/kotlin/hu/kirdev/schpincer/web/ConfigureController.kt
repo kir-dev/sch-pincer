@@ -400,6 +400,29 @@ open class ConfigureController {
         return "redirect:/configure/$circleId"
     }
 
+    @PostMapping("/configure/{circleId}/openings/{openingId}/edit")
+    fun editOpening(@PathVariable circleId: Long,
+                   @PathVariable openingId: Long,
+                    oed: OpeningEntityDto,
+                   request: HttpServletRequest
+    ): String {
+        if (cannotEditCircle(circleId, request)) return "redirect:/configure/$circleId?error"
+        val opening = openings.getOne(openingId)
+        with(opening) {
+            feeling = oed.feeling
+            if (oed.orderStart != "") orderStart = parseDate(oed.orderStart)
+            if (oed.orderEnd != "") orderEnd = parseDate(oed.orderEnd)
+            maxOrder = oed.maxOrder
+            maxAlpha = oed.maxAlpha
+            maxBeta = oed.maxBeta
+            maxGamma = oed.maxGamma
+            maxDelta = oed.maxDelta
+            maxLambda = oed.maxLambda
+        }
+        openings.save(opening)
+        return "redirect:/configure/$circleId"
+    }
+
     @GetMapping("/configure/{circleId}/openings/delete/{openingId}")
     fun deleteOpening(@PathVariable circleId: Long,
                       @PathVariable openingId: Long,
@@ -475,7 +498,7 @@ open class ConfigureController {
     }
 
     @GetMapping("/configure/table-export/{openingId}")
-    fun showOpenings(
+    fun exportOpening(
             @PathVariable openingId: Long,
             @RequestParam orderby: String,
             @RequestParam fields: String,

@@ -73,7 +73,7 @@ enum class ExportType(
                     { it.userName.replace(Regex(" ?x ?[0-9]+"), "") },
                     { it.room.uppercase().replace("SCH ", "").replace("SCH-", "") },
                     { it.intervalMessage.replace(" ", "") },
-                    { (_, _, _, _, _, _, _, name, _, _, _, _, _, _, _, extra) -> name + " " + extra },
+                    { (_, _, _, _, _, _, _, name, _, _, _, _, _, _, _, extra) -> name + " " + extra.uppercase() },
                     { it.comment },
                     { (it.price / it.count).toString() }
             ), 16f, true),
