@@ -11,7 +11,7 @@ open class SchpincerApp {
 
     @PostConstruct
     fun init() {
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT+1:00"))
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT+2:00"))
     }
 
 }

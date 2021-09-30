@@ -173,9 +173,11 @@ const InputType = {
     AMERICANO_SELECT: 'AMERICANO_SELECT',
     PIZZASCH_SELECT: 'PIZZASCH_SELECT',
     ITEM_COUNT: 'ITEM_COUNT',
+    DO_SELECT: 'DO_SELECT',
     KB_SELECT: 'KB_SELECT',
     AB_SELECT: 'AB_SELECT',
     AB_KB_SELECT: 'AB_KB_SELECT',
+    DO_CHECKBOX: 'DO_CHECKBOX',
     KB_CHECKBOX: 'KB_CHECKBOX',
     AB_CHECKBOX: 'AB_CHECKBOX',
     AB_KB_CHECKBOX: 'AB_KB_CHECKBOX'
@@ -206,6 +208,9 @@ function generateCustom(json, item) {
 
             if (element.type === InputType.EXTRA_SELECT) {
                 result += generateExtraSelect(element);
+            } else if (element.type === InputType.DO_SELECT) {
+                if (card === CardType.DO)
+                    result += generateExtraSelect(element);
             } else if (element.type === InputType.KB_SELECT) {
                 if (card === CardType.KB)
                     result += generateExtraSelect(element);
@@ -217,6 +222,9 @@ function generateCustom(json, item) {
                     result += generateExtraSelect(element);
             } else if (element.type === InputType.EXTRA_CHECKBOX) {
                 result += generateExtraCheckbox(element);
+            } else if (element.type === InputType.DO_CHECKBOX) {
+                if (card === CardType.DO)
+                    result += generateExtraCheckbox(element);
             } else if (element.type === InputType.AB_CHECKBOX) {
                 if (card === CardType.AB)
                     result += generateExtraCheckbox(element);
@@ -324,7 +332,7 @@ function generateExtraCheckbox(element) {
         const value = element.values[optionId];
         const price = element.prices[optionId];
         result += `
-            <label class="checkcontainer">${value}${price !== 0 ? ' (' + (price > 0 ? '+' : '') + price + ' ' + LANG['currency'] + ')' : ''}
+            <label class="checkcontainer">${value}${price !== 0 ? ' (' + (price > 0 ? '+' : '') + price + '&nbsp;' + LANG['currency'] + ')' : ''}
                 <input type="checkbox" name="${element.name}_${optionId}" data-price="${price}" onchange="itemChanged()" class="price-changer"/>
                 <span class="checkmark"></span>
             </label>`;
@@ -456,6 +464,14 @@ function packDetails() {
                         selected: [document.querySelector(`select[name='${element.name}']`).value]
                     });
                 }
+            } else if (element.type === InputType.DO_SELECT) {
+                if (card === CardType.DO) {
+                    result.push({
+                        type: InputType.DO_SELECT,
+                        name: element.name,
+                        selected: [document.querySelector(`select[name='${element.name}']`).value]
+                    });
+                }
             } else if (element.type === InputType.AB_KB_SELECT) {
                 if (card === CardType.KB || card === CardType.AB) {
                     result.push({
@@ -476,6 +492,14 @@ function packDetails() {
                 if (card === CardType.KB) {
                     result.push({
                         type: InputType.KB_CHECKBOX,
+                        name: element.name,
+                        selected: getCheckboxChecked(element.name, element.values.length)
+                    });
+                }
+            } else if (element.type === InputType.DO_CHECKBOX) {
+                if (card === CardType.DO) {
+                    result.push({
+                        type: InputType.DO_CHECKBOX,
                         name: element.name,
                         selected: getCheckboxChecked(element.name, element.values.length)
                     });
