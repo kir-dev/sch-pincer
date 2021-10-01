@@ -404,6 +404,7 @@ function showPopup(id) {
             document.getElementById('popup').classList.remove('inactive');
             document.getElementById('blur-section').classList.add('blur');
             selectedItem = data;
+            document.getElementById('submit-order-button').disabled = false;
         });
 }
 
@@ -541,6 +542,7 @@ const ResponseType = {
 };
 
 function buySelectedItem() {
+    document.getElementById('submit-order-button').disabled = true;
     postForString('api/order', {
         id: selectedItem.id,
         time: document.querySelector('select[name="time"]').value,
@@ -605,6 +607,7 @@ function closeMessageBox() {
 }
 
 function showMessageBox(message) {
+    document.getElementById('submit-order-button').disabled = false;
     document.getElementById('messagebox-text').innerText = message;
     document.querySelector('.messagebox').style.display = 'inline-block';
 }

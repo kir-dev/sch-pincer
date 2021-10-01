@@ -56,7 +56,7 @@
                             </select>
                             <label th:text="#{lang.items.comment}">Comment</label>
                             <input id="popup-comment" type="text" name="comment" autocomplete="off" maxlength="200"/>
-                            <input type="submit" class="colored-light submit-button" value="Order"
+                            <input type="submit" id="submit-order-button" class="colored-light submit-button" value="Order"
                                    th:value="#{lang.items.buy}" th:unless="${session.user} eq null"/>
                         </div>
                         <em th:text="#{lang.items.loggedin}" th:if="${session.user} eq null">

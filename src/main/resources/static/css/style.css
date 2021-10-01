@@ -998,6 +998,10 @@ a {
     margin-bottom: 60px;
 }
 
+.popup .submit-button:disabled {
+    color: #888888 !important;
+}
+
 .popup .picture {
     width: 100%;
     height: 150px;
