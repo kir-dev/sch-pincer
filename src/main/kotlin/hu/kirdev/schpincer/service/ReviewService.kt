@@ -2,6 +2,7 @@ package hu.kirdev.schpincer.service
 
 import hu.kirdev.schpincer.dao.ReviewRepository
 import hu.kirdev.schpincer.model.ReviewEntity
+import hu.kirdev.schpincer.model.UserEntity
 import hu.kirdev.schpincer.web.getUserIfPresent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -38,11 +39,15 @@ open class ReviewService {
     }
 
     @Transactional(readOnly = false)
-    open fun createReview(request: HttpServletRequest, orderId: Long, review: String?, rateQuality: Int, ratePrice: Int,
-                          rateSpeed: Int, rateOverAll: Int
+    open fun createReview(user: UserEntity,
+                          orderId: Long,
+                          review: String,
+                          rateQuality: Int,
+                          ratePrice: Int,
+                          rateSpeed: Int,
+                          rateOverAll: Int
     ) {
         val circleId = orders.getCircleIdByOrderId(orderId)!!
-        val user = request.getUserIfPresent()!!
         val order = orders.getOne(orderId)
 
         val fullReview = ReviewEntity(
@@ -50,7 +55,7 @@ open class ReviewService {
                 order = order,
                 openingFeeling = openings.getOne(order?.openingId!!).feeling,
                 userName = user.name,
-                review = review ?: "",
+                review = if (review.length > 1000) review.substring(0, 1000) else review,
                 rateSpeed = rateSpeed.between(1, 5),
                 rateQuality = rateQuality.between(1, 5),
                 ratePrice = ratePrice.between(1, 5),

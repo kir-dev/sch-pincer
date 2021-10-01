@@ -159,6 +159,13 @@
         </form>
     </div>
 
+    <div class="highlighted">
+        <h3 th:text="#{lang.actions.title}">Actions</h3>
+        <form th:action="|@{/configure}/${circleId}/action/${opening.id}/close-all|" method="post">
+            <input class="button" type="submit" value="Close all orders" th:value="#{lang.actions.close-all}">
+        </form>
+    </div>
+
     <div class="highlighted dashboard">
         <h3 th:text="#{lang.export.title-table}">Table export</h3>
 

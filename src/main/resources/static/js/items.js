@@ -607,9 +607,9 @@ function closeMessageBox() {
 }
 
 function showMessageBox(message) {
-    document.getElementById('submit-order-button').disabled = false;
     document.getElementById('messagebox-text').innerText = message;
     document.querySelector('.messagebox').style.display = 'inline-block';
+    document.getElementById('submit-order-button').disabled = false;
 }
 
 function disableScroll() {
