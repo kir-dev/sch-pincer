@@ -402,9 +402,9 @@ open class ConfigureController {
 
     @PostMapping("/configure/{circleId}/openings/{openingId}/edit")
     fun editOpening(@PathVariable circleId: Long,
-                   @PathVariable openingId: Long,
+                    @PathVariable openingId: Long,
                     oed: OpeningEntityDto,
-                   request: HttpServletRequest
+                    request: HttpServletRequest
     ): String {
         if (cannotEditCircle(circleId, request)) return "redirect:/configure/$circleId?error"
         val opening = openings.getOne(openingId)
@@ -420,6 +420,17 @@ open class ConfigureController {
             maxLambda = oed.maxLambda
         }
         openings.save(opening)
+        return "redirect:/configure/$circleId"
+    }
+
+    @PostMapping("/configure/{circleId}/action/{openingId}/close-all")
+    fun applyCloseAllAction(@PathVariable circleId: Long,
+                             @PathVariable openingId: Long,
+                             request: HttpServletRequest
+    ): String {
+        if (cannotEditCircle(circleId, request)) return "redirect:/configure/$circleId?error"
+
+        orders.closeAllOrdersInOpening(openingId)
         return "redirect:/configure/$circleId"
     }
 

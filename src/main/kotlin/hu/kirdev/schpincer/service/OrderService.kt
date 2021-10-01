@@ -154,6 +154,14 @@ open class OrderService {
         return source
     }
 
+    @Transactional(readOnly = false)
+    open fun closeAllOrdersInOpening(openingId: Long) {
+        val orderEntities = repo.findAllByOpeningId(openingId)
+                .filter { it.status == OrderStatus.ACCEPTED || it.status == OrderStatus.INTERPRETED }
+        orderEntities.forEach { it.status = OrderStatus.SHIPPED }
+        repo.saveAll(orderEntities)
+    }
+
 }
 
 fun responseOf(body: String, status: HttpStatus = HttpStatus.OK) = ResponseEntity(body, status)

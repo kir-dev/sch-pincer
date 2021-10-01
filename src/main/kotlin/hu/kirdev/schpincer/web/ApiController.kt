@@ -200,13 +200,6 @@ open class ApiController {
         }
     }
 
-    @ApiOperation("Hashed user id")
-    @GetMapping("/user/id")
-    @ResponseBody
-    fun setRoom(request: HttpServletRequest): String {
-        return request.getUserIfPresent()?.uid?.sha256() ?: "ERROR"
-    }
-
     data class DeleteRequestDto(var id: Long = 0)
 
     @Deprecated("There is an issue with allowed item counts, DO NOT remove this functionallity")
