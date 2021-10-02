@@ -52,20 +52,46 @@
     </div>
 
     <div class="highlighted dashboard">
-        <table class="form full-table">
-            <tr>
-                <th th:text="#{lang.configure.item-list}">Items</th>
-                <th></th>
-            </tr>
-            <tr th:each="item : ${items}" th:object="${item}">
-                <td th:text="*{name}">Item name</td>
-                <td>
-                    <a href="#" th:href="@{/configure/__${circleId}__/items/edit/__*{id}__}"><i class="material-icons">edit</i></a>
-                    <a href="#" th:href="@{/configure/__${circleId}__/items/delete/__*{id}__}"><i
-                            class="material-icons">delete</i></a>
-                </td>
-            </tr>
-        </table>
+        <form th:action="|@{/configure}/${circleId}/mass-update-items|" method="post">
+            <table class="form full-table">
+                <tr>
+                    <th th:text="#{lang.configure.item-list}">Items</th>
+                    <th></th>
+                </tr>
+                <tr th:each="item : ${items}" th:object="${item}">
+                    <td>
+                        <input type="checkbox" th:id="|item*{id}|" th:name="|item*{id}|" />
+                        <label class="item-name" th:text="*{name}" th:for="|item*{id}|">Item name</label>
+                        <i class="item-status" th:text="#{lang.configure.item-hidden}" th:unless="*{visible}">(rejtett)</i>
+                        <i class="item-status" th:text="#{lang.configure.item-not-orderable}" th:unless="*{orderable}">(nem rendelhető)</i>
+                    </td>
+                    <td>
+                        <a href="#" th:href="@{/configure/__${circleId}__/items/edit/__*{id}__}"><i class="material-icons">edit</i></a>
+                        <a href="#" th:href="@{/configure/__${circleId}__/items/delete/__*{id}__}"><i
+                                class="material-icons">delete</i></a>
+                    </td>
+                </tr>
+            </table>
+
+            <div style="display: inline-block">
+                <label th:text="#{lang.configure.action}" for="action">Művelet</label>
+                <select name="action" id="action">
+                    <option th:text="#{lang.configure.action.visible}" value="visible">Legyen látható</option>
+                    <option th:text="#{lang.configure.action.not-visible}" value="not-visible">Legyen rejtett</option>
+                    <option th:text="#{lang.configure.action.orderable}" value="orderable">Legyen rendelhető</option>
+                    <option th:text="#{lang.configure.action.not-orderable}" value="not-orderable">Ne legyen rendelhető</option>
+                    <option th:text="#{lang.configure.action.set-price}" value="price">Legyan a termék ára</option>
+                    <option th:text="#{lang.configure.action.set-json}" value="json">Legyen a beállítás JSON</option>
+                </select>
+            </div>
+            <div style="display: inline-block">
+                <label th:text="#{lang.configure.action.parameter}" for="arg">Paraméter</label>
+                <input type="text" name="arg" id="arg" />
+            </div>
+            <div style="display: inline-block">
+                <input class="button form-button" type="submit" th:value="#{lang.configure.mass-update-items}" />
+            </div>
+        </form>
 
         <a class="button" href="#" th:href="@{/configure/__${circleId}__/items/new}"
            th:text="#{lang.configure.title-item}">New item</a>
