@@ -13,7 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 enum class Role {
     ADMIN,
     LEADER,
-    USER;
+    USER
 }
 
 @EnableWebSecurity

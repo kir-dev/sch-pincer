@@ -2755,6 +2755,73 @@ img.centered-mini {
     color: #9d9d9e;
 }
 
+.trashpanda-container {
+    z-index: 10000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+    vertical-align: center;
+    backdrop-filter: blur(3px);
+}
+
+.trashpanda-popup {
+    display: inline-block;
+    margin: 20vh auto;
+    background-color: #FFFFFF;
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-width: 800px;
+    border-bottom: 8px solid #464647;
+}
+
+.trashpanda-popup .trashpanda-logo img {
+    width: 100%;
+    max-width: 800px;
+}
+
+.trashpanda-popup .trashpanda-content {
+    padding: 20px 20px 20px 20px;
+}
+
+.trashpanda-popup .trashpanda-content h3 {
+    font-size: 36px;
+    color: #d60665;
+    padding: 0 20px;
+}
+
+.trashpanda-popup .trashpanda-content p {
+    font-size: 24px;
+    padding: 20px;
+}
+
+.trashpanda-popup .trashpanda-content button {
+    font-size: 20px;
+    font-weight: bold;
+    padding: 12px 24px;
+    margin: 20px 10px;
+    color: #d60665;
+    background-color: #f1f1f1;
+    transition: color ease 0.1s, background-color ease 0.1s;
+    cursor: pointer;
+}
+
+.trashpanda-popup .trashpanda-content button:hover {
+    background-color: #d60665;
+    color: #FFFFFF;
+}
+
+.trashpanda-popup .trashpanda-content button.secondary {
+    color: #464647;
+}
+
+.trashpanda-popup .trashpanda-content button.secondary:hover {
+    background-color: #464647;
+    color: #FFFFFF;
+}
 
 /** MEDIA QUERIES FOR RESPONSIVE UI **/
 
