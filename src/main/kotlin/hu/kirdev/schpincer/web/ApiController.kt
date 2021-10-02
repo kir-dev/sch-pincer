@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
 
@@ -230,4 +230,45 @@ open class ApiController {
                 "Timestamp: ${System.currentTimeMillis()}"
     }
 
+    private val trashpandaVoters: ConcurrentHashMap<String, Int> = ConcurrentHashMap<String, Int>()
+
+    @PostMapping("/easteregg/trashpanda/{feedback}")
+    @ResponseBody
+    fun trashpandaVote(
+            request: HttpServletRequest,
+            @PathVariable feedback: Int
+    ): String {
+        val ip = request.remoteAddr ?: ""
+        if (trashpandaVoters.containsKey(ip)) {
+            if (feedback == 1 || feedback == 2)
+                trashpandaVoters[ip] = feedback
+        } else {
+            trashpandaVoters[ip] = feedback
+        }
+        return "OK"
+    }
+
+    @GetMapping("/admin/trashpanda")
+    @ResponseBody
+    fun trashpandaShow(request: HttpServletRequest): String {
+        if (request.getUserIfPresent()?.sysadmin == true) {
+            return "Good: " + trashpandaVoters.values.count { it == 1 } +
+                    " Bad: " + trashpandaVoters.values.count { it == 2 } +
+                    " OK: " + trashpandaVoters.values.count { it == 3 } +
+                    " Side: " + trashpandaVoters.values.count { it == 4 } +
+                    " HACK: " + trashpandaVoters.values.count { it < 1 || it > 4 }
+        } else {
+            return "Nice try!"
+        }
+    }
+
+    @GetMapping("/admin/trashpanda/raw")
+    @ResponseBody
+    fun trashpandaShowRaw(request: HttpServletRequest): String {
+        if (request.getUserIfPresent()?.sysadmin == true) {
+            return trashpandaVoters.entries.toString()
+        } else {
+            return "Nice try!"
+        }
+    }
 }

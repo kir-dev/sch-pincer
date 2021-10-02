@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css"/>
 </head>
-<body>
+<body onload="showTrashPanda()">
 <div class="header" th:replace="MainLayout :: header">
 </div>
 
@@ -26,6 +26,24 @@
             </div>
         </div>
     </div>
+
+    <div class="trashpanda-container" onclick="closeTrashPanda(4)" id="trashpanda" style="display: none">
+        <div class="trashpanda-popup" onclick="event.stopPropagation()">
+            <div class="trashpanda-logo">
+                <img th:src="@{/image/trashpanda.png}" alt="trashpanda logó" />
+            </div>
+            <div class="trashpanda-content">
+                <h3>az sch-pincér mostantól trashpanda</h3>
+                <p>
+                    Mi? Ember, dehogy is! Csak vicceltünk.
+                </p>
+                <button onclick="closeTrashPanda(1)">Nem is rossz ötlet</button>
+                <button onclick="closeTrashPanda(2)">Bocs, pocsék ötlet</button>
+                <button class="secondary" onclick="closeTrashPanda(3)">OK</button>
+            </div>
+        </div>
+    </div>
+
     <div class="article-set">
 
         <div th:each="circle,cStat : ${circlesRandom}" class="article orange"
@@ -89,5 +107,32 @@
 </div>
 
 <div th:replace="MainLayout :: footer"></div>
+
+<script>
+    function showTrashPanda(key) {
+        if (localStorage.getItem("traspanda") == null
+            || (localStorage.getItem("traspanda") != 1
+            && localStorage.getItem("traspanda") != 2)
+        ) {
+            document.getElementById('trashpanda').style.display = 'block';
+        }
+    }
+    function closeTrashPanda(typeOfClose) {
+        localStorage.setItem("traspanda", typeOfClose);
+        document.getElementById('trashpanda').style.display = 'none';
+
+        return fetch("/api/easteregg/trashpanda/" + typeOfClose, {
+            method: 'POST',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {
+                'Accept': 'text/plain;charset=UTF-8',
+                'Content-type': 'application/json;charset=UTF-8'
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer'
+        }).then(response => response.text());
+    }
+</script>
 </body>
 </html>
