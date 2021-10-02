@@ -1620,6 +1620,18 @@ form input[type="submit"]:hover {
     color: #F4CF3B;
 }
 
+.form i.item-status {
+    color: #9d9d9e;
+    top: 0;
+}
+
+form label.item-name {
+    margin: 0;
+    font-weight: 300;
+    display: inline-block;
+    font-size: 16px;
+}
+
 .form td:first-of-type {
     text-align: left;
     width: 50%;

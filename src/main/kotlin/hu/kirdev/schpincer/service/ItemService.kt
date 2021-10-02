@@ -84,4 +84,9 @@ open class ItemService {
         return c.timeInMillis
     }
 
+    @Transactional(readOnly = false)
+    open fun saveAll(itemEntities: List<ItemEntity>) {
+        repo.saveAll(itemEntities)
+    }
+
 }

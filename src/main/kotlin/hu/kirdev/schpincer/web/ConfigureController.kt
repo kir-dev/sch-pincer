@@ -245,6 +245,56 @@ open class ConfigureController {
         return "redirect:/configure/$circleId"
     }
 
+    @PostMapping("/configure/{circleId}/mass-update-items")
+    fun massUpdateItems(
+            @RequestParam allRequestParams: Map<String,String>,
+            @PathVariable circleId: Long,
+            request: HttpServletRequest
+    ): String {
+        if (cannotEditCircleNoPR(circleId, request))
+            return "redirect:/configure/$circleId?error=invalidPermissions"
+
+        if (!allRequestParams.containsKey("action"))
+            return "redirect:/configure/$circleId?error=invalidRequest"
+
+        val itemEntities = items.findAllByCircle(circleId)
+                .filter { allRequestParams.containsKey("item${it.id}") }
+                .filter { allRequestParams["item${it.id}"] != "off" }
+
+        when (allRequestParams["action"]) {
+            "visible" -> {
+                itemEntities.forEach {
+                    it.visible = true
+                    it.visibleInAll = true
+                }
+            }
+            "not-visible" -> {
+                itemEntities.forEach {
+                    it.visible = false
+                    it.visibleInAll = false
+                }
+            }
+            "orderable" -> {
+                itemEntities.forEach { it.orderable = true }
+            }
+            "not-orderable" -> {
+                itemEntities.forEach { it.orderable = false }
+            }
+            "price" -> {
+                val price = allRequestParams["arg"]?.toIntOrNull() ?: return "redirect:/configure/$circleId?error=invalidPrice"
+                itemEntities.forEach { it.price = price }
+            }
+            "json" -> {
+                val json = allRequestParams["arg"] ?: return "redirect:/configure/$circleId?error=invalidJson"
+                itemEntities.forEach { it.detailsConfigJson = json }
+            }
+            else -> return "redirect:/configure/$circleId?error=invalidAction"
+        }
+        items.saveAll(itemEntities)
+
+        return "redirect:/configure/$circleId"
+    }
+
     @GetMapping("/configure/{circleId}/items/new")
     fun newItem(@PathVariable circleId: Long, model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
