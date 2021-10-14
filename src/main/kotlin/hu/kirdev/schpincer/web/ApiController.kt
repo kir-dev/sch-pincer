@@ -232,8 +232,8 @@ open class ApiController {
 
     private val trashpandaVoters: ConcurrentHashMap<String, Int> = ConcurrentHashMap<String, Int>()
 
-    @PostMapping("/easteregg/trashpanda/{feedback}")
-    @ResponseBody
+//    @PostMapping("/easteregg/trashpanda/{feedback}")
+//    @ResponseBody
     fun trashpandaVote(
             request: HttpServletRequest,
             @PathVariable feedback: Int
@@ -248,8 +248,8 @@ open class ApiController {
         return "OK"
     }
 
-    @GetMapping("/admin/trashpanda")
-    @ResponseBody
+//    @GetMapping("/admin/trashpanda")
+//    @ResponseBody
     fun trashpandaShow(request: HttpServletRequest): String {
         if (request.getUserIfPresent()?.sysadmin == true) {
             return "Good: " + trashpandaVoters.values.count { it == 1 } +
@@ -262,8 +262,8 @@ open class ApiController {
         }
     }
 
-    @GetMapping("/admin/trashpanda/raw")
-    @ResponseBody
+//    @GetMapping("/admin/trashpanda/raw")
+//    @ResponseBody
     fun trashpandaShowRaw(request: HttpServletRequest): String {
         if (request.getUserIfPresent()?.sysadmin == true) {
             return trashpandaVoters.entries.toString()
