@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    <div class="trashpanda-container" onclick="closeTrashPanda(4)" id="trashpanda" style="display: none">
+    <div th:remove="all" class="trashpanda-container" onclick="closeTrashPanda(4)" id="trashpanda" style="display: none">
         <div class="trashpanda-popup" onclick="event.stopPropagation()">
             <div class="trashpanda-logo">
                 <img th:src="@{/image/trashpanda.png}" alt="trashpanda logó" />
@@ -81,7 +81,7 @@
             </div>
         </div>
 
-        <div th:replace="news/news_2021_07_24 :: article"></div>
+        <div th:replace="news/news_2021_10_14 :: article"></div>
 
     </div>
 
@@ -108,7 +108,7 @@
 
 <div th:replace="MainLayout :: footer"></div>
 
-<script>
+<script th:remove="all">
     function showTrashPanda(key) {
         if (localStorage.getItem("traspanda") == null
             || (localStorage.getItem("traspanda") != 1
