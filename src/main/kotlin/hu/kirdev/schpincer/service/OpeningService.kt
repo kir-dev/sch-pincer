@@ -72,4 +72,10 @@ open class OpeningService {
     open fun saveTimeWindow(tw: TimeWindowEntity) {
         twRepo.save(tw)
     }
+
+    @Transactional(readOnly = true)
+    open fun isCircleMatches(openingId: Long, circleId: Long): Boolean {
+        return repo.findById(openingId).map { (it.circle?.id ?: 0) == circleId }.orElse(false)
+    }
+
 }

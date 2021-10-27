@@ -73,22 +73,22 @@
                 </tr>
             </table>
 
-            <div style="display: inline-block">
+            <div style="display: inline-block; margin-top: 20px">
                 <label th:text="#{lang.configure.action}" for="action">Művelet</label>
                 <select name="action" id="action">
                     <option th:text="#{lang.configure.action.visible}" value="visible">Legyen látható</option>
                     <option th:text="#{lang.configure.action.not-visible}" value="not-visible">Legyen rejtett</option>
                     <option th:text="#{lang.configure.action.orderable}" value="orderable">Legyen rendelhető</option>
                     <option th:text="#{lang.configure.action.not-orderable}" value="not-orderable">Ne legyen rendelhető</option>
-                    <option th:text="#{lang.configure.action.set-price}" value="price">Legyan a termék ára</option>
+                    <option th:text="#{lang.configure.action.set-price}" value="price">Legyen a termék ára</option>
                     <option th:text="#{lang.configure.action.set-json}" value="json">Legyen a beállítás JSON</option>
                 </select>
             </div>
-            <div style="display: inline-block">
+            <div style="display: inline-block; margin-top: 20px">
                 <label th:text="#{lang.configure.action.parameter}" for="arg">Paraméter</label>
                 <input type="text" name="arg" id="arg" />
             </div>
-            <div style="display: inline-block">
+            <div style="display: inline-block; margin-top: 20px">
                 <input class="button form-button" type="submit" th:value="#{lang.configure.mass-update-items}" />
             </div>
         </form>

@@ -478,10 +478,39 @@ open class ConfigureController {
                              @PathVariable openingId: Long,
                              request: HttpServletRequest
     ): String {
-        if (cannotEditCircle(circleId, request)) return "redirect:/configure/$circleId?error"
+        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+            return "redirect:/configure/$circleId?error"
 
         orders.closeAllOrdersInOpening(openingId)
         return "redirect:/configure/$circleId"
+    }
+
+    @PostMapping("/configure/{circleId}/action/{openingId}/cancel-all")
+    fun applyCancelAllAction(@PathVariable circleId: Long,
+                            @PathVariable openingId: Long,
+                            request: HttpServletRequest
+    ): String {
+        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+            return "redirect:/configure/$circleId?error"
+
+        orders.cancelAllOrdersInOpening(openingId)
+        return "redirect:/configure/$circleId"
+    }
+
+    @ResponseBody
+    @PostMapping("/configure/{circleId}/action/{openingId}/emails")
+    fun applyCollectEmails(@PathVariable circleId: Long,
+                             @PathVariable openingId: Long,
+                             request: HttpServletRequest
+    ): String {
+        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+            return "redirect:/configure/$circleId?error"
+
+        return orders.findAllByOpening(openingId)
+                .map { users.getById(it.userId) }
+                .distinctBy { it.uid }
+                .map { "\"${it.name}\" &lt;${it.email ?: ""}&gt;" }
+                .joinToString(", <br>")
     }
 
     @GetMapping("/configure/{circleId}/openings/delete/{openingId}")

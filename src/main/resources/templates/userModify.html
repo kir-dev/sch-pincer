@@ -33,6 +33,10 @@
                     <td><input type="text" name="name" th:value="${name}" disabled/></td>
                 </tr>
                 <tr>
+                    <td th:text="#{lang.admin.roles.email}">Email</td>
+                    <td><input type="text" name="email" th:value="${email}" disabled/></td>
+                </tr>
+                <tr>
                     <td th:text="#{lang.admin.roles.sysadmin}">SysAdmin</td>
                     <td><input type="checkbox" name="sysadmin" th:checked="${sysadmin}"/></td>
                 </tr>
