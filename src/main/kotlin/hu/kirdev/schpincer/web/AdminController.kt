@@ -160,6 +160,7 @@ open class AdminController {
         val user = users.getByUidHash(uidHash)
         model.addAttribute("name", user!!.name)
         model.addAttribute("sysadmin", user.sysadmin)
+        model.addAttribute("email", user.email ?: "-")
         model.addAttribute("roles", user.permissions.joinToString(", "))
         model.addAttribute("priority", user.orderingPriority)
         return "userModify"

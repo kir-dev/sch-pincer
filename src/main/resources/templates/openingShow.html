@@ -161,8 +161,14 @@
 
     <div class="highlighted">
         <h3 th:text="#{lang.actions.title}">Actions</h3>
-        <form th:action="|@{/configure}/${circleId}/action/${opening.id}/close-all|" method="post">
+        <form th:action="|@{/configure}/${circleId}/action/${opening.id}/close-all|" method="post" style="display: inline-block">
             <input class="button" type="submit" value="Close all orders" th:value="#{lang.actions.close-all}">
+        </form>
+        <form th:action="|@{/configure}/${circleId}/action/${opening.id}/cancel-all|" method="post" style="display: inline-block">
+            <input class="button" type="submit" value="Cancel all orders" th:value="#{lang.actions.cancel-all}">
+        </form>
+        <form th:action="|@{/configure}/${circleId}/action/${opening.id}/emails|" method="post" style="display: inline-block">
+            <input class="button" type="submit" value="Get all emails" th:value="#{lang.actions.emails-of-the-opening}">
         </form>
     </div>
 
