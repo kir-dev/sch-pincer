@@ -47,7 +47,7 @@
                         </tr>
                         <tr>
                             <td th:text="#{lang.profile.next-opening}">Next opening</td>
-                            <td th:text="${#dates.format(nextOpening, '__#{lang.date-format}__')} ?: #{lang.profile.date-not-set}">
+                            <td th:text="${timeService.format(nextOpening, '__#{lang.date-format}__')} ?: #{lang.profile.date-not-set}">
                                 2018-05-12
                             </td>
                         </tr>

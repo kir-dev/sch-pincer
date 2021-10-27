@@ -55,6 +55,9 @@ open class ConfigureController {
     @Autowired
     private lateinit var reviews: ReviewService
 
+    @Autowired
+    private lateinit var timeService: TimeService
+
     @Value("\${schpincer.external:/etc/schpincer/external}")
     private lateinit var uploadPath: String
 
@@ -80,6 +83,7 @@ open class ConfigureController {
         model.addAttribute("roles", users.findAllCircleRole(circleId).filter { it.permission !== CircleMemberRole.NONE })
         model.addAttribute("circleId", circleId)
         model.addAttribute("items", items.findAllByCircle(circleId))
+        model.addAttribute("timeService", timeService)
         return "configure"
     }
 
@@ -516,8 +520,8 @@ open class ConfigureController {
     @GetMapping("/configure/{circleId}/openings/delete/{openingId}")
     fun deleteOpening(@PathVariable circleId: Long,
                       @PathVariable openingId: Long,
-                      model: Model)
-            : String {
+                      model: Model
+    ): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("topic", "opening")
         model.addAttribute("arg", formatDate(openings.getOne(openingId).dateStart))
@@ -556,6 +560,7 @@ open class ConfigureController {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("orders", orders.findAllByOpening(openingId))
         model.addAttribute("opening", opening)
+        model.addAttribute("timeService", timeService)
         return "openingShow"
     }
 
@@ -584,6 +589,7 @@ open class ConfigureController {
         model.addAttribute("avgPrice", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumBy { it.ratePrice } / reviewList.size.toFloat()) else null)
         model.addAttribute("avgSpeed", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumBy { it.rateSpeed } / reviewList.size.toFloat()) else null)
         model.addAttribute("avgOverAll", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumBy { it.rateOverAll } / reviewList.size.toFloat()) else null)
+        model.addAttribute("timeService", timeService)
         return "circleReviews"
     }
 

@@ -74,7 +74,7 @@
                 <b th:if="${order.count <= 1}" th:text="*{name}">Ördög pizza</b>
                 <b th:unless="${order.count <= 1}" th:text="|*{name} x *{count}|">Ördög pizza</b>
                 <br/>
-                <ins th:text="|${#dates.format(order.date, '__#{lang.date-no-year-format}__')} @ *{room}|">Hétfő 22:00 -
+                <ins th:text="|${timeService.format(order.date, '__#{lang.date-no-year-format}__')} @ *{room}|">Hétfő 22:00 -
                     22:30 @ 1608
                 </ins>
                 <div class="placeholder"></div>
@@ -93,8 +93,8 @@
                 <td class="border-colored">
                     <a href="#" th:text="*{circle.displayName}" th:href="@{/provider/__*{circle.alias}__/}">Vödör</a>
                 </td>
-                <td th:text="#{lang.weekday-__${#dates.dayOfWeekNameShort(opening.dateStart)}__}">Hetfő</td>
-                <td class="date" th:text="${#dates.format(opening.dateStart, '__#{lang.date-opening-format}__')}">18:00
+                <td th:text="#{lang.weekday-__${timeService.format(opening.dateStart, 'u')}__}">Hetfő</td>
+                <td class="date" th:text="${timeService.format(opening.dateStart, '__#{lang.date-opening-format}__')}">18:00
                     (18-04-09)
                 </td>
                 <td class="feeling" th:text="*{feeling}">Lorem ispsum dolor sit amet.</td>

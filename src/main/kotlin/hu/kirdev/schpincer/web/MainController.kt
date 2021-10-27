@@ -6,6 +6,7 @@ import hu.kirdev.schpincer.model.OrderStatus
 import hu.kirdev.schpincer.service.CircleService
 import hu.kirdev.schpincer.service.OpeningService
 import hu.kirdev.schpincer.service.OrderService
+import hu.kirdev.schpincer.service.TimeService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -27,6 +28,9 @@ open class MainController {
     @Autowired
     private lateinit var orders: OrderService
 
+    @Autowired
+    private lateinit var timeService: TimeService
+
     @GetMapping("/")
     fun root(request: HttpServletRequest, model: Model): String {
         val circlesList: List<CircleEntity> = circles.findAllForMenu()
@@ -47,6 +51,7 @@ open class MainController {
                     .filter { it.date >= (System.currentTimeMillis() - (1000 * 60 * 60 * 24 * 7 * 3)) }
                     .take(3))
         }
+        model.addAttribute("timeService", timeService)
         return "index"
     }
 
@@ -63,6 +68,7 @@ open class MainController {
     fun circle(model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circlesWithOpening", circles.findAllForInfo())
+        model.addAttribute("timeService", timeService)
         return "circle"
     }
 
@@ -79,6 +85,7 @@ open class MainController {
             model.addAttribute("selectedCircle", circleEntity)
             model.addAttribute("nextOpening", openings.findNextStartDateOf(circleEntity.id))
         }
+        model.addAttribute("timeService", timeService)
         return "circleProfile"
     }
 
@@ -91,6 +98,7 @@ open class MainController {
     fun profile(request: HttpServletRequest, model: Model): String {
         model.addAttribute("orders", this.orders.findAll(request.getUserId()))
         model.addAttribute("circles", circles.findAllForMenu())
+        model.addAttribute("timeService", timeService)
         return "profile"
     }
 

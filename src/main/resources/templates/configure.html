@@ -36,7 +36,7 @@
                 <th></th>
             </tr>
             <tr th:each="opening : ${circle.openings}" th:object="${opening}">
-                <td th:text="${#dates.format(opening.dateStart, #messages.msg('lang.date-format'))}">2018.05.01. 00:00
+                <td th:text="${timeService.format(opening.dateStart, #messages.msg('lang.date-format'))}">2018.05.01. 00:00
                 </td>
                 <td>
                     <a href="#" th:href="@{/configure/__${circleId}__/openings/show/__*{id}__}"><i

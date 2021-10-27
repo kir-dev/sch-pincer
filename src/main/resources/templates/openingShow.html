@@ -39,25 +39,25 @@
                 <tr>
                     <td th:text="#{lang.configure.opening.date-start}">Date start</td>
                     <td>
-                        <ins th:text="${#dates.format(opening.dateStart, '__#{lang.date-format}__')}"></ins>
+                        <ins th:text="${timeService.format(opening.dateStart, '__#{lang.date-format}__')}"></ins>
                     </td>
                 </tr>
                 <tr>
                     <td th:text="#{lang.configure.opening.date-end}">Date end</td>
                     <td>
-                        <ins th:text="${#dates.format(opening.dateEnd, '__#{lang.date-format}__')}"></ins>
+                        <ins th:text="${timeService.format(opening.dateEnd, '__#{lang.date-format}__')}"></ins>
                     </td>
                 </tr>
                 <tr>
                     <td th:text="#{lang.configure.opening.order-start}">Order start</td>
                     <td>
-                        <input type="text" class="datetime-picker" name="orderStart" id="orderStart" th:value="${#dates.format(opening.orderStart, '__#{lang.date-format2}__')}" />
+                        <input type="text" class="datetime-picker" name="orderStart" id="orderStart" th:value="${timeService.format(opening.orderStart, '__#{lang.date-format2}__')}" />
                     </td>
                 </tr>
                 <tr>
                     <td th:text="#{lang.configure.opening.order-end}">Order end</td>
                     <td>
-                        <input type="text" class="datetime-picker" name="orderEnd" id="orderEnd" th:value="${#dates.format(opening.orderEnd, '__#{lang.date-format2}__')}" />
+                        <input type="text" class="datetime-picker" name="orderEnd" id="orderEnd" th:value="${timeService.format(opening.orderEnd, '__#{lang.date-format2}__')}" />
                     </td>
                 </tr>
                 <tr>
@@ -355,7 +355,7 @@
             <tr th:each="order : ${orders}" th:object="${order}">
                 <td th:text="*{userName}">Test name</td>
                 <td th:text="*{name}">Ördög pizza</td>
-                <td th:text="${#dates.format(order.date, '__#{lang.date-short-format}__')} + ' ' + *{intervalMessage}">
+                <td th:text="${timeService.format(order.date, '__#{lang.date-short-format}__')} + ' ' + *{intervalMessage}">
                     10:00 - 10:30
                 </td>
                 <td th:text="*{room}">SCH 1037</td>
