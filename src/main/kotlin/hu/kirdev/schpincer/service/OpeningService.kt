@@ -15,7 +15,7 @@ import java.util.*
 open class OpeningService {
 
     companion object {
-        val DATE_FORMATTER_HH_MM = SimpleDateFormat("HH:mm")
+        val DATE_FORMATTER_HH_MM by lazy { SimpleDateFormat("HH:mm") }
         private const val WEEK = 1000L * 60L * 60L * 24L * 7L
     }
 

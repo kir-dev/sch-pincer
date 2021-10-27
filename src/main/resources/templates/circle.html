@@ -49,7 +49,7 @@
                 <span class="colored-white">
 						<b>Következő nyitás:</b>
 						<em th:if="${circle.nextOpening != null}" class="border-colored"
-                            th:text="${#dates.format(circle.nextOpening.dateStart, #messages.msg('lang.date-format'))}">2018.04.12. 18:00</em>
+                            th:text="${timeService.format(circle.nextOpening.dateStart, #messages.msg('lang.date-format'))}">2018.04.12. 18:00</em>
 						<em th:unless="${circle.nextOpening != null}" class="border-colored"
                             th:text="#{lang.profile.date-not-set}">Nincs beütemezve</em>
 					</span>

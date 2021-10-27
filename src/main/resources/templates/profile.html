@@ -97,7 +97,7 @@
                         <i class="material-icons">delete</i>
                     </a>
                 </td>
-                <td th:text="${#dates.format(order.date, '__#{lang.date-short-format}__')} + ' ' + *{intervalMessage}">
+                <td th:text="${timeService.format(order.date, '__#{lang.date-short-format}__')} + ' ' + *{intervalMessage}">
                     10:00 - 10:30
                 </td>
                 <td th:text="*{room}">SCH 1037</td>
@@ -142,7 +142,7 @@
 
                 <tr>
                     <td th:text="#{lang.profile.orders-time}">Time</td>
-                    <td th:text="${#dates.format(order.date, '__#{lang.date-short-format}__')} + ' ' + *{intervalMessage}">
+                    <td th:text="${timeService.format(order.date, '__#{lang.date-short-format}__')} + ' ' + *{intervalMessage}">
                         10:00 - 10:30
                     </td>
                 </tr>

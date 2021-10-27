@@ -91,7 +91,7 @@
                         <i class="material-icons">star_rate</i>
                     </th:block>
                 </td>
-                <td th:text="${#dates.format(review.date, '__#{lang.date-no-year-format}__')}">MM.dd. HH:mm</td>
+                <td th:text="${timeService.format(review.date, '__#{lang.date-no-year-format}__')}">MM.dd. HH:mm</td>
             </tr>
         </table>
 
