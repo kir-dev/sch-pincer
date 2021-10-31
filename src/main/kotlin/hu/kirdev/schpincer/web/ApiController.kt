@@ -9,6 +9,7 @@ import hu.kirdev.schpincer.service.*
 import io.swagger.annotations.ApiOperation
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -37,6 +38,15 @@ open class ApiController {
 
     @Autowired
     private lateinit var orders: OrderService
+
+    @Autowired
+    private lateinit var timeService: TimeService
+
+    @Value("\${schpincer.indualsch-api-token:}")
+    private lateinit var indulaschApiToken: String
+
+    @Value("\${schpincer.api.base-url}")
+    private lateinit var baseUrl: String
 
     @ApiOperation("Item info")
     @GetMapping("/item/{id}")
@@ -238,6 +248,28 @@ open class ApiController {
     fun time(): String {
         return "Time: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z").format(System.currentTimeMillis())}\n" +
                 "Timestamp: ${System.currentTimeMillis()}"
+    }
+
+    data class OpeningDetail(var name: String, var icon: String, var available: Int, var outOf: Int, var comment: String)
+
+    @GetMapping("/openings-for-indulasch")
+    @ResponseBody
+    fun openingsApi(@RequestParam(required = false) token: String?): List<OpeningDetail> {
+        if (token.isNullOrBlank() || !token.equals(indulaschApiToken))
+            return listOf()
+
+        return openings.findNextWeek()
+                .filter { it.circle != null }
+                .map { OpeningDetail(
+                        name = it.circle?.displayName ?: "n/a",
+                        icon =  baseUrl + (it.circle?.logoUrl ?: ""),
+                        available = Math.max(0, Math.min(
+                                        it.timeWindows.sumOf { tw -> tw.normalItemCount },
+                                        it.maxOrder - it.timeWindows.sumOf { tw -> it.maxOrderPerInterval - tw.normalItemCount
+                                })),
+                        outOf = it.maxOrder,
+                        comment = "Rendelhető ${timeService.format(it.orderEnd, "MM.dd. HH:mm")}-ig az sch-pincéren"
+                ) }
     }
 
     private val trashpandaVoters: ConcurrentHashMap<String, Int> = ConcurrentHashMap<String, Int>()

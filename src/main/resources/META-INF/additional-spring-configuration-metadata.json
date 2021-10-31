@@ -1,11 +1,6 @@
 {
   "properties": [
     {
-      "name": "webschop.external",
-      "type": "java.lang.String",
-      "description": "External files path, /cdn/** "
-    },
-    {
       "name": "schpincer.external",
       "type": "java.lang.String",
       "description": "External files path, /cdn/** "
