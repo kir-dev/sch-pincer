@@ -35,7 +35,6 @@ authsch.client-key=80 chars length
 # never / always / on-trace-param
 #server.error.include-stacktrace=never
 
-webschop.external=./test/external/
 schpincer.external=./test/external/
 spring.jpa.properties.hibernate.search.default.directory_provider=filesystem
 spring.jpa.properties.hibernate.search.default.indexBase=/tmp/schpincer/search/
