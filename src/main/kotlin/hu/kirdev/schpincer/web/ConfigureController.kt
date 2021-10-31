@@ -535,10 +535,12 @@ open class ConfigureController {
                              @PathVariable openingId: Long?,
                              request: HttpServletRequest
     ): String {
-        if (cannotEditCircle(circleId, request))
+        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId ?: 0, circleId))
             return "redirect:/configure/$circleId?error=invalidPermissions"
         val ie = openings.getOne(openingId!!)
-        if (ie.circle!!.id == circleId) openings.delete(ie)
+        orders.cancelAllOrdersInOpening(openingId)
+        if (ie.circle!!.id == circleId)
+            openings.delete(ie)
         return "redirect:/configure/$circleId"
     }
 
