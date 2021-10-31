@@ -72,4 +72,7 @@ interface ReviewRepository : JpaRepository<ReviewEntity, Long> {
 interface TimeWindowRepository : JpaRepository<TimeWindowEntity, Long>
 
 @Repository
-interface UserRepository : JpaRepository<UserEntity, String>
+interface UserRepository : JpaRepository<UserEntity, String> {
+    fun findTop10AllByNameContainsIgnoreCase(name: String): List<UserEntity>
+    fun findTop10AllByRoomContainsIgnoreCase(room: String): List<UserEntity>
+}

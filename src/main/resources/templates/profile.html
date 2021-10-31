@@ -21,7 +21,7 @@
 <div class="left-menu" th:replace="MainLayout :: left-menu">
 </div>
 
-<div class="page content">
+<div class="page content profile-page">
     <div class="highlighted">
         <div class="decoration profile">
             <i class="material-icons main">person</i>
@@ -84,12 +84,17 @@
                 <td>
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'SHIPPED')}"
                        th:title="#{lang.profile.status-shipped}">done</i>
+                    <i class="material-icons" th:if="${#strings.equals(order.status, 'HANDED_OVER')}"
+                       th:title="#{lang.profile.status-handed-over}">local_shipping</i>
+                    <i class="material-icons" th:if="${#strings.equals(order.status, 'COMPLETED')}"
+                       th:title="#{lang.profile.status-completed}">downloading</i>
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'INTERPRETED')}"
-                       th:title="#{lang.profile.status-interpreted}">local_shipping</i>
+                       th:title="#{lang.profile.status-interpreted}">engineering</i>
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'ACCEPTED')}"
                        th:title="#{lang.profile.status-accepted}">shopping_cart</i>
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'CANCELLED')}"
                        th:title="#{lang.profile.status-cancelled}">do_not_disturb</i>
+
 
                     <a href="#"
                        th:if="${order.cancelUntil >= T(java.lang.System).currentTimeMillis() && #strings.equals(order.status, 'ACCEPTED')}"

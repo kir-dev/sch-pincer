@@ -2,6 +2,7 @@ package hu.kirdev.schpincer.service
 
 import hu.kirdev.schpincer.dao.ItemRepository
 import hu.kirdev.schpincer.dao.TimeWindowRepository
+import hu.kirdev.schpincer.dto.ManualUserDetails
 import hu.kirdev.schpincer.dto.OrderDetailsDto
 import hu.kirdev.schpincer.model.*
 import hu.kirdev.schpincer.web.component.calculateExtra
@@ -32,20 +33,36 @@ class MakeOrderProcedure (
      * This function is not reusable.
      * Create new MakeOrderProcedure for every time you need it.
      */
-    fun makeOrder() {
-        validateUserHasRoom()
-        createOrderEntity()
-        loadTargetItem()
+    fun makeOrder(manualUser: ManualUserDetails? = null) {
+        if (manualUser == null) {
+            validateUserHasRoom()
+            createOrderEntity()
+            loadTargetItem()
+        } else {
+            order = OrderEntity(
+                    userId = manualUser.id,
+                    userName = manualUser.name,
+                    comment = "[${manualUser.card}] @ ${user.name} | $comment",
+                    detailsJson = detailsJson,
+                    room = manualUser.room)
+            item = itemsRepo.getOne(id)
+        }
 
-        details = calculateExtra(detailsJson, order, item, user)
+        details = calculateExtra(detailsJson, order, item, manualUser?.card ?: user.cardType)
         updateBasicDetails()
         current = openings.findNextOf(item.circle?.id!!) ?: throw FailedOrderException(RESPONSE_INTERNAL_ERROR)
-        validateOrderable(System.currentTimeMillis())
+        if (manualUser == null)
+            validateOrderable(System.currentTimeMillis())
 
         clampItemCount()
-        validateOrderCount()
-        timeWindow = timeWindowRepo.getOne(time)
-        validateTimeWindow()
+
+        if (manualUser == null) {
+            validateOrderCount()
+            timeWindow = timeWindowRepo.getOne(time)
+            validateTimeWindow()
+        } else {
+            timeWindow = timeWindowRepo.getOne(time)
+        }
 
         updateCategoryLimitations()
         updateRemainingItemCount()

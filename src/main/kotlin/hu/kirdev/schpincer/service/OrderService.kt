@@ -4,8 +4,11 @@ import hu.kirdev.schpincer.dao.ItemRepository
 import hu.kirdev.schpincer.dao.OpeningRepository
 import hu.kirdev.schpincer.dao.OrderRepository
 import hu.kirdev.schpincer.dao.TimeWindowRepository
+import hu.kirdev.schpincer.dto.ManualUserDetails
 import hu.kirdev.schpincer.model.*
+import hu.kirdev.schpincer.web.cannotEditCircle
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -29,6 +32,7 @@ const val RESPONSE_MAX_REACHED = "MAX_REACHED"
 const val RESPONSE_MAX_REACHED_EXTRA = "MAX_REACHED_EXTRA"
 const val RESPONSE_CATEGORY_FULL = "CATEGORY_FULL"
 const val RESPONSE_ACK = "ACK"
+const val RESPONSE_MANUAL_FAIL = "MANUAL_FAIL"
 const val RESPONSE_BAD_REQUEST = "BAD_REQUEST"
 const val RESPONSE_INVALID_STATUS = "INVALID_STATUS"
 const val RESPONSE_ORDER_PERIOD_ENDED = "ORDER_PERIOD_ENDED"
@@ -109,6 +113,27 @@ open class OrderService {
     }
 
     @Transactional(readOnly = false)
+    open fun makeManualOrder(user: UserEntity, id: Long, itemCount: Int, time: Long,
+                             comment: String, detailsJson: String, manualUser: ManualUserDetails
+    ): ResponseEntity<String> {
+        val circleId = itemsRepo.findByIdOrNull(id)?.circle?.id
+        if (!((user.permissions.contains("CIRCLE_$circleId")) || user.sysadmin)) {
+            return responseOf(RESPONSE_MANUAL_FAIL)
+        }
+
+        val procedure = MakeOrderProcedure(user, id, itemCount, time, comment, detailsJson,
+                itemsRepo = itemsRepo,
+                openings = openings,
+                timeWindowRepo = timeWindowRepo)
+        procedure.makeOrder(manualUser)
+
+        timeWindowRepo.save(procedure.timeWindow)
+        openings.save(procedure.current)
+        this.save(procedure.order)
+        return responseOf(RESPONSE_ACK)
+    }
+
+    @Transactional(readOnly = false)
     open fun cancelOrder(user: UserEntity, id: Long): ResponseEntity<String> {
         val procedure = CancelOrderProcedure(user, id,
                 orderRepository = repo,
@@ -122,6 +147,7 @@ open class OrderService {
         return responseOf(RESPONSE_ACK)
     }
 
+    @Transactional(readOnly = true)
     open fun findToExport(openingId: Long, orderBy: String): List<OrderEntity> {
         return when (orderBy) {
             OrderStrategy.ORDER_ABSOLUTE.representation -> appendArtificialId(repo.findAllByOpeningIdAndStatusNotOrderByPriorityDescDateAsc(openingId, OrderStatus.CANCELLED))
@@ -157,7 +183,10 @@ open class OrderService {
     @Transactional(readOnly = false)
     open fun closeAllOrdersInOpening(openingId: Long) {
         val orderEntities = repo.findAllByOpeningId(openingId)
-                .filter { it.status == OrderStatus.ACCEPTED || it.status == OrderStatus.INTERPRETED }
+                .filter { it.status == OrderStatus.ACCEPTED
+                        || it.status == OrderStatus.INTERPRETED
+                        || it.status == OrderStatus.COMPLETED
+                        || it.status == OrderStatus.HANDED_OVER }
         orderEntities.forEach { it.status = OrderStatus.SHIPPED }
         repo.saveAll(orderEntities)
     }
@@ -165,9 +194,25 @@ open class OrderService {
     @Transactional(readOnly = false)
     open fun cancelAllOrdersInOpening(openingId: Long) {
         val orderEntities = repo.findAllByOpeningId(openingId)
-                .filter { it.status == OrderStatus.ACCEPTED || it.status == OrderStatus.INTERPRETED }
+                .filter { it.status == OrderStatus.ACCEPTED }
         orderEntities.forEach { it.status = OrderStatus.CANCELLED }
         repo.saveAll(orderEntities)
+    }
+
+    @Transactional(readOnly = false)
+    open fun updateStatus(orderId: Long, status: String) {
+        repo.findById(orderId).orElse(null)?.let {
+            it.status = OrderStatus.get(status)
+            repo.save(it)
+        }
+    }
+
+    @Transactional(readOnly = false)
+    open fun updateChefComment(orderId: Long, comment: String) {
+        repo.findById(orderId).orElse(null)?.let {
+            it.chefComment = comment
+            repo.save(it)
+        }
     }
 }
 

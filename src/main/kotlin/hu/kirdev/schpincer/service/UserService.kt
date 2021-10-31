@@ -87,4 +87,14 @@ open class UserService {
         return user
     }
 
+    @Transactional(readOnly = true)
+    open fun findByUsernameContains(name: String): List<UserEntity> {
+        return repo.findTop10AllByNameContainsIgnoreCase(name)
+    }
+
+    @Transactional(readOnly = true)
+    open fun findByRoomContains(room: String): List<UserEntity> {
+        return repo.findTop10AllByRoomContainsIgnoreCase(room)
+    }
+
 }

@@ -39,14 +39,15 @@
                 'noInternetConnection': /*[[ #{lang.msgbox.no-internet-connection} ]]*/ 'No internet connection',
                 'currency': /*[[ #{lang.currency} ]]*/ 'Ft',
                 'outOfStock': /*[[ #{lang.items.out-of-stock} ]]*/ 'Out of stock',
-                'priceDiscounted': /*[[ #{lang.items.price-discounted} ]]*/ 'Discounted price'
+                'priceDiscounted': /*[[ #{lang.items.price-discounted} ]]*/ 'Discounted price',
+                'manualOrderRoomMessage': /*[[ #{lang.items.manual-order-room-message} ]]*/ 'The item will be delivered to <b>$1</b> at room <b>$2</b>.'
             };
             const URL_BASE = /*[[ @{/} ]]*/ '/';
             document.addEventListener('DOMContentLoaded', function () {
                 searchFor(/*[[ ${keyword} ]]*/ '');
                 if ((/*[[ ${keyword} ]]*/ '').length === 0) appendNext();
             });
-            const card = /*[[ ${card} ]]*/ 'DO';
+            let card = /*[[ ${card} ]]*/ 'DO';
         </script>
         <script th:unless='${searchMode}' th:inline='javascript'>
             const LANG = {
@@ -86,13 +87,14 @@
                 'noInternetConnection': /*[[ #{lang.msgbox.no-internet-connection} ]]*/ 'No internet connection',
                 'currency': /*[[ #{lang.currency} ]]*/ 'Ft',
                 'outOfStock': /*[[ #{lang.items.out-of-stock} ]]*/ 'Out of stock',
-                'priceDiscounted': /*[[ #{lang.items.price-discounted} ]]*/ 'Discounted price'
+                'priceDiscounted': /*[[ #{lang.items.price-discounted} ]]*/ 'Discounted price',
+                'manualOrderRoomMessage': /*[[ #{lang.items.manual-order-room-message} ]]*/ 'The item will be delivered to <b>$1</b> at room <b>$2</b>.'
             };
             const URL_BASE = /*[[ @{/} ]]*/ '/';
             document.addEventListener('DOMContentLoaded', function () {
                 appendNext();
             });
-            const card = /*[[ ${card} ]]*/ 'DO';
+            let card = /*[[ ${card} ]]*/ 'DO';
         </script>
     </object>
 
@@ -135,14 +137,15 @@
                 'noInternetConnection': /*[[ #{lang.msgbox.no-internet-connection} ]]*/ 'No internet connection',
                 'currency': /*[[ #{lang.currency} ]]*/ 'Ft',
                 'outOfStock': /*[[ #{lang.items.out-of-stock} ]]*/ 'Out of stock',
-                'priceDiscounted': /*[[ #{lang.items.price-discounted} ]]*/ 'Discounted price'
+                'priceDiscounted': /*[[ #{lang.items.price-discounted} ]]*/ 'Discounted price',
+                'manualOrderRoomMessage': /*[[ #{lang.items.manual-order-room-message} ]]*/ 'The item will be delivered to <b>$1</b> at room <b>$2</b>.'
             };
             const URL_BASE = /*[[ @{/} ]]*/ '/';
             document.addEventListener('DOMContentLoaded', function () {
                 searchFor(/*[[ ${keyword} ]]*/ '');
                 if ((/*[[ ${keyword} ]]*/ '').length === 0) appendNext(/*[[ ${profile} ]]*/ '0');
             });
-            const card = /*[[ ${card} ]]*/ 'DO';
+            let card = /*[[ ${card} ]]*/ 'DO';
         </script>
         <script th:unless='${searchMode}' th:inline='javascript'>
             const LANG = {
@@ -182,13 +185,14 @@
                 'noInternetConnection': /*[[ #{lang.msgbox.no-internet-connection} ]]*/ 'No internet connection',
                 'currency': /*[[ #{lang.currency} ]]*/ 'Ft',
                 'outOfStock': /*[[ #{lang.items.out-of-stock} ]]*/ 'Out of stock',
-                'priceDiscounted': /*[[ #{lang.items.price-discounted} ]]*/ 'Discounted price'
+                'priceDiscounted': /*[[ #{lang.items.price-discounted} ]]*/ 'Discounted price',
+                'manualOrderRoomMessage': /*[[ #{lang.items.manual-order-room-message} ]]*/ 'The item will be delivered to <b>$1</b> at room <b>$2</b>.'
             };
             const URL_BASE = /*[[ @{/} ]]*/ '/';
             document.addEventListener('DOMContentLoaded', function () {
                 appendNext(/*[[ ${profile} ]]*/ '0');
             });
-            const card = /*[[ ${card} ]]*/ 'DO';
+            let card = /*[[ ${card} ]]*/ 'DO';
         </script>
     </object>
 </head>

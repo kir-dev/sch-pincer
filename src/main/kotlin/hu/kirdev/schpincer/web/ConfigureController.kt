@@ -75,7 +75,7 @@ open class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}")
-    fun configure(@PathVariable circleId: Long, model: Model, request: HttpServletRequest): String? {
+    fun configure(@PathVariable circleId: Long, model: Model, request: HttpServletRequest): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circle", circles.getOne(circleId))
         model.addAttribute("pr", isPR(circleId, request))
@@ -88,7 +88,7 @@ open class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/roles/list")
-    fun listUserRole(@PathVariable circleId: Long, model: Model): String? {
+    fun listUserRole(@PathVariable circleId: Long, model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circleId", circleId)
         model.addAttribute("roles", users.findAllCircleRole(circleId))
@@ -129,7 +129,7 @@ open class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/members/new")
-    fun newMember(@PathVariable circleId: Long, model: Model): String? {
+    fun newMember(@PathVariable circleId: Long, model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circleId", circleId)
         model.addAttribute("member", CircleMemberEntity())
@@ -141,7 +141,7 @@ open class ConfigureController {
     fun newMember(@PathVariable circleId: Long,
                   cme: @Valid CircleMemberEntity?,
                   @RequestParam avatarFile: MultipartFile?,
-                  request: HttpServletRequest): String? {
+                  request: HttpServletRequest): String {
         if (cannotEditCircleNoPR(circleId, request)) return "redirect:/configure/$circleId?error"
         val circle = circles.getOne(circleId)
         cme!!.circle = circle
@@ -154,7 +154,7 @@ open class ConfigureController {
     @GetMapping("/configure/{circleId}/members/edit/{memberId}")
     fun editMember(@PathVariable circleId: Long,
                    @PathVariable memberId: Long,
-                   model: Model): String? {
+                   model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circleId", circleId)
         model.addAttribute("mode", "edit")
@@ -266,7 +266,7 @@ open class ConfigureController {
                 .filter { allRequestParams["item${it.id}"] != "off" }
 
         when (allRequestParams["action"]) {
-            "visible" -> {
+            "visible" -> { // TODO: extract them
                 itemEntities.forEach {
                     it.visible = true
                     it.visibleInAll = true
@@ -558,9 +558,11 @@ open class ConfigureController {
         model.addAttribute("exportTypes", ExportType.values())
         model.addAttribute("openingId", opening.id)
         model.addAttribute("circles", circles.findAllForMenu())
-        model.addAttribute("orders", orders.findAllByOpening(openingId))
+        val ordersToReturn = orders.findAllByOpening(openingId)
+        model.addAttribute("orders", ordersToReturn)
         model.addAttribute("opening", opening)
         model.addAttribute("timeService", timeService)
+        model.addAttribute("notCancelledCount", ordersToReturn.filter { it.status != OrderStatus.CANCELLED }.count())
         return "openingShow"
     }
 

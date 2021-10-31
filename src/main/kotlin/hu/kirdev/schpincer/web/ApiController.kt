@@ -1,6 +1,7 @@
 package hu.kirdev.schpincer.web
 
 import hu.kirdev.schpincer.dto.ItemEntityDto
+import hu.kirdev.schpincer.dto.ManualUserDetails
 import hu.kirdev.schpincer.model.CircleEntity
 import hu.kirdev.schpincer.model.ItemEntity
 import hu.kirdev.schpincer.model.OpeningEntity
@@ -167,7 +168,9 @@ open class ApiController {
                                var time: Int = -1,
                                var comment: String = "",
                                var count: Int = 1,
-                               var detailsJson: String = "{}")
+                               var detailsJson: String = "{}",
+                               var manualOrderDetails: ManualUserDetails? = null
+    )
 
     @ApiOperation("New order")
     @PostMapping("/order")
@@ -178,8 +181,15 @@ open class ApiController {
             return ResponseEntity(RESPONSE_INTERNAL_ERROR, HttpStatus.OK)
         val user = request.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
         try {
-            return orders.makeOrder(user, requestBody.id, requestBody.count, requestBody.time.toLong(),
-                    requestBody.comment, requestBody.detailsJson)
+            if (requestBody.manualOrderDetails != null) {
+                log.info("{}:{} is making a manual order with details: {}, for {}",
+                        user.name, user.uid, requestBody.detailsJson, requestBody.manualOrderDetails?.toString() ?: "null")
+                return orders.makeManualOrder(user, requestBody.id, requestBody.count, requestBody.time.toLong(),
+                        requestBody.comment, requestBody.detailsJson, requestBody.manualOrderDetails!!)
+            } else {
+                return orders.makeOrder(user, requestBody.id, requestBody.count, requestBody.time.toLong(),
+                        requestBody.comment, requestBody.detailsJson)
+            }
         } catch (e: FailedOrderException) {
             log.warn("Failed to make new order by '${request.getUserIfPresent()?.uid ?: "n/a"}' reason: ${e.response}")
             return responseOf(e.response)
