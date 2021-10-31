@@ -51,6 +51,12 @@ data class OrderEntity(
         @Column
         var comment: String,
 
+        @Column(nullable = false, columnDefinition = "varchar(255) not null default ''") // FIXME: remove after migration
+        var additionalComment: String = "",
+
+        @Column(nullable = false, columnDefinition = "varchar(255) not null default ''")
+        var chefComment: String = "",
+
         @Column
         var room: @Size(max = 8) String = "",
 

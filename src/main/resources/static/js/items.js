@@ -3,8 +3,11 @@ let endReached = false;
 let selectedItem = null;
 let latestData;
 let searchResult = [];
+let manualOrder = false;
 
 function appendNext(profile = 0) {
+    if (document.getElementById('no-results') == null)
+        return;
     if (page === 0)
         clearAll();
 
@@ -197,6 +200,10 @@ function generateCustom(json, item) {
         console.error(e);
         return;
     }
+    if (manualOrder) {
+        card = manualOrderCard;
+    }
+
     let result = '';
     custom.forEach(element => {
         if (typeof element.values !== 'undefined') {
@@ -252,7 +259,7 @@ function generateTimes(timeWindows, categoryMax, extra = false) {
     let result = '';
     timeWindows.forEach(element => {
         if (element.name !== undefined) {
-            result += `<option value="${element.id}">${element.name} (${extra ? element.extraItemCount : Math.min(element.normalItemCount, categoryMax)}${LANG.pieces})</option>`;
+            result += `<option value="${element.id}">${element.name} (${extra ? element.extraItemCount : Math.max(0, Math.min(element.normalItemCount, categoryMax))}${LANG.pieces})</option>`;
         }
     });
     return result;
@@ -395,11 +402,20 @@ function showPopup(id) {
             timeWindowsElement.style.display = data.timeWindows.length > 1 ? 'block' : 'none';
 
             document.getElementById('popup-comment').value = '';
-            document.getElementById('popup-orderable-block').style.display = data.orderable && !data.personallyOrderable ? 'block' : 'none';
+            document.getElementById('popup-orderable-block').style.display = (manualOrder || (data.orderable && !data.personallyOrderable)) ? 'block' : 'none';
             if (document.getElementById('popup-not-orderable'))
-                document.getElementById('popup-not-orderable').style.display = data.orderable || data.personallyOrderable ? 'none' : 'block';
+                document.getElementById('popup-not-orderable').style.display = (manualOrder || data.orderable || data.personallyOrderable) ? 'none' : 'block';
             if (document.getElementById('popup-personally'))
-                document.getElementById('popup-personally').style.display = data.personallyOrderable ? 'block' : 'none';
+                document.getElementById('popup-personally').style.display = (manualOrder || !data.personallyOrderable) ? 'none' : 'block';
+
+            if (manualOrder) {
+                document.getElementById('noManualOrderRoom').style.display = 'none';
+                document.getElementById('manualOrderRoom').style.display = 'block';
+                document.getElementById('manualOrderRoom').innerHTML = LANG.manualOrderRoomMessage.replace('$1', manualOrderUser).replace('$2', manualOrderRoom);
+            } else {
+                document.getElementById('noManualOrderRoom').style.display = 'block';
+                document.getElementById('manualOrderRoom').style.display = 'none';
+            }
 
             document.getElementById('popup').classList.remove('inactive');
             document.getElementById('blur-section').classList.add('blur');
@@ -423,6 +439,9 @@ function packDetails() {
 
     let result = [];
     let custom = JSON.parse(selectedItem.detailsConfigJson);
+    if (manualOrder) {
+        card = manualOrderCard;
+    }
     custom.forEach(element => {
         if (element.values !== undefined) {
             if (element.type === InputType.EXTRA_SELECT) {
@@ -541,6 +560,27 @@ const ResponseType = {
     CATEGORY_FULL: 'CATEGORY_FULL'
 };
 
+function packManualOrderDetails() {
+    if (!manualOrder
+        || typeof(manualOrderUserId) == 'undefined'
+        || manualOrderUserId == null
+        || typeof(manualOrderUser) == 'undefined'
+        || manualOrderUser == null
+        || typeof(manualOrderRoom) == 'undefined'
+        || manualOrderRoom == null
+        || typeof(manualOrderCard) == 'undefined'
+        || manualOrderCard == null
+    ) {
+        return null;
+    }
+    return {
+        id: manualOrderUserId,
+        name: manualOrderUser,
+        room: manualOrderRoom,
+        card: manualOrderCard
+    }
+}
+
 function buySelectedItem() {
     document.getElementById('submit-order-button').disabled = true;
     postForString('api/order', {
@@ -548,7 +588,8 @@ function buySelectedItem() {
         time: document.querySelector('select[name="time"]').value,
         comment: document.getElementById('popup-comment').value,
         count: document.getElementById('popup-count') !== null ? document.getElementById('popup-count').value : 1,
-        detailsJson: packDetails()
+        detailsJson: packDetails(),
+        manualOrderDetails: packManualOrderDetails()
     }).then(function (data) {
         if (data === ResponseType.ACK) {
             closePopup(true);

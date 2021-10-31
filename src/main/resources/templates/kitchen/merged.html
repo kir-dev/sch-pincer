@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8" th:remove="all"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" th:remove="all"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" th:remove="all"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet"
+          th:remove="all">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" th:remove="all">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" th:remove="all"/>
+    <object th:include="MainLayout :: head" th:remove="tag"></object>
+    <link rel="manifest" href="/manifest.json">
+    <script src="../static/js/items.js" th:src="@{/js/items.js}"></script>
+    <script src="../static/js/kitchen-view.js" th:src="@{/js/kitchen-view.js}"></script>
+    <object th:include="fragments/lang :: script()" th:remove="tag"></object>
+</head>
+<body>
+
+<div class="kitchen-view-menu">
+    <nav>
+        <label class="form-switch">
+            <input type="checkbox" id="live" checked="checked" onchange="setLiveStatus()">
+            <ins class="form-slider"></ins>
+        </label>
+
+        <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/new-order|" th:text="#{lang.kitchen-view.nav.new-order}">New order</a>
+        <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/kitchen|"   th:text="#{lang.kitchen-view.nav.kitchen}">Kitchen</a>
+        <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/hand-over|" th:text="#{lang.kitchen-view.nav.hand-over}">Hand over</a>
+        <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/merged|"    th:text="#{lang.kitchen-view.nav.merged}" class="selected">Merged</a>
+        <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/shipping|"  th:text="#{lang.kitchen-view.nav.shipping}">Shipping</a>
+        <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/stats|"     th:text="#{lang.kitchen-view.nav.stats}">Stats</a>
+    </nav>
+</div>
+
+<div class="kitchen-view" id="content">
+
+</div>
+
+<script th:inline="javascript">
+    const CIRCLE_ID = /*[[${circleId}]]*/ 0;
+    const OPENING_ID = /*[[${openingId}]]*/ 0;
+    reload('merged');
+    startLiveStatus('merged');
+</script>
+</body>
+</html>

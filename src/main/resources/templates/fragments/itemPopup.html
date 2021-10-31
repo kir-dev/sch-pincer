@@ -36,13 +36,16 @@
                             <h5 id="popup-price-tag" th:text="#{lang.items.price}">ÁR</h5>
                             <span class="colored-light" id="popup-price">800 JMF</span>
                         </ins>
-                        <object th:remove="tag"
-                                th:if="${session.user} neq null and ${session.user.room} neq null and ${session.user.room.length()} gt 0">
-                            <a th:href="@{/profile}"><p th:utext="#{lang.items.room-comment(${session.user.room})}"></p>
-                            </a>
-                        </object>
-                        <p th:if="${session.user} neq null and (${session.user.room} eq null or ${session.user.room.length()} eq 0)">
-                            <a th:href="@{/profile}" th:text="#{lang.items.no-room-comment}"></a></p>
+                        <div id="noManualOrderRoom">
+                            <object th:remove="tag"
+                                    th:if="${session.user} neq null and ${session.user.room} neq null and ${session.user.room.length()} gt 0">
+                                <a th:href="@{/profile}"><p th:utext="#{lang.items.room-comment(${session.user.room})}"></p>
+                                </a>
+                            </object>
+                            <p th:if="${session.user} neq null and (${session.user.room} eq null or ${session.user.room.length()} eq 0)">
+                                <a th:href="@{/profile}" th:text="#{lang.items.no-room-comment}"></a></p>
+                        </div>
+                        <p id="manualOrderRoom"></p>
                     </div>
                     <form onsubmit="buySelectedItem(); return false;" action="#" method="GET" class="form-order">
                         <ins id="popup-custom"></ins>

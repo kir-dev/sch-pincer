@@ -1887,7 +1887,7 @@ textarea {
     background-color: #3f3f40;
 }
 
-.responsive-table tr:nth-of-type(7n-6) {
+.profile-page .responsive-table tr:nth-of-type(7n-6) {
     border-top: 2px solid #383839;
 }
 
@@ -2630,6 +2630,222 @@ img.centered-mini {
     color: #FFFFFF !important;
 }
 
+/** FAST-FOOD VIEW **/
+
+.kitchen-view-menu {
+    text-align: center;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 18px;
+    margin: 0 20px;
+}
+
+.kitchen-view-menu a {
+    color: #9d9d9e;
+    padding: 20px 12px;
+    display: inline-block;
+}
+
+.kitchen-view-menu a:hover {
+    color: #FFFFFF;
+}
+
+.kitchen-view-menu a.selected {
+    color: #eead45;
+}
+
+.kitchen-view-menu a.selected:hover {
+    color: #ffd390;
+}
+
+.kitchen-view {
+    margin: 0 40px 20px 40px;
+    text-align: center;
+}
+
+.kitchen-view .order {
+    width: 300px;
+    background: #4C4C4D;
+    color: #FFFFFF;
+    border-top: 4px solid #888888;
+    display: inline-block;
+    margin: 10px;
+    vertical-align: top;
+}
+
+.kitchen-view .order.status-ACCEPTED {
+    border-color: #b52601;
+}
+
+.kitchen-view .order.status-INTERPRETED {
+    border-color: #eead45;
+}
+
+.kitchen-view .order.status-COMPLETED {
+    border-color: #5e8705;
+}
+
+.kitchen-view .order.status-HANDED_OVER {
+    border-color: #0D5D98;
+}
+
+.kitchen-view .order h3 {
+    background-color: #111111;
+    color: #FFFFFF;
+    font-size: 24px;
+    font-weight: 900;
+    text-transform: uppercase;
+    padding: 14px 20px 10px 20px;
+    display: block;
+}
+
+.kitchen-view .order .badge {
+    background-color: #222222;
+    border-radius: 6px;
+    padding: 2px 12px;
+    display: inline-block;
+    font-weight: bold;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.kitchen-view .order .badge span.status {
+    background-color: #FFFFFF;
+    display: inline-block;
+    height: 8px;
+    width: 8px;
+    border-radius: 8px;
+    vertical-align: top;
+    margin-top: 6px;
+    margin-left: 6px;
+}
+
+.kitchen-view .order .badge span.status-before {
+    background-color: #eead45;
+}
+
+.kitchen-view .order .badge span.status-ok {
+    background-color: #5e8705;
+}
+
+.kitchen-view .order .badge span.status-after {
+    background-color: #b52601;
+    animation: blinkingDot;
+    animation-duration: 0.5s;
+    animation-iteration-count: infinite;
+
+}
+
+.kitchen-view .order h4 {
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 300;
+    padding: 14px 20px 10px 20px;
+    display: block;
+}
+
+.kitchen-view .order p.ingreds {
+    line-height: 1.3;
+    padding: 16px;
+}
+
+.kitchen-view .order .comment {
+    line-height: 1.5;
+    padding: 16px;
+    background-color: #383839;
+}
+
+.kitchen-view .additional {
+    color: #eead45;
+}
+
+.kitchen-view .order .actions {
+    background-color: #111111;
+}
+
+.kitchen-view .order .actions button {
+    background-color: transparent;
+    color: #9d9d9e;
+    cursor: pointer;
+    padding: 8px;
+    margin-left: 6px;
+    margin-right: 6px;
+}
+
+.kitchen-view .order .actions button span {
+    font-size: 28px;
+}
+
+.kitchen-view .order .actions button:hover span {
+    color: #FFFFFF;
+}
+
+.scroll-x {
+    overflow-x: scroll;
+}
+
+.kitchen-view-menu .form-slider {
+    height: 20px;
+}
+
+.kitchen-view-menu .form-slider:before {
+    height: 12px;
+}
+
+.kitchen-view-menu .form-slider {
+    background-color: #111111;
+}
+
+.user-selector label {
+    display: inline-block;
+    font-size: 16px;
+    width: 50px;
+}
+
+.user-selector input[type="submit"] {
+    display: inline-block;
+    width: auto;
+}
+
+.validated-notification-on {
+    color: #a2ea04;
+}
+
+.validated-notification-off {
+    color: #ffffff;
+}
+
+.user-selector button {
+    width: 100%;
+    background-color: #5e8705;
+    cursor: pointer;
+}
+
+.user-selector button:hover {
+    background-color: #a2ea04;
+}
+
+.user-selector button span {
+    top: -2px;
+    margin-left: 10px;
+}
+
+.user-selector tr.last {
+    border-bottom: 2px solid #888888;
+}
+
+.balanced-content {
+    padding: 0 !important;
+}
+
+.stat-table td,
+.stat-table th {
+    text-align: center !important;
+}
+
+.stat-table tr:last-of-type td {
+    font-weight: bold;
+}
 
 /** MENU **/
 
@@ -3010,6 +3226,10 @@ img.centered-mini {
     .popup .body {
         padding-bottom: 0;
     }
+
+    .user-selector .wide-table {
+        display: none;
+    }
 }
 
 @media only screen and (min-width: 1025px) {
@@ -3119,6 +3339,12 @@ img.centered-mini {
     }
 }
 
+@media only screen and (max-width: 375px) {
+    .kitchen-view {
+        margin: 0;
+    }
+}
+
 @keyframes animGrow {
     from {
         transform: scale(0);
@@ -3176,6 +3402,18 @@ img.centered-mini {
     }
     100% {
         transform: rotate(345deg);
+    }
+}
+
+@keyframes blinkingDot {
+    0% {
+        background-color: #8d270b;
+    }
+    50% {
+        background-color: #ff3400;
+    }
+    100% {
+        background-color: #8d270b;
     }
 }
 

@@ -149,7 +149,7 @@
             </div>
             <div style="display: inline-block">
                 <span class="note" style="margin-bottom: 0" th:text="#{lang.export.empty-rows}">Add empty rows:</span>
-                <input name="emptyRows" type="number" th:value="${opening.maxOrder - #lists.size(orders)}" min="0"
+                <input name="emptyRows" type="number" th:value="${opening.maxOrder - notCancelledCount}" min="0"
                        max="200"/>
             </div>
             <div style="display: inline-block">
@@ -364,8 +364,12 @@
                 <td>
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'SHIPPED')}"
                        th:title="#{lang.profile.status-shipped}">done</i>
+                    <i class="material-icons" th:if="${#strings.equals(order.status, 'HANDED_OVER')}"
+                       th:title="#{lang.profile.status-handed-over}">local_shipping</i>
+                    <i class="material-icons" th:if="${#strings.equals(order.status, 'COMPLETED')}"
+                       th:title="#{lang.profile.status-completed}">downloading</i>
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'INTERPRETED')}"
-                       th:title="#{lang.profile.status-interpreted}">local_shipping</i>
+                       th:title="#{lang.profile.status-interpreted}">engineering</i>
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'ACCEPTED')}"
                        th:title="#{lang.profile.status-accepted}">shopping_cart</i>
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'CANCELLED')}"

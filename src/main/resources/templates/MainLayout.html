@@ -48,7 +48,8 @@
 
     <div class="header">
         <a href="#" th:href="@{/}"><span th:text="#{lang.header}">SCH-PINCÉR</span></a>
-        <ins th:if="${#arrays.contains(@environment.getActiveProfiles(),'demo')}" class="profile-badge">DEMO</ins>
+        <ins th:if="${#arrays.contains(@environment.getActiveProfiles(),'local')}" class="profile-badge">DEV</ins>
+        <ins th:if="${#arrays.contains(@environment.getActiveProfiles(),'staging')}" class="profile-badge">STAGING</ins>
         <nav>
             <object th:include="fragments/menu :: menu(${user})" th:remove="tag"></object>
         </nav>
