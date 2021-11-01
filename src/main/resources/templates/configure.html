@@ -130,7 +130,7 @@
             </tr>
             <tr th:each="role : ${roles}" th:object="${role}">
                 <td th:text="*{name}">Test Person</td>
-                <td th:text="*{permission}">LEADER</td>
+                <td th:text="#{lang.configure.member.role.__*{permission}__}">LEADER</td>
             </tr>
         </table>
 

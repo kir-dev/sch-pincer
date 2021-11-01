@@ -19,7 +19,6 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.util.*
-import java.util.function.Consumer
 import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
@@ -109,10 +108,11 @@ open class ConfigureController {
                       @RequestParam permission: CircleMemberRole,
                       request: HttpServletRequest
     ): String {
-        val user = users.getByUidHash(uidHash) ?: return "redirect:/configure/${circleId}?error=invalidUidHash"
-        if (!isCircleOwner(circleId, request) || user.sysadmin) return "redirect:/configure/$circleId?error"
+        val userToEdit = users.getByUidHash(uidHash) ?: return "redirect:/configure/${circleId}?error=invalidUidHash"
+        if ((!isCircleOwner(circleId, request) && !request.getUser().sysadmin) || userToEdit.sysadmin)
+            return "redirect:/configure/$circleId?error"
 
-        val tmp: MutableSet<String> = user.permissions.toMutableSet()
+        val tmp: MutableSet<String> = userToEdit.permissions.toMutableSet()
         when (permission) {
             CircleMemberRole.NONE -> tmp.removeAll(listOf("CIRCLE_${circleId}", "PR_${circleId}"))
             CircleMemberRole.PR -> tmp.addAll(listOf("CIRCLE_${circleId}", "PR_${circleId}", "ROLE_LEADER"))
@@ -123,8 +123,8 @@ open class ConfigureController {
         }
         if (tmp.count() == 1 && tmp.first() == "ROLE_LEADER")
             tmp.clear()
-        user.permissions = tmp
-        users.save(user)
+        userToEdit.permissions = tmp
+        users.save(userToEdit)
 
         return "redirect:/configure/$circleId/roles/list"
     }
