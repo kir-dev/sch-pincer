@@ -62,7 +62,7 @@ open class ConfigureController {
     private lateinit var uploadPath: String
 
     @GetMapping("/configure")
-    fun configureRoot(request: HttpServletRequest, model: Model): String? {
+    fun configureRoot(request: HttpServletRequest, model: Model): String {
         val all = circles.findAllForMenu()
         model.addAttribute("circles", all)
         val (_, _, _, _, sysadmin, _, permissions) = request.getUser()
@@ -79,7 +79,7 @@ open class ConfigureController {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circle", circles.getOne(circleId))
         model.addAttribute("pr", isPR(circleId, request))
-        model.addAttribute("owner", isCircleOwner(circleId, request))
+        model.addAttribute("owner", isCircleOwner(circleId, request) || request.getUser().sysadmin)
         model.addAttribute("roles", users.findAllCircleRole(circleId).filter { it.permission !== CircleMemberRole.NONE })
         model.addAttribute("circleId", circleId)
         model.addAttribute("items", items.findAllByCircle(circleId))
@@ -96,7 +96,7 @@ open class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/roles/edit/{uidHash}")
-    fun editUserRole(@PathVariable circleId: Long, @PathVariable uidHash: String, model: Model): String? {
+    fun editUserRole(@PathVariable circleId: Long, @PathVariable uidHash: String, model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circleId", circleId)
         model.addAttribute("role", users.findPermissionByUidHash(uidHash, circleId))
@@ -121,7 +121,8 @@ open class ConfigureController {
                 tmp.remove("PR_${circleId}")
             }
         }
-        if (tmp.count() == 1 && tmp.first() == "ROLE_LEADER") tmp.clear()
+        if (tmp.count() == 1 && tmp.first() == "ROLE_LEADER")
+            tmp.clear()
         user.permissions = tmp
         users.save(user)
 
@@ -138,10 +139,12 @@ open class ConfigureController {
     }
 
     @PostMapping("/configure/{circleId}/members/new")
-    fun newMember(@PathVariable circleId: Long,
-                  cme: @Valid CircleMemberEntity?,
-                  @RequestParam avatarFile: MultipartFile?,
-                  request: HttpServletRequest): String {
+    fun newMember(
+            @PathVariable circleId: Long,
+            cme: @Valid CircleMemberEntity?,
+            @RequestParam avatarFile: MultipartFile?,
+            request: HttpServletRequest
+    ): String {
         if (cannotEditCircleNoPR(circleId, request)) return "redirect:/configure/$circleId?error"
         val circle = circles.getOne(circleId)
         cme!!.circle = circle

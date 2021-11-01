@@ -96,6 +96,7 @@ open class LoginController {
     }
 
     private fun getOwnedCircleIds(profile: ProfileDataResponse): List<Long> {
+        println(profile.eduPersonEntitlements.map { it.name + " " + it.id + " " + it.status })
         return profile.eduPersonEntitlements
                 .filter { it.status == "körvezető" }
                 .mapNotNull { circles.findByVirGroupId(it.id)?.id }

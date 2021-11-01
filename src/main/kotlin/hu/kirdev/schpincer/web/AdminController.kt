@@ -120,6 +120,7 @@ open class AdminController {
             websiteUrl = circle.websiteUrl
             alias = circle.alias
             visible = circle.visible
+            virGroupId = circle.virGroupId
 
             var file = logo?.uploadFile("logos")
             if (file != null)

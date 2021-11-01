@@ -106,6 +106,12 @@
                         </label>
                     </td>
                 </tr>
+                <tr th:if="${adminMode}">
+                    <td th:text="#{lang.admin.circle.vir-id}">Vir ID</td>
+                    <td><input type="text" th:field="*{virGroupId}"/>
+                        <span class="error" th:if="${#fields.hasErrors('virGroupId')}" th:errors="*{virGroupId}"></span>
+                    </td>
+                </tr>
                 <tr>
                     <td th:text="#{lang.admin.circle.logo}">Logo</td>
                     <td><input type="file" name="logo"/></td>
