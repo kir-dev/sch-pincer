@@ -252,6 +252,7 @@ open class ApiController {
 
     data class OpeningDetail(var name: String, var icon: String, var available: Int, var outOf: Int, var comment: String)
 
+    @CrossOrigin(origins = ["*"])
     @GetMapping("/openings-for-indulasch")
     @ResponseBody
     fun openingsApi(@RequestParam(required = false) token: String?): List<OpeningDetail> {
