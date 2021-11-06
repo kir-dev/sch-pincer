@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" th:remove="all">
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" th:remove="all"/>
     <object th:include="MainLayout :: head" th:remove="tag"></object>
+    <object th:include="fragments/lang :: script()" th:remove="tag"></object>
     <script src="../static/js/profile.js" th:src="@{/js/profile.js}"></script>
     <script th:inline="javascript">
         const URL_BASE = /*[[ @{/} ]]*/ "/";
@@ -79,8 +80,8 @@
                 <th th:text="#{lang.profile.orders-review}">Review</th>
             </tr>
             <tr th:each="order : ${orders}" th:object="${order}">
-                <td th:if="${order.count <= 1}" th:text="*{name}">Ördög pizza</td>
-                <td th:unless="${order.count <= 1}" th:text="|*{name} x *{count}|">Ördög pizza</td>
+                <td th:if="${order.count <= 1}" th:text="*{name}" th:attr="onclick=|openModalWithOrder(${order.id})|" th:class="orders-product-name">Ördög pizza</td>
+                <td th:unless="${order.count <= 1}" th:text="|*{name} x *{count}|" th:attr="onclick=|openModalWithOrder(${order.id})|" th:class="orders-product-name">Ördög pizza</td>
                 <td>
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'SHIPPED')}"
                        th:title="#{lang.profile.status-shipped}">done</i>
@@ -122,8 +123,8 @@
             <object th:each="order : ${orders}" th:object="${order}" th:remove="tag">
                 <tr>
                     <td th:text="#{lang.profile.orders-name}">Name</td>
-                    <td th:if="${order.count <= 1}" th:text="*{name}">Ördög pizza</td>
-                    <td th:unless="${order.count <= 1}" th:text="|*{name} x *{count}|">Ördög pizza</td>
+                    <td th:if="${order.count <= 1}" th:text="*{name}" th:attr="onclick=|openModalWithOrder(${order.id})|" th:class="orders-product-name">Ördög pizza</td>
+                    <td th:unless="${order.count <= 1}" th:text="|*{name} x *{count}|" th:attr="onclick=|openModalWithOrder(${order.id})|" th:class="orders-product-name">Ördög pizza</td>
                 </tr>
 
                 <tr>
@@ -184,6 +185,27 @@
     </div>
 </div>
 
+<div class="popup-bg inactive" id="details-popup">
+    <div class="popup">
+        <div class="popup-child">
+            <div class="overlay-flex">
+                <i class="material-icons" onclick="closePopup()">close</i>
+            </div>
+            <h3 id="popup-title">Ördög pizza</h3>
+            <div class="body">
+                <div class="info" id="info">
+                    asd
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div th:replace="MainLayout :: footer"></div>
+
+<script th:inline="javascript">
+    var orders = [[${orders}]];
+    var priceBreakdowns = [[${priceBreakdowns}]];
+</script>
 </body>
 </html>

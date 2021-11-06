@@ -1,12 +1,15 @@
 package hu.kirdev.schpincer.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import hu.kirdev.schpincer.dao.ItemRepository
 import hu.kirdev.schpincer.dao.OpeningRepository
 import hu.kirdev.schpincer.dao.OrderRepository
 import hu.kirdev.schpincer.dao.TimeWindowRepository
 import hu.kirdev.schpincer.dto.ManualUserDetails
+import hu.kirdev.schpincer.dto.PriceBreakdown
 import hu.kirdev.schpincer.model.*
 import hu.kirdev.schpincer.web.cannotEditCircle
+import hu.kirdev.schpincer.web.component.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
@@ -239,6 +242,44 @@ open class OrderService {
         repo.saveAll(affectedOpenings)
     }
 
+
+    @Transactional(readOnly = false)
+    open fun generatePriceBreakdowns(orders: List<OrderEntity>): List<PriceBreakdown> {
+
+        return orders.map {
+
+            var prices = mutableMapOf<String, Int>()
+
+            /**
+             * @see CustomComponentType
+             * */
+            val mapper = ObjectMapper()
+            val types: Map<String, CustomComponentType> = CustomComponentType.values().associateBy({ it.name }, { it })
+            val answers = mapper.readValue(it.detailsJson.toByteArray(), CustomComponentAnswerList::class.java)
+            // TODO: PUT ITEM IN ORDER ENTITY
+            val itemEntity = itemsRepo.findAllByNameEquals(it.compactName)[0]
+            val cardType = when {
+                it.comment.startsWith("[KB]") -> CardType.KB
+                it.comment.startsWith("[AB]") -> CardType.AB
+                else -> CardType.DO
+            }
+
+            val models = mapper.readValue(("{\"models\":${itemEntity.detailsConfigJson}}").toByteArray(), CustomComponentModelList::class.java)
+            val mapped: Map<String, CustomComponentModel> = models.models.associateBy({ it.name }, { it })
+
+            for (answer in answers.answers) {
+                prices[answer.name] = (types[answer.type] ?: CustomComponentType.UNKNOWN)
+                    .processPrices(answer, it, mapped[answer.name]!!, cardType)
+            }
+            prices["basePrice"] = if (itemEntity.discountPrice == 0) itemEntity.price else itemEntity.discountPrice
+
+            PriceBreakdown(
+                it.id,
+                prices
+            )
+        }
+
+    }
 }
 
 fun responseOf(body: String, status: HttpStatus = HttpStatus.OK) = ResponseEntity(body, status)

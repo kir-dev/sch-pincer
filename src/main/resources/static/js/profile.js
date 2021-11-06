@@ -48,3 +48,37 @@ function postForJsonObject(path, data) {
         body: JSON.stringify(data)
     });
 }
+
+function openModalWithOrder(orderId) {
+
+    let order = orders.find(o => o.id === orderId);
+    let priceBreakdown = priceBreakdowns.find(pb => pb.orderId === orderId);
+
+    document.getElementById('details-popup').classList.remove('inactive');
+    document.getElementById('popup-title').innerText = order.name;
+
+    const toDisplay = [
+        {
+            name: 'Alapár',
+            value: priceBreakdown.prices['basePrice']
+        }
+    ];
+
+    for (let key in priceBreakdown.prices) {
+
+        if (key === 'basePrice') {
+            continue;
+        }
+        toDisplay.push({
+            name: LANG[key],
+            value: priceBreakdown.prices[key]
+        });
+
+    }
+    document.getElementById('info').innerHTML = JSON.stringify(toDisplay);
+
+}
+
+function closePopup() {
+    document.getElementById('details-popup').classList.add('inactive');
+}
