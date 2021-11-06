@@ -1,7 +1,7 @@
 <html xmlns:th='http://www.thymeleaf.org/'>
 <head>
     <object th:fragment='script()'>
-        <script th:if='${searchMode}' th:inline='javascript'>
+        <script th:inline="javascript">
             const LANG = {
                 'size': /*[[ #{lang.items.custom-size} ]]*/ 'size',
                 'sauce': /*[[ #{lang.items.custom-sauce} ]]*/ 'Sauce',
@@ -43,6 +43,8 @@
                 'manualOrderRoomMessage': /*[[ #{lang.items.manual-order-room-message} ]]*/ 'The item will be delivered to <b>$1</b> at room <b>$2</b>.'
             };
             const URL_BASE = /*[[ @{/} ]]*/ '/';
+        </script>
+        <script th:if='${searchMode}' th:inline='javascript'>
             document.addEventListener('DOMContentLoaded', function () {
                 searchFor(/*[[ ${keyword} ]]*/ '');
                 if ((/*[[ ${keyword} ]]*/ '').length === 0) appendNext();
@@ -50,47 +52,6 @@
             let card = /*[[ ${card} ]]*/ 'DO';
         </script>
         <script th:unless='${searchMode}' th:inline='javascript'>
-            const LANG = {
-                'size': /*[[ #{lang.items.custom-size} ]]*/ 'size',
-                'sauce': /*[[ #{lang.items.custom-sauce} ]]*/ 'Sauce',
-                'count': /*[[ #{lang.items.custom-count} ]]*/ 'Count',
-                'extra': /*[[ #{lang.items.custom-extra} ]]*/ 'Extra',
-                'contain': /*[[ #{lang.items.custom-contain} ]]*/ 'Contain',
-                'onion': /*[[ #{lang.items.custom-onion} ]]*/ 'Onion',
-                'type': /*[[ #{lang.items.custom-type} ]]*/ 'Type',
-                'fork': /*[[ #{lang.items.custom-fork} ]]*/ 'Fork',
-                'dressing': /*[[ #{lang.items.custom-dressing} ]]*/ 'Dressing',
-                'ingreds': /*[[ #{lang.items.custom-ingreds} ]]*/ 'Ingredients',
-                'potato': /*[[ #{lang.items.custom-potato} ]]*/ 'Potato',
-                'panzo': /*[[ #{lang.items.custom-panzo} ]]*/ 'Panzo',
-                'stbpanzo': /*[[ #{lang.items.custom-stbpanzo} ]]*/ 'STB. Panzo',
-                'mashed-potato': /*[[ #{lang.items.custom-mashed-potato} ]]*/ 'Mashed potato',
-                'schnitzel': /*[[ #{lang.items.custom-schnitzel} ]]*/ 'Schnitzel',
-                'cheese': /*[[ #{lang.items.custom-cheese} ]]*/ 'Cheese',
-                'price': /*[[ #{lang.items.price} ]]*/ 'Price',
-                'pieces': /*[[ #{lang.items.pieces} ]]*/ 'pieces',
-                'ingred': /*[[ #{lang.items.ingredients} ]]*/ 'Ingredients',
-                'ab_extra': /*[[ #{lang.items.ab-extra} ]]*/ 'AB Extra',
-                'kb_extra': /*[[ #{lang.items.kb-extra} ]]*/ 'KB Extra',
-                'ab_kb_extra': /*[[ #{lang.items.ab-kb-extra} ]]*/ 'AB, KB Extra',
-                'ab_extra2': /*[[ #{lang.items.ab-extra2} ]]*/ 'AB Extra',
-                'kb_extra2': /*[[ #{lang.items.kb-extra2} ]]*/ 'KB Extra',
-                'ab_kb_extra2': /*[[ #{lang.items.ab-kb-extra2} ]]*/ 'AB, KB Extra',
-                'cutlery': /*[[ #{lang.items.cutlery} ]]*/ 'Cutlery',
-                'intervalFull': /*[[ #{lang.msgbox.interval-full} ]]*/ 'This time window is full',
-                'intervalFullExtra': /*[[ #{lang.msgbox.interval-full-extra} ]]*/ 'This time window is full',
-                'orderFull': /*[[ #{lang.msgbox.order-full} ]]*/ 'This time window is full',
-                'alreadyClosed': /*[[ #{lang.msgbox.already-closed} ]]*/ 'There is currently no ordering period',
-                'noRoom': /*[[ #{lang.msgbox.no-room} ]]*/ 'You haven\'t set your room',
-                'categoryFull': /*[[ #{lang.msgbox.category-full} ]]*/ 'This category is full',
-                'internal': /*[[ #{lang.msgbox.internal} ]]*/ 'Internal server error occurred',
-                'noInternetConnection': /*[[ #{lang.msgbox.no-internet-connection} ]]*/ 'No internet connection',
-                'currency': /*[[ #{lang.currency} ]]*/ 'Ft',
-                'outOfStock': /*[[ #{lang.items.out-of-stock} ]]*/ 'Out of stock',
-                'priceDiscounted': /*[[ #{lang.items.price-discounted} ]]*/ 'Discounted price',
-                'manualOrderRoomMessage': /*[[ #{lang.items.manual-order-room-message} ]]*/ 'The item will be delivered to <b>$1</b> at room <b>$2</b>.'
-            };
-            const URL_BASE = /*[[ @{/} ]]*/ '/';
             document.addEventListener('DOMContentLoaded', function () {
                 appendNext();
             });

@@ -3541,3 +3541,31 @@ input:checked + .form-slider:before {
     height: auto;
     border-bottom: 4px solid #222222;
 }
+
+.orders-product-name {
+    pointer-events: fill;
+    cursor: pointer;
+}
+
+.popup-child .overlay-flex {
+    padding: 8px;
+    height: inherit;
+    display: flex;
+    justify-content: end;
+}
+
+.popup .overlay-flex i {
+    float: right;
+    display: block;
+    font-size: 32px;
+    color: #FFFFFF;
+    margin-top: 8px;
+    margin-right: 8px;
+    cursor: pointer;
+    transform: rotate(0deg);
+    transition: transform ease 0.2s;
+}
+
+.popup .overlay-flex i:hover {
+    transform: rotate(90deg);
+}

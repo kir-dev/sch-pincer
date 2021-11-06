@@ -35,6 +35,7 @@ interface ItemRepository : JpaRepository<ItemEntity, Long> {
     fun findAllByCircle_IdOrderByPrecedenceDesc(circleId: Long): List<ItemEntity>
     fun findAllByCircle_IdInOrderByPrecedenceDesc(circles: List<Long>): List<ItemEntity>
     fun findAllByCircle_IdOrderByManualPrecedenceDesc(circleId: Long): List<ItemEntity>
+    fun findAllByNameEquals(name: String): List<ItemEntity>
 }
 
 @SuppressWarnings("kotlin:S100" // ignore underscores in queries

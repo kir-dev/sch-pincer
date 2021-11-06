@@ -96,7 +96,9 @@ open class MainController {
 
     @GetMapping("/profile")
     fun profile(request: HttpServletRequest, model: Model): String {
-        model.addAttribute("orders", this.orders.findAll(request.getUserId()))
+        val orders = this.orders.findAll(request.getUserId())
+        model.addAttribute("orders", orders)
+        model.addAttribute("priceBreakdowns", this.orders.generatePriceBreakdowns(orders))
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("timeService", timeService)
         return "profile"
