@@ -1,13 +1,14 @@
 package hu.kirdev.schpincer.service
 
-import hu.kirdev.schpincer.dao.ItemRepository
-import hu.kirdev.schpincer.dao.OpeningRepository
-import hu.kirdev.schpincer.dao.OrderRepository
-import hu.kirdev.schpincer.dao.TimeWindowRepository
+import com.fasterxml.jackson.databind.ObjectMapper
+import hu.kirdev.schpincer.dao.*
 import hu.kirdev.schpincer.dto.ManualUserDetails
+import hu.kirdev.schpincer.dto.PriceBreakdown
 import hu.kirdev.schpincer.model.*
 import hu.kirdev.schpincer.web.cannotEditCircle
+import hu.kirdev.schpincer.web.component.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.MessageSource
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -39,6 +40,7 @@ const val RESPONSE_BAD_REQUEST = "BAD_REQUEST"
 const val RESPONSE_INVALID_STATUS = "INVALID_STATUS"
 const val RESPONSE_ORDER_PERIOD_ENDED = "ORDER_PERIOD_ENDED"
 const val RESPONSE_TIME_WINDOW_INVALID = "TIME_WINDOW_INVALID"
+const val BASE_PRICE = "basePrice"
 
 @Service
 open class OrderService {
@@ -57,6 +59,12 @@ open class OrderService {
 
     @Autowired
     internal lateinit var itemsRepo: ItemRepository
+
+    @Autowired
+    internal lateinit var extrasRepository: ExtrasRepository
+
+    @Autowired
+    lateinit var messageSource: MessageSource
 
     @Transactional
     open fun save(order: OrderEntity) {
@@ -120,7 +128,8 @@ open class OrderService {
         val procedure = MakeOrderProcedure(user, id, itemCount, time, comment, detailsJson,
                 itemsRepo = itemsRepo,
                 openings = openings,
-                timeWindowRepo = timeWindowRepo)
+                timeWindowRepo = timeWindowRepo,
+                extrasRepository = extrasRepository)
         procedure.makeOrder()
 
         timeWindowRepo.save(procedure.timeWindow)
@@ -141,7 +150,8 @@ open class OrderService {
         val procedure = MakeOrderProcedure(user, id, itemCount, time, comment, detailsJson,
                 itemsRepo = itemsRepo,
                 openings = openings,
-                timeWindowRepo = timeWindowRepo)
+                timeWindowRepo = timeWindowRepo,
+                extrasRepository = extrasRepository)
         procedure.makeOrder(manualUser)
 
         timeWindowRepo.save(procedure.timeWindow)
@@ -239,6 +249,28 @@ open class OrderService {
         repo.saveAll(affectedOpenings)
     }
 
+
+    @Transactional(readOnly = false)
+    open fun generatePriceBreakdowns(orders: List<OrderEntity>): List<PriceBreakdown> {
+
+        return orders.map {
+
+            var prices = mutableMapOf<String, Int>()
+            prices[BASE_PRICE] = it.price / it.count
+            it.orderedItem?.apply {
+                for (extra in it.extras.sortedBy { extra -> extra.name }) {
+                    prices["${extra.name}- ${extra.displayName}"] = extra.price
+                }
+                prices[BASE_PRICE] = if (this.discountPrice == 0) this.price else this.discountPrice
+            }
+
+            PriceBreakdown(
+                it.id,
+                prices
+            )
+        }
+
+    }
 }
 
 fun responseOf(body: String, status: HttpStatus = HttpStatus.OK) = ResponseEntity(body, status)

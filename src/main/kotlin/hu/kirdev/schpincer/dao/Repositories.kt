@@ -1,6 +1,7 @@
 package hu.kirdev.schpincer.dao
 
 import hu.kirdev.schpincer.model.*
+import hu.kirdev.schpincer.web.component.CustomComponentType
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
@@ -35,6 +36,7 @@ interface ItemRepository : JpaRepository<ItemEntity, Long> {
     fun findAllByCircle_IdOrderByPrecedenceDesc(circleId: Long): List<ItemEntity>
     fun findAllByCircle_IdInOrderByPrecedenceDesc(circles: List<Long>): List<ItemEntity>
     fun findAllByCircle_IdOrderByManualPrecedenceDesc(circleId: Long): List<ItemEntity>
+    fun findAllByNameEquals(name: String): List<ItemEntity>
 }
 
 @SuppressWarnings("kotlin:S100" // ignore underscores in queries
@@ -78,4 +80,9 @@ interface TimeWindowRepository : JpaRepository<TimeWindowEntity, Long> {
 interface UserRepository : JpaRepository<UserEntity, String> {
     fun findTop10AllByNameContainsIgnoreCase(name: String): List<UserEntity>
     fun findTop10AllByRoomContainsIgnoreCase(room: String): List<UserEntity>
+}
+
+@Repository
+interface ExtrasRepository : JpaRepository<ExtraEntity, Long> {
+    fun findByCircleAndNameAndInputTypeAndSelectedIndex(circle: CircleEntity, name: String, inputType: CustomComponentType, selectedIndex: Int): Optional<ExtraEntity>
 }
