@@ -1,11 +1,14 @@
 package hu.kirdev.schpincer.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import hu.kirdev.schpincer.dao.ExtrasRepository
 import hu.kirdev.schpincer.dao.ItemRepository
 import hu.kirdev.schpincer.dao.TimeWindowRepository
 import hu.kirdev.schpincer.dto.ManualUserDetails
 import hu.kirdev.schpincer.dto.OrderDetailsDto
 import hu.kirdev.schpincer.model.*
-import hu.kirdev.schpincer.web.component.calculateExtra
+import hu.kirdev.schpincer.web.component.*
+import java.util.*
 
 class FailedOrderException(val response: String) : RuntimeException()
 
@@ -18,7 +21,8 @@ class MakeOrderProcedure (
         private val detailsJson: String,
         private val itemsRepo: ItemRepository,
         private val openings: OpeningService,
-        private val timeWindowRepo: TimeWindowRepository
+        private val timeWindowRepo: TimeWindowRepository,
+        private val extrasRepository: ExtrasRepository
 ) {
 
     internal lateinit var item: ItemEntity
@@ -51,6 +55,9 @@ class MakeOrderProcedure (
 
         details = calculateExtra(detailsJson, order, item, manualUser?.card ?: user.cardType)
         updateBasicDetails()
+
+        order.orderedItem = item
+        order.extras = getExtrasOfOrder()
         if (manualUser == null)
             validateOrderable(System.currentTimeMillis())
 
@@ -188,5 +195,30 @@ class MakeOrderProcedure (
             compactName = (if (item.alias.isEmpty()) item.name else item.alias) + (if (this@MakeOrderProcedure.count == 1) "" else " x ${this@MakeOrderProcedure.count}")
             order.count = this@MakeOrderProcedure.count
         }
+    }
+
+    private fun getExtrasOfOrder(): Set<ExtraEntity> {
+
+        val extras = mutableSetOf<ExtraEntity>()
+        val mapper = ObjectMapper()
+        val answers = mapper.readValue(detailsJson.toByteArray(), CustomComponentAnswerList::class.java)
+
+        for (answer in answers.answers) {
+            val type = CustomComponentType.valueOf(answer.type)
+            val name = answer.name
+            for (selected in answer.selected) {
+
+                val optionalExtra = extrasRepository.findByCircleAndNameAndInputTypeAndSelectedIndex(current.circle!!, name, type, selected)
+                if (optionalExtra.isEmpty) {
+                    throw IllegalArgumentException("${current.circle!!} has no optional extra with input type $type and name $name")
+                }
+                val extra = optionalExtra.get()
+                extras.add(extra)
+
+            }
+        }
+
+        return extras
+
     }
 }

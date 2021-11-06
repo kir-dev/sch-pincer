@@ -35,6 +35,9 @@ data class OrderEntity(
         @Column(length = 255)
         var name: String = "",
 
+        @ManyToOne(optional = true)
+        var orderedItem: ItemEntity? = null,
+
         @Lob
         @Column
         var detailsJson: String,
@@ -91,6 +94,9 @@ data class OrderEntity(
         var reviewId: Long? = null,
 
         @Column(nullable = false, columnDefinition = "bigint(20) not null default 0")
-        var createdAt: Long = 0
+        var createdAt: Long = 0,
+
+        @ManyToMany
+        var extras: Set<ExtraEntity> = setOf()
 
 ) : Serializable

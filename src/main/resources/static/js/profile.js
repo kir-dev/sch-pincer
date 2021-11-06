@@ -48,3 +48,77 @@ function postForJsonObject(path, data) {
         body: JSON.stringify(data)
     });
 }
+
+const BASE_PRICE = 'basePrice';
+
+function openModalWithOrder(orderId) {
+
+    let order = orders.find(o => o.id === orderId);
+    let priceBreakdown = priceBreakdowns.find(pb => pb.orderId === orderId);
+
+    document.getElementById('details-popup').classList.remove('inactive');
+    document.getElementById('popup-title').innerText = order.name;
+
+    let data = [
+        {
+            name: 'Alapár',
+            value: priceBreakdown.prices[BASE_PRICE]
+        }
+    ];
+
+    for (let key in priceBreakdown.prices) {
+
+        if (key === 'basePrice') {
+            continue;
+        }
+
+        let typeName = LANG[key.split("-")[0]];
+        let name = key.replace(key.split("-")[0], `${typeName} `);
+
+        data.push({
+            name: name,
+            value: priceBreakdown.prices[key]
+        });
+
+    }
+    let toDisplay = `
+    <table class="form full-table">
+        <tr>
+            <th>
+                Név
+            </th>
+            <th style="text-align: end">
+                Ár
+            </th>
+        </tr>`;
+    for (let item of data) {
+        toDisplay += `
+        <tr> 
+            <td>
+                ${item.name}
+            </td>
+            <td>
+                ${item.value} ${order.count > 1 ? "x " + order.count : ""}
+            </td>
+        </tr>
+        `;
+    }
+    toDisplay += `
+        <tr style="border-top: 4px solid #888">
+            <td style="font-weight: bold">
+                Összesen
+            </td>
+            <td style="font-weight: bold; text-align: end">
+                ${order.price}            
+            </td>
+        </tr>
+    `;
+    toDisplay += "</table>";
+
+    document.getElementById('info').innerHTML = toDisplay
+
+}
+
+function closePopup() {
+    document.getElementById('details-popup').classList.add('inactive');
+}

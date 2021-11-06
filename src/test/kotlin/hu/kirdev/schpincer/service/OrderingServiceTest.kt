@@ -1,5 +1,6 @@
 package hu.kirdev.schpincer.service
 
+import hu.kirdev.schpincer.dao.ExtrasRepository
 import hu.kirdev.schpincer.dao.ItemRepository
 import hu.kirdev.schpincer.dao.OrderRepository
 import hu.kirdev.schpincer.dao.TimeWindowRepository
@@ -29,6 +30,9 @@ class OrderingServiceTest {
     @Mock
     lateinit var user: UserEntity
 
+    @Mock
+    lateinit var extrasRepository: ExtrasRepository
+
     @Test
     fun makeValidOrder() {
         val service = spy(OrderService())
@@ -54,6 +58,7 @@ class OrderingServiceTest {
         service.itemsRepo = itemsRepo
         service.timeWindowRepo = timeWindowRepo
         service.openings = openings
+        service.extrasRepository = extrasRepository
 
         service.makeOrder(user, 12, 2, 40, "comment", "{\"answers\": []}")
 
