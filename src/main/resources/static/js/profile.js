@@ -69,8 +69,12 @@ function openModalWithOrder(orderId) {
         if (key === 'basePrice') {
             continue;
         }
+
+        let typeName = LANG[key.split("-")[0]];
+        let name = key.replace(key.split("-")[0], `${typeName} `);
+
         toDisplay.push({
-            name: LANG[key],
+            name: name,
             value: priceBreakdown.prices[key]
         });
 

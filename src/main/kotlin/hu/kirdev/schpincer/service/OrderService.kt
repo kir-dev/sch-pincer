@@ -257,7 +257,11 @@ open class OrderService {
             val types: Map<String, CustomComponentType> = CustomComponentType.values().associateBy({ it.name }, { it })
             val answers = mapper.readValue(it.detailsJson.toByteArray(), CustomComponentAnswerList::class.java)
             // TODO: PUT ITEM IN ORDER ENTITY
-            val itemEntity = itemsRepo.findAllByNameEquals(it.compactName)[0]
+            var itemName = it.compactName
+            if (itemName.contains(" x ")) {
+                itemName = itemName.split(" x ")[0]
+            }
+            val itemEntity = itemsRepo.findAllByNameEquals(itemName)[0]
             val cardType = when {
                 it.comment.startsWith("[KB]") -> CardType.KB
                 it.comment.startsWith("[AB]") -> CardType.AB
@@ -268,8 +272,12 @@ open class OrderService {
             val mapped: Map<String, CustomComponentModel> = models.models.associateBy({ it.name }, { it })
 
             for (answer in answers.answers) {
-                prices[answer.name] = (types[answer.type] ?: CustomComponentType.UNKNOWN)
-                    .processPrices(answer, it, mapped[answer.name]!!, cardType)
+                val extraMap =
+                    (types[answer.type] ?: CustomComponentType.UNKNOWN)
+                        .generatePriceBreakdown(answer, it, mapped[answer.name]!!, cardType)
+                prices.putAll(
+                    extraMap
+                )
             }
             prices["basePrice"] = if (itemEntity.discountPrice == 0) itemEntity.price else itemEntity.discountPrice
 
