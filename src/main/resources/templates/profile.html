@@ -58,9 +58,9 @@
                 <td th:text="${session.user?.orderingPriority}">100</td>
             </tr>
             <tr>
-                <td><i class="material-icons">request_quote</i></td>
-                <td>Egyenleg</td>
-                <td>0 JMF</td>
+                <td><i class="material-icons">fingerprint</i></td>
+                <td th:text="#{lang.profile.id}">UID</td>
+                <td th:text="${uid}"></td>
             </tr>
         </table>
         <a class="form-button" href="#" th:href="@{/logout}" th:text="#{lang.profile.logout}">Logout</a>

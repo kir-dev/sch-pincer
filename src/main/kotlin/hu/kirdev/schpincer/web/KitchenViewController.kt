@@ -246,7 +246,7 @@ class KitchenViewController {
     data class SearchTermsDto(var name: String = "", var room: String = "")
 
     data class UserSearchResultDto(var id: String = "", var name: String = "", var room: String = "",
-                                   var email: String = "", var card: CardType = CardType.DO)
+                                   var uid: String = "", var card: CardType = CardType.DO)
 
     @ResponseBody
     @PostMapping("/api/kitchen-view/{circleId}/{openingId}/search")
@@ -260,9 +260,9 @@ class KitchenViewController {
             return listOf()
 
         return if (searchTerms.name.isNotBlank()) {
-            users.findByUsernameContains(searchTerms.name).map { UserSearchResultDto(it.uid, it.name, it.room, it.email ?: "-", it.cardType) }
+            users.findByUsernameContains(searchTerms.name).map { UserSearchResultDto(it.uid, it.name, it.room, it.uid.sha256().substring(0, 6), it.cardType) }
         } else if (searchTerms.room.isNotBlank()) {
-            users.findByRoomContains(searchTerms.room).map { UserSearchResultDto(it.uid, it.name, it.room, it.email ?: "-", it.cardType) }
+            users.findByRoomContains(searchTerms.room).map { UserSearchResultDto(it.uid, it.name, it.room, it.uid.sha256().substring(0, 6), it.cardType) }
         } else {
             listOf()
         }

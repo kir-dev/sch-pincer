@@ -99,6 +99,7 @@ open class MainController {
         model.addAttribute("orders", this.orders.findAll(request.getUserId()))
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("timeService", timeService)
+        model.addAttribute("uid", request.getUserId().sha256().substring(0, 6))
         return "profile"
     }
 
