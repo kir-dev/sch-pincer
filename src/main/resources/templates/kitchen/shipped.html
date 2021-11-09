@@ -27,8 +27,8 @@
         <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/kitchen|"   th:text="#{lang.kitchen-view.nav.kitchen}">Kitchen</a>
         <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/hand-over|" th:text="#{lang.kitchen-view.nav.hand-over}">Hand over</a>
         <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/merged|"    th:text="#{lang.kitchen-view.nav.merged}">Merged</a>
-        <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/shipping|"  th:text="#{lang.kitchen-view.nav.shipping}" class="selected">Shipping</a>
-        <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/shipped|"   th:text="#{lang.kitchen-view.nav.shipped}">Shipped</a>
+        <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/shipping|"  th:text="#{lang.kitchen-view.nav.shipping}">Shipping</a>
+        <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/shipped|"   th:text="#{lang.kitchen-view.nav.shipped}" class="selected">Shipped</a>
         <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/stats|"     th:text="#{lang.kitchen-view.nav.stats}">Stats</a>
         <a href="#" th:href="|@{/configure/}${circleId}|"                           th:text="#{lang.kitchen-view.nav.exit}">Kilépés</a>
     </nav>
@@ -41,8 +41,8 @@
 <script th:inline="javascript">
     const CIRCLE_ID = /*[[${circleId}]]*/ 0;
     const OPENING_ID = /*[[${openingId}]]*/ 0;
-    reload('shipping');
-    startLiveStatus('shipping');
+    reload('shipped');
+    startLiveStatus('shipped');
 </script>
 </body>
 </html>

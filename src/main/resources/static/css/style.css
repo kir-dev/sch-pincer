@@ -2784,6 +2784,10 @@ img.centered-mini {
     filter: brightness(1.5);
 }
 
+.kitchen-view .order p {
+    word-break: break-word;
+}
+
 .scroll-x {
     overflow-x: scroll;
 }
