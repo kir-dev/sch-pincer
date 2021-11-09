@@ -15,6 +15,8 @@ function processKitchenOrderView(data, view) {
             result += generateMergedWidget(val);
         } else if (view === 'shipping') {
             result += generateShippingWidget(val);
+        } else if (view === 'shipped') {
+            result += generateShippedWidget(val);
         }
     });
     document.getElementById('content').innerHTML = result;
@@ -34,10 +36,10 @@ function generateHandOverWidget(orderDto) {
             <b>${htmlEncode(orderDto.chefComment)}</b>
         </div>
         <div class="actions">
-            <button onclick="setStatus(${orderDto.id}, 'HANDED_OVER', 'hand-over', ${htmlEncode(orderDto.id)}); reload('hand-over')">
+            <button onclick="setStatus(${orderDto.id}, 'HANDED_OVER', 'hand-over', ${htmlEncode(orderDto.id)});">
                     <span class="material-icons">local_shipping</span>
             </button>
-            <button onclick="setStatus(${orderDto.id}, 'INTERPRETED', 'hand-over', ${htmlEncode(orderDto.id)}); reload('hand-over')">
+            <button onclick="setStatus(${orderDto.id}, 'INTERPRETED', 'hand-over', ${htmlEncode(orderDto.id)});">
                     <span class="material-icons">play_arrow</span>
             </button>
             <button onclick="setChefComment(${orderDto.id}, 'hand-over'); reload('hand-over')">
@@ -62,13 +64,13 @@ function generateKitchenWidget(orderDto) {
         </div>
         <div class="actions">
             <div class="actions">
-                <button onclick="setStatus(${orderDto.id}, 'COMPLETED', 'kitchen', ${htmlEncode(orderDto.id)}); reload('kitchen')" class="status-color-COMPLETED">
+                <button onclick="setStatus(${orderDto.id}, 'COMPLETED', 'kitchen', ${htmlEncode(orderDto.id)});" class="status-color-COMPLETED">
                     <span class="material-icons">directions</span>
                 </button>
-                <button onclick="setStatus(${orderDto.id}, 'INTERPRETED', 'kitchen', ${htmlEncode(orderDto.id)}); reload('kitchen')" class="status-color-INTERPRETED">
+                <button onclick="setStatus(${orderDto.id}, 'INTERPRETED', 'kitchen', ${htmlEncode(orderDto.id)});" class="status-color-INTERPRETED">
                     <span class="material-icons">play_arrow</span>
                 </button>
-                <button onclick="setStatus(${orderDto.id}, 'ACCEPTED', 'kitchen', ${htmlEncode(orderDto.id)}); reload('kitchen')" class="status-color-ACCEPTED">
+                <button onclick="setStatus(${orderDto.id}, 'ACCEPTED', 'kitchen', ${htmlEncode(orderDto.id)});" class="status-color-ACCEPTED">
                     <span class="material-icons">shopping_cart</span>
                 </button>
                 <button onclick="setChefComment(${orderDto.id}, 'kitchen', '${jsEscape(orderDto.chefComment)}'); reload('kitchen')">
@@ -94,16 +96,16 @@ function generateMergedWidget(orderDto) {
         </div>
         <div class="actions">
             <div class="actions">
-                <button onclick="setStatus(${orderDto.id}, 'HANDED_OVER', 'merged', ${htmlEncode(orderDto.id)}); reload('merged')" class="status-color-HANDED_OVER">
+                <button onclick="setStatus(${orderDto.id}, 'HANDED_OVER', 'merged', ${htmlEncode(orderDto.id)});" class="status-color-HANDED_OVER">
                     <span class="material-icons">local_shipping</span>
                 </button>
-                <button onclick="setStatus(${orderDto.id}, 'COMPLETED', 'merged', ${htmlEncode(orderDto.id)}); reload('merged')" class="status-color-COMPLETED">
+                <button onclick="setStatus(${orderDto.id}, 'COMPLETED', 'merged', ${htmlEncode(orderDto.id)});" class="status-color-COMPLETED">
                     <span class="material-icons">directions</span>
                 </button>
-                <button onclick="setStatus(${orderDto.id}, 'INTERPRETED', 'merged', ${htmlEncode(orderDto.id)}); reload('merged')" class="status-color-INTERPRETED">
+                <button onclick="setStatus(${orderDto.id}, 'INTERPRETED', 'merged', ${htmlEncode(orderDto.id)});" class="status-color-INTERPRETED">
                     <span class="material-icons">play_arrow</span>
                 </button>
-                <button onclick="setStatus(${orderDto.id}, 'ACCEPTED', 'merged', ${htmlEncode(orderDto.id)}); reload('merged')" class="status-color-ACCEPTED">
+                <button onclick="setStatus(${orderDto.id}, 'ACCEPTED', 'merged', ${htmlEncode(orderDto.id)});" class="status-color-ACCEPTED">
                     <span class="material-icons">shopping_cart</span>
                 </button>
                 <button onclick="setChefComment(${orderDto.id}, 'merged', '${jsEscape(orderDto.chefComment)}'); reload('merged')">
@@ -129,10 +131,10 @@ function generateShippingWidget(orderDto) {
         </div>
         <div class="actions">
             <div class="actions">
-                <button onclick="setStatus(${orderDto.id}, 'SHIPPED', 'shipping', ${htmlEncode(orderDto.id)}); reload('shipping')">
+                <button onclick="setStatus(${orderDto.id}, 'SHIPPED', 'shipping', ${htmlEncode(orderDto.id)});">
                     <span class="material-icons">done</span>
                 </button>
-                <button onclick="setStatus(${orderDto.id}, 'COMPLETED', 'shipping', ${htmlEncode(orderDto.id)}); reload('shipping')">
+                <button onclick="setStatus(${orderDto.id}, 'COMPLETED', 'shipping', ${htmlEncode(orderDto.id)});">
                     <span class="material-icons">close</span>
                 </button>
             </div>
@@ -140,8 +142,34 @@ function generateShippingWidget(orderDto) {
     </div>`;
 }
 
+function generateShippedWidget(orderDto) {
+    return `<div class="order status-${htmlEncode(orderDto.status)}" id="order-${htmlEncode(orderDto.id)}">
+        <h3>#${htmlEncode(orderDto.artificialId)} - ${htmlEncode(orderDto.name)}${orderDto.count > 1 ? (' x' + orderDto.count) : ''}</h3>
+        <h4>${htmlEncode(orderDto.userName)} - ${htmlEncode(orderDto.room)}</h4>
+        <h4 class="badge">${htmlEncode(orderDto.intervalMessage)} <span class="status status-${htmlEncode(orderDto.intervalStatus)}"></span></h4>
+        <h4 class="badge">${orderDto.price} JMF</h4>
+
+        <p class="ingreds">${htmlEncode(orderDto.extra)}</p>
+        <div class="comment">
+            <p>${htmlEncode(orderDto.comment)}</p>
+            <p class="additional">${htmlEncode(orderDto.additionalComment)}</p>
+            <b>${htmlEncode(orderDto.chefComment)}</b>
+        </div>
+        <div class="actions">
+            <div class="actions">
+                <button onclick="setStatus(${orderDto.id}, 'HANDED_OVER', 'shipped', ${htmlEncode(orderDto.id)});" class="status-color-HANDED_OVER">
+                    <span class="material-icons">local_shipping</span>
+                </button>
+                <button onclick="setStatus(${orderDto.id}, 'COMPLETED', 'shipped', ${htmlEncode(orderDto.id)});" class="status-color-COMPLETED">
+                    <span class="material-icons">directions</span>
+                </button>
+            </div>
+        </div>
+    </div>`;
+}
+
 function setStatus(orderId, status, view, itemId) {
-    document.getElementById(`order-${itemId}`).className = `order status-${status}`;
+    document.getElementById(`order-${itemId}`).className = `order status-${status} order-syncing`;
     postForJsonObject(`api/kitchen-view/${CIRCLE_ID}/${OPENING_ID}/view/${view}/${orderId}/status/${status}`, {})
         .then(data => processKitchenOrderView(data, view));
 }

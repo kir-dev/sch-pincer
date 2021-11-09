@@ -1,5 +1,6 @@
 package hu.kirdev.schpincer.dto
 
+import hu.kirdev.schpincer.model.MILLIS_TO_MINS
 import hu.kirdev.schpincer.model.OrderEntity
 import hu.kirdev.schpincer.model.OrderStatus
 
@@ -44,7 +45,7 @@ data class KitchenOrderDto(
             priority = order.priority,
             intervalStatus = when {
                 System.currentTimeMillis() < (order.date) -> "before"
-                System.currentTimeMillis() > (order.date + intervalLength) -> "after"
+                System.currentTimeMillis() > (order.date + (intervalLength * MILLIS_TO_MINS)) -> "after"
                 else -> "ok"
             }
     )

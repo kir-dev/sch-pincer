@@ -82,6 +82,22 @@ class KitchenViewController {
         return "kitchen/shipping"
     }
 
+
+    @GetMapping("/kitchen-view/{circleId}/{openingId}/shipped")
+    fun shipped(
+            @PathVariable circleId: Long,
+            @PathVariable openingId: Long,
+            model: Model,
+            request: HttpServletRequest
+    ): String {
+        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+            return "redirect:/profile"
+
+        model.addAttribute("openingId", openingId)
+        model.addAttribute("circleId", circleId)
+        return "kitchen/shipped"
+    }
+
     @GetMapping("/kitchen-view/{circleId}/{openingId}/new-order")
     fun newOrder(
             @PathVariable circleId: Long,
@@ -129,19 +145,6 @@ class KitchenViewController {
         return orders.findToExport(openingId, OrderStrategy.ORDER_GROUPED.representation)
                 .filter { it.status == OrderStatus.COMPLETED }
                 .map { KitchenOrderDto(it, openingIntervalLength) }
-
-//        val orders = orders.findToExport(openingId, OrderStrategy.ORDER_GROUPED.representation)
-//        var id = 1
-//        val result = mutableListOf<FastfoodOrderDto>()
-//        for (order in orders) {
-//            for (i in 0 until order.count) {
-//                val clone = FastfoodOrderDto(order, openingIntervalLength)
-//                clone.artificialId = id
-//                id++
-//                result.add(clone)
-//            }
-//        }
-//        return result
     }
 
     @ResponseBody
@@ -203,6 +206,25 @@ class KitchenViewController {
 
         return orders.findToExport(openingId, OrderStrategy.ORDER_GROUPED.representation)
                 .filter { it.status == OrderStatus.HANDED_OVER }
+                .map { KitchenOrderDto(it, openingIntervalLength) }
+    }
+
+    @ResponseBody
+    @RequestMapping(
+            path = ["/api/kitchen-view/{circleId}/{openingId}/shipped"],
+            method = [RequestMethod.GET, RequestMethod.POST])
+    fun fetchShipped(
+            @PathVariable circleId: Long,
+            @PathVariable openingId: Long,
+            request: HttpServletRequest
+    ): List<KitchenOrderDto> {
+        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+            return listOf()
+
+        val openingIntervalLength = openings.getOne(openingId).intervalLength
+
+        return orders.findToExport(openingId, OrderStrategy.ORDER_GROUPED.representation)
+                .filter { it.status == OrderStatus.SHIPPED }
                 .map { KitchenOrderDto(it, openingIntervalLength) }
     }
 
