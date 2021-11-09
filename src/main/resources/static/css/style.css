@@ -2689,6 +2689,10 @@ img.centered-mini {
     border-color: #0D5D98;
 }
 
+.kitchen-view .order.status-SHIPPED {
+    border-color: #884291;
+}
+
 .kitchen-view .order h3 {
     background-color: #111111;
     color: #FFFFFF;
@@ -2777,7 +2781,7 @@ img.centered-mini {
 }
 
 .kitchen-view .order .actions button:hover span {
-    color: #FFFFFF;
+    filter: brightness(1.5);
 }
 
 .scroll-x {
@@ -2794,6 +2798,17 @@ img.centered-mini {
 
 .kitchen-view-menu .form-slider {
     background-color: #111111;
+}
+
+.status-table {
+    margin: 0 auto;
+    color: #e5e5e5;
+}
+
+.status-table th {
+    padding: 8px;
+    font-weight: 300;
+    text-transform: uppercase;
 }
 
 .user-selector label {
@@ -2846,6 +2861,27 @@ img.centered-mini {
 .stat-table tr:last-of-type td {
     font-weight: bold;
 }
+
+.status-color-ACCEPTED {
+    color: #b52601 !important;
+}
+
+.status-color-INTERPRETED {
+    color: #eead45 !important;
+}
+
+.status-color-COMPLETED {
+    color: #6E9E06 !important;
+}
+
+.status-color-HANDED_OVER {
+    color: #027BE5 !important;
+}
+
+.status-color-SHIPPED {
+    color: #884291 !important;
+}
+
 
 /** MENU **/
 
