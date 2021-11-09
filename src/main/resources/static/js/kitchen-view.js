@@ -221,7 +221,7 @@ function populateResultTable(data) {
             <tr>
                 <td>${htmlEncode(val.name)}</td>
                 <td>${htmlEncode(val.room)}</td>
-                <td>${htmlEncode(val.email)}</td>
+                <td>${htmlEncode(val.uid)}</td>
                 <td>${htmlEncode(val.card)}</td>
                 <td>
                     <button onclick="selectUser('${jsEscape(val.id)}', '${jsEscape(val.name)}', '${jsEscape(val.room)}', '${jsEscape(val.card)}')">
@@ -241,7 +241,7 @@ function populateResultTable(data) {
                 <td>${htmlEncode(val.room)}</td>
             </tr>
             <tr>
-                <td>${htmlEncode(val.email)}</td>
+                <td>${htmlEncode(val.uid)}</td>
             </tr>
             <tr>
                 <td>${htmlEncode(val.card)}</td>
