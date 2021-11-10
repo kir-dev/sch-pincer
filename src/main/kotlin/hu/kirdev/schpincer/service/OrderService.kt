@@ -12,6 +12,8 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
@@ -98,7 +100,7 @@ open class OrderService {
         save(order)
     }
 
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
     open fun makeOrder(user: UserEntity, id: Long, itemCount: Int, time: Long, comment: String, detailsJson: String): ResponseEntity<String> {
         val procedure = MakeOrderProcedure(user, id, itemCount, time, comment, detailsJson,
                 itemsRepo = itemsRepo,
@@ -112,7 +114,7 @@ open class OrderService {
         return responseOf(RESPONSE_ACK)
     }
 
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
     open fun makeManualOrder(user: UserEntity, id: Long, itemCount: Int, time: Long,
                              comment: String, detailsJson: String, manualUser: ManualUserDetails
     ): ResponseEntity<String> {
@@ -133,7 +135,7 @@ open class OrderService {
         return responseOf(RESPONSE_ACK)
     }
 
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
     open fun cancelOrder(user: UserEntity, id: Long): ResponseEntity<String> {
         val procedure = CancelOrderProcedure(user, id,
                 orderRepository = repo,
