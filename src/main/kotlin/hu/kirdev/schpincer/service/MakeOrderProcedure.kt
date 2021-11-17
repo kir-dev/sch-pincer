@@ -60,11 +60,11 @@ class MakeOrderProcedure (
             validateOrderCount()
             timeWindow = timeWindowRepo.getOne(time)
             validateTimeWindow()
+            updateCategoryLimitations()
         } else {
             timeWindow = timeWindowRepo.getOne(time)
         }
 
-        updateCategoryLimitations()
         updateRemainingItemCount()
         updateOrderDetails()
     }
