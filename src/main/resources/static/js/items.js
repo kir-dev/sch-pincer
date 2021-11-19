@@ -71,10 +71,9 @@ function showLoading() {
 }
 
 function searchFor(keyword) {
-    getForJsonObject('api/search/?q=')
+    getForJsonObject('api/items/' + getFilter('/'))
         .then(function (data) {
             searchResult = data;
-            data.forEach(val => addItem(val));
             document.getElementById('search-input').value = keyword;
             filterSearch();
             document.getElementById('loading').style.display = 'none';
@@ -85,12 +84,12 @@ function searchFor(keyword) {
 function updateUrl(keyword) {
     if (keyword == null) {
         window.history.pushState({
-            route: '/items/' + getFilter('')
-        }, document.title, '/items/' + getFilter(''));
+            route: '/items/' + (getFilter('') !== '' ? ('?' + getFilter('')) : '')
+        }, document.title, '/items/' + (getFilter('') !== '' ? ('?' + getFilter('')) : ''));
     } else {
         window.history.pushState({
-            route: '/items/?q=' + encodeURI(keyword)
-        }, document.title, '/items/?q=' + encodeURI(keyword));
+            route: '/items/?' + (getFilter('') !== '' ? (getFilter('') + '&') : '') + 'q=' + encodeURI(keyword)
+        }, document.title, '/items/?' + (getFilter('') !== '' ? (getFilter('') + '&') : '') + 'q=' + encodeURI(keyword));
     }
 }
 
