@@ -20,33 +20,24 @@ import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/api")
-open class ApiController {
+open class ApiController(
+        private val circles: CircleService,
+        private val openings: OpeningService,
+        private val items: ItemService,
+        private val users: UserService,
+        private val orders: OrderService,
+        private val timeService: TimeService,
+
+        @Value("\${schpincer.api-tokens:}")
+        apiTokensRaw: String,
+
+        @Value("\${schpincer.api.base-url}")
+        private val baseUrl: String
+) {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    @Autowired
-    private lateinit var circles: CircleService
-
-    @Autowired
-    private lateinit var openings: OpeningService
-
-    @Autowired
-    private lateinit var items: ItemService
-
-    @Autowired
-    private lateinit var users: UserService
-
-    @Autowired
-    private lateinit var orders: OrderService
-
-    @Autowired
-    private lateinit var timeService: TimeService
-
-    @Value("\${schpincer.indualsch-api-token:}")
-    private lateinit var indulaschApiToken: String
-
-    @Value("\${schpincer.api.base-url}")
-    private lateinit var baseUrl: String
+    private val apiTokens = apiTokensRaw.split(Regex(", *"))
 
     @ApiOperation("Item info")
     @GetMapping("/item/{id}")
@@ -131,49 +122,6 @@ open class ApiController {
         return ResponseEntity(list, HttpStatus.OK)
     }
 
-// Disabled due to previous change in handling items
-//    @ApiOperation("Page of items")
-//    @GetMapping("/items/{page}")
-//    @ResponseBody
-    fun getItems(request: HttpServletRequest, @PathVariable page: Int): ResponseEntity<List<ItemEntityDto>> {
-        val loggedIn = request.hasUser()
-        val cache: MutableMap<Long, OpeningEntity?> = HashMap()
-        val list = items.findAll(page).stream()
-                .filter { it.visibleWithoutLogin || loggedIn }
-                .filter(ItemEntity::visibleInAll)
-                .map { item: ItemEntity ->
-                    ItemEntityDto(item,
-                            cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
-                            loggedIn || request.isInInternalNetwork())
-                }
-                .collect(Collectors.toList())
-        return ResponseEntity(list, HttpStatus.OK)
-    }
-
-    @ApiOperation("List of openings")
-    @GetMapping("/openings")
-    @ResponseBody
-    fun getAllOpenings(): ResponseEntity<List<OpeningEntity>> {
-        val page = openings.findAll()
-        return ResponseEntity(page, HttpStatus.OK)
-    }
-
-    @ApiOperation("List of openings (next week period)")
-    @GetMapping("/openings/week")
-    @ResponseBody
-    fun getNextWeekOpenings(): ResponseEntity<List<OpeningEntity>> {
-        val page = openings.findNextWeek()
-        return ResponseEntity(page, HttpStatus.OK)
-    }
-
-    @ApiOperation("List of circles")
-    @GetMapping("/circles")
-    @ResponseBody
-    fun getAllCircles(): ResponseEntity<List<CircleEntity>> {
-        val page = circles.findAll()
-        return ResponseEntity(page, HttpStatus.OK)
-    }
-
     data class NewOrderRequest(var id: Long = -1,
                                var time: Int = -1,
                                var comment: String = "",
@@ -250,26 +198,42 @@ open class ApiController {
                 "Timestamp: ${System.currentTimeMillis()}"
     }
 
-    data class OpeningDetail(var name: String, var icon: String, var available: Int, var outOf: Int, var comment: String)
+    data class OpeningDetail(
+            var name: String,
+            var icon: String?,
+            var feeling: String,
+            var available: Int,
+            var outOf: Int,
+            var banner: String?,
+            var day: String,
+            var comment: String
+    )
+
+    private val daysOfTheWeek = arrayOf("n/a", "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat", "Vasárnap")
 
     @CrossOrigin(origins = ["*"])
-    @GetMapping("/openings-for-indulasch")
+    @GetMapping("/open/openings")
     @ResponseBody
     fun openingsApi(@RequestParam(required = false) token: String?): List<OpeningDetail> {
-        if (token.isNullOrBlank() || !token.equals(indulaschApiToken))
-            return listOf()
+        if (token.isNullOrBlank() || !apiTokens.contains(token))
+            return listOf(OpeningDetail("Invalid Token", null, "", 0, 0, null, "", "Contact the administrator if you think this is a problem"))
 
         return openings.findNextWeek()
                 .filter { it.circle != null }
+                .filter { it.orderStart <= System.currentTimeMillis() }
                 .map { OpeningDetail(
                         name = it.circle?.displayName ?: "n/a",
-                        icon =  baseUrl + (it.circle?.logoUrl ?: ""),
+                        icon =  it.circle?.logoUrl?.let { url -> baseUrl + url },
+                        feeling = it.feeling ?: "",
                         available = Math.max(0, Math.min(
                                         it.timeWindows.sumOf { tw -> tw.normalItemCount },
                                         it.maxOrder - it.timeWindows.sumOf { tw -> it.maxOrderPerInterval - tw.normalItemCount
                                 })),
                         outOf = it.maxOrder,
-                        comment = "Rendelhető ${timeService.format(it.orderEnd, "MM.dd. HH:mm")}-ig az sch-pincéren"
+                        banner = it.prUrl.let { url -> baseUrl + url },
+                        day = timeService.format(it.dateStart, "u")?.toInt().let { daysOfTheWeek[it ?: 0] },
+                        comment = "${timeService.format(it.orderEnd, "u")?.toInt().let { daysOfTheWeek[it ?: 0] }} " +
+                                "${timeService.format(it.orderEnd, "HH:mm")}-ig rendelhető"
                 ) }
     }
 
