@@ -33,7 +33,10 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .and()
                 .formLogin()
                 .loginPage("/login")
-        http.csrf().ignoringAntMatchers("/api/**", "/configure/order/update")
+        http.csrf().ignoringAntMatchers("/api/**",
+                "/configure/order/update",
+                "/configure/order/set-comment",
+                "/configure/order/change-price")
     }
 
     override fun configure(auth: AuthenticationManagerBuilder?) {

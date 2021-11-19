@@ -79,10 +79,24 @@ open class OrderService {
 
     @Transactional
     open fun updateOrder(id: Long, os: OrderStatus) {
-        val order: Optional<OrderEntity> = repo.findById(id)
-        if (order.isPresent()) {
-            val orderEntity: OrderEntity = order.get()
+        repo.findById(id).ifPresent { orderEntity ->
             orderEntity.status = os
+            repo.save(orderEntity)
+        }
+    }
+
+    @Transactional
+    open fun updateOrderComment(id: Long, comment: String) {
+        repo.findById(id).ifPresent { orderEntity ->
+            orderEntity.comment = orderEntity.comment.substring(0, 5) + comment
+            repo.save(orderEntity)
+        }
+    }
+
+    @Transactional
+    open fun updateOrderPrice(id: Long, price: Int) {
+        repo.findById(id).ifPresent { orderEntity ->
+            orderEntity.price = price
             repo.save(orderEntity)
         }
     }
@@ -216,6 +230,7 @@ open class OrderService {
             repo.save(it)
         }
     }
+
 }
 
 fun responseOf(body: String, status: HttpStatus = HttpStatus.OK) = ResponseEntity(body, status)
