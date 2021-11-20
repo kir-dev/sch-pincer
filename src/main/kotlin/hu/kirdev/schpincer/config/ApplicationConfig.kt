@@ -16,7 +16,7 @@ open class ApplicationConfig {
     @Autowired
     private val itemPrecedenceService: ItemPrecedenceService? = null
 
-    @Scheduled(fixedRate = 1000 * 60 * 30, initialDelay = 20000)
+    @Scheduled(fixedRate = 1000 * 60 * 30L, initialDelay = 20000)
     fun reorderItems() {
         log.info("Executing reorder task")
         itemPrecedenceService!!.reorder()
