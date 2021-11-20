@@ -16,6 +16,18 @@
 </head>
 <body>
 
+<div class="status-table-placeholder"></div>
+<div class="status-table-holder">
+    <table class="status-table">
+        <tr>
+            <th><span class="material-icons status-color-ACCEPTED">shopping_cart</span><br><span th:text="#{lang.kitchen-view.stat.accepted}">Megrendelve</span></th>
+            <th><span class="material-icons status-color-INTERPRETED">play_arrow</span><br><span th:text="#{lang.kitchen-view.stat.interpreted}">Készül</span></th>
+            <th><span class="material-icons status-color-COMPLETED">directions</span><br><b><span th:text="#{lang.kitchen-view.stat.completed}">Kész</span></b></th>
+            <th><span class="material-icons status-color-HANDED_OVER">local_shipping</span><br><span th:text="#{lang.kitchen-view.stat.hand-over}">Szállítás</span></th>
+        </tr>
+    </table>
+</div>
+
 <div class="kitchen-view-menu">
     <nav>
         <label class="form-switch">
@@ -33,16 +45,6 @@
         <a href="#" th:href="|@{/configure/}${circleId}|"                           th:text="#{lang.kitchen-view.nav.exit}">Kilépés</a>
     </nav>
 </div>
-
-<table class="status-table">
-    <tr>
-        <th><span class="material-icons status-color-ACCEPTED">shopping_cart</span><br><span th:text="#{lang.kitchen-view.stat.accepted}">Megrendelve</span></th>
-        <th><span class="material-icons status-color-INTERPRETED">play_arrow</span><br><span th:text="#{lang.kitchen-view.stat.interpreted}">Készül</span></th>
-        <th><span class="material-icons status-color-COMPLETED">directions</span><br><b><span th:text="#{lang.kitchen-view.stat.completed}">Kész</span></b></th>
-        <th><span class="material-icons status-color-HANDED_OVER">local_shipping</span><br><span th:text="#{lang.kitchen-view.stat.hand-over}">Szállítás</span></th>
-        <th><span class="material-icons status-color-SHIPPED">done</span><br><span th:text="#{lang.kitchen-view.stat.shipped}">Kiszállítva</span></th>
-    </tr>
-</table>
 
 <div class="kitchen-view" id="content">
 
