@@ -5,6 +5,8 @@ let latestData;
 let searchResult = [];
 let manualOrder = false;
 
+var beepSound = new Audio('/beep-boop.mp3');
+
 function appendNext(profile = 0) {
     if (document.getElementById('no-results') == null)
         return;
@@ -632,6 +634,9 @@ function doneOrder() {
     setTimeout(() => {
         document.querySelector('.done-tick').style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
     }, 100);
+    setTimeout(() => {
+        beepSound.play();
+    }, 300);
     setTimeout(() => {
         let doneElement = document.querySelector('.done');
         doneElement.style.top = '20vh';

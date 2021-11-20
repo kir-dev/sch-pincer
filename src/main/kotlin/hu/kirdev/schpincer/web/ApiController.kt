@@ -215,7 +215,9 @@ open class ApiController(
             var outOf: Int,
             var banner: String?,
             var day: String,
-            var comment: String
+            var comment: String,
+            var cirleUrl: String,
+            var circleColor: String
     )
 
     private val daysOfTheWeek = arrayOf("n/a", "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat", "Vasárnap")
@@ -225,7 +227,8 @@ open class ApiController(
     @ResponseBody
     fun openingsApi(@RequestParam(required = false) token: String?): List<OpeningDetail> {
         if (token.isNullOrBlank() || !apiTokens.contains(token))
-            return listOf(OpeningDetail("Invalid Token", null, "", 0, 0, null, "", "Contact the administrator if you think this is a problem"))
+            return listOf(OpeningDetail("Invalid Token", null, "sad", 0, 0, null,
+                    "", "Contact the administrator if you think this is a problem", "", ""))
 
         return openings.findNextWeek()
                 .filter { it.circle != null }
@@ -242,7 +245,55 @@ open class ApiController(
                         banner = it.prUrl.let { url -> baseUrl + url },
                         day = timeService.format(it.dateStart, "u")?.toInt().let { daysOfTheWeek[it ?: 0] },
                         comment = "${timeService.format(it.orderEnd, "u")?.toInt().let { daysOfTheWeek[it ?: 0] }} " +
-                                "${timeService.format(it.orderEnd, "HH:mm")}-ig rendelhető"
+                                "${timeService.format(it.orderEnd, "HH:mm")}-ig rendelhető",
+                        cirleUrl = it.circle?.alias?.let { alias -> baseUrl + "p/" + alias } ?: baseUrl + "p/" + (it.circle?.id ?: 0),
+                        circleColor = it.circle?.cssClassName ?: "none"
+                ) }
+    }
+
+    data class UpcomingOpeningDetail(
+            var name: String,
+            var orderStart: Long,
+            var openingStart: Long,
+            var icon: String?,
+            var feeling: String,
+            var available: Int,
+            var outOf: Int,
+            var banner: String?,
+            var day: String,
+            var comment: String,
+            var cirleUrl: String,
+            var circleColor: String
+    )
+
+    @CrossOrigin(origins = ["*"])
+    @GetMapping("/open/upcoming-openings")
+    @ResponseBody
+    fun upcomingOpeningsApi(@RequestParam(required = false) token: String?): List<UpcomingOpeningDetail> {
+        if (token.isNullOrBlank() || !apiTokens.contains(token))
+            return listOf(UpcomingOpeningDetail("Invalid Token", 0, 0,null,
+                    "sad", 0, 0, null, "",
+                    "Contact the administrator if you think this is a problem", "", ""))
+
+        return openings.findNextWeek()
+                .filter { it.circle != null }
+                .map { UpcomingOpeningDetail(
+                        name = it.circle?.displayName ?: "n/a",
+                        orderStart = it.orderStart,
+                        openingStart = it.dateStart,
+                        icon =  it.circle?.logoUrl?.let { url -> baseUrl + url },
+                        feeling = it.feeling ?: "",
+                        available = Math.max(0, Math.min(
+                                it.timeWindows.sumOf { tw -> tw.normalItemCount },
+                                it.maxOrder - it.timeWindows.sumOf { tw -> it.maxOrderPerInterval - tw.normalItemCount
+                                })),
+                        outOf = it.maxOrder,
+                        banner = it.prUrl.let { url -> baseUrl + url },
+                        day = timeService.format(it.dateStart, "u")?.toInt().let { daysOfTheWeek[it ?: 0] },
+                        comment = "${timeService.format(it.orderEnd, "u")?.toInt().let { daysOfTheWeek[it ?: 0] }} " +
+                                "${timeService.format(it.orderEnd, "HH:mm")}-ig rendelhető",
+                        cirleUrl = it.circle?.alias?.let { alias -> baseUrl + "p/" + alias } ?: baseUrl + "p/" + (it.circle?.id ?: 0),
+                        circleColor = it.circle?.cssClassName ?: "none"
                 ) }
     }
 
