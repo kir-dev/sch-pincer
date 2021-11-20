@@ -44,7 +44,8 @@ class MakeOrderProcedure (
                     userName = manualUser.name,
                     comment = "[${manualUser.card}] @ ${user.name} | $comment",
                     detailsJson = detailsJson,
-                    room = manualUser.room)
+                    room = manualUser.room,
+                    createdAt = System.currentTimeMillis())
             item = itemsRepo.getOne(id)
         }
 
@@ -80,7 +81,8 @@ class MakeOrderProcedure (
                 userName = user.name,
                 comment = "[${user.cardType.name}] $comment",
                 detailsJson = detailsJson,
-                room = user.room)
+                room = user.room,
+                createdAt = System.currentTimeMillis())
     }
 
     internal fun loadTargetItem() {

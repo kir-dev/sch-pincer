@@ -88,6 +88,9 @@ data class OrderEntity(
         var compactName: String = "",
 
         @Column
-        var reviewId: Long? = null
+        var reviewId: Long? = null,
+
+        @Column(nullable = false, columnDefinition = "bigint(20) not null default 0")
+        var createdAt: Long = 0
 
 ) : Serializable
