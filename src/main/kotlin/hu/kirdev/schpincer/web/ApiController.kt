@@ -42,12 +42,17 @@ open class ApiController(
     @ApiOperation("Item info")
     @GetMapping("/item/{id}")
     @ResponseBody
-    fun getItem(request: HttpServletRequest, @PathVariable id: Long): ItemEntityDto? {
+    fun getItem(
+            request: HttpServletRequest,
+            @PathVariable id: Long,
+            @RequestParam(defaultValue = "0") explicitOpening: Long
+    ): ItemEntityDto? {
         val item = items.getOne(id)
         if (item == null || (!request.hasUser() && !item.visibleWithoutLogin))
             return null
         val loggedIn = request.hasUser() || request.isInInternalNetwork()
-        return ItemEntityDto(item, openings.findNextOf(item.circle!!.id), loggedIn)
+        val opening = if (explicitOpening != 0L) openings.getOne(explicitOpening) else openings.findNextOf(item.circle!!.id)
+        return ItemEntityDto(item, opening, loggedIn, loggedIn && explicitOpening > 0)
     }
 
     @ApiOperation("List of items")
@@ -66,7 +71,8 @@ open class ApiController(
                     .map { item: ItemEntity ->
                         ItemEntityDto(item,
                                 cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
-                                loggedIn || request.isInInternalNetwork())
+                                loggedIn || request.isInInternalNetwork(),
+                                false)
                     }
                     .collect(Collectors.toList())
             return ResponseEntity(list, HttpStatus.OK)
@@ -78,7 +84,8 @@ open class ApiController(
                 .map { item: ItemEntity ->
                     ItemEntityDto(item,
                             cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
-                            loggedIn || request.isInInternalNetwork())
+                            loggedIn || request.isInInternalNetwork(),
+                            false)
                 }
                 .collect(Collectors.toList())
         return ResponseEntity(list, HttpStatus.OK)
@@ -97,7 +104,8 @@ open class ApiController(
                 .map { item: ItemEntity ->
                     ItemEntityDto(item,
                             cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
-                            loggedIn || request.isInInternalNetwork())
+                            loggedIn || request.isInInternalNetwork(),
+                            false)
                 }
                 .collect(Collectors.toList())
         return ResponseEntity(list, HttpStatus.OK)
@@ -116,7 +124,8 @@ open class ApiController(
                 .map { item: ItemEntity ->
                     ItemEntityDto(item,
                             cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
-                            loggedIn || request.isInInternalNetwork())
+                            loggedIn || request.isInInternalNetwork(),
+                            false)
                 }
                 .collect(Collectors.toList())
         return ResponseEntity(list, HttpStatus.OK)

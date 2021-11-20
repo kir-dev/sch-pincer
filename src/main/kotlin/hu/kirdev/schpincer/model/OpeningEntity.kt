@@ -113,6 +113,10 @@ data class OpeningEntity(
             appendTimeWindow(openings, time)
             time += this.intervalLength * MILLIS_TO_MINS
         }
+
+        val tw = TimeWindowEntity(0, this, "Túlóra", this.dateEnd, 0, Integer.MIN_VALUE)
+        timeWindows.add(tw)
+        openings.saveTimeWindow(tw)
     }
 
     private fun appendTimeWindow(openings: OpeningService, time: Long) {

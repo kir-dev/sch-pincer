@@ -370,7 +370,7 @@ function itemChangedPizzasch() {
 }
 
 function showPopup(id) {
-    getForJsonObject('api/item/' + id)
+    getForJsonObject('api/item/' + id + (manualOrder ? ('?explicitOpening=' + OPENING_ID) : ''))
         .then(function (data) {
             disableScroll();
             latestData = data;
@@ -556,7 +556,8 @@ const ResponseType = {
     MAX_REACHED_EXTRA: 'MAX_REACHED_EXTRA',
     NO_ORDERING: 'NO_ORDERING',
     NO_ROOM_SET: 'NO_ROOM_SET',
-    CATEGORY_FULL: 'CATEGORY_FULL'
+    CATEGORY_FULL: 'CATEGORY_FULL',
+    TIME_WINDOW_INVALID: 'TIME_WINDOW_INVALID'
 };
 
 function packManualOrderDetails() {
@@ -593,22 +594,27 @@ function buySelectedItem() {
         if (data === ResponseType.ACK) {
             closePopup(true);
             doneOrder();
-        } else if (data === ResponseType.INTERNAL_ERROR) {
-            showMessageBox(LANG.internal);
-        } else if (data === ResponseType.OVERALL_MAX_REACHED) {
-            showMessageBox(LANG.orderFull);
-        } else if (data === ResponseType.MAX_REACHED) {
-            showMessageBox(LANG.intervalFull);
-        } else if (data === ResponseType.MAX_REACHED_EXTRA) {
-            showMessageBox(LANG.intervalFullExtra);
-        } else if (data === ResponseType.NO_ORDERING) {
-            showMessageBox(LANG.alreadyClosed);
-        } else if (data === ResponseType.NO_ROOM_SET) {
-            showMessageBox(LANG.noRoom);
-        } else if (data === ResponseType.CATEGORY_FULL) {
-            showMessageBox(LANG.categoryFull);
         } else {
-            showMessageBox(data);
+            console.error(data);
+            if (data === ResponseType.INTERNAL_ERROR) {
+                showMessageBox(LANG.internal);
+            } else if (data === ResponseType.OVERALL_MAX_REACHED) {
+                showMessageBox(LANG.orderFull);
+            } else if (data === ResponseType.MAX_REACHED) {
+                showMessageBox(LANG.intervalFull);
+            } else if (data === ResponseType.MAX_REACHED_EXTRA) {
+                showMessageBox(LANG.intervalFullExtra);
+            } else if (data === ResponseType.NO_ORDERING) {
+                showMessageBox(LANG.alreadyClosed);
+            } else if (data === ResponseType.NO_ROOM_SET) {
+                showMessageBox(LANG.noRoom);
+            } else if (data === ResponseType.CATEGORY_FULL) {
+                showMessageBox(LANG.categoryFull);
+            } else if (data === ResponseType.TIME_WINDOW_INVALID) {
+                showMessageBox(LANG.internal);
+            } else {
+                showMessageBox(data);
+            }
         }
 
     }).catch(function (e) {
