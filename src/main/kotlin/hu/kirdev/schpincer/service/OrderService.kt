@@ -231,6 +231,13 @@ open class OrderService {
         }
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
+    open fun changeCancelUntilDates(openingId: Long, orderEnd: Long) {
+        val affectedOpenings = repo.findAllByOpeningId(openingId)
+        affectedOpenings.forEach { it.cancelUntil = orderEnd }
+        repo.saveAll(affectedOpenings)
+    }
+
 }
 
 fun responseOf(body: String, status: HttpStatus = HttpStatus.OK) = ResponseEntity(body, status)

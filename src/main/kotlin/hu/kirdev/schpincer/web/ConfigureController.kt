@@ -480,6 +480,7 @@ open class ConfigureController {
             maxLambda = oed.maxLambda
         }
         openings.save(opening)
+        orders.changeCancelUntilDates(openingId, opening.orderEnd)
         return "redirect:/configure/$circleId"
     }
 
