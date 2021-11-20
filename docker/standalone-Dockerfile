@@ -3,5 +3,5 @@ MAINTAINER gerviba@sch.bme.hu
 COPY target/schpincer.jar /opt/schpincer/
 COPY docker/application-docker.properties /opt/schpincer/application.properties
 WORKDIR /opt/schpincer
-ENTRYPOINT ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=98", "-jar", "/opt/schpincer/schpincer.jar"]
+ENTRYPOINT ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=98.0", "-jar", "/opt/schpincer/schpincer.jar"]
 EXPOSE 80
