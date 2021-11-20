@@ -4,7 +4,7 @@ import hu.kirdev.schpincer.model.*
 import java.lang.Integer.max
 import java.lang.Integer.min
 
-class ItemEntityDto(base: ItemEntity, opening: OpeningEntity?, loggedin: Boolean) {
+class ItemEntityDto(base: ItemEntity, opening: OpeningEntity?, loggedin: Boolean, explicitMapping: Boolean) {
     val id: Long
     val name: String
     val description: String
@@ -41,7 +41,13 @@ class ItemEntityDto(base: ItemEntity, opening: OpeningEntity?, loggedin: Boolean
         personallyOrderable = base.personallyOrderable
         imageName = base.imageName ?: "/cdn/image/blank-null-item.jpg"
         nextOpeningDate = opening?.dateStart ?: 0
-        timeWindows = opening?.timeWindows ?: listOf()
+
+        timeWindows = if (loggedin) {
+            (opening?.timeWindows ?: listOf()).filter { explicitMapping || it.extraItemCount >= 0 }
+        } else {
+            listOf()
+        }
+
         orderStatus = ItemOrderableStatus.OK
         flag = base.flag
         discountPrice = base.discountPrice

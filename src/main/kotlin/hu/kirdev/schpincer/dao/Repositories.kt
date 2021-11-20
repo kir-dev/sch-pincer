@@ -69,7 +69,9 @@ interface ReviewRepository : JpaRepository<ReviewEntity, Long> {
 }
 
 @Repository
-interface TimeWindowRepository : JpaRepository<TimeWindowEntity, Long>
+interface TimeWindowRepository : JpaRepository<TimeWindowEntity, Long> {
+    override fun findById(id: Long): Optional<TimeWindowEntity>
+}
 
 @Repository
 interface UserRepository : JpaRepository<UserEntity, String> {
