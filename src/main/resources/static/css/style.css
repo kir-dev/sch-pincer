@@ -2804,15 +2804,28 @@ img.centered-mini {
     background-color: #111111;
 }
 
+.status-table-holder {
+    color: #e5e5e5;
+    background-color: #111111;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+    font-size: 12px;
+}
+
 .status-table {
     margin: 0 auto;
-    color: #e5e5e5;
 }
 
 .status-table th {
     padding: 8px;
     font-weight: 300;
     text-transform: uppercase;
+}
+
+.status-table-placeholder {
+    padding-top: 60px;
 }
 
 .user-selector label {
@@ -3095,6 +3108,10 @@ img.centered-mini {
     .messagebox {
         left: calc(50vw - 200px);
         max-width: 352px;
+    }
+
+    .status-table-holder {
+        font-size: 16px;
     }
 
 }

@@ -36,10 +36,10 @@ function generateHandOverWidget(orderDto) {
             <b>${htmlEncode(orderDto.chefComment)}</b>
         </div>
         <div class="actions">
-            <button onclick="setStatus(${orderDto.id}, 'HANDED_OVER', 'hand-over', ${htmlEncode(orderDto.id)});">
+            <button onclick="setStatus(${orderDto.id}, 'HANDED_OVER', 'hand-over', ${htmlEncode(orderDto.id)});" class="status-color-HANDED_OVER">
                     <span class="material-icons">local_shipping</span>
             </button>
-            <button onclick="setStatus(${orderDto.id}, 'INTERPRETED', 'hand-over', ${htmlEncode(orderDto.id)});">
+            <button onclick="setStatus(${orderDto.id}, 'INTERPRETED', 'hand-over', ${htmlEncode(orderDto.id)});" class="status-color-INTERPRETED">
                     <span class="material-icons">play_arrow</span>
             </button>
             <button onclick="setChefComment(${orderDto.id}, 'hand-over'); reload('hand-over')">
