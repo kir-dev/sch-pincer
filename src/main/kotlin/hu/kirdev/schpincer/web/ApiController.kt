@@ -2,13 +2,11 @@ package hu.kirdev.schpincer.web
 
 import hu.kirdev.schpincer.dto.ItemEntityDto
 import hu.kirdev.schpincer.dto.ManualUserDetails
-import hu.kirdev.schpincer.model.CircleEntity
 import hu.kirdev.schpincer.model.ItemEntity
 import hu.kirdev.schpincer.model.OpeningEntity
 import hu.kirdev.schpincer.service.*
 import io.swagger.annotations.ApiOperation
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -21,13 +19,11 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @RequestMapping("/api")
 open class ApiController(
-        private val circles: CircleService,
         private val openings: OpeningService,
         private val items: ItemService,
         private val users: UserService,
         private val orders: OrderService,
         private val timeService: TimeService,
-
         @Value("\${schpincer.api-tokens:}")
         apiTokensRaw: String,
 
@@ -216,7 +212,7 @@ open class ApiController(
             var banner: String?,
             var day: String,
             var comment: String,
-            var cirleUrl: String,
+            var circleUrl: String,
             var circleColor: String
     )
 
@@ -246,7 +242,7 @@ open class ApiController(
                         day = timeService.format(it.dateStart, "u")?.toInt().let { daysOfTheWeek[it ?: 0] },
                         comment = "${timeService.format(it.orderEnd, "u")?.toInt().let { daysOfTheWeek[it ?: 0] }} " +
                                 "${timeService.format(it.orderEnd, "HH:mm")}-ig rendelhető",
-                        cirleUrl = it.circle?.alias?.let { alias -> baseUrl + "p/" + alias } ?: baseUrl + "p/" + (it.circle?.id ?: 0),
+                        circleUrl = it.circle?.alias?.let { alias -> baseUrl + "p/" + alias } ?: baseUrl + "p/" + (it.circle?.id ?: 0),
                         circleColor = it.circle?.cssClassName ?: "none"
                 ) }
     }
@@ -262,7 +258,7 @@ open class ApiController(
             var banner: String?,
             var day: String,
             var comment: String,
-            var cirleUrl: String,
+            var circleUrl: String,
             var circleColor: String
     )
 
@@ -292,7 +288,7 @@ open class ApiController(
                         day = timeService.format(it.dateStart, "u")?.toInt().let { daysOfTheWeek[it ?: 0] },
                         comment = "${timeService.format(it.orderEnd, "u")?.toInt().let { daysOfTheWeek[it ?: 0] }} " +
                                 "${timeService.format(it.orderEnd, "HH:mm")}-ig rendelhető",
-                        cirleUrl = it.circle?.alias?.let { alias -> baseUrl + "p/" + alias } ?: baseUrl + "p/" + (it.circle?.id ?: 0),
+                        circleUrl = it.circle?.alias?.let { alias -> baseUrl + "p/" + alias } ?: baseUrl + "p/" + (it.circle?.id ?: 0),
                         circleColor = it.circle?.cssClassName ?: "none"
                 ) }
     }
