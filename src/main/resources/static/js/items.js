@@ -421,7 +421,8 @@ function showPopup(id) {
             document.getElementById('popup').classList.remove('inactive');
             document.getElementById('blur-section').classList.add('blur');
             selectedItem = data;
-            document.getElementById('submit-order-button').disabled = false;
+            if (document.getElementById('submit-order-button') != null)
+                document.getElementById('submit-order-button').disabled = false;
         });
 }
 
@@ -660,7 +661,8 @@ function closeMessageBox() {
 function showMessageBox(message) {
     document.getElementById('messagebox-text').innerText = message;
     document.querySelector('.messagebox').style.display = 'inline-block';
-    document.getElementById('submit-order-button').disabled = false;
+    if (document.getElementById('submit-order-button') != null)
+        document.getElementById('submit-order-button').disabled = false;
 }
 
 function disableScroll() {
