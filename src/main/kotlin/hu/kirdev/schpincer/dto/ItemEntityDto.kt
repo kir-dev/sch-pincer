@@ -72,6 +72,6 @@ class ItemEntityDto(base: ItemEntity, opening: OpeningEntity?, loggedin: Boolean
             0
         }
 
-        outOfStock = orderable && (((opening?.timeWindows ?: listOf()).all { it.normalItemCount == 0 }) || (categoryMax == 0))
+        outOfStock = orderable && (((opening?.timeWindows ?: listOf()).all { it.normalItemCount <= 0 }) || (categoryMax == 0))
     }
 }

@@ -400,12 +400,12 @@ function showPopup(id) {
 
             const timeWindowsElement = document.getElementById('popup-timewindows');
             timeWindowsElement.innerHTML = generateTimes(data.timeWindows, data.categoryMax);
-            timeWindowsElement.style.display = data.timeWindows.length > 1 ? 'block' : 'none';
+            timeWindowsElement.style.display = data.timeWindows.length >= 1 ? 'block' : 'none';
 
             document.getElementById('popup-comment').value = '';
-            document.getElementById('popup-orderable-block').style.display = (manualOrder || (data.orderable && !data.personallyOrderable)) ? 'block' : 'none';
+            document.getElementById('popup-orderable-block').style.display = (manualOrder || (data.orderable && !data.personallyOrderable && data.timeWindows.length >= 1)) ? 'block' : 'none';
             if (document.getElementById('popup-not-orderable'))
-                document.getElementById('popup-not-orderable').style.display = (manualOrder || data.orderable || data.personallyOrderable) ? 'none' : 'block';
+                document.getElementById('popup-not-orderable').style.display = (manualOrder || data.orderable || data.personallyOrderable && data.timeWindows.length >= 1) ? 'none' : 'block';
             if (document.getElementById('popup-personally'))
                 document.getElementById('popup-personally').style.display = (manualOrder || !data.personallyOrderable) ? 'none' : 'block';
 

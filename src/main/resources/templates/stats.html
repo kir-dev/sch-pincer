@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8" th:remove="all"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" th:remove="all"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" th:remove="all"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,900&amp;subset=latin-ext" rel="stylesheet"
+          th:remove="all">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" th:remove="all">
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" th:remove="all"/>
+    <object th:include="MainLayout :: head" th:remove="tag"></object>
+    <link rel="stylesheet" th:href="@{/css/stats.css}" href="../static/css/stats.css"/>
+    <script src="../static/js/profile.js" th:src="@{/js/profile.js}"></script>
+    <script th:inline="javascript">
+        const URL_BASE = /*[[ @{/} ]]*/ "/";
+    </script>
+</head>
+<body>
+<div class="header" th:replace="MainLayout :: header">
+</div>
+
+<div class="left-menu" th:replace="MainLayout :: left-menu">
+</div>
+
+<div class="page content profile-page">
+    <div class="highlighted stats">
+        <div class="decoration profile">
+            <h1>BETEKINTÉS 2021<br>(őszi félév)</h1>
+        </div>
+
+        <div class="message">
+            Az schpincérnél tudjuk, hogy semmi sem hozhat úgy lázba téged, mint statisztika arról, hogy mit esznek mások koliban!<br>
+            <br>
+            <span>(szeptember elejétől számolva)</span>
+        </div>
+
+        <h2>SZÓVAL EZT ETTÉK MÁSOK</h2>
+        <img class="emoticon wobble-hor-top" src="https://openmoji.org/data/color/svg/1F3C5.svg" width="200px">
+        <div class="message">
+            Tökre nem igazságos összehasonlítás alapján:
+        </div>
+        <div class="message fix-left">
+            <ul>
+                <li th:if="${globalMostLovedItem.size() > 0}" th:text="|1. - ${globalMostLovedItem.get(0)?.first?.toUpperCase()} (${globalMostLovedItem.get(0)?.second}db)|">1. - Első kaja (12db rendelés)</li>
+                <li th:if="${globalMostLovedItem.size() > 1}" th:text="|2. - ${globalMostLovedItem.get(1)?.first?.toUpperCase()} (${globalMostLovedItem.get(1)?.second}db)|">1. - Első kaja (12db rendelés)</li>
+                <li th:if="${globalMostLovedItem.size() > 2}" th:text="|3. - ${globalMostLovedItem.get(2)?.first?.toUpperCase()} (${globalMostLovedItem.get(2)?.second}db)|">1. - Első kaja (12db rendelés)</li>
+                <li th:if="${globalMostLovedItem.size() > 3}" th:text="|4. - ${globalMostLovedItem.get(3)?.first?.toUpperCase()} (${globalMostLovedItem.get(3)?.second}db)|">1. - Első kaja (12db rendelés)</li>
+                <li th:if="${globalMostLovedItem.size() > 4}" th:text="|5. - ${globalMostLovedItem.get(4)?.first?.toUpperCase()} (${globalMostLovedItem.get(4)?.second}db)|">1. - Első kaja (12db rendelés)</li>
+                <li th:if="${globalMostLovedItem.size() > 5}" th:text="|6. - ${globalMostLovedItem.get(5)?.first?.toUpperCase()} (${globalMostLovedItem.get(5)?.second}db)|">1. - Első kaja (12db rendelés)</li>
+                <li th:if="${globalMostLovedItem.size() > 6}" th:text="|7. - ${globalMostLovedItem.get(6)?.first?.toUpperCase()} (${globalMostLovedItem.get(6)?.second}db)|">1. - Első kaja (12db rendelés)</li>
+            </ul>
+        </div>
+
+        <div class="message" th:if="${userFavorite.size() > 0}">
+            A te kedvenc kajád pedig a(z) <b th:text="${userFavorite.get(0)?.first}"></b> volt, amit <b th:text="|${userFavorite.get(0)?.second} alkalommal|"></b> rendeltél meg!
+        </div>
+
+        <h2>A FOODEX-NEK TÖBB DOLGA VAN MINT A TÉLAPÓNAK</h2>
+        <img class="emoticon heartbeat" src="https://openmoji.org/data/color/svg/1F60D.svg" width="200px">
+        <div class="message">
+            És van, ahol rendszeresen meg is fordultak! A legtöbbet rendelt személyek toplistája:
+        </div>
+        <div class="message fix-left">
+            <ul>
+                <li th:if="${globalOrdersByUser.size() > 0}" th:utext="|1. hely: <b>${globalOrdersByUser.get(0)?.second}db</b>&nbsp;termék|">1. hely 30db termék</li>
+                <li th:if="${globalOrdersByUser.size() > 1}" th:utext="|2. hely: <b>${globalOrdersByUser.get(1)?.second}db</b>&nbsp;termék|">1. hely 30db termék</li>
+                <li th:if="${globalOrdersByUser.size() > 2}" th:utext="|3. hely: <b>${globalOrdersByUser.get(2)?.second}db</b>&nbsp;termék|">1. hely 30db termék</li>
+                <li th:if="${globalOrdersByUser.size() > 3}" th:utext="|4. hely: <b>${globalOrdersByUser.get(3)?.second}db</b>&nbsp;termék|">1. hely 30db termék</li>
+                <li th:if="${globalOrdersByUser.size() > 4}" th:utext="|5. hely: <b>${globalOrdersByUser.get(4)?.second}db</b>&nbsp;termék|">1. hely 30db termék</li>
+            </ul>
+        </div>
+        <div class="message">
+            Ebből te a(z) <b th:text="|${userTopByOrderCount}.|">13.</b> vagy <b th:text="|${userOrderCount} db|">40db</b> rendeléssel! Az komoly!
+        </div>
+
+        <h2>Ha már rólad van szó</h2>
+        <img class="emoticon wobble-hor-bottom" src="https://openmoji.org/data/color/svg/1F914.svg" width="200px">
+        <div class="message">
+            <b th:text="|${userOrderValue} JMF|">6000 JMF</b> értékben adtál le rendelést, ami alapján te vagy a(z) <b th:text="|${userTopByOrderValue}.|">4.</b> legtöbbet költő a félévben!
+        </div>
+        <div class="message">
+            Szeptember eleje óta összesen <b class="first" th:text="|${globalOrderedFoodCount} db|">4000 db</b> rendelést adtatok le kollektívan!
+        </div>
+
+        <object th:remove="tag" th:if="${session.user?.cardType.name() != 'DO'}">
+        <h2>Igazi VIP vagy</h2>
+        <img class="emoticon pulsate-fwd" src="https://openmoji.org/data/color/svg/1F381.svg" width="200px">
+        <div class="message" th:if="${session.user?.cardType.name() == 'AB'}">
+            Az <b>AB</b> kártyád után <b th:text="|${userKbAbExtra} db|">13db</b> extra feltétet kaptál ingyen!
+        </div>
+        <div class="message" th:if="${session.user?.cardType.name() == 'KB'}">
+            A <b>KB</b> kártyád után <b th:text="|${userKbAbExtra} db|">13db</b> extra feltétet kaptál ingyen!
+        </div>
+        </object>
+
+        <h2>SZOR-GOSAN DOLGOZTAK A KÖRÖK</h2>
+        <img class="emoticon vibrate-1" src="https://openmoji.org/data/color/svg/1F633.svg" width="200px">
+        <div class="message">
+            Azt a(z) <b th:text="|${globalOrderedFoodCount} db|">4000 db</b> rendelést bizony valakinek el is kellett készítenie!
+            A körök a félévben <b th:text="|${globalHeldOpeningCount} nyitást|">30 nyitást</b> csináltak! Szép munka!
+        </div>
+
+        <h2>Mert nyomni, nyomni kell!</h2>
+        <div class="message">
+            <ul>
+                <li><b>3 kör</b> csatlakozott az aktívan itt nyitók csoportjába</li>
+                <li><b>38 commit</b> került bemergelve</li>
+                <li><b>23 issue</b> került lezárásra</li>
+                <li><b>75 fájl</b> megváltoztatva</li>
+                <li><b class="stat-green">3972 sor</b> beszúrva, <b class="stat-red">588 sor</b> törölve</li>
+                <li><b>1 db</b> BSS adásban jelent meg a schpincér</li>
+            </ul>
+        </div>
+
+        <h2>MINK PEDIG</h2>
+
+        <img class="emoticon jello-horizontal" src="https://openmoji.org/data/color/svg/1F384.svg" width="200px">
+        <div class="message">
+            A <a href="https://kir-dev.sch.bme.hu/">kir-dev</a> és a körök nevében nagyon boldog karácsonyt és sikerekben gazdag vizsgaidőszakot kívánunk!
+        </div>
+
+        <img class="photo" src="https://spot.sch.bme.hu/photos/2021/20211112_simonyi_szulinap/fotofal/2048/20211112_224939_lina.jpg" width="100%">
+    </div>
+
+    <div class="last"></div>
+</div>
+
+<div th:replace="MainLayout :: footer"></div>
+</body>
+</html>
