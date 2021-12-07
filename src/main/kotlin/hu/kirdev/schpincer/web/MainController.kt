@@ -3,17 +3,16 @@ package hu.kirdev.schpincer.web
 import hu.kirdev.schpincer.model.CardType
 import hu.kirdev.schpincer.model.CircleEntity
 import hu.kirdev.schpincer.model.OrderStatus
-import hu.kirdev.schpincer.service.CircleService
-import hu.kirdev.schpincer.service.OpeningService
-import hu.kirdev.schpincer.service.OrderService
-import hu.kirdev.schpincer.service.TimeService
+import hu.kirdev.schpincer.service.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseBody
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import javax.servlet.http.HttpServletRequest
 
 @Controller
@@ -30,6 +29,9 @@ open class MainController {
 
     @Autowired
     private lateinit var timeService: TimeService
+
+    @Autowired
+    private lateinit var statService: StatisticsService
 
     @GetMapping("/")
     fun root(request: HttpServletRequest, model: Model): String {
@@ -101,6 +103,28 @@ open class MainController {
         model.addAttribute("timeService", timeService)
         model.addAttribute("uid", request.getUserId().sha256().substring(0, 6))
         return "profile"
+    }
+
+    private val statsViews: ConcurrentHashMap<String, String> = ConcurrentHashMap<String, String>()
+
+    @GetMapping("/stats")
+    fun stats(request: HttpServletRequest, model: Model): String {
+        model.addAttribute("circles", circles.findAllForMenu())
+        val user = request.getUser()
+        statsViews.computeIfPresent(user.uid, { a, b -> b + "+1"})
+        statsViews.computeIfAbsent(user.uid, { user.name + ";" + System.currentTimeMillis() + ";1" })
+        statService.getDetailsForUser(user).entries.forEach { model.addAttribute(it.key, it.value) }
+        return "stats"
+    }
+
+    @GetMapping("/admin/stats-insight")
+    @ResponseBody
+    fun statsInsights(request: HttpServletRequest): String {
+        if (request.getUserIfPresent()?.sysadmin == true) {
+            return statsViews.values.toString()
+        } else {
+            return "Nice try!"
+        }
     }
 
 }
