@@ -15,6 +15,8 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
@@ -39,6 +41,7 @@ const val RESPONSE_MANUAL_FAIL = "MANUAL_FAIL"
 const val RESPONSE_BAD_REQUEST = "BAD_REQUEST"
 const val RESPONSE_INVALID_STATUS = "INVALID_STATUS"
 const val RESPONSE_ORDER_PERIOD_ENDED = "ORDER_PERIOD_ENDED"
+const val RESPONSE_TIME_WINDOW_INVALID = "TIME_WINDOW_INVALID"
 
 @Service
 open class OrderService {
@@ -80,10 +83,24 @@ open class OrderService {
 
     @Transactional
     open fun updateOrder(id: Long, os: OrderStatus) {
-        val order: Optional<OrderEntity> = repo.findById(id)
-        if (order.isPresent()) {
-            val orderEntity: OrderEntity = order.get()
+        repo.findById(id).ifPresent { orderEntity ->
             orderEntity.status = os
+            repo.save(orderEntity)
+        }
+    }
+
+    @Transactional
+    open fun updateOrderComment(id: Long, comment: String) {
+        repo.findById(id).ifPresent { orderEntity ->
+            orderEntity.comment = orderEntity.comment.substring(0, 5) + comment
+            repo.save(orderEntity)
+        }
+    }
+
+    @Transactional
+    open fun updateOrderPrice(id: Long, price: Int) {
+        repo.findById(id).ifPresent { orderEntity ->
+            orderEntity.price = price
             repo.save(orderEntity)
         }
     }
@@ -101,7 +118,7 @@ open class OrderService {
         save(order)
     }
 
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
     open fun makeOrder(user: UserEntity, id: Long, itemCount: Int, time: Long, comment: String, detailsJson: String): ResponseEntity<String> {
         val procedure = MakeOrderProcedure(user, id, itemCount, time, comment, detailsJson,
                 itemsRepo = itemsRepo,
@@ -115,7 +132,7 @@ open class OrderService {
         return responseOf(RESPONSE_ACK)
     }
 
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
     open fun makeManualOrder(user: UserEntity, id: Long, itemCount: Int, time: Long,
                              comment: String, detailsJson: String, manualUser: ManualUserDetails
     ): ResponseEntity<String> {
@@ -136,7 +153,7 @@ open class OrderService {
         return responseOf(RESPONSE_ACK)
     }
 
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
     open fun cancelOrder(user: UserEntity, id: Long): ResponseEntity<String> {
         val procedure = CancelOrderProcedure(user, id,
                 orderRepository = repo,
@@ -263,6 +280,14 @@ open class OrderService {
         }
 
     }
+
+    @Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
+    open fun changeCancelUntilDates(openingId: Long, orderEnd: Long) {
+        val affectedOpenings = repo.findAllByOpeningId(openingId)
+        affectedOpenings.forEach { it.cancelUntil = orderEnd }
+        repo.saveAll(affectedOpenings)
+    }
+
 }
 
 fun responseOf(body: String, status: HttpStatus = HttpStatus.OK) = ResponseEntity(body, status)

@@ -367,9 +367,9 @@
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'HANDED_OVER')}"
                        th:title="#{lang.profile.status-handed-over}">local_shipping</i>
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'COMPLETED')}"
-                       th:title="#{lang.profile.status-completed}">downloading</i>
+                       th:title="#{lang.profile.status-completed}">directions</i>
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'INTERPRETED')}"
-                       th:title="#{lang.profile.status-interpreted}">engineering</i>
+                       th:title="#{lang.profile.status-interpreted}">play_arrow</i>
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'ACCEPTED')}"
                        th:title="#{lang.profile.status-accepted}">shopping_cart</i>
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'CANCELLED')}"
@@ -377,17 +377,22 @@
 
                     |
 
-                    <a href="#" th:onclick="'updateItem(' + ${order.id} + ', \'INTERPRETED\'); return false'"
-                       th:unless="${#strings.equals(order.status, 'SHIPPED')}">
-                        <i class="material-icons" th:title="#{lang.configure.orders.working}">restaurant_menu</i>
-                    </a>
-                    <a href="#" th:onclick="'updateItem(' + ${order.id} + ', \'SHIPPED\'); return false'"
+                    <a href="#" th:onclick="|updateItem(${order.id}, 'SHIPPED'); return false|"
                        th:unless="${#strings.equals(order.status, 'SHIPPED')}">
                         <i class="material-icons" th:title="#{lang.configure.orders.shipped}">local_shipping</i>
                     </a>
-                    <a href="#" th:onclick="'updateItem(' + ${order.id} + ', \'CANCELLED\'); return false'"
+                    <a href="#" th:onclick="|updateItem(${order.id}, 'CANCELLED'); return false|"
                        th:unless="${#strings.equals(order.status, 'CANCELLED')}">
                         <i class="material-icons" th:title="#{lang.configure.orders.cancel}">delete_forever</i>
+                    </a>
+
+                    |
+
+                    <a href="#" th:onclick="|deleteComment(${order.id}); return false|">
+                        <i class="material-icons" th:title="#{lang.configure.orders.delete-comment}">speaker_notes_off</i>
+                    </a>
+                    <a href="#" th:onclick="|changePrice(${order.id}, ${order.price}); return false|">
+                        <i class="material-icons" th:title="#{lang.configure.orders.change-price}">request_quote</i>
                     </a>
                 </td>
             </tr>
@@ -406,7 +411,7 @@
 <div th:replace="MainLayout :: footer"></div>
 <script>
     flatpickr(".datetime-picker", {
-        minDate: "today",
+        // minDate: "today",
         enableTime: true,
         dateFormat: "Y-m-d H:i",
     });

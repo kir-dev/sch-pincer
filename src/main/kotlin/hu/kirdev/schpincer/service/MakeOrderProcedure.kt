@@ -44,13 +44,13 @@ class MakeOrderProcedure (
                     userName = manualUser.name,
                     comment = "[${manualUser.card}] @ ${user.name} | $comment",
                     detailsJson = detailsJson,
-                    room = manualUser.room)
+                    room = manualUser.room,
+                    createdAt = System.currentTimeMillis())
             item = itemsRepo.getOne(id)
         }
 
         details = calculateExtra(detailsJson, order, item, manualUser?.card ?: user.cardType)
         updateBasicDetails()
-        current = openings.findNextOf(item.circle?.id!!) ?: throw FailedOrderException(RESPONSE_INTERNAL_ERROR)
         if (manualUser == null)
             validateOrderable(System.currentTimeMillis())
 
@@ -60,11 +60,12 @@ class MakeOrderProcedure (
             validateOrderCount()
             timeWindow = timeWindowRepo.getOne(time)
             validateTimeWindow()
+            updateCategoryLimitations(true)
         } else {
+            updateCategoryLimitations(false)
             timeWindow = timeWindowRepo.getOne(time)
         }
 
-        updateCategoryLimitations()
         updateRemainingItemCount()
         updateOrderDetails()
     }
@@ -80,7 +81,8 @@ class MakeOrderProcedure (
                 userName = user.name,
                 comment = "[${user.cardType.name}] $comment",
                 detailsJson = detailsJson,
-                room = user.room)
+                room = user.room,
+                createdAt = System.currentTimeMillis())
     }
 
     internal fun loadTargetItem() {
@@ -92,7 +94,8 @@ class MakeOrderProcedure (
     internal fun updateBasicDetails() {
         order.intervalId = time
         order.name = item.name
-        order.openingId = openings.findNextOf(item.circle?.id!!)?.id!!
+        current = timeWindowRepo.findById(time).map { it.opening }.orElse(null) ?: throw FailedOrderException(RESPONSE_TIME_WINDOW_INVALID)
+        order.openingId = current.id
     }
 
     internal fun validateOrderable(now: Long) {
@@ -114,32 +117,42 @@ class MakeOrderProcedure (
             throw FailedOrderException(RESPONSE_MAX_REACHED_EXTRA)
     }
 
-    internal fun updateCategoryLimitations() {
+    internal fun updateCategoryLimitations(force: Boolean) {
         when (ItemCategory.of(item.category)) {
-            ItemCategory.ALPHA ->
+            ItemCategory.ALPHA -> {
                 if (current.usedAlpha + count <= current.maxAlpha)
                     current.usedAlpha += count
-                else throw FailedOrderException(RESPONSE_CATEGORY_FULL)
+                else if (force) throw FailedOrderException(RESPONSE_CATEGORY_FULL)
+                else return
+            }
 
-            ItemCategory.BETA ->
+            ItemCategory.BETA -> {
                 if (current.usedBeta + count <= current.maxBeta)
                     current.usedBeta += count
-                else throw FailedOrderException(RESPONSE_CATEGORY_FULL)
+                else if (force) throw FailedOrderException(RESPONSE_CATEGORY_FULL)
+                else return
+            }
 
-            ItemCategory.GAMMA ->
+            ItemCategory.GAMMA -> {
                 if (current.usedGamma + count <= current.maxGamma)
                     current.usedGamma += count
-                else throw FailedOrderException(RESPONSE_CATEGORY_FULL)
+                else if (force) throw FailedOrderException(RESPONSE_CATEGORY_FULL)
+                else return
+            }
 
-            ItemCategory.DELTA ->
+            ItemCategory.DELTA -> {
                 if (current.usedDelta + count <= current.maxDelta)
                     current.usedDelta += count
-                else throw FailedOrderException(RESPONSE_CATEGORY_FULL)
+                else if (force)  throw FailedOrderException(RESPONSE_CATEGORY_FULL)
+                else return
+            }
 
-            ItemCategory.LAMBDA ->
+            ItemCategory.LAMBDA -> {
                 if (current.usedLambda + count <= current.maxLambda)
                     current.usedLambda += count
-                else throw FailedOrderException(RESPONSE_CATEGORY_FULL)
+                else if (force) throw FailedOrderException(RESPONSE_CATEGORY_FULL)
+                else return
+            }
 
             else -> {
                 // No extra action is required

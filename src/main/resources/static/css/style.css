@@ -1914,6 +1914,7 @@ textarea {
 
 .orders td:nth-of-type(6) {
     color: #9d9d9e;
+    word-break: break-word;
 }
 
 .dashboard table td:nth-of-type(2) {
@@ -2689,6 +2690,10 @@ img.centered-mini {
     border-color: #0D5D98;
 }
 
+.kitchen-view .order.status-SHIPPED {
+    border-color: #884291;
+}
+
 .kitchen-view .order h3 {
     background-color: #111111;
     color: #FFFFFF;
@@ -2777,7 +2782,11 @@ img.centered-mini {
 }
 
 .kitchen-view .order .actions button:hover span {
-    color: #FFFFFF;
+    filter: brightness(1.5);
+}
+
+.kitchen-view .order p {
+    word-break: break-word;
 }
 
 .scroll-x {
@@ -2794,6 +2803,30 @@ img.centered-mini {
 
 .kitchen-view-menu .form-slider {
     background-color: #111111;
+}
+
+.status-table-holder {
+    color: #e5e5e5;
+    background-color: #111111;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+    font-size: 12px;
+}
+
+.status-table {
+    margin: 0 auto;
+}
+
+.status-table th {
+    padding: 8px;
+    font-weight: 300;
+    text-transform: uppercase;
+}
+
+.status-table-placeholder {
+    padding-top: 60px;
 }
 
 .user-selector label {
@@ -2845,6 +2878,26 @@ img.centered-mini {
 
 .stat-table tr:last-of-type td {
     font-weight: bold;
+}
+
+.status-color-ACCEPTED {
+    color: #b52601 !important;
+}
+
+.status-color-INTERPRETED {
+    color: #eead45 !important;
+}
+
+.status-color-COMPLETED {
+    color: #6E9E06 !important;
+}
+
+.status-color-HANDED_OVER {
+    color: #027BE5 !important;
+}
+
+.status-color-SHIPPED {
+    color: #884291 !important;
 }
 
 /** MENU **/
@@ -3055,6 +3108,10 @@ img.centered-mini {
     .messagebox {
         left: calc(50vw - 200px);
         max-width: 352px;
+    }
+
+    .status-table-holder {
+        font-size: 16px;
     }
 
 }

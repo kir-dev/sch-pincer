@@ -82,6 +82,22 @@ class KitchenViewController {
         return "kitchen/shipping"
     }
 
+
+    @GetMapping("/kitchen-view/{circleId}/{openingId}/shipped")
+    fun shipped(
+            @PathVariable circleId: Long,
+            @PathVariable openingId: Long,
+            model: Model,
+            request: HttpServletRequest
+    ): String {
+        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+            return "redirect:/profile"
+
+        model.addAttribute("openingId", openingId)
+        model.addAttribute("circleId", circleId)
+        return "kitchen/shipped"
+    }
+
     @GetMapping("/kitchen-view/{circleId}/{openingId}/new-order")
     fun newOrder(
             @PathVariable circleId: Long,
@@ -129,19 +145,6 @@ class KitchenViewController {
         return orders.findToExport(openingId, OrderStrategy.ORDER_GROUPED.representation)
                 .filter { it.status == OrderStatus.COMPLETED }
                 .map { KitchenOrderDto(it, openingIntervalLength) }
-
-//        val orders = orders.findToExport(openingId, OrderStrategy.ORDER_GROUPED.representation)
-//        var id = 1
-//        val result = mutableListOf<FastfoodOrderDto>()
-//        for (order in orders) {
-//            for (i in 0 until order.count) {
-//                val clone = FastfoodOrderDto(order, openingIntervalLength)
-//                clone.artificialId = id
-//                id++
-//                result.add(clone)
-//            }
-//        }
-//        return result
     }
 
     @ResponseBody
@@ -206,6 +209,25 @@ class KitchenViewController {
                 .map { KitchenOrderDto(it, openingIntervalLength) }
     }
 
+    @ResponseBody
+    @RequestMapping(
+            path = ["/api/kitchen-view/{circleId}/{openingId}/shipped"],
+            method = [RequestMethod.GET, RequestMethod.POST])
+    fun fetchShipped(
+            @PathVariable circleId: Long,
+            @PathVariable openingId: Long,
+            request: HttpServletRequest
+    ): List<KitchenOrderDto> {
+        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+            return listOf()
+
+        val openingIntervalLength = openings.getOne(openingId).intervalLength
+
+        return orders.findToExport(openingId, OrderStrategy.ORDER_GROUPED.representation)
+                .filter { it.status == OrderStatus.SHIPPED }
+                .map { KitchenOrderDto(it, openingIntervalLength) }
+    }
+
     @PostMapping("/api/kitchen-view/{circleId}/{openingId}/view/{view}/{orderId}/status/{status}")
     fun changeStatus(
             @PathVariable circleId: Long,
@@ -246,7 +268,7 @@ class KitchenViewController {
     data class SearchTermsDto(var name: String = "", var room: String = "")
 
     data class UserSearchResultDto(var id: String = "", var name: String = "", var room: String = "",
-                                   var email: String = "", var card: CardType = CardType.DO)
+                                   var uid: String = "", var card: CardType = CardType.DO)
 
     @ResponseBody
     @PostMapping("/api/kitchen-view/{circleId}/{openingId}/search")
@@ -260,9 +282,9 @@ class KitchenViewController {
             return listOf()
 
         return if (searchTerms.name.isNotBlank()) {
-            users.findByUsernameContains(searchTerms.name).map { UserSearchResultDto(it.uid, it.name, it.room, it.email ?: "-", it.cardType) }
+            users.findByUsernameContains(searchTerms.name).map { UserSearchResultDto(it.uid, it.name, it.room, it.uid.sha256().substring(0, 6), it.cardType) }
         } else if (searchTerms.room.isNotBlank()) {
-            users.findByRoomContains(searchTerms.room).map { UserSearchResultDto(it.uid, it.name, it.room, it.email ?: "-", it.cardType) }
+            users.findByRoomContains(searchTerms.room).map { UserSearchResultDto(it.uid, it.name, it.room, it.uid.sha256().substring(0, 6), it.cardType) }
         } else {
             listOf()
         }

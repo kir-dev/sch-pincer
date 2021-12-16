@@ -27,13 +27,16 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
                         "/americano", "/pizzasch", "/reggelisch", "/kakas", "/langosch", "/vodor", "/dzsajrosz").permitAll()
                 .antMatchers("/loggedin", "/login").permitAll()
                 .antMatchers("/api/**").permitAll()
-                .antMatchers("/profile", "/profile/**").hasRole(Role.USER.name)
+                .antMatchers("/profile", "/profile/**", "/stats").hasRole(Role.USER.name)
                 .antMatchers("/configure/**").hasAnyRole(Role.LEADER.name, Role.ADMIN.name)
                 .antMatchers("/admin", "/admin/**").hasRole(Role.ADMIN.name)
                 .and()
                 .formLogin()
                 .loginPage("/login")
-        http.csrf().ignoringAntMatchers("/api/**", "/configure/order/update")
+        http.csrf().ignoringAntMatchers("/api/**",
+                "/configure/order/update",
+                "/configure/order/set-comment",
+                "/configure/order/change-price")
     }
 
     override fun configure(auth: AuthenticationManagerBuilder?) {

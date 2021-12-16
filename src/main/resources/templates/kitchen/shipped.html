@@ -20,10 +20,9 @@
 <div class="status-table-holder">
     <table class="status-table">
         <tr>
-            <th><span class="material-icons status-color-ACCEPTED">shopping_cart</span><br><span th:text="#{lang.kitchen-view.stat.accepted}">Megrendelve</span></th>
-            <th><span class="material-icons status-color-INTERPRETED">play_arrow</span><br><span th:text="#{lang.kitchen-view.stat.interpreted}">Készül</span></th>
-            <th><span class="material-icons status-color-COMPLETED">directions</span><br><b><span th:text="#{lang.kitchen-view.stat.completed}">Kész</span></b></th>
+            <th><span class="material-icons status-color-COMPLETED">directions</span><br><span th:text="#{lang.kitchen-view.stat.completed}">Kész</span></th>
             <th><span class="material-icons status-color-HANDED_OVER">local_shipping</span><br><span th:text="#{lang.kitchen-view.stat.hand-over}">Szállítás</span></th>
+            <th><span class="material-icons status-color-SHIPPED">done</span><br><b><span th:text="#{lang.kitchen-view.stat.shipped}">Kiszállítva</span></b></th>
         </tr>
     </table>
 </div>
@@ -37,10 +36,10 @@
 
         <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/new-order|" th:text="#{lang.kitchen-view.nav.new-order}">New order</a>
         <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/kitchen|"   th:text="#{lang.kitchen-view.nav.kitchen}">Kitchen</a>
-        <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/hand-over|" th:text="#{lang.kitchen-view.nav.hand-over}" class="selected">Hand over</a>
+        <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/hand-over|" th:text="#{lang.kitchen-view.nav.hand-over}">Hand over</a>
         <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/merged|"    th:text="#{lang.kitchen-view.nav.merged}">Merged</a>
         <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/shipping|"  th:text="#{lang.kitchen-view.nav.shipping}">Shipping</a>
-        <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/shipped|"   th:text="#{lang.kitchen-view.nav.shipped}">Shipped</a>
+        <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/shipped|"   th:text="#{lang.kitchen-view.nav.shipped}" class="selected">Shipped</a>
         <a href="#" th:href="|@{/kitchen-view/}${circleId}/${openingId}/stats|"     th:text="#{lang.kitchen-view.nav.stats}">Stats</a>
         <a href="#" th:href="|@{/configure/}${circleId}|"                           th:text="#{lang.kitchen-view.nav.exit}">Kilépés</a>
     </nav>
@@ -53,8 +52,8 @@
 <script th:inline="javascript">
     const CIRCLE_ID = /*[[${circleId}]]*/ 0;
     const OPENING_ID = /*[[${openingId}]]*/ 0;
-    reload('hand-over');
-    startLiveStatus('hand-over');
+    reload('shipped');
+    startLiveStatus('shipped');
 </script>
 </body>
 </html>

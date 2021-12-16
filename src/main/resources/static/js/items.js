@@ -5,6 +5,8 @@ let latestData;
 let searchResult = [];
 let manualOrder = false;
 
+var beepSound = new Audio('/beep-boop.mp3');
+
 function appendNext(profile = 0) {
     if (document.getElementById('no-results') == null)
         return;
@@ -71,10 +73,9 @@ function showLoading() {
 }
 
 function searchFor(keyword) {
-    getForJsonObject('api/search/?q=')
+    getForJsonObject('api/items/' + getFilter('/'))
         .then(function (data) {
             searchResult = data;
-            data.forEach(val => addItem(val));
             document.getElementById('search-input').value = keyword;
             filterSearch();
             document.getElementById('loading').style.display = 'none';
@@ -85,12 +86,12 @@ function searchFor(keyword) {
 function updateUrl(keyword) {
     if (keyword == null) {
         window.history.pushState({
-            route: '/items/' + getFilter('')
-        }, document.title, '/items/' + getFilter(''));
+            route: '/items/' + (getFilter('') !== '' ? ('?' + getFilter('')) : '')
+        }, document.title, '/items/' + (getFilter('') !== '' ? ('?' + getFilter('')) : ''));
     } else {
         window.history.pushState({
-            route: '/items/?q=' + encodeURI(keyword)
-        }, document.title, '/items/?q=' + encodeURI(keyword));
+            route: '/items/?' + (getFilter('') !== '' ? (getFilter('') + '&') : '') + 'q=' + encodeURI(keyword)
+        }, document.title, '/items/?' + (getFilter('') !== '' ? (getFilter('') + '&') : '') + 'q=' + encodeURI(keyword));
     }
 }
 
@@ -371,7 +372,7 @@ function itemChangedPizzasch() {
 }
 
 function showPopup(id) {
-    getForJsonObject('api/item/' + id)
+    getForJsonObject('api/item/' + id + (manualOrder ? ('?explicitOpening=' + OPENING_ID) : ''))
         .then(function (data) {
             disableScroll();
             latestData = data;
@@ -399,12 +400,12 @@ function showPopup(id) {
 
             const timeWindowsElement = document.getElementById('popup-timewindows');
             timeWindowsElement.innerHTML = generateTimes(data.timeWindows, data.categoryMax);
-            timeWindowsElement.style.display = data.timeWindows.length > 1 ? 'block' : 'none';
+            timeWindowsElement.style.display = data.timeWindows.length >= 1 ? 'block' : 'none';
 
             document.getElementById('popup-comment').value = '';
-            document.getElementById('popup-orderable-block').style.display = (manualOrder || (data.orderable && !data.personallyOrderable)) ? 'block' : 'none';
+            document.getElementById('popup-orderable-block').style.display = (manualOrder || (data.orderable && !data.personallyOrderable && data.timeWindows.length >= 1)) ? 'block' : 'none';
             if (document.getElementById('popup-not-orderable'))
-                document.getElementById('popup-not-orderable').style.display = (manualOrder || data.orderable || data.personallyOrderable) ? 'none' : 'block';
+                document.getElementById('popup-not-orderable').style.display = (manualOrder || data.orderable || data.personallyOrderable && data.timeWindows.length >= 1) ? 'none' : 'block';
             if (document.getElementById('popup-personally'))
                 document.getElementById('popup-personally').style.display = (manualOrder || !data.personallyOrderable) ? 'none' : 'block';
 
@@ -420,7 +421,8 @@ function showPopup(id) {
             document.getElementById('popup').classList.remove('inactive');
             document.getElementById('blur-section').classList.add('blur');
             selectedItem = data;
-            document.getElementById('submit-order-button').disabled = false;
+            if (document.getElementById('submit-order-button') != null)
+                document.getElementById('submit-order-button').disabled = false;
         });
 }
 
@@ -557,7 +559,8 @@ const ResponseType = {
     MAX_REACHED_EXTRA: 'MAX_REACHED_EXTRA',
     NO_ORDERING: 'NO_ORDERING',
     NO_ROOM_SET: 'NO_ROOM_SET',
-    CATEGORY_FULL: 'CATEGORY_FULL'
+    CATEGORY_FULL: 'CATEGORY_FULL',
+    TIME_WINDOW_INVALID: 'TIME_WINDOW_INVALID'
 };
 
 function packManualOrderDetails() {
@@ -594,22 +597,27 @@ function buySelectedItem() {
         if (data === ResponseType.ACK) {
             closePopup(true);
             doneOrder();
-        } else if (data === ResponseType.INTERNAL_ERROR) {
-            showMessageBox(LANG.internal);
-        } else if (data === ResponseType.OVERALL_MAX_REACHED) {
-            showMessageBox(LANG.orderFull);
-        } else if (data === ResponseType.MAX_REACHED) {
-            showMessageBox(LANG.intervalFull);
-        } else if (data === ResponseType.MAX_REACHED_EXTRA) {
-            showMessageBox(LANG.intervalFullExtra);
-        } else if (data === ResponseType.NO_ORDERING) {
-            showMessageBox(LANG.alreadyClosed);
-        } else if (data === ResponseType.NO_ROOM_SET) {
-            showMessageBox(LANG.noRoom);
-        } else if (data === ResponseType.CATEGORY_FULL) {
-            showMessageBox(LANG.categoryFull);
         } else {
-            showMessageBox(data);
+            console.error(data);
+            if (data === ResponseType.INTERNAL_ERROR) {
+                showMessageBox(LANG.internal);
+            } else if (data === ResponseType.OVERALL_MAX_REACHED) {
+                showMessageBox(LANG.orderFull);
+            } else if (data === ResponseType.MAX_REACHED) {
+                showMessageBox(LANG.intervalFull);
+            } else if (data === ResponseType.MAX_REACHED_EXTRA) {
+                showMessageBox(LANG.intervalFullExtra);
+            } else if (data === ResponseType.NO_ORDERING) {
+                showMessageBox(LANG.alreadyClosed);
+            } else if (data === ResponseType.NO_ROOM_SET) {
+                showMessageBox(LANG.noRoom);
+            } else if (data === ResponseType.CATEGORY_FULL) {
+                showMessageBox(LANG.categoryFull);
+            } else if (data === ResponseType.TIME_WINDOW_INVALID) {
+                showMessageBox(LANG.internal);
+            } else {
+                showMessageBox(data);
+            }
         }
 
     }).catch(function (e) {
@@ -627,6 +635,9 @@ function doneOrder() {
     setTimeout(() => {
         document.querySelector('.done-tick').style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
     }, 100);
+    setTimeout(() => {
+        beepSound.play();
+    }, 300);
     setTimeout(() => {
         let doneElement = document.querySelector('.done');
         doneElement.style.top = '20vh';
@@ -650,7 +661,8 @@ function closeMessageBox() {
 function showMessageBox(message) {
     document.getElementById('messagebox-text').innerText = message;
     document.querySelector('.messagebox').style.display = 'inline-block';
-    document.getElementById('submit-order-button').disabled = false;
+    if (document.getElementById('submit-order-button') != null)
+        document.getElementById('submit-order-button').disabled = false;
 }
 
 function disableScroll() {

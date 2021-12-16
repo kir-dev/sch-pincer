@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
+import java.lang.Integer.max
 import java.util.*
 import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
@@ -28,7 +29,9 @@ enum class PageTypes(val orientation: String) {
     LANDSCAPE("landscape")
 }
 
-data class OrderUpdateDto(val id: Long, val status: String)
+data class OrderUpdateDto(var id: Long = 0, var status: String = "")
+data class OrderSetCommentDto(var id: Long = 0, var comment: String = "")
+data class OrderChangePriceDto(var id: Long = 0, var price: Int = 0)
 
 @Controller
 open class ConfigureController {
@@ -477,6 +480,7 @@ open class ConfigureController {
             maxLambda = oed.maxLambda
         }
         openings.save(opening)
+        orders.changeCancelUntilDates(openingId, opening.orderEnd)
         return "redirect:/configure/$circleId"
     }
 
@@ -582,7 +586,35 @@ open class ConfigureController {
             return "NO PERMISSION"
 
         orders.updateOrder(body.id, OrderStatus[body.status])
-        return "redirect:/configure/$circleId"
+        return "OK"
+    }
+
+    @PostMapping("/configure/order/set-comment")
+    @ResponseBody
+    fun updateOrderComment(@RequestBody body: OrderSetCommentDto,
+                    request: HttpServletRequest
+    ): String {
+        val circleId = orders.getCircleIdByOrderId(body.id) ?: return "INVALID ID"
+
+        if (cannotEditCircle(circleId, request))
+            return "NO PERMISSION"
+
+        orders.updateOrderComment(body.id, body.comment)
+        return "OK"
+    }
+
+    @PostMapping("/configure/order/change-price")
+    @ResponseBody
+    fun updateOrderPrice(@RequestBody body: OrderChangePriceDto,
+                    request: HttpServletRequest
+    ): String {
+        val circleId = orders.getCircleIdByOrderId(body.id) ?: return "INVALID ID"
+
+        if (cannotEditCircle(circleId, request))
+            return "NO PERMISSION"
+
+        orders.updateOrderPrice(body.id, max(0, body.price))
+        return "OK"
     }
 
     @GetMapping("/configure/{circleId}/reviews")

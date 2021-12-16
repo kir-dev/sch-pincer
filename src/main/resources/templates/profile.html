@@ -59,9 +59,9 @@
                 <td th:text="${session.user?.orderingPriority}">100</td>
             </tr>
             <tr>
-                <td><i class="material-icons">request_quote</i></td>
-                <td>Egyenleg</td>
-                <td>0 JMF</td>
+                <td><i class="material-icons">fingerprint</i></td>
+                <td th:text="#{lang.profile.id}">UID</td>
+                <td th:text="${uid}"></td>
             </tr>
         </table>
         <a class="form-button" href="#" th:href="@{/logout}" th:text="#{lang.profile.logout}">Logout</a>
@@ -88,9 +88,9 @@
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'HANDED_OVER')}"
                        th:title="#{lang.profile.status-handed-over}">local_shipping</i>
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'COMPLETED')}"
-                       th:title="#{lang.profile.status-completed}">downloading</i>
+                       th:title="#{lang.profile.status-completed}">directions</i>
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'INTERPRETED')}"
-                       th:title="#{lang.profile.status-interpreted}">engineering</i>
+                       th:title="#{lang.profile.status-interpreted}">play_arrow</i>
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'ACCEPTED')}"
                        th:title="#{lang.profile.status-accepted}">shopping_cart</i>
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'CANCELLED')}"

@@ -1,8 +1,10 @@
 package hu.kirdev.schpincer.dto
 
 import hu.kirdev.schpincer.model.*
+import java.lang.Integer.max
+import java.lang.Integer.min
 
-class ItemEntityDto(base: ItemEntity, opening: OpeningEntity?, loggedin: Boolean) {
+class ItemEntityDto(base: ItemEntity, opening: OpeningEntity?, loggedin: Boolean, explicitMapping: Boolean) {
     val id: Long
     val name: String
     val description: String
@@ -39,12 +41,17 @@ class ItemEntityDto(base: ItemEntity, opening: OpeningEntity?, loggedin: Boolean
         personallyOrderable = base.personallyOrderable
         imageName = base.imageName ?: "/cdn/image/blank-null-item.jpg"
         nextOpeningDate = opening?.dateStart ?: 0
-        timeWindows = opening?.timeWindows ?: listOf()
+
+        timeWindows = if (loggedin) {
+            (opening?.timeWindows ?: listOf()).filter { explicitMapping || it.extraItemCount >= 0 }
+        } else {
+            listOf()
+        }
+
         orderStatus = ItemOrderableStatus.OK
         flag = base.flag
         discountPrice = base.discountPrice
         keywords = base.keywords?.replace(",", "") ?: ""
-        outOfStock = orderable && timeWindows.all { it.normalItemCount == 0 }
 
         circleId = base.circle?.id ?: 0L
         circleAlias = base.circle?.alias ?: "404"
@@ -53,16 +60,18 @@ class ItemEntityDto(base: ItemEntity, opening: OpeningEntity?, loggedin: Boolean
         circleColor = base.circle?.cssClassName ?: ""
 
         categoryMax = if (opening != null) {
-            when (ItemCategory.of(base.category)) {
+            max(0, min(opening.maxOrder - opening.orderCount, when (ItemCategory.of(base.category)) {
                 ItemCategory.ALPHA -> opening.maxAlpha - opening.usedAlpha
                 ItemCategory.BETA -> opening.maxBeta - opening.usedBeta
                 ItemCategory.GAMMA -> opening.maxGamma - opening.usedGamma
                 ItemCategory.DELTA -> opening.maxDelta - opening.usedDelta
                 ItemCategory.LAMBDA -> opening.maxLambda - opening.usedLambda
                 else -> opening.maxOrderPerInterval
-            }
+            }))
         } else {
             0
         }
+
+        outOfStock = orderable && (((opening?.timeWindows ?: listOf()).all { it.normalItemCount <= 0 }) || (categoryMax == 0))
     }
 }

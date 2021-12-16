@@ -60,6 +60,7 @@ interface OrderRepository : JpaRepository<OrderEntity, Long> {
     fun findAllByOpeningIdAndStatusNotOrderByPriorityDescDateAsc(openingId: Long, status: OrderStatus): List<OrderEntity>
     fun findAllByOpeningIdAndStatusNotOrderByIntervalIdAscPriorityDescDateAsc(openingId: Long, status: OrderStatus): List<OrderEntity>
     fun findAllByOpeningIdAndStatusNot(openingId: Long, status: OrderStatus): List<OrderEntity>
+    fun findAllByDateGreaterThanAndDateLessThanAndStatusIsNot(dateFrom: Long, dateTo: Long, status: OrderStatus): List<OrderEntity>
 }
 
 @SuppressWarnings("kotlin:S100"// ignore underscores in queries
@@ -70,7 +71,9 @@ interface ReviewRepository : JpaRepository<ReviewEntity, Long> {
 }
 
 @Repository
-interface TimeWindowRepository : JpaRepository<TimeWindowEntity, Long>
+interface TimeWindowRepository : JpaRepository<TimeWindowEntity, Long> {
+    override fun findById(id: Long): Optional<TimeWindowEntity>
+}
 
 @Repository
 interface UserRepository : JpaRepository<UserEntity, String> {

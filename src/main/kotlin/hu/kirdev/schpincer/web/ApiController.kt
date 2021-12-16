@@ -2,13 +2,11 @@ package hu.kirdev.schpincer.web
 
 import hu.kirdev.schpincer.dto.ItemEntityDto
 import hu.kirdev.schpincer.dto.ManualUserDetails
-import hu.kirdev.schpincer.model.CircleEntity
 import hu.kirdev.schpincer.model.ItemEntity
 import hu.kirdev.schpincer.model.OpeningEntity
 import hu.kirdev.schpincer.service.*
 import io.swagger.annotations.ApiOperation
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -20,43 +18,37 @@ import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/api")
-open class ApiController {
+open class ApiController(
+        private val openings: OpeningService,
+        private val items: ItemService,
+        private val users: UserService,
+        private val orders: OrderService,
+        private val timeService: TimeService,
+        @Value("\${schpincer.api-tokens:}")
+        apiTokensRaw: String,
+
+        @Value("\${schpincer.api.base-url}")
+        private val baseUrl: String
+) {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    @Autowired
-    private lateinit var circles: CircleService
-
-    @Autowired
-    private lateinit var openings: OpeningService
-
-    @Autowired
-    private lateinit var items: ItemService
-
-    @Autowired
-    private lateinit var users: UserService
-
-    @Autowired
-    private lateinit var orders: OrderService
-
-    @Autowired
-    private lateinit var timeService: TimeService
-
-    @Value("\${schpincer.indualsch-api-token:}")
-    private lateinit var indulaschApiToken: String
-
-    @Value("\${schpincer.api.base-url}")
-    private lateinit var baseUrl: String
+    private val apiTokens = apiTokensRaw.split(Regex(", *"))
 
     @ApiOperation("Item info")
     @GetMapping("/item/{id}")
     @ResponseBody
-    fun getItem(request: HttpServletRequest, @PathVariable id: Long): ItemEntityDto? {
+    fun getItem(
+            request: HttpServletRequest,
+            @PathVariable id: Long,
+            @RequestParam(defaultValue = "0") explicitOpening: Long
+    ): ItemEntityDto? {
         val item = items.getOne(id)
         if (item == null || (!request.hasUser() && !item.visibleWithoutLogin))
             return null
         val loggedIn = request.hasUser() || request.isInInternalNetwork()
-        return ItemEntityDto(item, openings.findNextOf(item.circle!!.id), loggedIn)
+        val opening = if (explicitOpening != 0L) openings.getOne(explicitOpening) else openings.findNextOf(item.circle!!.id)
+        return ItemEntityDto(item, opening, loggedIn, loggedIn && explicitOpening > 0)
     }
 
     @ApiOperation("List of items")
@@ -75,7 +67,8 @@ open class ApiController {
                     .map { item: ItemEntity ->
                         ItemEntityDto(item,
                                 cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
-                                loggedIn || request.isInInternalNetwork())
+                                loggedIn || request.isInInternalNetwork(),
+                                false)
                     }
                     .collect(Collectors.toList())
             return ResponseEntity(list, HttpStatus.OK)
@@ -87,7 +80,8 @@ open class ApiController {
                 .map { item: ItemEntity ->
                     ItemEntityDto(item,
                             cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
-                            loggedIn || request.isInInternalNetwork())
+                            loggedIn || request.isInInternalNetwork(),
+                            false)
                 }
                 .collect(Collectors.toList())
         return ResponseEntity(list, HttpStatus.OK)
@@ -106,7 +100,8 @@ open class ApiController {
                 .map { item: ItemEntity ->
                     ItemEntityDto(item,
                             cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
-                            loggedIn || request.isInInternalNetwork())
+                            loggedIn || request.isInInternalNetwork(),
+                            false)
                 }
                 .collect(Collectors.toList())
         return ResponseEntity(list, HttpStatus.OK)
@@ -125,53 +120,11 @@ open class ApiController {
                 .map { item: ItemEntity ->
                     ItemEntityDto(item,
                             cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
-                            loggedIn || request.isInInternalNetwork())
+                            loggedIn || request.isInInternalNetwork(),
+                            false)
                 }
                 .collect(Collectors.toList())
         return ResponseEntity(list, HttpStatus.OK)
-    }
-
-// Disabled due to previous change in handling items
-//    @ApiOperation("Page of items")
-//    @GetMapping("/items/{page}")
-//    @ResponseBody
-    fun getItems(request: HttpServletRequest, @PathVariable page: Int): ResponseEntity<List<ItemEntityDto>> {
-        val loggedIn = request.hasUser()
-        val cache: MutableMap<Long, OpeningEntity?> = HashMap()
-        val list = items.findAll(page).stream()
-                .filter { it.visibleWithoutLogin || loggedIn }
-                .filter(ItemEntity::visibleInAll)
-                .map { item: ItemEntity ->
-                    ItemEntityDto(item,
-                            cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
-                            loggedIn || request.isInInternalNetwork())
-                }
-                .collect(Collectors.toList())
-        return ResponseEntity(list, HttpStatus.OK)
-    }
-
-    @ApiOperation("List of openings")
-    @GetMapping("/openings")
-    @ResponseBody
-    fun getAllOpenings(): ResponseEntity<List<OpeningEntity>> {
-        val page = openings.findAll()
-        return ResponseEntity(page, HttpStatus.OK)
-    }
-
-    @ApiOperation("List of openings (next week period)")
-    @GetMapping("/openings/week")
-    @ResponseBody
-    fun getNextWeekOpenings(): ResponseEntity<List<OpeningEntity>> {
-        val page = openings.findNextWeek()
-        return ResponseEntity(page, HttpStatus.OK)
-    }
-
-    @ApiOperation("List of circles")
-    @GetMapping("/circles")
-    @ResponseBody
-    fun getAllCircles(): ResponseEntity<List<CircleEntity>> {
-        val page = circles.findAll()
-        return ResponseEntity(page, HttpStatus.OK)
     }
 
     data class NewOrderRequest(var id: Long = -1,
@@ -250,26 +203,93 @@ open class ApiController {
                 "Timestamp: ${System.currentTimeMillis()}"
     }
 
-    data class OpeningDetail(var name: String, var icon: String, var available: Int, var outOf: Int, var comment: String)
+    data class OpeningDetail(
+            var name: String,
+            var icon: String?,
+            var feeling: String,
+            var available: Int,
+            var outOf: Int,
+            var banner: String?,
+            var day: String,
+            var comment: String,
+            var circleUrl: String,
+            var circleColor: String
+    )
+
+    private val daysOfTheWeek = arrayOf("n/a", "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat", "Vasárnap")
 
     @CrossOrigin(origins = ["*"])
-    @GetMapping("/openings-for-indulasch")
+    @GetMapping("/open/openings")
     @ResponseBody
     fun openingsApi(@RequestParam(required = false) token: String?): List<OpeningDetail> {
-        if (token.isNullOrBlank() || !token.equals(indulaschApiToken))
-            return listOf()
+        if (token.isNullOrBlank() || !apiTokens.contains(token))
+            return listOf(OpeningDetail("Invalid Token", null, "sad", 0, 0, null,
+                    "", "Contact the administrator if you think this is a problem", "", ""))
 
         return openings.findNextWeek()
                 .filter { it.circle != null }
+                .filter { it.orderStart <= System.currentTimeMillis() }
                 .map { OpeningDetail(
                         name = it.circle?.displayName ?: "n/a",
-                        icon =  baseUrl + (it.circle?.logoUrl ?: ""),
+                        icon =  it.circle?.logoUrl?.let { url -> baseUrl + url },
+                        feeling = it.feeling ?: "",
                         available = Math.max(0, Math.min(
                                         it.timeWindows.sumOf { tw -> tw.normalItemCount },
                                         it.maxOrder - it.timeWindows.sumOf { tw -> it.maxOrderPerInterval - tw.normalItemCount
                                 })),
                         outOf = it.maxOrder,
-                        comment = "Rendelhető ${timeService.format(it.orderEnd, "MM.dd. HH:mm")}-ig az sch-pincéren"
+                        banner = it.prUrl.let { url -> baseUrl + url },
+                        day = timeService.format(it.dateStart, "u")?.toInt().let { daysOfTheWeek[it ?: 0] },
+                        comment = "${timeService.format(it.orderEnd, "u")?.toInt().let { daysOfTheWeek[it ?: 0] }} " +
+                                "${timeService.format(it.orderEnd, "HH:mm")}-ig rendelhető",
+                        circleUrl = it.circle?.alias?.let { alias -> baseUrl + "p/" + alias } ?: baseUrl + "p/" + (it.circle?.id ?: 0),
+                        circleColor = it.circle?.cssClassName ?: "none"
+                ) }
+    }
+
+    data class UpcomingOpeningDetail(
+            var name: String,
+            var orderStart: Long,
+            var openingStart: Long,
+            var icon: String?,
+            var feeling: String,
+            var available: Int,
+            var outOf: Int,
+            var banner: String?,
+            var day: String,
+            var comment: String,
+            var circleUrl: String,
+            var circleColor: String
+    )
+
+    @CrossOrigin(origins = ["*"])
+    @GetMapping("/open/upcoming-openings")
+    @ResponseBody
+    fun upcomingOpeningsApi(@RequestParam(required = false) token: String?): List<UpcomingOpeningDetail> {
+        if (token.isNullOrBlank() || !apiTokens.contains(token))
+            return listOf(UpcomingOpeningDetail("Invalid Token", 0, 0,null,
+                    "sad", 0, 0, null, "",
+                    "Contact the administrator if you think this is a problem", "", ""))
+
+        return openings.findNextWeek()
+                .filter { it.circle != null }
+                .map { UpcomingOpeningDetail(
+                        name = it.circle?.displayName ?: "n/a",
+                        orderStart = it.orderStart,
+                        openingStart = it.dateStart,
+                        icon =  it.circle?.logoUrl?.let { url -> baseUrl + url },
+                        feeling = it.feeling ?: "",
+                        available = Math.max(0, Math.min(
+                                it.timeWindows.sumOf { tw -> tw.normalItemCount },
+                                it.maxOrder - it.timeWindows.sumOf { tw -> it.maxOrderPerInterval - tw.normalItemCount
+                                })),
+                        outOf = it.maxOrder,
+                        banner = it.prUrl.let { url -> baseUrl + url },
+                        day = timeService.format(it.dateStart, "u")?.toInt().let { daysOfTheWeek[it ?: 0] },
+                        comment = "${timeService.format(it.orderEnd, "u")?.toInt().let { daysOfTheWeek[it ?: 0] }} " +
+                                "${timeService.format(it.orderEnd, "HH:mm")}-ig rendelhető",
+                        circleUrl = it.circle?.alias?.let { alias -> baseUrl + "p/" + alias } ?: baseUrl + "p/" + (it.circle?.id ?: 0),
+                        circleColor = it.circle?.cssClassName ?: "none"
                 ) }
     }
 
