@@ -57,7 +57,7 @@ function openModalWithOrder(orderId) {
     document.getElementById('details-popup').classList.remove('inactive');
     document.getElementById('popup-title').innerText = order.name;
 
-    const toDisplay = [
+    let data = [
         {
             name: 'Alapár',
             value: priceBreakdown.prices['basePrice']
@@ -73,13 +73,47 @@ function openModalWithOrder(orderId) {
         let typeName = LANG[key.split("-")[0]];
         let name = key.replace(key.split("-")[0], `${typeName} `);
 
-        toDisplay.push({
+        data.push({
             name: name,
             value: priceBreakdown.prices[key]
         });
 
     }
-    document.getElementById('info').innerHTML = JSON.stringify(toDisplay);
+    let toDisplay = `
+<table class="form full-table">
+    <tr>
+        <th>
+            Név
+        </th>
+        <th style="text-align: end">
+            Ár
+        </th>
+    </tr>`;
+    for (let item of data) {
+        toDisplay += `
+        <tr> 
+            <td>
+                ${item.name}
+            </td>
+            <td>
+                ${item.value}
+            </td>
+        </tr>
+        `;
+    }
+    toDisplay += `
+        <tr style="border-top: 4px double #888">
+            <td style="font-weight: bold">
+                Összesen
+            </td>
+            <td style="font-weight: bold; text-align: end">
+                ${order.price}            
+            </td>
+        </tr>
+    `;
+    toDisplay += "</table>";
+
+    document.getElementById('info').innerHTML = toDisplay
 
 }
 
