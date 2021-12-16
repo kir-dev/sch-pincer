@@ -3569,3 +3569,12 @@ input:checked + .form-slider:before {
 .popup .overlay-flex i:hover {
     transform: rotate(90deg);
 }
+
+.popup h3.no-top {
+    top: 0;
+}
+
+.popup .body.table-body {
+    margin-top: 0;
+    padding-bottom: 50px;
+}
