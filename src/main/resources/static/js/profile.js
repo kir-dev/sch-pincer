@@ -107,7 +107,7 @@ function openModalWithOrder(orderId) {
                 Összesen
             </td>
             <td style="font-weight: bold; text-align: end">
-                ${order.price}            
+                ${order.price / order.count}            
             </td>
         </tr>
     `;

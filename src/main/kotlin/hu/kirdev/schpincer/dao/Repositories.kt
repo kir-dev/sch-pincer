@@ -1,6 +1,7 @@
 package hu.kirdev.schpincer.dao
 
 import hu.kirdev.schpincer.model.*
+import hu.kirdev.schpincer.web.component.CustomComponentType
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
@@ -79,4 +80,9 @@ interface TimeWindowRepository : JpaRepository<TimeWindowEntity, Long> {
 interface UserRepository : JpaRepository<UserEntity, String> {
     fun findTop10AllByNameContainsIgnoreCase(name: String): List<UserEntity>
     fun findTop10AllByRoomContainsIgnoreCase(room: String): List<UserEntity>
+}
+
+@Repository
+interface ExtrasRepository : JpaRepository<ExtraEntity, Long> {
+    fun findByCircleAndNameAndInputTypeAndSelectedIndex(circle: CircleEntity, name: String, inputType: CustomComponentType, selectedIndex: Int): Optional<ExtraEntity>
 }

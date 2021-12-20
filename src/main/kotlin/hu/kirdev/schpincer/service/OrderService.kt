@@ -1,16 +1,14 @@
 package hu.kirdev.schpincer.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import hu.kirdev.schpincer.dao.ItemRepository
-import hu.kirdev.schpincer.dao.OpeningRepository
-import hu.kirdev.schpincer.dao.OrderRepository
-import hu.kirdev.schpincer.dao.TimeWindowRepository
+import hu.kirdev.schpincer.dao.*
 import hu.kirdev.schpincer.dto.ManualUserDetails
 import hu.kirdev.schpincer.dto.PriceBreakdown
 import hu.kirdev.schpincer.model.*
 import hu.kirdev.schpincer.web.cannotEditCircle
 import hu.kirdev.schpincer.web.component.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.MessageSource
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -60,6 +58,12 @@ open class OrderService {
 
     @Autowired
     internal lateinit var itemsRepo: ItemRepository
+
+    @Autowired
+    internal lateinit var extrasRepository: ExtrasRepository
+
+    @Autowired
+    lateinit var messageSource: MessageSource
 
     @Transactional
     open fun save(order: OrderEntity) {
@@ -123,7 +127,8 @@ open class OrderService {
         val procedure = MakeOrderProcedure(user, id, itemCount, time, comment, detailsJson,
                 itemsRepo = itemsRepo,
                 openings = openings,
-                timeWindowRepo = timeWindowRepo)
+                timeWindowRepo = timeWindowRepo,
+                extrasRepository = extrasRepository)
         procedure.makeOrder()
 
         timeWindowRepo.save(procedure.timeWindow)
@@ -144,7 +149,8 @@ open class OrderService {
         val procedure = MakeOrderProcedure(user, id, itemCount, time, comment, detailsJson,
                 itemsRepo = itemsRepo,
                 openings = openings,
-                timeWindowRepo = timeWindowRepo)
+                timeWindowRepo = timeWindowRepo,
+                extrasRepository = extrasRepository)
         procedure.makeOrder(manualUser)
 
         timeWindowRepo.save(procedure.timeWindow)
@@ -249,35 +255,10 @@ open class OrderService {
         return orders.map {
 
             var prices = mutableMapOf<String, Int>()
+            val itemEntity = it.orderedItem!!
 
-            /**
-             * @see CustomComponentType
-             * */
-            val mapper = ObjectMapper()
-            val types: Map<String, CustomComponentType> = CustomComponentType.values().associateBy({ it.name }, { it })
-            val answers = mapper.readValue(it.detailsJson.toByteArray(), CustomComponentAnswerList::class.java)
-            // TODO: PUT ITEM IN ORDER ENTITY
-            var itemName = it.compactName
-            if (itemName.contains(" x ")) {
-                itemName = itemName.split(" x ")[0]
-            }
-            val itemEntity = itemsRepo.findAllByNameEquals(itemName)[0]
-            val cardType = when {
-                it.comment.startsWith("[KB]") -> CardType.KB
-                it.comment.startsWith("[AB]") -> CardType.AB
-                else -> CardType.DO
-            }
-
-            val models = mapper.readValue(("{\"models\":${itemEntity.detailsConfigJson}}").toByteArray(), CustomComponentModelList::class.java)
-            val mapped: Map<String, CustomComponentModel> = models.models.associateBy({ it.name }, { it })
-
-            for (answer in answers.answers) {
-                val extraMap =
-                    (types[answer.type] ?: CustomComponentType.UNKNOWN)
-                        .generatePriceBreakdown(answer, it, mapped[answer.name]!!, cardType)
-                prices.putAll(
-                    extraMap
-                )
+            for (extra in it.extras.sortedBy { extra -> extra.name }) {
+                prices["${extra.name}- ${extra.displayName}"] = extra.price
             }
             prices["basePrice"] = if (itemEntity.discountPrice == 0) itemEntity.price else itemEntity.discountPrice
 
