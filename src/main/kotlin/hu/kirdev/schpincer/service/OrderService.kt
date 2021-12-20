@@ -247,12 +247,12 @@ open class OrderService {
         return orders.map {
 
             var prices = mutableMapOf<String, Int>()
-            val itemEntity = it.orderedItem!!
-
-            for (extra in it.extras.sortedBy { extra -> extra.name }) {
-                prices["${extra.name}- ${extra.displayName}"] = extra.price
+            it.orderedItem?.apply {
+                for (extra in it.extras.sortedBy { extra -> extra.name }) {
+                    prices["${extra.name}- ${extra.displayName}"] = extra.price
+                }
+                prices["basePrice"] = if (this.discountPrice == 0) this.price else this.discountPrice
             }
-            prices["basePrice"] = if (itemEntity.discountPrice == 0) itemEntity.price else itemEntity.discountPrice
 
             PriceBreakdown(
                 it.id,
