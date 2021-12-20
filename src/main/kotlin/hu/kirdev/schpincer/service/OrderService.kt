@@ -247,6 +247,7 @@ open class OrderService {
         return orders.map {
 
             var prices = mutableMapOf<String, Int>()
+            prices["basePrice"] = it.price / it.count
             it.orderedItem?.apply {
                 for (extra in it.extras.sortedBy { extra -> extra.name }) {
                     prices["${extra.name}- ${extra.displayName}"] = extra.price
