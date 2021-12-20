@@ -21,6 +21,9 @@ open class ItemService {
     @Autowired
     private lateinit var openingRepo: OpeningRepository
 
+    @Autowired
+    private lateinit var extrasService: ExtrasService
+
     @Transactional(readOnly = true)
     open fun findAll(): List<ItemEntity> {
         return repo.findAllByVisibleTrueOrderByPrecedenceDesc()
@@ -39,6 +42,8 @@ open class ItemService {
     @Transactional(readOnly = false)
     open fun save(itemEntity: ItemEntity) {
         repo.save(itemEntity)
+        // Regenerate extras whenever an item gets updated
+        extrasService.createAllExtras()
     }
 
     @Transactional(readOnly = true)
@@ -87,6 +92,8 @@ open class ItemService {
     @Transactional(readOnly = false)
     open fun saveAll(itemEntities: List<ItemEntity>) {
         repo.saveAll(itemEntities)
+        // Regenerate extras whenever an item gets updated
+        extrasService.createAllExtras()
     }
 
 }
