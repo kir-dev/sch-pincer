@@ -270,6 +270,28 @@ open class OrderService {
         repo.saveAll(affectedOpenings)
     }
 
+
+    @Transactional(readOnly = false)
+    open fun generatePriceBreakdowns(orders: List<OrderEntity>): List<PriceBreakdown> {
+
+        return orders.map {
+
+            var prices = mutableMapOf<String, Int>()
+            prices["basePrice"] = it.price / it.count
+            it.orderedItem?.apply {
+                for (extra in it.extras.sortedBy { extra -> extra.name }) {
+                    prices["${extra.name}- ${extra.displayName}"] = extra.price
+                }
+                prices["basePrice"] = if (this.discountPrice == 0) this.price else this.discountPrice
+            }
+
+            PriceBreakdown(
+                it.id,
+                prices
+            )
+        }
+
+    }
 }
 
 fun responseOf(body: String, status: HttpStatus = HttpStatus.OK) = ResponseEntity(body, status)
