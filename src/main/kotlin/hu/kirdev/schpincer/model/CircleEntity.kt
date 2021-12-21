@@ -1,5 +1,6 @@
 package hu.kirdev.schpincer.model
 
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import java.io.Serializable
 import javax.persistence.*
 import javax.validation.constraints.Size
@@ -36,11 +37,13 @@ data class CircleEntity(
         @Column
         @OrderBy("sort DESC")
         @OneToMany(mappedBy = "circle", fetch = FetchType.LAZY, orphanRemoval = true)
+        @JsonManagedReference
         var members: List<CircleMemberEntity>? = null,
 
         @Column
         @OrderBy("dateStart ASC")
         @OneToMany(mappedBy = "circle", fetch = FetchType.LAZY, orphanRemoval = true)
+        @JsonManagedReference
         var openings: List<OpeningEntity>? = null,
 
         @Column
