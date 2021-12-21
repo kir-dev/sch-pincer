@@ -25,15 +25,17 @@ class ExtrasService {
     @Autowired
     lateinit var circleRepository: CircleRepository
 
+    @Autowired
+    lateinit var mapper: ObjectMapper
+
     fun createExtrasForCircle(circle: CircleEntity) {
 
-        var circleItems = itemRepository.findAllByCircle_Id(circle.id)
+        val circleItems = itemRepository.findAllByCircle_Id(circle.id)
         circleItems.forEach {
 
             /**
              * @see CustomComponentType
              * */
-            val mapper = ObjectMapper()
             val models = mapper.readValue(("{\"models\":${it.detailsConfigJson}}").toByteArray(), CustomComponentModelList::class.java)
             val mapped: Map<String, CustomComponentModel> = models.models.associateBy({ it.name }, { it })
 
@@ -50,11 +52,10 @@ class ExtrasService {
 
     private fun createOrUpdateExtra(mappedExtra: CustomComponentModel, i: Int, circle: CircleEntity) {
         val optionalExtra = extrasRepository.findByCircleAndNameAndInputTypeAndSelectedIndex(circle, mappedExtra.name, CustomComponentType.valueOf(mappedExtra.type), i)
-        if (optionalExtra.isPresent) {
-            val extra = optionalExtra.get()
-            extra.price = mappedExtra.prices[i]
-            extrasRepository.save(extra)
-        } else {
+        optionalExtra.ifPresentOrElse({
+            it.price = mappedExtra.prices[i]
+            extrasRepository.save(it)
+        }) {
             val extra = ExtraEntity(
                     circle = circle,
                     category = mappedExtra.aliases.getOrElse(i) { i.toString() },
@@ -69,7 +70,7 @@ class ExtrasService {
     }
 
     @PostConstruct
-    fun createAllExtras() {
+    fun generateAllExtrasForAllCircles() {
 
         for (circle in circleRepository.findAll()) {
             createExtrasForCircle(circle)

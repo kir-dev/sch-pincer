@@ -49,6 +49,8 @@ function postForJsonObject(path, data) {
     });
 }
 
+const BASE_PRICE = 'basePrice';
+
 function openModalWithOrder(orderId) {
 
     let order = orders.find(o => o.id === orderId);
@@ -60,7 +62,7 @@ function openModalWithOrder(orderId) {
     let data = [
         {
             name: 'Alapár',
-            value: priceBreakdown.prices['basePrice']
+            value: priceBreakdown.prices[BASE_PRICE]
         }
     ];
 
@@ -80,15 +82,15 @@ function openModalWithOrder(orderId) {
 
     }
     let toDisplay = `
-<table class="form full-table">
-    <tr>
-        <th>
-            Név
-        </th>
-        <th style="text-align: end">
-            Ár
-        </th>
-    </tr>`;
+    <table class="form full-table">
+        <tr>
+            <th>
+                Név
+            </th>
+            <th style="text-align: end">
+                Ár
+            </th>
+        </tr>`;
     for (let item of data) {
         toDisplay += `
         <tr> 
@@ -96,18 +98,18 @@ function openModalWithOrder(orderId) {
                 ${item.name}
             </td>
             <td>
-                ${item.value}
+                ${item.value} ${order.count > 1 ? "x " + order.count : ""}
             </td>
         </tr>
         `;
     }
     toDisplay += `
-        <tr style="border-top: 4px double #888">
+        <tr style="border-top: 4px solid #888">
             <td style="font-weight: bold">
                 Összesen
             </td>
             <td style="font-weight: bold; text-align: end">
-                ${order.price / order.count}            
+                ${order.price}            
             </td>
         </tr>
     `;

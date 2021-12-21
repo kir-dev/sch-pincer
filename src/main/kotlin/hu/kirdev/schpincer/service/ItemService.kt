@@ -43,7 +43,7 @@ open class ItemService {
     open fun save(itemEntity: ItemEntity) {
         repo.save(itemEntity)
         // Regenerate extras whenever an item gets updated
-        extrasService.createAllExtras()
+        extrasService.generateAllExtrasForAllCircles()
     }
 
     @Transactional(readOnly = true)
@@ -93,7 +93,7 @@ open class ItemService {
     open fun saveAll(itemEntities: List<ItemEntity>) {
         repo.saveAll(itemEntities)
         // Regenerate extras whenever an item gets updated
-        extrasService.createAllExtras()
+        extrasService.generateAllExtrasForAllCircles()
     }
 
 }

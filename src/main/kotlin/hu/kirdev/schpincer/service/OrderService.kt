@@ -40,6 +40,7 @@ const val RESPONSE_BAD_REQUEST = "BAD_REQUEST"
 const val RESPONSE_INVALID_STATUS = "INVALID_STATUS"
 const val RESPONSE_ORDER_PERIOD_ENDED = "ORDER_PERIOD_ENDED"
 const val RESPONSE_TIME_WINDOW_INVALID = "TIME_WINDOW_INVALID"
+const val BASE_PRICE = "basePrice"
 
 @Service
 open class OrderService {
@@ -241,28 +242,6 @@ open class OrderService {
         }
     }
 
-    @Transactional(readOnly = false)
-    open fun generatePriceBreakdowns(orders: List<OrderEntity>): List<PriceBreakdown> {
-
-        return orders.map {
-
-            var prices = mutableMapOf<String, Int>()
-            prices["basePrice"] = it.price / it.count
-            it.orderedItem?.apply {
-                for (extra in it.extras.sortedBy { extra -> extra.name }) {
-                    prices["${extra.name}- ${extra.displayName}"] = extra.price
-                }
-                prices["basePrice"] = if (this.discountPrice == 0) this.price else this.discountPrice
-            }
-
-            PriceBreakdown(
-                it.id,
-                prices
-            )
-        }
-
-    }
-
     @Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
     open fun changeCancelUntilDates(openingId: Long, orderEnd: Long) {
         val affectedOpenings = repo.findAllByOpeningId(openingId)
@@ -277,12 +256,12 @@ open class OrderService {
         return orders.map {
 
             var prices = mutableMapOf<String, Int>()
-            prices["basePrice"] = it.price / it.count
+            prices[BASE_PRICE] = it.price / it.count
             it.orderedItem?.apply {
                 for (extra in it.extras.sortedBy { extra -> extra.name }) {
                     prices["${extra.name}- ${extra.displayName}"] = extra.price
                 }
-                prices["basePrice"] = if (this.discountPrice == 0) this.price else this.discountPrice
+                prices[BASE_PRICE] = if (this.discountPrice == 0) this.price else this.discountPrice
             }
 
             PriceBreakdown(

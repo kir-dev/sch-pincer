@@ -57,7 +57,7 @@ class MakeOrderProcedure (
         updateBasicDetails()
 
         order.orderedItem = item
-        order.extras = extras()
+        order.extras = getExtrasOfOrder()
         if (manualUser == null)
             validateOrderable(System.currentTimeMillis())
 
@@ -197,7 +197,7 @@ class MakeOrderProcedure (
         }
     }
 
-    private fun extras(): Set<ExtraEntity> {
+    private fun getExtrasOfOrder(): Set<ExtraEntity> {
 
         val extras = mutableSetOf<ExtraEntity>()
         val mapper = ObjectMapper()
