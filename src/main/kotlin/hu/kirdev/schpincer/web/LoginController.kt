@@ -144,8 +144,7 @@ open class LoginController {
 
     fun buildUniqueState(request: HttpServletRequest): String {
         return (request.session.id
-                + request.localAddr
-                + request.localPort).sha256()
+                + request.localAddr).sha256()
     }
 
     @ApiOperation("Logout user")
