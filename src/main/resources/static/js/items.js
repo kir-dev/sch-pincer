@@ -6,6 +6,7 @@ let searchResult = [];
 let manualOrder = false;
 
 var beepSound = new Audio('/beep-boop.mp3');
+var burgirSound = new Audio('/burgir.mp3');
 
 function appendNext(profile = 0) {
     if (document.getElementById('no-results') == null)
@@ -636,7 +637,11 @@ function doneOrder() {
         document.querySelector('.done-tick').style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
     }, 100);
     setTimeout(() => {
-        beepSound.play();
+        if (document.getElementById('popup-title').innerText.toLowerCase().includes("burger")) {
+            burgirSound.play();
+        } else {
+            beepSound.play();
+        }
     }, 300);
     setTimeout(() => {
         let doneElement = document.querySelector('.done');
