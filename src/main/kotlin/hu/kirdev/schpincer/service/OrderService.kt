@@ -174,6 +174,18 @@ open class OrderService {
         return responseOf(RESPONSE_ACK)
     }
 
+    @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
+    open fun changeOrder(user: UserEntity, id: Long, room: String, comment: String): ResponseEntity<String> {
+        val procedure = ChangeOrderProcedure(user, id,
+            orderRepository = repo,
+            room = room,
+            comment = comment)
+        procedure.changeOrder()
+
+        this.save(procedure.order)
+        return responseOf(RESPONSE_ACK)
+    }
+
     @Transactional(readOnly = true)
     open fun findToExport(openingId: Long, orderBy: String): List<OrderEntity> {
         return when (orderBy) {
@@ -250,12 +262,11 @@ open class OrderService {
     }
 
 
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = true)
     open fun generatePriceBreakdowns(orders: List<OrderEntity>): List<PriceBreakdown> {
 
         return orders.map {
-
-            var prices = mutableMapOf<String, Int>()
+            val prices = mutableMapOf<String, Int>()
             prices[BASE_PRICE] = it.price / it.count
             it.orderedItem?.apply {
                 for (extra in it.extras.sortedBy { extra -> extra.name }) {
@@ -264,10 +275,7 @@ open class OrderService {
                 prices[BASE_PRICE] = if (this.discountPrice == 0) this.price else this.discountPrice
             }
 
-            PriceBreakdown(
-                it.id,
-                prices
-            )
+            PriceBreakdown(it.id, prices)
         }
 
     }

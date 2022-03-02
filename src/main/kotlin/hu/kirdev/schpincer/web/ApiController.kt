@@ -175,19 +175,32 @@ open class ApiController(
 
     data class DeleteRequestDto(var id: Long = 0)
 
-    @Deprecated("There is an issue with allowed item counts, DO NOT remove this functionallity")
     @ApiOperation("Delete order")
     @PostMapping("/order/delete")
     @ResponseBody
     fun deleteOrder(request: HttpServletRequest, @RequestBody(required = true) body: DeleteRequestDto): ResponseEntity<String> {
         val user = request.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
-        try {
-            return orders.cancelOrder(user, body.id)
+        return try {
+            orders.cancelOrder(user, body.id)
         } catch (e: FailedOrderException) {
             log.warn("Failed to cancel order by '${request.getUserIfPresent()?.uid ?: "n/a"}' reason: ${e.response}")
-            return responseOf(e.response)
+            responseOf(e.response)
         }
+    }
 
+    data class ChangeRequestDto(var id: Long = 0, var room: String = "", var comment: String = "")
+
+    @ApiOperation("Change order")
+    @PostMapping("/order/change")
+    @ResponseBody
+    fun changeOrder(request: HttpServletRequest, @RequestBody(required = true) body: ChangeRequestDto): ResponseEntity<String> {
+        val user = request.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
+        return try {
+            orders.changeOrder(user, body.id, body.room, body.comment)
+        } catch (e: FailedOrderException) {
+            log.warn("Failed to change order by '${request.getUserIfPresent()?.uid ?: "n/a"}' reason: ${e.response}")
+            responseOf(e.response)
+        }
     }
 
     @GetMapping("/version")

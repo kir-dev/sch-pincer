@@ -96,10 +96,32 @@ open class MainController {
         return circleSpecific(circle, model, request)
     }
 
+    data class OrderForDetails(
+        val id: Long,
+        val name: String,
+        val count: Int,
+        val price: Int,
+        val image: String,
+        val color: String,
+        val room: String,
+        val comment: String,
+        val changable: Boolean
+    )
+
     @GetMapping("/profile")
     fun profile(request: HttpServletRequest, model: Model): String {
         val orders = this.orders.findAll(request.getUserId())
         model.addAttribute("orders", orders)
+        model.addAttribute("ordersForDetails", orders.map {
+            OrderForDetails(
+                it.id, it.name, it.count, it.price,
+                it.orderedItem?.imageName ?: "/image/blank-item.jpg",
+                it.orderedItem?.circle?.cssClassName ?: "blank",
+                it.room,
+                it.comment.replace(Regex("^\\[((AB)|(KB)|(DO))] "), ""),
+                it.cancelUntil > System.currentTimeMillis() && it.status == OrderStatus.ACCEPTED
+            )
+        })
         model.addAttribute("priceBreakdowns", this.orders.generatePriceBreakdowns(orders))
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("timeService", timeService)
@@ -113,8 +135,8 @@ open class MainController {
     fun stats(request: HttpServletRequest, model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
         val user = request.getUser()
-        statsViews.computeIfPresent(user.uid, { a, b -> b + "+1"})
-        statsViews.computeIfAbsent(user.uid, { user.name + ";" + System.currentTimeMillis() + ";1" })
+        statsViews.computeIfPresent(user.uid) { _, b -> "$b+1" }
+        statsViews.computeIfAbsent(user.uid) { user.name + ";" + System.currentTimeMillis() + ";1" }
         statService.getDetailsForUser(user).entries.forEach { model.addAttribute(it.key, it.value) }
         return "stats"
     }

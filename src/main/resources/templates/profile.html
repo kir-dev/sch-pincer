@@ -80,8 +80,10 @@
                 <th th:text="#{lang.profile.orders-review}">Review</th>
             </tr>
             <tr th:each="order : ${orders}" th:object="${order}">
-                <td th:if="${order.count <= 1}" th:text="*{name}" th:attr="onclick=|openModalWithOrder(${order.id})|" th:class="orders-product-name">Ördög pizza</td>
-                <td th:unless="${order.count <= 1}" th:text="|*{name} x *{count}|" th:attr="onclick=|openModalWithOrder(${order.id})|" th:class="orders-product-name">Ördög pizza</td>
+                <td>
+                    <text th:if="${order.count <= 1}" th:text="*{name}" th:onclick="|openModalWithOrder(${order.id}); return false|" class="orders-product-name">Ördög pizza</text>
+                    <text th:unless="${order.count <= 1}" th:text="|*{name} x *{count}|" th:onclick="|openModalWithOrder(${order.id}); return false|" class="orders-product-name">Ördög pizza x 2</text>
+                </td>
                 <td>
                     <i class="material-icons" th:if="${#strings.equals(order.status, 'SHIPPED')}"
                        th:title="#{lang.profile.status-shipped}">done</i>
@@ -106,7 +108,15 @@
                 <td th:text="${timeService.format(order.date, '__#{lang.date-short-format}__')} + ' ' + *{intervalMessage}">
                     10:00 - 10:30
                 </td>
-                <td th:text="*{room}">SCH 1037</td>
+                <td>
+                    <text th:text="*{room}">SCH 1037</text>
+                    <a href="#" th:onclick="|openModalWithOrder(${order.id}); return false|" th:if="${order.cancelUntil >= T(java.lang.System).currentTimeMillis() && #strings.equals(order.status, 'ACCEPTED')}" class="orders-product-name">
+                        <i class="material-icons">edit</i>
+                    </a>
+                    <a href="#" th:onclick="|openModalWithOrder(${order.id}); return false|" th:unless="${order.cancelUntil >= T(java.lang.System).currentTimeMillis() && #strings.equals(order.status, 'ACCEPTED')}" class="orders-product-name">
+                        <i class="material-icons">info</i>
+                    </a>
+                </td>
                 <td th:text="*{price} + ' ' + #{lang.currency}">800 JMF</td>
                 <td th:text="*{comment}" class="comment">Csípjen papa</td>
                 <td class="review-order">
@@ -123,8 +133,10 @@
             <object th:each="order : ${orders}" th:object="${order}" th:remove="tag">
                 <tr>
                     <td th:text="#{lang.profile.orders-name}">Name</td>
-                    <td th:if="${order.count <= 1}" th:text="*{name}" th:attr="onclick=|openModalWithOrder(${order.id})|" th:class="orders-product-name">Ördög pizza</td>
-                    <td th:unless="${order.count <= 1}" th:text="|*{name} x *{count}|" th:attr="onclick=|openModalWithOrder(${order.id})|" th:class="orders-product-name">Ördög pizza</td>
+                    <td>
+                        <text th:if="${order.count <= 1}" th:text="*{name}" th:onclick="|openModalWithOrder(${order.id}); return false|" class="orders-product-name">Ördög pizza</text>
+                        <text th:unless="${order.count <= 1}" th:text="|*{name} x *{count}|" th:onclick="|openModalWithOrder(${order.id}); return false|" class="orders-product-name">Ördög pizza x 2</text>
+                    </td>
                 </tr>
 
                 <tr>
@@ -155,7 +167,15 @@
 
                 <tr>
                     <td th:text="#{lang.profile.orders-room}">Room</td>
-                    <td th:text="*{room}">SCH 1037</td>
+                    <td>
+                        <text th:text="*{room}">SCH 1037</text>
+                        <a href="#" th:onclick="|openModalWithOrder(${order.id}); return false|" th:if="${order.cancelUntil >= T(java.lang.System).currentTimeMillis() && #strings.equals(order.status, 'ACCEPTED')}" class="orders-product-name">
+                            <i class="material-icons">edit</i>
+                        </a>
+                        <a href="#" th:onclick="|openModalWithOrder(${order.id}); return false|" th:unless="${order.cancelUntil >= T(java.lang.System).currentTimeMillis() && #strings.equals(order.status, 'ACCEPTED')}" class="orders-product-name">
+                            <i class="material-icons">info</i>
+                        </a>
+                    </td>
                 </tr>
 
                 <tr>
@@ -185,18 +205,30 @@
     </div>
 </div>
 
-<div class="popup-bg inactive" id="details-popup">
-    <div class="popup">
+<div class="popup-bg inactive" id="details-popup" onclick="closePopup()">
+    <div class="popup" id="popup-window" onclick="event.stopPropagation()">
         <div class="popup-child">
-            <div class="overlay-flex">
-                <i class="material-icons" onclick="closePopup()">close</i>
-            </div>
-            <h3 id="popup-title" class="no-top">Ördög pizza</h3>
-            <div class="body table-body">
-                <div class="full-table dashboard highlighted" id="info">
-                    asd
+            <div class="picture border-colored" id="popup-header">
+                <div class="overlay">
+                    <i class="material-icons" onclick="closePopup()">close</i>
                 </div>
             </div>
+            <div style="height: 180px;"></div>
+
+            <h3 id="popup-title" style="top: 0">Ördög pizza</h3>
+            <div class="table-body">
+                <div class="full-table dashboard highlighted" id="info" style="margin-top: 20px">
+                    content
+                </div>
+            </div>
+
+            <form class="popup-form" action="#" method="get" onsubmit="changeItem(document.getElementById('popup-id').value, document.getElementById('popup-room-id').value,document.getElementById('popup-comment').value); return false">
+                <input type="hidden" id="popup-id" />
+                <label for="popup-room-id" th:text="#{lang.profile.orders-target}">Kiszállítás helye:</label> <input type="text" id="popup-room-id" maxlength="10" /><br />
+                <label for="popup-comment" th:text="#{lang.profile.orders-comment}">Megjegyzés:</label> <input type="text" id="popup-comment" />
+                <input type="submit" class="colored-light submit-button" id="popup-edit" th:value="#{lang.profile.orders-change}">
+                <input type="button" class="submit-button" id="popup-close" th:value="#{lang.profile.close}" onclick="closePopup()">
+            </form>
         </div>
     </div>
 </div>
@@ -204,8 +236,8 @@
 <div th:replace="MainLayout :: footer"></div>
 
 <script th:inline="javascript">
-    var orders = [[${orders}]];
-    var priceBreakdowns = [[${priceBreakdowns}]];
+    const orders = [[${ordersForDetails}]];
+    const priceBreakdowns = [[${priceBreakdowns}]];
 </script>
 </body>
 </html>

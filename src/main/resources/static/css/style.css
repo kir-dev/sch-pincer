@@ -1206,7 +1206,8 @@ a {
     display: block;
 }
 
-.popup input[type="submit"] {
+.popup input[type="submit"],
+.popup input[type="button"] {
     text-shadow: 0 2px 0 #111111;
 }
 
@@ -1290,6 +1291,11 @@ form input[type="text"] {
 
 form input[type="datetime-local"] {
     min-width: 300px;
+}
+
+form input[disabled] {
+    color: #a3a3a3;
+    cursor: not-allowed;
 }
 
 form select {
@@ -1398,7 +1404,8 @@ form label {
     font-weight: 900;
 }
 
-form input[type="submit"] {
+form input[type="submit"],
+form input[type="button"] {
     display: block;
     text-transform: uppercase;
     font-family: 'Roboto', 'Roboto-offline', sans-serif;
@@ -1413,10 +1420,14 @@ form input[type="submit"] {
     width: 100%;
 }
 
-form input[type="submit"]:hover {
+form input[type="submit"]:hover,
+form input[type="button"]:hover {
     filter: brightness(120%);
 }
 
+form input[type="button"] {
+    color: #a3a3a3;
+}
 
 /** ORDER REVIEW **/
 
@@ -3177,13 +3188,6 @@ img.centered-mini {
     }
 }
 
-@media only screen and (min-width: 600px) {
-    .popup {
-        border-top-left-radius: 10px;
-        border-top-right-radius: 10px;
-    }
-}
-
 @media only screen and (min-width: 700px) {
     .article:nth-of-type(2n) {
         margin-left: 20px;
@@ -3564,6 +3568,14 @@ input:checked + .form-slider:before {
     font-size: 16px;
 }
 
+table .material-icons {
+    vertical-align: top;
+}
+
+text {
+    vertical-align: bottom;
+}
+
 #saved {
     display: none;
 }
@@ -3602,6 +3614,12 @@ input:checked + .form-slider:before {
 .orders-product-name {
     pointer-events: fill;
     cursor: pointer;
+    transition: opacity ease 0.2s;
+    opacity: 1;
+}
+
+.orders-product-name:hover {
+    opacity: 0.8;
 }
 
 .popup-child .overlay-flex {
@@ -3627,11 +3645,19 @@ input:checked + .form-slider:before {
     transform: rotate(90deg);
 }
 
-.popup h3.no-top {
-    top: 0;
-}
-
 .popup .body.table-body {
     margin-top: 0;
     padding-bottom: 50px;
+}
+
+.popup-form {
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+.popup-form label {
+    display: inline-block;
+    min-width: 192px;
+    font-size: 16px;
+    font-weight: 300;
 }
