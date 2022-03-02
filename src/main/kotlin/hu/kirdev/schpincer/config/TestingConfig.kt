@@ -86,7 +86,7 @@ class TestingConfig {
                 "Fokhagymás alap, Pick szalámi, Lilahagyma, Kukorica, Mozzarella",
                 " pizza pizzasch albino batman",
                 "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\"],\"aliases\":[\"normál\"],\"prices\":[0]},{\"type\":\"ITEM_COUNT\",\"name\":\"count\",\"min\":1,\"max\":10,\"values\":[],\"_hide\":true},{\"type\":\"AB_KB_SELECT\",\"name\":\"kb_extra\",\"values\":[\"Nem kérek\",\"+ Gomba\",\"+ Kukorica\",\"+ Ananász\"],\"aliases\":[\"-\",\"GOMBA\",\"KUKOR\",\"ANANS\"],\"prices\":[0,0,0,0],\"_hide\":true},{\"type\":\"AB_SELECT\",\"name\":\"ab_extra\",\"values\":[\"Nem kérek\",\"+ Gomba\",\"+ Kukorica\",\"+ Ananász\"],\"aliases\":[\"-\",\"GOMBA\",\"KUKOR\",\"ANANS\"],\"prices\":[0,0,0,0],\"_hide\":true}]",
-                800, true, true, false, true, false, false, "cdn/items/pizzasch_blank.jpeg", 0))
+                800, true, true, false, true, false, false, "cdn/items/5.jpg", 0))
         items.save(ItemEntity(0, "BBQ", circle,
                 "BBQ alap, Bacon, Sonka, Lilahagyma, Mozzarella",
                 "BBQ alap, Bacon, Sonka, Lilahagyma, Mozzarella",
@@ -170,7 +170,7 @@ class TestingConfig {
                 "Fokhagymás alap, Sonka, Paradicsom, Olívabogyó, Mozzarella",
                 " pizza pizzasch yolo",
                 "[{\"type\":\"PIZZASCH_SELECT\",\"name\":\"size\",\"values\":[\"32\",\"45\"],\"aliases\":[\"kis\",\"nagy\"],\"prices\":[0,200],\"_comment\":\"A 45-ös pizzából csak limitált mennyiségűt készítünk.\"}]",
-                800, true, true, false, true, false, false, "cdn/items/yolo.jpeg", 68))
+                800, true, true, false, true, false, false, "cdn/items/7.jpg", 68))
         circles.save(CircleEntity("Dzsájrosz",
                 "Egyszer egy angol szóbelin valaki benyögte, hogy dzsájroszt reggelizett... "
                         + "biztos nem közülünk volt valaki ;) Kicsit késõbb történt, valamikor '12-ben, "

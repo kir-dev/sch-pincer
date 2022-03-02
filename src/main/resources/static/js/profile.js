@@ -19,9 +19,9 @@ function setRoom() {
         .then(function () {
             showRoom(document.getElementById('room-setter').value);
         }).catch(function (e) {
-        console.error("Cannot send POST request.");
-        console.error(e);
-    });
+            console.error("Cannot send POST request.");
+            console.error(e);
+        });
 }
 
 function cancelItem(id) {
@@ -29,7 +29,17 @@ function cancelItem(id) {
         .then(function () {
             location.reload();
         }).catch(function (e) {
-        console.error("Cannot send DELETE request.");
+            console.error("Cannot send DELETE request.");
+            console.error(e);
+        });
+}
+
+function changeItem(id, room, comment) {
+    postForJsonObject('api/order/change', {id: id, room: room, comment: comment})
+        .then(function () {
+            location.reload();
+        }).catch(function (e) {
+        console.error("Cannot send CHANGE request.");
         console.error(e);
     });
 }
@@ -58,16 +68,24 @@ function openModalWithOrder(orderId) {
 
     document.getElementById('details-popup').classList.remove('inactive');
     document.getElementById('popup-title').innerText = order.name;
+    document.getElementById('popup-header').style.backgroundImage = `url('${order.image}')`;
+    document.getElementById('popup-window').className = `popup ${order.color}`;
+    document.getElementById('popup-id').value = order.id;
+    document.getElementById('popup-room-id').value = order.room;
+    document.getElementById('popup-room-id').disabled = !order.changable;
+    document.getElementById('popup-comment').value = order.comment;
+    document.getElementById('popup-comment').disabled = !order.changable;
+
+    document.getElementById('popup-edit').style.display = order.changable ? 'inline-block' : 'none';
 
     let data = [
         {
-            name: 'Alapár',
+            name: LANG['basePrice'],
             value: priceBreakdown.prices[BASE_PRICE]
         }
     ];
 
     for (let key in priceBreakdown.prices) {
-
         if (key === 'basePrice') {
             continue;
         }
@@ -79,8 +97,8 @@ function openModalWithOrder(orderId) {
             name: name,
             value: priceBreakdown.prices[key]
         });
-
     }
+
     let toDisplay = `
     <table class="form full-table">
         <tr>
@@ -116,7 +134,6 @@ function openModalWithOrder(orderId) {
     toDisplay += "</table>";
 
     document.getElementById('info').innerHTML = toDisplay
-
 }
 
 function closePopup() {
