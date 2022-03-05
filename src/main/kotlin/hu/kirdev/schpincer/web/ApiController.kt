@@ -2,8 +2,10 @@ package hu.kirdev.schpincer.web
 
 import hu.kirdev.schpincer.dto.ItemEntityDto
 import hu.kirdev.schpincer.dto.ManualUserDetails
+import hu.kirdev.schpincer.model.ItemCategory
 import hu.kirdev.schpincer.model.ItemEntity
 import hu.kirdev.schpincer.model.OpeningEntity
+import hu.kirdev.schpincer.model.OrderStatus
 import hu.kirdev.schpincer.service.*
 import io.swagger.annotations.ApiOperation
 import org.slf4j.LoggerFactory
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.lang.Integer.min
 import java.text.SimpleDateFormat
 import java.util.concurrent.ConcurrentHashMap
 import java.util.stream.Collectors
@@ -143,19 +146,19 @@ open class ApiController(
         if (requestBody.id < 0 || requestBody.time < 0 || requestBody.detailsJson == "{}")
             return ResponseEntity(RESPONSE_INTERNAL_ERROR, HttpStatus.OK)
         val user = request.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
-        try {
+        return try {
             if (requestBody.manualOrderDetails != null) {
                 log.info("{}:{} is making a manual order with details: {}, for {}",
-                        user.name, user.uid, requestBody.detailsJson, requestBody.manualOrderDetails?.toString() ?: "null")
-                return orders.makeManualOrder(user, requestBody.id, requestBody.count, requestBody.time.toLong(),
-                        requestBody.comment, requestBody.detailsJson, requestBody.manualOrderDetails!!)
+                    user.name, user.uid, requestBody.detailsJson, requestBody.manualOrderDetails?.toString() ?: "null")
+                orders.makeManualOrder(user, requestBody.id, requestBody.count, requestBody.time.toLong(),
+                    requestBody.comment, requestBody.detailsJson, requestBody.manualOrderDetails!!)
             } else {
-                return orders.makeOrder(user, requestBody.id, requestBody.count, requestBody.time.toLong(),
-                        requestBody.comment, requestBody.detailsJson)
+                orders.makeOrder(user, requestBody.id, requestBody.count, requestBody.time.toLong(),
+                    requestBody.comment, requestBody.detailsJson)
             }
         } catch (e: FailedOrderException) {
             log.warn("Failed to make new order by '${request.getUserIfPresent()?.uid ?: "n/a"}' reason: ${e.response}")
-            return responseOf(e.response)
+            responseOf(e.response)
         }
     }
 
@@ -242,22 +245,44 @@ open class ApiController(
         return openings.findNextWeek()
                 .filter { it.circle != null }
                 .filter { it.orderStart <= System.currentTimeMillis() }
-                .map { OpeningDetail(
-                        name = it.circle?.displayName ?: "n/a",
-                        icon =  it.circle?.logoUrl?.let { url -> baseUrl + url },
-                        feeling = it.feeling ?: "",
-                        available = Math.max(0, Math.min(
-                                        it.timeWindows.sumOf { tw -> tw.normalItemCount },
-                                        it.maxOrder - it.timeWindows.sumOf { tw -> it.maxOrderPerInterval - tw.normalItemCount
-                                })),
-                        outOf = it.maxOrder,
-                        banner = it.prUrl.let { url -> baseUrl + url },
-                        day = timeService.format(it.dateStart, "u")?.toInt().let { daysOfTheWeek[it ?: 0] },
-                        comment = "${timeService.format(it.orderEnd, "u")?.toInt().let { daysOfTheWeek[it ?: 0] }} " +
-                                "${timeService.format(it.orderEnd, "HH:mm")}-ig rendelhető",
-                        circleUrl = it.circle?.alias?.let { alias -> baseUrl + "p/" + alias } ?: baseUrl + "p/" + (it.circle?.id ?: 0),
-                        circleColor = it.circle?.cssClassName ?: "none"
-                ) }
+                .map { openingEntity ->
+                    OpeningDetail(
+                        name = openingEntity.circle?.displayName ?: "n/a",
+                        icon = openingEntity.circle?.logoUrl?.let { url -> baseUrl + url },
+                        feeling = openingEntity.feeling ?: "",
+                        available = calculateAvailable(openingEntity),
+                        outOf = openingEntity.maxOrder,
+                        banner = openingEntity.prUrl.let { url -> baseUrl + url },
+                        day = timeService.format(openingEntity.dateStart, "u")?.toInt().let { daysOfTheWeek[it ?: 0] },
+                        comment = "${
+                            timeService.format(openingEntity.orderEnd, "u")?.toInt().let { daysOfTheWeek[it ?: 0] }
+                        } " +
+                                "${timeService.format(openingEntity.orderEnd, "HH:mm")}-ig rendelhető",
+                        circleUrl = openingEntity.circle?.alias?.let { alias -> baseUrl + "p/" + alias }
+                            ?: (baseUrl + "p/" + (openingEntity.circle?.id ?: 0)),
+                        circleColor = openingEntity.circle?.cssClassName ?: "none"
+                    ) }
+    }
+
+    private fun calculateAvailable(openingEntity: OpeningEntity): Int {
+        val orders = orders.findAllByOpening(openingEntity.id)
+            .filter { it.status == OrderStatus.ACCEPTED }
+
+        val maxOverall = openingEntity.maxOrder - orders.sumOf { it.count }
+        val available = min(maxOverall, orders.groupBy { it.orderedItem?.category ?: 0 }
+            .map { pair -> pair.key to pair.value.sumOf { it.count } }
+            .map { pair ->
+                when (ItemCategory.of(pair.first)) {
+                    ItemCategory.DEFAULT -> maxOverall
+                    ItemCategory.ALPHA -> openingEntity.maxAlpha - pair.second
+                    ItemCategory.BETA -> openingEntity.maxBeta - pair.second
+                    ItemCategory.GAMMA -> openingEntity.maxGamma - pair.second
+                    ItemCategory.DELTA -> openingEntity.maxDelta - pair.second
+                    ItemCategory.LAMBDA -> openingEntity.maxLambda - pair.second
+                }
+            }
+            .maxOrNull() ?: 0)
+        return available
     }
 
     data class UpcomingOpeningDetail(
@@ -286,23 +311,21 @@ open class ApiController(
 
         return openings.findNextWeek()
                 .filter { it.circle != null }
-                .map { UpcomingOpeningDetail(
-                        name = it.circle?.displayName ?: "n/a",
-                        orderStart = it.orderStart,
-                        openingStart = it.dateStart,
-                        icon =  it.circle?.logoUrl?.let { url -> baseUrl + url },
-                        feeling = it.feeling ?: "",
-                        available = Math.max(0, Math.min(
-                                it.timeWindows.sumOf { tw -> tw.normalItemCount },
-                                it.maxOrder - it.timeWindows.sumOf { tw -> it.maxOrderPerInterval - tw.normalItemCount
-                                })),
-                        outOf = it.maxOrder,
-                        banner = it.prUrl.let { url -> baseUrl + url },
-                        day = timeService.format(it.dateStart, "u")?.toInt().let { daysOfTheWeek[it ?: 0] },
-                        comment = "${timeService.format(it.orderEnd, "u")?.toInt().let { daysOfTheWeek[it ?: 0] }} " +
-                                "${timeService.format(it.orderEnd, "HH:mm")}-ig rendelhető",
-                        circleUrl = it.circle?.alias?.let { alias -> baseUrl + "p/" + alias } ?: baseUrl + "p/" + (it.circle?.id ?: 0),
-                        circleColor = it.circle?.cssClassName ?: "none"
+                .map { openingEntity ->
+                    UpcomingOpeningDetail(
+                        name = openingEntity.circle?.displayName ?: "n/a",
+                        orderStart = openingEntity.orderStart,
+                        openingStart = openingEntity.dateStart,
+                        icon =  openingEntity.circle?.logoUrl?.let { url -> baseUrl + url },
+                        feeling = openingEntity.feeling ?: "",
+                        available = calculateAvailable(openingEntity),
+                        outOf = openingEntity.maxOrder,
+                        banner = openingEntity.prUrl.let { url -> baseUrl + url },
+                        day = timeService.format(openingEntity.dateStart, "u")?.toInt().let { daysOfTheWeek[it ?: 0] },
+                        comment = "${timeService.format(openingEntity.orderEnd, "u")?.toInt().let { daysOfTheWeek[it ?: 0] }} " +
+                                "${timeService.format(openingEntity.orderEnd, "HH:mm")}-ig rendelhető",
+                        circleUrl = openingEntity.circle?.alias?.let { alias -> baseUrl + "p/" + alias } ?: (baseUrl + "p/" + (openingEntity.circle?.id ?: 0)),
+                        circleColor = openingEntity.circle?.cssClassName ?: "none"
                 ) }
     }
 
