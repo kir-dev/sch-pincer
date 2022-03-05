@@ -19,6 +19,7 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.lang.Integer.max
+import java.lang.Integer.min
 import java.util.*
 import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
@@ -442,7 +443,7 @@ open class ConfigureController {
                 orderStart = parseDate(oed.orderStart),
                 orderEnd = parseDate(oed.orderEnd),
                 timeIntervals = oed.timeIntervals,
-                maxOrder = oed.maxOrder,
+                maxOrder = 0,
                 maxOrderPerInterval = oed.maxOrderPerInterval,
                 maxExtraPerInterval = oed.maxExtraPerInterval,
                 intervalLength = oed.intervalLength,
@@ -456,6 +457,7 @@ open class ConfigureController {
         eo.prUrl = if (file == null) "image/blank-pr.jpg" else "cdn/pr/$file"
         openings.save(eo)
         eo.generateTimeWindows(openings)
+        eo.maxOrder = min(oed.maxOrder, oed.maxOrderPerInterval * eo.timeWindows.size)
         openings.save(eo)
         return "redirect:/configure/$circleId"
     }
