@@ -98,8 +98,7 @@ fun toReadableRole(permissions: Set<String>, circleID: Long): CircleMemberRole {
 val dateFormat: DateFormat by lazy { SimpleDateFormat("yyyy-MM-dd hh:mm") }
 
 fun parseDate(dateToParse: String): Long {
-    val date: Date
-    date = try {
+    val date: Date = try {
         dateFormat.parse(dateToParse)
     } catch (e: ParseException) {
         e.printStackTrace()
@@ -115,3 +114,13 @@ fun formatDate(date: Long): String {
 fun HttpServletRequest.isInInternalNetwork(): Boolean {
     return this.remoteAddr.startsWith("152.66.") || this.remoteAddr == "127.0.0.1"
 }
+
+val nonAscii = Regex("[^\\x00-\\u0170]")
+val controlChars = Regex("[\\p{Cntrl}&&[^\r\n\t]]")
+val nonPrintable = Regex("\\p{C}")
+
+fun String.removeNonPrintable() =
+    this.replace(nonAscii, "")
+        .replace(controlChars, "")
+        .replace(nonPrintable, "")
+        .trim()
