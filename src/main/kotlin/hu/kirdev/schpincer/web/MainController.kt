@@ -33,6 +33,9 @@ open class MainController {
     @Autowired
     private lateinit var statService: StatisticsService
 
+    @Autowired
+    private lateinit var config: RealtimeConfigService
+
     @GetMapping("/")
     fun root(request: HttpServletRequest, model: Model): String {
         val circlesList: List<CircleEntity> = circles.findAllForMenu()
@@ -54,6 +57,7 @@ open class MainController {
                     .take(3))
         }
         model.addAttribute("timeService", timeService)
+        config.injectPublicValues(model)
         return "index"
     }
 
@@ -63,6 +67,7 @@ open class MainController {
         model.addAttribute("searchMode", "" != keyword)
         model.addAttribute("keyword", keyword)
         model.addAttribute("card", (request.getUserIfPresent()?.cardType ?: CardType.DO).name)
+        config.injectPublicValues(model)
         return "items"
     }
 
@@ -71,6 +76,7 @@ open class MainController {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circlesWithOpening", circles.findAllForInfo())
         model.addAttribute("timeService", timeService)
+        config.injectPublicValues(model)
         return "circle"
     }
 
@@ -88,6 +94,7 @@ open class MainController {
             model.addAttribute("nextOpening", openings.findNextStartDateOf(circleEntity.id))
         }
         model.addAttribute("timeService", timeService)
+        config.injectPublicValues(model)
         return "circleProfile"
     }
 
@@ -126,6 +133,7 @@ open class MainController {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("timeService", timeService)
         model.addAttribute("uid", request.getUserId().sha256().substring(0, 6))
+        config.injectPublicValues(model)
         return "profile"
     }
 
@@ -138,16 +146,17 @@ open class MainController {
         statsViews.computeIfPresent(user.uid) { _, b -> "$b+1" }
         statsViews.computeIfAbsent(user.uid) { user.name + ";" + System.currentTimeMillis() + ";1" }
         statService.getDetailsForUser(user).entries.forEach { model.addAttribute(it.key, it.value) }
+        config.injectPublicValues(model)
         return "stats"
     }
 
     @GetMapping("/admin/stats-insight")
     @ResponseBody
     fun statsInsights(request: HttpServletRequest): String {
-        if (request.getUserIfPresent()?.sysadmin == true) {
-            return statsViews.values.toString()
+        return if (request.getUserIfPresent()?.sysadmin == true) {
+            statsViews.values.toString()
         } else {
-            return "Nice try!"
+            "Nice try!"
         }
     }
 

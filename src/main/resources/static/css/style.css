@@ -3035,6 +3035,42 @@ img.centered-mini {
     color: #9d9d9e;
 }
 
+.alert-message-box {
+    text-align: center;
+    padding: 6px 20px 6px 20px;
+}
+
+.alert-message-box.warning {
+    background-color: #f6d85f;
+    color: #000000;
+}
+
+.alert-message-box.error {
+    background-color: #cc0202;
+    color: #FFFFFF;
+}
+
+.alert-message-box.info {
+    background-color: #308bd9;
+    color: #FFFFFF;
+}
+
+.alert-message-box.success {
+    background-color: #86bb13;
+    color: #000000;
+}
+
+.alert-message-box span:first-of-type {
+    vertical-align: middle;
+    font-size: 30px;
+    padding-right: 10px;
+}
+
+.alert-message-box span:last-of-type {
+    vertical-align: middle;
+    font-size: 20px;
+}
+
 .trashpanda-container {
     z-index: 10000;
     position: fixed;
@@ -3391,6 +3427,10 @@ img.centered-mini {
 
     .messagebox {
         left: calc(50vw - 183px);
+    }
+
+    .alert-message-box {
+        padding-left: 120px;
     }
 }
 

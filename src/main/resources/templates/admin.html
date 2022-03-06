@@ -40,8 +40,27 @@
             </tr>
         </table>
 
-        <a class="button" href="#" th:href="@{/admin/circles/new}" th:text="#{lang.admin.title-circle-new}">New
-            circle</a>
+        <a class="button" href="#" th:href="@{/admin/circles/new}" th:text="#{lang.admin.title-circle-new}">New circle</a>
+    </div>
+
+    <div class="highlighted dashboard">
+        <form action="#" class="scrollable-x" method="post" th:action="@{/admin/config}">
+            <table class="form full-table" th:object="${configObject}">
+                <tr>
+                    <th th:text="#{lang.admin.config-settings}">Circles</th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.admin.config.message-box-type}">Message box type</td>
+                    <td><input type="text" th:field="*{messageBoxType}"/></td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.admin.config.message-box-message}">Message box message</td>
+                    <td><input type="text" th:field="*{messageBoxMessage}"/></td>
+                </tr>
+            </table>
+            <input class="button" type="submit" th:value="#{lang.admin.config-update}"/>
+        </form>
     </div>
 
     <div class="highlighted dashboard latest">

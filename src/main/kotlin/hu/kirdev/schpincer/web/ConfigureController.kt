@@ -61,6 +61,9 @@ open class ConfigureController {
     @Autowired
     private lateinit var timeService: TimeService
 
+    @Autowired
+    private lateinit var config: RealtimeConfigService
+
     @Value("\${schpincer.external:/etc/schpincer/external}")
     private lateinit var uploadPath: String
 
@@ -74,6 +77,7 @@ open class ConfigureController {
                 .filter { x: CircleEntity -> sysadmin || permissions.contains("CIRCLE_" + x.id) }
                 .collect(Collectors.toList())
         model.addAttribute("editable", editable)
+        config.injectPublicValues(model)
         return "leaderDashboard"
     }
 
@@ -87,6 +91,7 @@ open class ConfigureController {
         model.addAttribute("circleId", circleId)
         model.addAttribute("items", items.findAllByCircle(circleId))
         model.addAttribute("timeService", timeService)
+        config.injectPublicValues(model)
         return "configure"
     }
 
@@ -95,6 +100,7 @@ open class ConfigureController {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circleId", circleId)
         model.addAttribute("roles", users.findAllCircleRole(circleId))
+        config.injectPublicValues(model)
         return "circleRoleList"
     }
 
@@ -103,6 +109,7 @@ open class ConfigureController {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circleId", circleId)
         model.addAttribute("role", users.findPermissionByUidHash(uidHash, circleId))
+        config.injectPublicValues(model)
         return "circleRoleModify"
     }
 
@@ -139,6 +146,7 @@ open class ConfigureController {
         model.addAttribute("circleId", circleId)
         model.addAttribute("member", CircleMemberEntity())
         model.addAttribute("mode", "new")
+        config.injectPublicValues(model)
         return "memberModify"
     }
 
@@ -166,6 +174,7 @@ open class ConfigureController {
         model.addAttribute("circleId", circleId)
         model.addAttribute("mode", "edit")
         model.addAttribute("member", members.getOne(memberId))
+        config.injectPublicValues(model)
         return "memberModify"
     }
 
@@ -201,6 +210,7 @@ open class ConfigureController {
         model.addAttribute("arg", members.getOne(memberId).name)
         model.addAttribute("ok", "configure/$circleId/members/delete/$memberId/confirm")
         model.addAttribute("cancel", "configure/$circleId")
+        config.injectPublicValues(model)
         return "prompt"
     }
 
@@ -220,6 +230,7 @@ open class ConfigureController {
         model.addAttribute("mode", "edit")
         model.addAttribute("adminMode", false)
         model.addAttribute("circle", circles.getOne(circleId)?.copy())
+        config.injectPublicValues(model)
         return "circleModify"
     }
 
@@ -320,6 +331,7 @@ open class ConfigureController {
                 personallyOrderable = false,
                 visibleWithoutLogin = true)
         model.addAttribute("item", ie)
+        config.injectPublicValues(model)
         return "itemModify"
     }
 
@@ -351,6 +363,7 @@ open class ConfigureController {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("mode", "edit")
         model.addAttribute("item", items.getOne(itemId)?.copy())
+        config.injectPublicValues(model)
         return "itemModify"
     }
 
@@ -406,6 +419,7 @@ open class ConfigureController {
         model.addAttribute("arg", items.getOne(itemId)!!.name)
         model.addAttribute("ok", "configure/$circleId/items/delete/$itemId/confirm")
         model.addAttribute("cancel", "configure/$circleId")
+        config.injectPublicValues(model)
         return "prompt"
     }
 
@@ -425,6 +439,7 @@ open class ConfigureController {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circleId", circleId)
         model.addAttribute("opening", OpeningEntityDto())
+        config.injectPublicValues(model)
         return "openingAdd"
     }
 
@@ -520,10 +535,9 @@ open class ConfigureController {
             return "redirect:/configure/$circleId?error"
 
         return orders.findAllByOpening(openingId)
-                .map { users.getById(it.userId) }
-                .distinctBy { it.uid }
-                .map { "\"${it.name}\" &lt;${it.email ?: ""}&gt;" }
-                .joinToString(", <br>")
+            .map { users.getById(it.userId) }
+            .distinctBy { it.uid }
+            .joinToString(", <br>") { "\"${it.name}\" &lt;${it.email ?: ""}&gt;" }
     }
 
     @GetMapping("/configure/{circleId}/openings/delete/{openingId}")
@@ -536,6 +550,7 @@ open class ConfigureController {
         model.addAttribute("arg", formatDate(openings.getOne(openingId).dateStart))
         model.addAttribute("ok", "configure/$circleId/openings/delete/$openingId/confirm")
         model.addAttribute("cancel", "configure/$circleId")
+        config.injectPublicValues(model)
         return "prompt"
     }
 
@@ -573,7 +588,8 @@ open class ConfigureController {
         model.addAttribute("orders", ordersToReturn)
         model.addAttribute("opening", opening)
         model.addAttribute("timeService", timeService)
-        model.addAttribute("notCancelledCount", ordersToReturn.filter { it.status != OrderStatus.CANCELLED }.count())
+        model.addAttribute("notCancelledCount", ordersToReturn.count { it.status != OrderStatus.CANCELLED })
+        config.injectPublicValues(model)
         return "openingShow"
     }
 
@@ -620,7 +636,7 @@ open class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/reviews")
-    fun showReviews(@PathVariable circleId: Long, model: Model, request: HttpServletRequest): String? {
+    fun showReviews(@PathVariable circleId: Long, model: Model, request: HttpServletRequest): String {
         val reviewList = reviews.findAll(circleId)
         model.addAttribute("reviews", reviewList)
         model.addAttribute("circles", circles.findAllForMenu())
@@ -631,6 +647,7 @@ open class ConfigureController {
         model.addAttribute("avgSpeed", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumBy { it.rateSpeed } / reviewList.size.toFloat()) else null)
         model.addAttribute("avgOverAll", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumBy { it.rateOverAll } / reviewList.size.toFloat()) else null)
         model.addAttribute("timeService", timeService)
+        config.injectPublicValues(model)
         return "circleReviews"
     }
 
@@ -676,6 +693,7 @@ open class ConfigureController {
         model.addAttribute("systemComment", systemComment != "off")
         model.addAttribute("fields", fields)
         model.addAttribute("orders", orders.findToExport(openingId, orderby))
+        config.injectPublicValues(model)
         return "exportTable"
     }
 
@@ -694,7 +712,7 @@ open class ConfigureController {
         val document = Document()
         val export = ExportType.valueOf(type)
 
-        if (pageOrientation.equals(PageTypes.PORTRAIT.orientation)) {
+        if (pageOrientation == PageTypes.PORTRAIT.orientation) {
             document.pageSize = PageSize.A4
         } else {
             document.pageSize = PageSize.A4.rotate()
@@ -731,7 +749,7 @@ open class ConfigureController {
     private fun addTableHeader(table: PdfPTable, export: ExportType) {
         table.headerRows = 1
         val font = Font(Font.FontFamily.UNDEFINED, export.fontSize)
-        export.header.forEach({ columnTitle ->
+        export.header.forEach { columnTitle ->
             val header = PdfPCell()
             header.horizontalAlignment = Element.ALIGN_CENTER
             header.verticalAlignment = Element.ALIGN_CENTER
@@ -739,7 +757,7 @@ open class ConfigureController {
             header.borderWidthBottom = 1.5f
             header.fixedHeight = 15f * (export.fontSize / 10f)
             table.addCell(header)
-        })
+        }
     }
 
     private fun addOrderRows(table: PdfPTable, export: ExportType, opening: OpeningEntity): Int {

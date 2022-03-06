@@ -54,6 +54,14 @@
             <object th:include="fragments/menu :: menu(${user})" th:remove="tag"></object>
         </nav>
     </div>
+
+    <div th:if="${messageBoxMessage != null && messageBoxMessage != ''}" class="alert-message-box success" th:class="|alert-message-box ${messageBoxType ?: ''}|">
+        <span class="material-icons" th:if="${messageBoxType == 'error'}"  >notification_important</span>
+        <span class="material-icons" th:if="${messageBoxType == 'warning'}">warning_amber</span>
+        <span class="material-icons" th:if="${messageBoxType == 'info'}"   >info</span>
+        <span class="material-icons" th:if="${messageBoxType == 'success'}">thumb_up_off_alt</span>
+        <span th:text="${messageBoxMessage}">Ez egy teszt warning üzenet! Lehet picit hosszabb is!</span>
+    </div>
 </object>
 
 <div class="left-menu" th:fragment="left-menu">
