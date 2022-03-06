@@ -35,8 +35,8 @@
                 <th th:text="#{lang.configure.opening-list}">Openings</th>
                 <th></th>
             </tr>
-            <tr th:each="opening : ${circle.openings}" th:object="${opening}">
-                <td th:text="${timeService.format(opening.dateStart, #messages.msg('lang.date-format'))}">2018.05.01. 00:00
+            <tr th:each="opening, iter : ${openings}" th:object="${opening}" th:class="${iter.index > 4 ? 'spoiler-hidden' : ''}">
+                <td th:text="${timeService.format(opening.dateStart, #messages.msg('lang.date-format'))} + ' - ' + ${opening.feeling ?: ''}">2018.05.01. 00:00
                 </td>
                 <td>
                     <a href="#" th:href="@{/kitchen-view/__${circleId}__/__*{id}__/kitchen}"><i
@@ -48,6 +48,12 @@
                 </td>
             </tr>
         </table>
+        <a class="button" href="#" id="show-openings"
+           onclick="document.querySelectorAll('.spoiler-hidden').forEach(elem => { elem.style.display = 'table-row' }); document.getElementById('show-openings').style.display = 'none'; return false"
+            th:if="${openings.size() > 5}"
+            th:text="#{lang.configure.show-more-openings}">
+            RÉGEBBI NYITÁSOK
+        </a>
 
         <a class="button" href="#" th:href="@{/configure/__${circleId}__/openings/new}"
            th:text="#{lang.configure.title-opening}">New opening</a>
