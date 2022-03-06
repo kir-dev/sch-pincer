@@ -2,6 +2,7 @@ package hu.kirdev.schpincer.service
 
 import hu.kirdev.schpincer.dao.OrderRepository
 import hu.kirdev.schpincer.model.*
+import hu.kirdev.schpincer.web.removeNonPrintable
 
 class ChangeOrderProcedure(
         private val user: UserEntity,
@@ -43,7 +44,7 @@ class ChangeOrderProcedure(
 
     private fun updateDetails() {
         order.room = room
-        order.comment = "[${user.cardType.name}] $comment"
+        order.comment = "[${user.cardType.name}] ${comment.removeNonPrintable()}"
     }
 
 }

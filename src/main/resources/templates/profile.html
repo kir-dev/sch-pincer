@@ -40,7 +40,9 @@
 							<form id="room-form" style="display: none" onsubmit="setRoom(); return false" action="#"
                                   method="GET">
 								<input type="text" id="room-setter" maxlength="8" autocomplete="off"
-                                       onfocusout="setRoom(); return false"/>
+                                       onfocusout="setRoom(); return false"
+                                       onchange="this.value = this.value.replaceAll(/[^A-Za-z0-9 -_()]/, '')"
+                                       onkeyup="this.value = this.value.replaceAll(/[^A-Za-z0-9 -_()]/, '')" />
                                 <ins id="saved" th:text="#{lang.profile.room-number-hint}">(Szám vagy terem neve)</ins>
 							</form>
 							<ins id="saved" th:text="#{lang.profile.saved}">Elmentve</ins>
