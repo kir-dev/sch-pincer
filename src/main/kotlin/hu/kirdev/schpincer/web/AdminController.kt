@@ -3,10 +3,7 @@ package hu.kirdev.schpincer.web
 import hu.kirdev.schpincer.dto.RoleEntryDto
 import hu.kirdev.schpincer.model.CardType
 import hu.kirdev.schpincer.model.CircleEntity
-import hu.kirdev.schpincer.service.CircleService
-import hu.kirdev.schpincer.service.ItemPrecedenceService
-import hu.kirdev.schpincer.service.ItemService
-import hu.kirdev.schpincer.service.UserService
+import hu.kirdev.schpincer.service.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -14,6 +11,7 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.io.IOException
+import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
@@ -35,6 +33,9 @@ open class AdminController {
     @Autowired
     private lateinit var itemSorter: ItemPrecedenceService
 
+    @Autowired
+    private lateinit var config: RealtimeConfigService
+
     @GetMapping("/")
     fun adminRoot(model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
@@ -43,6 +44,8 @@ open class AdminController {
                 .map { RoleEntryDto(it.uid.sha256(), it) }
                 .sortedBy { it.name }
         model.addAttribute("roles", roles)
+        model.addAttribute("configObject", ConfigObject(config))
+        config.injectPublicValues(model)
         return "admin"
     }
 
@@ -50,6 +53,7 @@ open class AdminController {
     fun adminCircles(model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circlesToEdit", circles.findAll())
+        config.injectPublicValues(model)
         return "admin"
     }
 
@@ -59,6 +63,7 @@ open class AdminController {
         model.addAttribute("mode", "new")
         model.addAttribute("adminMode", true)
         model.addAttribute("circle", CircleEntity())
+        config.injectPublicValues(model)
         return "circleModify"
     }
 
@@ -86,6 +91,7 @@ open class AdminController {
         model.addAttribute("mode", "edit")
         model.addAttribute("adminMode", true)
         model.addAttribute("circle", circles.getOne(circleId)!!.copy())
+        config.injectPublicValues(model)
         return "circleModify"
     }
 
@@ -141,6 +147,7 @@ open class AdminController {
         model.addAttribute("arg", circles.getOne(circleId)!!.displayName)
         model.addAttribute("ok", "admin/circles/delete/$circleId/confirm")
         model.addAttribute("cancel", "admin/")
+        config.injectPublicValues(model)
         return "prompt"
     }
 
@@ -164,6 +171,7 @@ open class AdminController {
         model.addAttribute("email", user.email ?: "-")
         model.addAttribute("roles", user.permissions.joinToString(", "))
         model.addAttribute("priority", user.orderingPriority)
+        config.injectPublicValues(model)
         return "userModify"
     }
 
@@ -177,7 +185,7 @@ open class AdminController {
         user.sysadmin = sysadmin
         val permissions = mutableSetOf<String>()
         for (role in roles.split(",".toRegex()).toTypedArray()) {
-            val roleName = role.trim().toUpperCase()
+            val roleName = role.trim().uppercase(Locale.getDefault())
             if (roleName.startsWith("CIRCLE_"))
                 permissions.add(roleName)
             if (roleName.startsWith("PR_"))
@@ -205,6 +213,14 @@ open class AdminController {
         user.cardType = CardType.valueOf(card)
         users.save(user)
         return "ok"
+    }
+
+    @PostMapping("/config")
+    fun adminConfigUpdate(@ModelAttribute configObject: ConfigObject, request: HttpServletRequest): String {
+        config.messageBoxType = configObject.messageBoxType
+        config.messageBoxMessage = configObject.messageBoxMessage
+        config.persist()
+        return REDIRECT_TO_ADMIN
     }
 
 }

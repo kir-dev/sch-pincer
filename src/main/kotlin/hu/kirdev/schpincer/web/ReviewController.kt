@@ -4,6 +4,7 @@ import hu.kirdev.schpincer.model.OrderStatus
 import hu.kirdev.schpincer.model.ReviewEntity
 import hu.kirdev.schpincer.service.CircleService
 import hu.kirdev.schpincer.service.OrderService
+import hu.kirdev.schpincer.service.RealtimeConfigService
 import hu.kirdev.schpincer.service.ReviewService
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest
 
 @Controller
 open class ReviewController {
+
     @Autowired
     private lateinit var orders: OrderService
 
@@ -26,6 +28,9 @@ open class ReviewController {
 
     @Autowired
     private lateinit var reviews: ReviewService
+
+    @Autowired
+    private lateinit var config: RealtimeConfigService
 
     @ApiOperation("Review order page")
     @GetMapping("/review/{orderId}")
@@ -40,6 +45,7 @@ open class ReviewController {
         model.addAttribute("orderId", orderId)
         model.addAttribute("review", ReviewEntity(rateOverAll = 3, ratePrice = 3, rateQuality = 3, rateSpeed = 3))
         model.addAttribute("circles", circles.findAllForMenu())
+        config.injectPublicValues(model)
         return "orderReview"
     }
 
