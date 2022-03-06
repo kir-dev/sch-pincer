@@ -84,37 +84,36 @@
         <div>
             <h3 th:text="#{lang.footer.about-us}">Rólunk</h3>
             <p th:text="#{lang.footer.about-us-long}">Az SCH-Pincér a KIR-DEV projektje</p>
-            <a href="https://kir-dev.sch.bme.hu/"><img src="../image/kirdev.svg" th:src="@{/image/kirdev.svg}"
-                                                       height="120" class="white"/></a><br/>
-            <a href="https://kir-dev.sch.bme.hu/projects/schpincer" target="_blank"><i
-                    class="material-icons">link</i><span>TOVÁBBI INFROMÁCIÓ</span></a>
+            <a href="https://kir-dev.sch.bme.hu/"><img src="../image/kirdev.svg" th:src="@{/image/kirdev.svg}" height="120" class="white"/></a><br/>
+            <a href="https://github.com/kir-dev/sch-pincer" target="_blank"><i class="material-icons">link</i><span>FORRÁSKÓD (GIT)</span></a>
         </div>
         <div>
-            <h3 th:text="#{lang.footer.rights}">Jogok</h3>
+            <h3 th:text="#{lang.footer.rights}">Jogi dolgok</h3>
             <p>Copyright &copy; 2022 GNU/GPL 3.0</p>
             <p th:text="#{lang.footer.rights-long}">
                 Az oldalon megjelenő képek szerzői joga minden esetben a forgalmazó kört illeti.
                 A képek esetenként csak illusztrációk. A termékek leírásának helyességéért az adott körök felelősek.
             </p>
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSe1XaJuDzGjPUWvSnud8XXsEgUCUOUGsCHeoud_AgVJb6qorA/viewform?usp=sf_link"
-               target="_blank"><i class="material-icons">link</i><span>Visszajelzés küldése</span></a>
+            <a href="https://github.com/kir-dev/sch-pincer/issues" target="_blank"><i class="material-icons">link</i><span>Visszajelzés küldése</span></a>
         </div>
         <div>
             <h3 th:text="#{lang.footer.partners}">Partnerek</h3>
-            <a href="http://foodex.sch.bme.hu/"><img src="../image/foodex.png" th:src="@{/image/foodex.png}"
+            <a href="https://foodex.sch.bme.hu/"><img src="../image/foodex.png" th:src="@{/image/foodex.png}"
                                                      class="white"/></a><br/>
-            <a href="http://szor.sch.bme.hu/"><i
+            <a href="https://szor.sch.bme.hu/"><i
                     class="material-icons">link</i><span>Szolgáltató Reszort</span></a><br/>
             <ins th:text="#{lang.footer.app-by}">App by</ins>
-            : <a href="https://github.com/kir-dev/sch-pincer"><i class="material-icons">link</i><span>KIR-DEV</span></a><br/>
+            : <a href="https://kir-dev.sch.bme.hu/"><i class="material-icons">link</i><span>KIR-DEV</span></a><br/>
             <ins th:text="#{lang.footer.hosting}">Hosting</ins>
-            : <a href="http://kszk.sch.bme.hu/"><i class="material-icons">link</i><span>KSZK</span></a>
+            : <a href="https://kszk.sch.bme.hu/"><i class="material-icons">link</i><span>KSZK</span></a><br />
+            <br />
+            <ins>VERZIÓ</ins>: <span th:text="${appVersion ?: 'DEV-SNAPSHOT'}">1.3.26</span>
         </div>
     </div>
     <div class="foot">
         <span><i class="material-icons">code</i></span>
         with <span><i class="material-icons">favorite_border</i></span>
-        by <span><a href="#VESZTETTEM">SCHÁMI, TRISZ, BENI, BERCI</a></span>
+        by <span><a href="https://kir-dev.sch.bme.hu/members/">SCHÁMI, TRISZ, BENI, BERCI</a></span>
     </div>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-151909044-1"></script>
