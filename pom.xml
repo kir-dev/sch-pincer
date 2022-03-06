@@ -22,7 +22,7 @@
         <sonar.projectKey>kir-dev_sch-pincer</sonar.projectKey>
         <sonar.organization>kir-dev</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <authsch.version>1.0.2</authsch.version>
         <kotlin.version>1.5.0</kotlin.version>
     </properties>
@@ -190,7 +190,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <jvmTarget>1.8</jvmTarget>
+                    <jvmTarget>11</jvmTarget>
                     <compilerPlugins>
                         <plugin>jpa</plugin>
                     </compilerPlugins>
@@ -224,8 +224,8 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>11</source>
+                    <target>11</target>
                 </configuration>
             </plugin>
 

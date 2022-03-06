@@ -267,7 +267,7 @@ open class OrderService {
 
         return orders.map {
             val prices = mutableMapOf<String, Int>()
-            prices[BASE_PRICE] = it.price / it.count
+            prices[BASE_PRICE] = it.price / it.count.coerceAtLeast(1)
             it.orderedItem?.apply {
                 for (extra in it.extras.sortedBy { extra -> extra.name }) {
                     prices["${extra.name}- ${extra.displayName}"] = extra.price
