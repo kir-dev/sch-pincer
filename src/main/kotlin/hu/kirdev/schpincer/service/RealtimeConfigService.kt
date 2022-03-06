@@ -17,6 +17,7 @@ class RealtimeConfigService : ConfigObject() {
     fun injectPublicValues(model: Model) {
         model.addAttribute("messageBoxType", messageBoxType)
         model.addAttribute("messageBoxMessage", messageBoxMessage)
+        model.addAttribute("appVersion", javaClass.getPackage().implementationVersion)
     }
 
     fun persist() {
