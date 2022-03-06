@@ -83,8 +83,10 @@ open class ConfigureController {
 
     @GetMapping("/configure/{circleId}")
     fun configure(@PathVariable circleId: Long, model: Model, request: HttpServletRequest): String {
+        val circle = circles.getOne(circleId)
         model.addAttribute("circles", circles.findAllForMenu())
-        model.addAttribute("circle", circles.getOne(circleId))
+        model.addAttribute("circle", circle)
+        model.addAttribute("openings", circle?.openings?.sortedByDescending { it.dateStart } ?: listOf<OpeningEntity>())
         model.addAttribute("pr", isPR(circleId, request))
         model.addAttribute("owner", isCircleOwner(circleId, request) || request.getUser().sysadmin)
         model.addAttribute("roles", users.findAllCircleRole(circleId).filter { it.permission !== CircleMemberRole.NONE })
