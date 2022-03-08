@@ -6,6 +6,7 @@ import hu.kirdev.schpincer.dao.ExtrasRepository
 import hu.kirdev.schpincer.dao.ItemRepository
 import hu.kirdev.schpincer.model.CircleEntity
 import hu.kirdev.schpincer.model.ExtraEntity
+import hu.kirdev.schpincer.model.ItemEntity
 import hu.kirdev.schpincer.web.component.CustomComponentModel
 import hu.kirdev.schpincer.web.component.CustomComponentModelList
 import hu.kirdev.schpincer.web.component.CustomComponentType
@@ -42,7 +43,7 @@ class ExtrasService {
             mapped.forEach { that ->
                 val mappedExtra = that.value
                 for (i in 0 until mappedExtra.values.size) {
-                    createOrUpdateExtra(mappedExtra, i, circle)
+                    createOrUpdateExtra(mappedExtra, i, circle, it)
                 }
             }
 
@@ -50,8 +51,13 @@ class ExtrasService {
 
     }
 
-    private fun createOrUpdateExtra(mappedExtra: CustomComponentModel, i: Int, circle: CircleEntity) {
-        val optionalExtra = extrasRepository.findByCircleAndNameAndInputTypeAndSelectedIndex(circle, mappedExtra.name, CustomComponentType.valueOf(mappedExtra.type), i)
+    private fun createOrUpdateExtra(mappedExtra: CustomComponentModel, i: Int, circle: CircleEntity, item: ItemEntity) {
+        val optionalExtra = extrasRepository.findByItemAndNameAndInputTypeAndSelectedIndex(
+                item,
+                mappedExtra.name,
+                CustomComponentType.valueOf(mappedExtra.type),
+                i
+        )
         optionalExtra.ifPresentOrElse({
             it.price = mappedExtra.prices[i]
             extrasRepository.save(it)
@@ -65,6 +71,7 @@ class ExtrasService {
                     displayName = mappedExtra.values[i],
                     price = mappedExtra.prices[i]
             )
+            extra.item = item
             extrasRepository.save(extra)
         }
     }
