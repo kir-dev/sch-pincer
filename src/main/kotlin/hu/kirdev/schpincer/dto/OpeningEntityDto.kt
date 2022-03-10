@@ -18,6 +18,8 @@ data class OpeningEntityDto(
         var maxBeta: Int = 0,
         var maxGamma: Int = 0,
         var maxDelta: Int = 0,
-        var maxLambda: Int = 0
+        var maxLambda: Int = 0,
+
+        var compensationTime: Long = 0
 )
 

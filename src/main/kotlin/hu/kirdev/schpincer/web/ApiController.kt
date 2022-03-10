@@ -244,24 +244,23 @@ open class ApiController(
 
         return openings.findNextWeek()
                 .filter { it.circle != null }
-                .filter { it.orderStart <= System.currentTimeMillis() }
+                .filter { it.orderStart + it.compensationTime <= System.currentTimeMillis() }
                 .map { openingEntity ->
                     OpeningDetail(
                         name = openingEntity.circle?.displayName ?: "n/a",
                         icon = openingEntity.circle?.logoUrl?.let { url -> baseUrl + url },
                         feeling = openingEntity.feeling ?: "",
-                        available = calculateAvailable(openingEntity),
+                        available = calculateAvailable(openingEntity).coerceAtLeast(0),
                         outOf = openingEntity.maxOrder,
                         banner = openingEntity.prUrl.let { url -> baseUrl + url },
                         day = timeService.format(openingEntity.dateStart, "u")?.toInt().let { daysOfTheWeek[it ?: 0] },
-                        comment = "${
-                            timeService.format(openingEntity.orderEnd, "u")?.toInt().let { daysOfTheWeek[it ?: 0] }
-                        } " +
+                        comment = "${timeService.format(openingEntity.orderEnd, "u")?.toInt().let { daysOfTheWeek[it ?: 0] }} " +
                                 "${timeService.format(openingEntity.orderEnd, "HH:mm")}-ig rendelhető",
                         circleUrl = openingEntity.circle?.alias?.let { alias -> baseUrl + "p/" + alias }
                             ?: (baseUrl + "p/" + (openingEntity.circle?.id ?: 0)),
                         circleColor = openingEntity.circle?.cssClassName ?: "none"
                     ) }
+                .filter { it.available > 0 }
     }
 
     private fun calculateAvailable(openingEntity: OpeningEntity): Int {
@@ -281,7 +280,7 @@ open class ApiController(
                     ItemCategory.LAMBDA -> openingEntity.maxLambda - pair.second
                 }
             }
-            .maxOrNull() ?: 0)
+            .maxOrNull() ?: maxOverall)
         return available
     }
 
@@ -303,6 +302,12 @@ open class ApiController(
     @CrossOrigin(origins = ["*"])
     @GetMapping("/open/upcoming-openings")
     @ResponseBody
+    fun upcomingOpeningsApiDeprecated(@RequestParam(required = false) token: String?): List<UpcomingOpeningDetail> {
+        return listOf(UpcomingOpeningDetail("This feature is deprecated", 0, 0,null,
+            "sad", 0, 0, null, "",
+            "Contact the administrator if you think this is a problem", "", ""))
+    }
+
     fun upcomingOpeningsApi(@RequestParam(required = false) token: String?): List<UpcomingOpeningDetail> {
         if (token.isNullOrBlank() || !apiTokens.contains(token))
             return listOf(UpcomingOpeningDetail("Invalid Token", 0, 0,null,
@@ -318,7 +323,7 @@ open class ApiController(
                         openingStart = openingEntity.dateStart,
                         icon =  openingEntity.circle?.logoUrl?.let { url -> baseUrl + url },
                         feeling = openingEntity.feeling ?: "",
-                        available = calculateAvailable(openingEntity),
+                        available = calculateAvailable(openingEntity).coerceAtLeast(0),
                         outOf = openingEntity.maxOrder,
                         banner = openingEntity.prUrl.let { url -> baseUrl + url },
                         day = timeService.format(openingEntity.dateStart, "u")?.toInt().let { daysOfTheWeek[it ?: 0] },

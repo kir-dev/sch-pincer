@@ -54,6 +54,10 @@
                     <td><input type="datetime-local" class="datetime-picker" th:field="*{dateEnd}"/></td>
                 </tr>
                 <tr>
+                    <td th:text="#{lang.configure.opening.compensation-time}">Compensation time</td>
+                    <td><input type="number" th:field="*{compensationTime}"/></td>
+                </tr>
+                <tr>
                     <td th:text="#{lang.configure.opening.order-max}">Order max</td>
                     <td><input type="number" th:field="*{maxOrder}"/></td>
                 </tr>

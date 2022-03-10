@@ -101,7 +101,10 @@ data class OpeningEntity(
         var usedDelta: Int = 0,
 
         @Column(nullable = false)
-        var usedLambda: Int = 0
+        var usedLambda: Int = 0,
+
+        @Column(nullable = false, columnDefinition = "bigint(20) DEFAULT 0")
+        var compensationTime: Long = 0
 
 ) : Serializable {
 
@@ -132,6 +135,6 @@ data class OpeningEntity(
         openings.saveTimeWindow(tw)
     }
 
-    fun isInInterval(timeMillis: Long) = orderStart <= timeMillis && orderEnd >= timeMillis
+    fun isInInterval(timeMillis: Long) = timeMillis in orderStart..orderEnd
 
 }
