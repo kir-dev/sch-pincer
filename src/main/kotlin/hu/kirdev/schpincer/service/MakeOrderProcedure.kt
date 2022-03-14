@@ -48,6 +48,7 @@ class MakeOrderProcedure (
                     userId = manualUser.id,
                     userName = manualUser.name,
                     comment = "[${manualUser.card}] @ ${user.name} | ${comment.removeNonPrintable()}",
+                    additionalComment = "via ${user.name}",
                     detailsJson = detailsJson,
                     room = manualUser.room,
                     createdAt = System.currentTimeMillis())
@@ -117,7 +118,7 @@ class MakeOrderProcedure (
     }
 
     internal fun validateTimeWindow() {
-        if (!timeWindow.opening?.id!!.equals(current.id))
+        if (timeWindow.opening?.id!! != current.id)
             throw FailedOrderException(RESPONSE_INTERNAL_ERROR)
         if (timeWindow.normalItemCount - count < 0)
             throw FailedOrderException(RESPONSE_MAX_REACHED)
@@ -169,13 +170,15 @@ class MakeOrderProcedure (
     }
 
     internal fun clampItemCount() {
-        count = Math.max(1, if (itemCount < details.minCount) {
-            details.minCount
-        } else if (itemCount > details.maxCount) {
-            details.maxCount
-        } else {
-            itemCount
-        })
+        count = 1.coerceAtLeast(
+            if (itemCount < details.minCount) {
+                details.minCount
+            } else if (itemCount > details.maxCount) {
+                details.maxCount
+            } else {
+                itemCount
+            }
+        )
     }
 
     internal fun updateRemainingItemCount() {
@@ -193,7 +196,7 @@ class MakeOrderProcedure (
             cancelUntil = current.orderEnd
             category = item.category
             priority = user.orderingPriority
-            compactName = (if (item.alias.isEmpty()) item.name else item.alias) + (if (this@MakeOrderProcedure.count == 1) "" else " x ${this@MakeOrderProcedure.count}")
+            compactName = (item.alias.ifEmpty { item.name }) + (if (this@MakeOrderProcedure.count == 1) "" else " x ${this@MakeOrderProcedure.count}")
             order.count = this@MakeOrderProcedure.count
         }
     }
@@ -211,7 +214,7 @@ class MakeOrderProcedure (
 
                 val optionalExtra = extrasRepository.findByCircleAndNameAndInputTypeAndSelectedIndex(current.circle!!, name, type, selected)
                 if (optionalExtra.isEmpty) {
-                    throw IllegalArgumentException("${current.circle!!} has no optional extra with input type $type and name $name")
+                    throw IllegalArgumentException("${current.circle?.displayName ?: "null"} has no optional extra with input type $type and name $name")
                 }
                 val extra = optionalExtra.get()
                 extras.add(extra)

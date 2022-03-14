@@ -468,7 +468,8 @@ open class ConfigureController {
                 maxBeta = oed.maxBeta,
                 maxGamma = oed.maxGamma,
                 maxDelta = oed.maxDelta,
-                maxLambda = oed.maxLambda
+                maxLambda = oed.maxLambda,
+                compensationTime = oed.compensationTime
         )
         val file = prFile?.uploadFile("pr")
         eo.prUrl = if (file == null) "image/blank-pr.jpg" else "cdn/pr/$file"
@@ -497,6 +498,7 @@ open class ConfigureController {
             maxGamma = oed.maxGamma
             maxDelta = oed.maxDelta
             maxLambda = oed.maxLambda
+            compensationTime = oed.compensationTime
         }
         openings.save(opening)
         orders.changeCancelUntilDates(openingId, opening.orderEnd)
