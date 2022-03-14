@@ -8,6 +8,7 @@ import hu.kirdev.schpincer.dto.ManualUserDetails
 import hu.kirdev.schpincer.dto.OrderDetailsDto
 import hu.kirdev.schpincer.model.*
 import hu.kirdev.schpincer.web.component.*
+import hu.kirdev.schpincer.web.removeNonPrintable
 import java.util.*
 
 class FailedOrderException(val response: String) : RuntimeException()
@@ -46,7 +47,7 @@ class MakeOrderProcedure (
             order = OrderEntity(
                     userId = manualUser.id,
                     userName = manualUser.name,
-                    comment = "[${manualUser.card}] @ ${user.name} | $comment",
+                    comment = "[${manualUser.card}] @ ${user.name} | ${comment.removeNonPrintable()}",
                     additionalComment = "via ${user.name}",
                     detailsJson = detailsJson,
                     room = manualUser.room,

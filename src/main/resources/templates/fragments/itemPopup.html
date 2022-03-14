@@ -58,7 +58,9 @@
                                 <option value="3">19:30 - 20:00 (20 db)</option>
                             </select>
                             <label th:text="#{lang.items.comment}">Comment</label>
-                            <input id="popup-comment" type="text" name="comment" autocomplete="off" maxlength="200"/>
+                            <input id="popup-comment" type="text" name="comment" autocomplete="off" maxlength="200"
+                                   onchange="this.value = this.value.replaceAll(/[^\x00-\u0170]/, '')"
+                                   onkeyup="this.value = this.value.replaceAll(/[^\x00-\u0170]/, '')"/>
                             <input type="submit" id="submit-order-button" class="colored-light submit-button" value="Order"
                                    th:value="#{lang.items.buy}" th:unless="${session.user} eq null"/>
                         </div>

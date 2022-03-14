@@ -412,24 +412,31 @@ a {
     margin: 0 auto;
 }
 
+.main-article {
+    padding-bottom: 41.66%;
+    position: relative;
+    height: 0;
+}
+
 .main-article .picture {
-    height: 500px;
-    max-height: 80vh;
     text-align: left;
     border-bottom: 8px solid #383839;
     background-position: center top;
     background-size: cover;
+    height: 100%;
+    position: absolute;
+    width: 100%;
 }
 
 .main-article .picture span {
-    display: inline-block;
+    display: none;
     text-transform: uppercase;
     bottom: 40px;
-    margin: calc(100vh - 220px) 0 0 0;
+    margin: 50px 0 0 0;
 }
 
 .main-article .picture h2 {
-    display: inline-block;
+    display: none;
     text-transform: uppercase;
 }
 
@@ -3184,9 +3191,6 @@ img.centered-mini {
     .header nav a.icon {
         padding: 12px 8px 8px 8px !important;
     }
-
-    .main-article .picture {
-    }
 }
 
 @media only screen and (min-width: 520px) {
@@ -3218,12 +3222,6 @@ img.centered-mini {
     }
 }
 
-@media only screen and (min-height: 580px) {
-    .main-article .picture span {
-        margin: 350px 0 0 0;
-    }
-}
-
 @media only screen and (min-width: 700px) {
     .article:nth-of-type(2n) {
         margin-left: 20px;
@@ -3236,6 +3234,11 @@ img.centered-mini {
     .article-set {
         display: -webkit-flex;
         display: flex;
+    }
+
+    .main-article .picture h2,
+    .main-article .picture span {
+        display: inline-block;
     }
 
     .circles .article .message span em {
