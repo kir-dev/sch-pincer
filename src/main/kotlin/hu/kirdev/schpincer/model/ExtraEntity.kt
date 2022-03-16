@@ -11,28 +11,29 @@ data class ExtraEntity(
         @GeneratedValue(strategy = GenerationType.AUTO)
         var id: Long = 0,
 
-        @ManyToOne
-        var circle: CircleEntity,
+        @Column
+        val category: String,
 
         @Column
-        var category: String,
+        val selectedIndex: Int,
 
         @Column
-        var selectedIndex: Int,
+        val displayName: String,
 
         @Column
-        var displayName: String,
+        val inputType: CustomComponentType,
 
         @Column
-        var inputType: CustomComponentType,
+        val name: String,
 
         @Column
-        var name: String,
+        val price: Int,
 
         @Column
-        var price: Int) {
+        var active: Boolean? = true) {
 
     @ManyToOne
-    lateinit var item: ItemEntity
+    @JoinColumn(name = "itemId", columnDefinition = "DEFAULT NULL")
+    var item: ItemEntity? = null
 
 }

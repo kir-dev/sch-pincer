@@ -59,11 +59,22 @@ class ExtrasService {
                 i
         )
         optionalExtra.ifPresentOrElse({
-            it.price = mappedExtra.prices[i]
-            extrasRepository.save(it)
+            if (it.price == mappedExtra.prices[i] &&
+                    it.displayName == mappedExtra.values[i]) {
+                return@ifPresentOrElse;
+            }
+            val newExtra = ExtraEntity(
+                    category = mappedExtra.aliases.getOrElse(i) { i.toString() },
+                    selectedIndex = i,
+                    inputType = CustomComponentType.valueOf(mappedExtra.type),
+                    name = mappedExtra.name,
+                    displayName = mappedExtra.values[i],
+                    price = mappedExtra.prices[i]
+            )
+            it.active = false
+            extrasRepository.saveAll(listOf(newExtra, it))
         }) {
             val extra = ExtraEntity(
-                    circle = circle,
                     category = mappedExtra.aliases.getOrElse(i) { i.toString() },
                     selectedIndex = i,
                     inputType = CustomComponentType.valueOf(mappedExtra.type),
@@ -78,6 +89,13 @@ class ExtrasService {
 
     @PostConstruct
     fun generateAllExtrasForAllCircles() {
+
+        extrasRepository.findAll().let {
+            it.map {
+                it.active = it.active ?: true
+            }
+            extrasRepository.saveAll(it)
+        }
 
         for (circle in circleRepository.findAll()) {
             createExtrasForCircle(circle)
