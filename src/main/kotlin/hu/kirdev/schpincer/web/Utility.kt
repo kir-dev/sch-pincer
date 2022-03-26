@@ -91,8 +91,8 @@ fun toReadableRole(permissions: Set<String>, circleID: Long): CircleMemberRole {
     val isLeader = permissions.contains("ROLE_LEADER")
     val isCircleOwner = permissions.contains("CIRCLE_${circleID}")
     val isPr = permissions.contains("PR_${circleID}")
-    if (!isLeader || !isCircleOwner) return CircleMemberRole.NONE
-    else return if (isPr) CircleMemberRole.PR else CircleMemberRole.LEADER
+    return if (!isLeader || !isCircleOwner) CircleMemberRole.NONE
+    else if (isPr) CircleMemberRole.PR else CircleMemberRole.LEADER
 }
 
 val dateFormat: DateFormat by lazy { SimpleDateFormat("yyyy-MM-dd hh:mm") }
@@ -112,7 +112,7 @@ fun formatDate(date: Long): String {
 }
 
 fun HttpServletRequest.isInInternalNetwork(): Boolean {
-    return this.remoteAddr.startsWith("152.66.") || this.remoteAddr == "127.0.0.1"
+    return false
 }
 
 val nonAscii = Regex("[^\\x00-\\u0170]")

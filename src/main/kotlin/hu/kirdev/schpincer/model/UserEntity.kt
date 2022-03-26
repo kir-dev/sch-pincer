@@ -33,6 +33,9 @@ data class UserEntity(
         var permissions: Set<String> = mutableSetOf(),
 
         @Column(nullable = false)
-        var orderingPriority: Int = 1
+        var orderingPriority: Int = 1,
+
+        @Column
+        var forceGrantLoginAccess: Boolean = false
 
 ) : Serializable

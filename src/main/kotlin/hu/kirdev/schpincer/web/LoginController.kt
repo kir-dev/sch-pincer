@@ -83,6 +83,9 @@ open class LoginController {
                 users.save(user)
             }
 
+            if (rejectLogin(profile, user))
+                return "redirect:/?error=bmeUnitScopesInvalid"
+
             auth = UsernamePasswordAuthenticationToken(code, state, getAuthorities(user))
 
             request.session.setAttribute(USER_SESSION_ATTRIBUTE_NAME, user.uid)
@@ -94,6 +97,17 @@ open class LoginController {
             e.printStackTrace()
         }
         return if (auth != null && auth.isAuthenticated) "redirect:/" else "redirect:/?error"
+    }
+
+    private fun rejectLogin(profile: ProfileDataResponse, user: UserEntity): Boolean {
+        if (profile.bmeUnitScopes.any { it.isActive && it.isVik && it.isBme })
+            return false
+        if (user.forceGrantLoginAccess)
+            return false
+        if (profile.eduPersonEntitlements.size > 0)
+            return false
+
+        return true
     }
 
     private fun getOwnedCircleIds(profile: ProfileDataResponse): List<Long> {
@@ -139,7 +153,7 @@ open class LoginController {
     @GetMapping("/login")
     fun items(request: HttpServletRequest): String {
         return "redirect:" + authSch.generateLoginUrl(buildUniqueState(request),
-                Scope.BASIC, Scope.GIVEN_NAME, Scope.SURNAME, Scope.MAIL, Scope.ENTRANTS, Scope.EDU_PERSON_ENTILEMENT)
+                Scope.BASIC, Scope.GIVEN_NAME, Scope.SURNAME, Scope.MAIL, Scope.ENTRANTS, Scope.EDU_PERSON_ENTILEMENT, Scope.BME_UNIT_SCOPE)
     }
 
     fun buildUniqueState(request: HttpServletRequest): String {
