@@ -11,22 +11,27 @@ package hu.gerviba.authsch.struct;
  * @author Gerviba
  */
 public enum BMEUnitScope {
-    BME(true, false, false, false),
-    BME_VIK(true, true, false, false),
-    BME_ACTIVE(true, false, true, false),
-    BME_VIK_ACTIVE(true, true, true, false),
-    BME_VIK_NEWBIE(true, true, false, true);
+    BME           (true, false, false, false, false),
+    BME_VIK       (true, true,  false, false, false),
+    BME_ACTIVE    (true, false, true,  false, false),
+    BME_VIK_ACTIVE(true, true,  true,  false, false),
+    BME_VIK_NEWBIE(true, true,  false, true , false),
+    BME_VBK       (true, false, false, false, true ),
+    BME_VBK_ACTIVE(true, false, true,  false, true ),
+    BME_VBK_NEWBIE(true, false, true,  true , true );
 
     private final boolean bme;
     private final boolean vik;
     private final boolean active;
     private final boolean newbie;
+    private final boolean vbk;
 
-    private BMEUnitScope(boolean bme, boolean vik, boolean active, boolean newbie) {
+    private BMEUnitScope(boolean bme, boolean vik, boolean active, boolean newbie, boolean vbk) {
         this.bme = bme;
         this.vik = vik;
         this.active = active;
         this.newbie = newbie;
+        this.vbk = vbk;
     }
 
     public boolean isBme() {
@@ -45,4 +50,7 @@ public enum BMEUnitScope {
         return newbie;
     }
 
+    public boolean isVbk() {
+        return vbk;
+    }
 }

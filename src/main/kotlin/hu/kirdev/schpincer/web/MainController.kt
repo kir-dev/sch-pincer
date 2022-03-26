@@ -37,7 +37,7 @@ open class MainController {
     private lateinit var config: RealtimeConfigService
 
     @GetMapping("/")
-    fun root(request: HttpServletRequest, model: Model): String {
+    fun root(request: HttpServletRequest, model: Model, @RequestParam(defaultValue = "") error: String): String {
         val circlesList: List<CircleEntity> = circles.findAllForMenu()
         model.addAttribute("circles", circlesList)
 
@@ -48,6 +48,7 @@ open class MainController {
         val opens = openings.findUpcomingOpenings()
         model.addAttribute("opener", if (opens.isNotEmpty()) opens[0] else null)
         model.addAttribute("openings", openings.findNextWeek())
+        model.addAttribute("error", error)
 
         model.addAttribute("orders", Collections.EMPTY_LIST)
         if (request.hasUser()) {

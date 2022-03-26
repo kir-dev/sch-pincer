@@ -171,6 +171,7 @@ open class AdminController {
         model.addAttribute("email", user.email ?: "-")
         model.addAttribute("roles", user.permissions.joinToString(", "))
         model.addAttribute("priority", user.orderingPriority)
+        model.addAttribute("forceGrantLoginAccess", user.forceGrantLoginAccess)
         config.injectPublicValues(model)
         return "userModify"
     }
@@ -179,7 +180,8 @@ open class AdminController {
     fun editRoles(@RequestParam uidHash: String,
                   @RequestParam roles: String,
                   @RequestParam(required = false, defaultValue = "false") sysadmin: Boolean,
-                  @RequestParam(defaultValue = "1") priority: Int
+                  @RequestParam(defaultValue = "1") priority: Int,
+                  @RequestParam(required = false, defaultValue = "false") forceGrantLoginAccess: Boolean,
     ): String {
         val user = users.getByUidHash(uidHash) ?: return "redirect:/admin/?error=invalidUidHash"
         user.sysadmin = sysadmin
@@ -195,6 +197,7 @@ open class AdminController {
             permissions.add("ROLE_LEADER")
         user.permissions = permissions
         user.orderingPriority = priority
+        user.forceGrantLoginAccess = forceGrantLoginAccess
         users.save(user)
         return REDIRECT_TO_ADMIN
     }

@@ -15,6 +15,11 @@
 <div class="left-menu" th:replace="MainLayout :: left-menu">
 </div>
 
+<div class="messagebox" onclick="document.querySelector('.messagebox').style.display = 'none'" th:style="|display: ${error != '' ? 'inline-block' : 'none'}|">
+    <p th:if="${error == 'bmeUnitScopesInvalid'}" id="messagebox-text" th:text="#{lang.msgbox.bme-unit-scopes-invalid}">This is the message to set.</p>
+    <span th:text="#{lang.msgbox.close-messagebox}">Click here to close</span>
+</div>
+
 <div class="content page">
     <div class="main-article" th:if="${opener} neq null"
          th:onclick="'location.href=\'' + @{/} + 'provider/' + ${opener?.circle?.id} + '\''">

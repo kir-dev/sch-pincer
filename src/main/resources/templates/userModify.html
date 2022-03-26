@@ -48,6 +48,10 @@
                     <td th:text="#{lang.admin.roles.priority}">Priority</td>
                     <td><input type="number" name="priority" th:value="${priority}"/></td>
                 </tr>
+                <tr>
+                    <td th:text="#{lang.admin.roles.force-grant-login-access}">Grant explicit login</td>
+                    <td><input type="checkbox" name="forceGrantLoginAccess" th:checked="${forceGrantLoginAccess}"/></td>
+                </tr>
             </table>
             <input class="button" type="submit" th:value="#{lang.admin.title-roles}"/>
         </form>
