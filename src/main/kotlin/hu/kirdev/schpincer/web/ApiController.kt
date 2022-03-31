@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*
 import java.lang.Integer.min
 import java.text.SimpleDateFormat
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ThreadLocalRandom
 import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
 
@@ -242,7 +243,7 @@ open class ApiController(
             return listOf(OpeningDetail("Invalid Token", null, "sad", 0, 0, null,
                     "", "Contact the administrator if you think this is a problem", "", ""))
 
-        return openings.findNextWeek()
+        val result = openings.findNextWeek()
                 .filter { it.circle != null }
                 .filter { it.orderStart + it.compensationTime <= System.currentTimeMillis() }
                 .map { openingEntity ->
@@ -261,6 +262,11 @@ open class ApiController(
                         circleColor = openingEntity.circle?.cssClassName ?: "none"
                     ) }
                 .filter { it.available > 0 }
+                .toMutableList()
+        if (System.currentTimeMillis() < 1648821600000 && ThreadLocalRandom.current().nextBoolean())
+            result.add(OpeningDetail("SZARVAS ANYUKÁK KÖZELBEN", null, "test", ThreadLocalRandom.current().nextInt(70), 70, null,
+                "péntek", "AZ ÖN KAKASA SINCS BIZTONSÁGBAN", "", ""))
+        return result
     }
 
     private fun calculateAvailable(openingEntity: OpeningEntity): Int {
