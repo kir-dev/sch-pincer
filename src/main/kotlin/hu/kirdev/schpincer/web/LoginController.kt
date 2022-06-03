@@ -55,12 +55,12 @@ open class LoginController {
             val ownedCircles = getOwnedCircleIds(profile)
             if (users.exists(profile.internalId.toString())) {
                 user = users.getById(profile.internalId.toString())
+                user.email = profile.mail
                 if (systemAdmins.split(",").contains(user.uid))
                     user.sysadmin = true
                 val card = cardTypeLookup(profile)
                 if (user.cardType !== card) {
                     user.cardType = card
-                    users.save(user)
                 }
                 if (user.orderingPriority == 0)
                     user.orderingPriority = 1
@@ -68,8 +68,8 @@ open class LoginController {
                 if (!user.permissions.containsAll(permissionsByVIR)) {
                     permissionsByVIR.addAll(user.permissions)
                     user.permissions = permissionsByVIR
-                    users.save(user)
                 }
+                users.save(user)
             } else {
                 val card = cardTypeLookup(profile)
                 user = UserEntity(profile.internalId.toString(),
