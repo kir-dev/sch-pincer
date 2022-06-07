@@ -336,6 +336,22 @@ open class ApiController(
 
     private val trashpandaVoters: ConcurrentHashMap<String, Int> = ConcurrentHashMap<String, Int>()
 
+    @PostMapping("/provider/{circle}/increaseInterest")
+    @ResponseBody
+    fun circleInterestPlusPlus(@PathVariable circle: String, model: Model, request: HttpServletRequest): String {
+        val circleEntity: CircleEntity
+        if (circle.matches("^\\d+$".toRegex())) {
+            val id = circle.toLong()
+            circleEntity = circles.getOne(circle)
+        } else {
+            val circleEntity: CircleEntity = circles.findByAlias(circle)
+            circleEntity = circles.findByAlias(circle)
+        }
+        val newInterest = ++circle.interestCounter
+        circles.save(circleEntity)
+        return newInterest
+    }
+
 //    @PostMapping("/easteregg/trashpanda/{feedback}")
 //    @ResponseBody
     fun trashpandaVote(

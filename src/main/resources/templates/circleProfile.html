@@ -56,6 +56,12 @@
                             <td th:text="${selectedCircle?.avgOpening}">Wednesday</td>
                         </tr>
                         <tr>
+                            <td th:text="#{lang.profile.open}">Please open!</td>
+                            <td>
+                                <button id="interest-counter" class="action-button" onclick="increaseInterest(1); return false" th:text="${selectedCircle?.interestCounter}" class="action-button">0</button>
+                            </td>
+                        </tr>
+                        <tr>
                             <td th:text="#{lang.profile.facebook}">Facebook</td>
                             <td><a href="#" target="_blank" th:href="${selectedCircle?.facebookUrl}"
                                    th:text="${selectedCircle} neq null ? #{lang.profile.open-url}">OPEN</a></td>
@@ -116,6 +122,23 @@
     <span class="list-end" id="no-results"></span>
 
     <div th:replace="MainLayout :: footer"></div>
+    <script>
+        function increaseInterest() {
+            return fetch("/api/provider/(Burgir)/increaseInterest", { // TODO hook in provider?
+                method: 'POST',
+                cache: 'no-cache',
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'text/plain;charset=UTF-8',
+                    'Content-type': 'application/json;charset=UTF-8'
+                },
+                redirect: 'follow',
+                referrerPolicy: 'no-referrer'
+            }).then(response => {
+                document.getElementById("interest-counter").innerText = response.text();
+            });
+        }
+    </script>
 </div>
 </body>
 </html>

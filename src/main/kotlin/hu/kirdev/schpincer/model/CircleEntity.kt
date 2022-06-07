@@ -79,6 +79,9 @@ data class CircleEntity(
         @Column
         var virGroupId: Long? = null
 
+        @Column
+        var interestCounter: Long? = 0
+
 ) : Serializable {
 
     /**
