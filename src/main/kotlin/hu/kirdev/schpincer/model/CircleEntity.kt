@@ -77,7 +77,7 @@ data class CircleEntity(
         var visible: Boolean = false,
 
         @Column
-        var virGroupId: Long? = null
+        var virGroupId: Long? = null,
 
         @Column
         var interestCounter: Long? = 0
