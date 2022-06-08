@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference
 import java.io.Serializable
 import javax.persistence.*
 import javax.validation.constraints.Size
+import org.hibernate.annotations.ColumnDefault
 
 @Entity
 @Table(name = "circles")
@@ -80,7 +81,8 @@ data class CircleEntity(
         var virGroupId: Long? = null,
 
         @Column
-        var interestCounter: Long? = 0
+        @ColumnDefault(0)
+        var interestCounter: Long = 0
 
 ) : Serializable {
 
