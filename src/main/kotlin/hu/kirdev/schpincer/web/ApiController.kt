@@ -342,19 +342,17 @@ open class ApiController(
     @PostMapping("/provider/{circle}/increaseInterest")
     @ResponseBody
     fun circleIncreaseInterest(@PathVariable circle: String): ResponseEntity<String> {
-        val circleEntity: CircleEntity?
+        var result: Long?
         if (circle.matches("^\\d+$".toRegex())) {
             val id = circle.toLong()
-            circleEntity = circles.getOne(id)
+            result = circles.increaseInterest(id)
         } else {
-            circleEntity = circles.findByAlias(circle)
+            result = circles.increaseInterestByAlias(circle)
         }
-        if (circleEntity == null) {
+        if (result != null) {
             return responseOf("Invalid Circle")
         }
-        val newInterest = ++circleEntity.interestCounter
-        circles.save(circleEntity)
-        return responseOf(""+newInterest)
+        return responseOf(""+result)
     }
 
 //    @PostMapping("/easteregg/trashpanda/{feedback}")
