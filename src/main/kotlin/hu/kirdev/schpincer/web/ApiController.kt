@@ -2,7 +2,6 @@ package hu.kirdev.schpincer.web
 
 import hu.kirdev.schpincer.dto.ItemEntityDto
 import hu.kirdev.schpincer.dto.ManualUserDetails
-import hu.kirdev.schpincer.model.CircleEntity
 import hu.kirdev.schpincer.model.ItemCategory
 import hu.kirdev.schpincer.model.ItemEntity
 import hu.kirdev.schpincer.model.OpeningEntity
