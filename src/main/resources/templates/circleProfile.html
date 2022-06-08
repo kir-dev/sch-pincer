@@ -58,7 +58,8 @@
                         <tr>
                             <td th:text="#{lang.profile.open}">Please open!</td>
                             <td>
-                                <button id="interest-counter" class="action-button" onclick="increaseInterest(1); return false" th:text="${selectedCircle?.interestCounter}" class="action-button">0</button>
+                                <!--/*https://stackoverflow.com/a/52960571  */-->
+                                <button id="interest-counter" class="action-button" th:attr="onclick=|increaseInterest('${selectedCircle.alias}'); return false|" th:text="${selectedCircle?.interestCounter}" class="action-button">0</button>
                             </td>
                         </tr>
                         <tr>
@@ -123,8 +124,8 @@
 
     <div th:replace="MainLayout :: footer"></div>
     <script>
-        function increaseInterest() {
-            return fetch("/api/provider/(Burgir)/increaseInterest", { // TODO hook in provider?
+        function increaseInterest(provider) {
+            return fetch(`/api/provider/${provider}/increaseInterest`, {
                 method: 'POST',
                 cache: 'no-cache',
                 credentials: 'same-origin',
