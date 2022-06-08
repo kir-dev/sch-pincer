@@ -2,6 +2,7 @@ package hu.kirdev.schpincer.web
 
 import hu.kirdev.schpincer.dto.ItemEntityDto
 import hu.kirdev.schpincer.dto.ManualUserDetails
+import hu.kirdev.schpincer.model.CircleEntity
 import hu.kirdev.schpincer.model.ItemCategory
 import hu.kirdev.schpincer.model.ItemEntity
 import hu.kirdev.schpincer.model.OpeningEntity
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @RequestMapping("/api")
 open class ApiController(
+        private val circles: CircleService,
         private val openings: OpeningService,
         private val items: ItemService,
         private val users: UserService,
@@ -336,19 +338,23 @@ open class ApiController(
 
     private val trashpandaVoters: ConcurrentHashMap<String, Int> = ConcurrentHashMap<String, Int>()
 
+    @ApiOperation("Increase interest in a provider's")
     @PostMapping("/provider/{circle}/increaseInterest")
     @ResponseBody
-    fun circleInterestPlusPlus(@PathVariable circle: String, model: Model, request: HttpServletRequest): String {
-        val circleEntity: CircleEntity
+    fun circleIncreaseInterest(@PathVariable circle: String): ResponseEntity<String> {
+        val circleEntity: CircleEntity?
         if (circle.matches("^\\d+$".toRegex())) {
             val id = circle.toLong()
             circleEntity = circles.getOne(id)
         } else {
             circleEntity = circles.findByAlias(circle)
         }
-        val newInterest = ++circle.interestCounter
+        if (circleEntity == null) {
+            return responseOf("Invalid Circle")
+        }
+        val newInterest = ++circleEntity.interestCounter
         circles.save(circleEntity)
-        return newInterest
+        return responseOf(""+newInterest)
     }
 
 //    @PostMapping("/easteregg/trashpanda/{feedback}")
