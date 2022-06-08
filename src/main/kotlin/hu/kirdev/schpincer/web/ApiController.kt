@@ -342,9 +342,8 @@ open class ApiController(
         val circleEntity: CircleEntity
         if (circle.matches("^\\d+$".toRegex())) {
             val id = circle.toLong()
-            circleEntity = circles.getOne(circle)
+            circleEntity = circles.getOne(id)
         } else {
-            val circleEntity: CircleEntity = circles.findByAlias(circle)
             circleEntity = circles.findByAlias(circle)
         }
         val newInterest = ++circle.interestCounter
