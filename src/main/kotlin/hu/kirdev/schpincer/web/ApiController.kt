@@ -10,14 +10,18 @@ import hu.kirdev.schpincer.service.*
 import io.swagger.annotations.ApiOperation
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+import org.springframework.http.*
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.client.RestTemplate
+import org.springframework.web.client.exchange
+import org.springframework.web.client.getForObject
 import java.lang.Integer.min
 import java.text.SimpleDateFormat
 import java.util.concurrent.ConcurrentHashMap
 import java.util.stream.Collectors
 import javax.servlet.http.HttpServletRequest
+import kotlin.math.round
 
 @RestController
 @RequestMapping("/api")
@@ -242,25 +246,67 @@ open class ApiController(
             return listOf(OpeningDetail("Invalid Token", null, "sad", 0, 0, null,
                     "", "Contact the administrator if you think this is a problem", "", ""))
 
-        return openings.findNextWeek()
-                .filter { it.circle != null }
-                .filter { it.orderStart + it.compensationTime <= System.currentTimeMillis() }
-                .map { openingEntity ->
-                    OpeningDetail(
-                        name = openingEntity.circle?.displayName ?: "n/a",
-                        icon = openingEntity.circle?.logoUrl?.let { url -> baseUrl + url },
-                        feeling = openingEntity.feeling ?: "",
-                        available = calculateAvailable(openingEntity).coerceAtLeast(0),
-                        outOf = openingEntity.maxOrder,
-                        banner = openingEntity.prUrl.let { url -> baseUrl + url },
-                        day = timeService.format(openingEntity.dateStart, "u")?.toInt().let { daysOfTheWeek[it ?: 0] },
-                        comment = "${timeService.format(openingEntity.orderEnd, "u")?.toInt().let { daysOfTheWeek[it ?: 0] }} " +
-                                "${timeService.format(openingEntity.orderEnd, "HH:mm")}-ig rendelhető",
-                        circleUrl = openingEntity.circle?.alias?.let { alias -> baseUrl + "p/" + alias }
-                            ?: (baseUrl + "p/" + (openingEntity.circle?.id ?: 0)),
-                        circleColor = openingEntity.circle?.cssClassName ?: "none"
-                    ) }
-                .filter { it.available > 0 }
+        val openings = openings.findNextWeek()
+            .filter { it.circle != null }
+            .filter { it.orderStart + it.compensationTime <= System.currentTimeMillis() }
+            .map { openingEntity ->
+                OpeningDetail(
+                    name = openingEntity.circle?.displayName ?: "n/a",
+                    icon = openingEntity.circle?.logoUrl?.let { url -> baseUrl + url },
+                    feeling = openingEntity.feeling ?: "",
+                    available = calculateAvailable(openingEntity).coerceAtLeast(0),
+                    outOf = openingEntity.maxOrder,
+                    banner = openingEntity.prUrl.let { url -> baseUrl + url },
+                    day = timeService.format(openingEntity.dateStart, "u")?.toInt().let { daysOfTheWeek[it ?: 0] },
+                    comment = "${
+                        timeService.format(openingEntity.orderEnd, "u")?.toInt().let { daysOfTheWeek[it ?: 0] }
+                    } " +
+                            "${timeService.format(openingEntity.orderEnd, "HH:mm")}-ig rendelhető",
+                    circleUrl = openingEntity.circle?.alias?.let { alias -> baseUrl + "p/" + alias }
+                        ?: (baseUrl + "p/" + (openingEntity.circle?.id ?: 0)),
+                    circleColor = openingEntity.circle?.cssClassName ?: "none"
+                )
+            }
+            .filter { it.available > 0 }
+
+        return openings.ifEmpty { generateCurrencyInfo() }
+    }
+
+    var EUR_PRICE: Int = 0
+    var USD_PRICE: Int = 0
+
+    private fun generateCurrencyInfo(): List<OpeningDetail> {
+        return if (EUR_PRICE == 0 || USD_PRICE == 0) listOf() else listOf(OpeningDetail(
+            name = "EUR / USD",
+            icon = "",
+            available = EUR_PRICE,
+            outOf = USD_PRICE,
+            feeling = "JMF",
+            comment = "Pár percenként frissül",
+            circleColor = "none",
+            day = "épp most",
+            banner = null,
+            circleUrl = ""
+        ))
+    }
+
+    @Scheduled(fixedRate = 60000 * 5)
+    fun updateEurAndUsd() {
+        EUR_PRICE = round(getPrice("eur")).toInt()
+        USD_PRICE = round(getPrice("usd")).toInt()
+        println("EUR: ${EUR_PRICE} USD: ${USD_PRICE}")
+    }
+
+    private fun getPrice(currency: String): Double {
+        val headers = HttpHeaders()
+        headers.set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+        headers.set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36")
+
+        val body: String = RestTemplate().exchange<String>("https://www.google.com/search?q=1+${currency}+to+huf", HttpMethod.GET, HttpEntity<String>(headers), String::class).body
+        val startIndex = body.indexOf("data-exchange-rate")
+        if (startIndex < 0)
+            return 0.0
+        return body.substring(startIndex + 20, body.indexOf("\"", startIndex + 21)).toDoubleOrNull() ?: 0.0
     }
 
     private fun calculateAvailable(openingEntity: OpeningEntity): Int {
