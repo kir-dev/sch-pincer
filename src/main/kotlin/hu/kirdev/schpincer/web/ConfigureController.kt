@@ -83,6 +83,9 @@ open class ConfigureController {
 
     @GetMapping("/configure/{circleId}")
     fun configure(@PathVariable circleId: Long, model: Model, request: HttpServletRequest): String {
+        if (cannotEditCircle(circleId, request))
+            return "redirect:/configure?error=invalidPermissions"
+
         val circle = circles.getOne(circleId)
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circle", circle)
@@ -98,7 +101,10 @@ open class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/roles/list")
-    fun listUserRole(@PathVariable circleId: Long, model: Model): String {
+    fun listUserRole(@PathVariable circleId: Long, model: Model, request: HttpServletRequest): String {
+        if (cannotEditCircle(circleId, request))
+            return "redirect:/configure?error=invalidPermissions"
+
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circleId", circleId)
         model.addAttribute("roles", users.findAllCircleRole(circleId))
@@ -107,7 +113,15 @@ open class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/roles/edit/{uidHash}")
-    fun editUserRole(@PathVariable circleId: Long, @PathVariable uidHash: String, model: Model): String {
+    fun editUserRole(
+        @PathVariable circleId: Long,
+        @PathVariable uidHash: String,
+        model: Model,
+        request: HttpServletRequest
+    ): String {
+        if (cannotEditCircle(circleId, request))
+            return "redirect:/configure?error=invalidPermissions"
+
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circleId", circleId)
         model.addAttribute("role", users.findPermissionByUidHash(uidHash, circleId))
@@ -143,7 +157,10 @@ open class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/members/new")
-    fun newMember(@PathVariable circleId: Long, model: Model): String {
+    fun newMember(@PathVariable circleId: Long, model: Model, request: HttpServletRequest): String {
+        if (cannotEditCircle(circleId, request))
+            return "redirect:/configure?error=invalidPermissions"
+
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circleId", circleId)
         model.addAttribute("member", CircleMemberEntity())
@@ -169,9 +186,15 @@ open class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/members/edit/{memberId}")
-    fun editMember(@PathVariable circleId: Long,
-                   @PathVariable memberId: Long,
-                   model: Model): String {
+    fun editMember(
+        @PathVariable circleId: Long,
+        @PathVariable memberId: Long,
+        model: Model,
+        request: HttpServletRequest
+    ): String {
+        if (cannotEditCircle(circleId, request))
+            return "redirect:/configure?error=invalidPermissions"
+
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circleId", circleId)
         model.addAttribute("mode", "edit")
@@ -181,11 +204,12 @@ open class ConfigureController {
     }
 
     @PostMapping("/configure/{circleId}/members/edit")
-    fun editMember(@PathVariable circleId: Long,
-                   cme: @Valid CircleMemberEntity,
-                   @RequestParam id: Long,
-                   @RequestParam avatarFile: MultipartFile?,
-                   request: HttpServletRequest
+    fun editMember(
+        @PathVariable circleId: Long,
+        cme: @Valid CircleMemberEntity,
+        @RequestParam id: Long,
+        @RequestParam avatarFile: MultipartFile?,
+        request: HttpServletRequest
     ): String {
         if (cannotEditCircleNoPR(circleId, request)) return "redirect:/configure/$circleId?error"
 
@@ -204,9 +228,15 @@ open class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/members/delete/{memberId}")
-    fun deleteMemberNoPR(@PathVariable circleId: Long,
-                         @PathVariable memberId: Long,
-                         model: Model): String {
+    fun deleteMemberNoPR(
+        @PathVariable circleId: Long,
+        @PathVariable memberId: Long,
+        model: Model,
+        request: HttpServletRequest
+    ): String {
+        if (cannotEditCircle(circleId, request))
+            return "redirect:/configure?error=invalidPermissions"
+
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("topic", "member")
         model.addAttribute("arg", members.getOne(memberId).name)
@@ -227,7 +257,14 @@ open class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/edit")
-    fun editCircle(@PathVariable circleId: Long, model: Model): String {
+    fun editCircle(
+        @PathVariable circleId: Long,
+        model: Model,
+        request: HttpServletRequest
+    ): String {
+        if (cannotEditCircle(circleId, request))
+            return "redirect:/configure?error=invalidPermissions"
+
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("mode", "edit")
         model.addAttribute("adminMode", false)
