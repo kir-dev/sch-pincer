@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import hu.gerviba.authsch.response.ProfileDataResponse.ProfileDataResponseBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Access Scope
@@ -187,9 +189,17 @@ public enum Scope {
         @Override
         public void apply(ProfileDataResponseBuilder response, JsonNode obj) {
             obj.path(Scope.BME_UNIT_SCOPE.getScope()).elements()
-                    .forEachRemaining(x -> response.addBmeUnitScope(BMEUnitScope.valueOf(x.asText())));
+                    .forEachRemaining(x -> {
+                        try {
+                            response.addBmeUnitScope(BMEUnitScope.valueOf(x.asText()));
+                        } catch (IllegalArgumentException e) {
+                            log.error("Invalid BMEUnitScope literal {}", x.asText(), e);
+                        }
+                    });
         }
     };
+
+    private static final Logger log = LoggerFactory.getLogger(Scope.class);
 
     private final String scope;
 

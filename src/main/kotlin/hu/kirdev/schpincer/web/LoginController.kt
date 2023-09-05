@@ -104,7 +104,7 @@ open class LoginController {
             return false
         if (user.forceGrantLoginAccess)
             return false
-        if (profile.eduPersonEntitlements.size > 0)
+        if (profile.eduPersonEntitlements.isNotEmpty())
             return false
 
         return true

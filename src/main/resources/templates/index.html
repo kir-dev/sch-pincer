@@ -86,10 +86,14 @@
             </div>
         </div>
 
-        <object th:remove="tag" th:if="${T(java.lang.System).currentTimeMillis() gt 1639090800000L}">
+        <object th:remove="tag">
+            <div th:replace="news/news_2023_09_06 :: article"></div>
+        </object>
+
+        <object th:remove="all">
             <div th:replace="news/news_2021_12_10 :: article"></div>
         </object>
-        <object th:remove="tag" th:if="${T(java.lang.System).currentTimeMillis() lt 1639090800000L}">
+        <object th:remove="all">
             <div th:replace="news/news_2021_10_14 :: article"></div>
         </object>
 

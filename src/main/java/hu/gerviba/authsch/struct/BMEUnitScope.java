@@ -12,6 +12,7 @@ package hu.gerviba.authsch.struct;
  */
 public enum BMEUnitScope {
     BME           (true, false, false, false, false),
+    BME_NEWBIE    (true, false,  false, true , false),
     BME_VIK       (true, true,  false, false, false),
     BME_ACTIVE    (true, false, true,  false, false),
     BME_VIK_ACTIVE(true, true,  true,  false, false),
