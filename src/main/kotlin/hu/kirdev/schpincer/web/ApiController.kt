@@ -275,6 +275,26 @@ open class ApiController(
     var EUR_PRICE: Int = 0
     var USD_PRICE: Int = 0
 
+    @CrossOrigin(origins = ["*"])
+    @GetMapping("/currency/usd")
+    @ResponseBody
+    fun usdOnly(@RequestParam(required = false) token: String?): Int {
+        if (token.isNullOrBlank() || !apiTokens.contains(token))
+            return -1
+
+        return USD_PRICE
+    }
+
+    @CrossOrigin(origins = ["*"])
+    @GetMapping("/currency/eur")
+    @ResponseBody
+    fun eurOnly(@RequestParam(required = false) token: String?): Int {
+        if (token.isNullOrBlank() || !apiTokens.contains(token))
+            return -1
+
+        return EUR_PRICE
+    }
+
     private fun generateCurrencyInfo(): List<OpeningDetail> {
         return if (EUR_PRICE == 0 || USD_PRICE == 0) listOf() else listOf(OpeningDetail(
             name = "EUR / USD",
