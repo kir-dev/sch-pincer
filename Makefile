@@ -65,5 +65,5 @@ docker-volume-create:
 	docker volume create --name schpincer-lucene-cache
 
 new-publish:
-	docker build -t schpincer/schpincer -f docker/standalone-Dockerfile .
-	docker push schpincer/schpincer
+	docker build -t harbor.sch.bme.hu/org-kir-dev/sch-pincer -f docker/standalone-Dockerfile .
+	docker push harbor.sch.bme.hu/org-kir-dev/sch-pincer

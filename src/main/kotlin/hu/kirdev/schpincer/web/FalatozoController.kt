@@ -6,9 +6,9 @@ import org.springframework.web.servlet.HandlerMapping
 import javax.servlet.http.HttpServletRequest
 
 @Controller
-open class SzorController {
+open class FalatozoController {
 
-    @GetMapping(path = ["/americano", "/pizzasch", "/reggelisch", "/kakas", "/langosch", "/vodor", "/dzsajrosz"])
+    @GetMapping(path = ["/americano", "/pizzasch", "/reggelisch", "/kakas", "/langosch", "/vodor", "/dzsajrosz", "/schami", "/palacsintazo", "/paschta"])
     fun providerRedirects(request: HttpServletRequest): String {
         val providerName = request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE) as String
         return "redirect:/p$providerName"

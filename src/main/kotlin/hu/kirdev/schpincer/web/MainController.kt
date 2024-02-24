@@ -72,7 +72,7 @@ open class MainController {
         return "items"
     }
 
-    @GetMapping("/szor")
+    @GetMapping("/falatozo")
     fun circle(model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circlesWithOpening", circles.findAllForInfo())
