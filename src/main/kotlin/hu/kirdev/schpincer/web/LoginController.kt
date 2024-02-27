@@ -83,8 +83,8 @@ open class LoginController {
                 users.save(user)
             }
 
-            if (rejectLogin(profile, user))
-                return "redirect:/?error=bmeUnitScopesInvalid"
+//            if (rejectLogin(profile, user))
+//                return "redirect:/?error=bmeUnitScopesInvalid"
 
             auth = UsernamePasswordAuthenticationToken(code, state, getAuthorities(user))
 
