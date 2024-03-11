@@ -56,6 +56,13 @@
                             <td th:text="${selectedCircle?.avgOpening}">Wednesday</td>
                         </tr>
                         <tr>
+                            <td th:text="#{lang.profile.open}">Please open!</td>
+                            <td>
+                                <!--/*https://stackoverflow.com/a/52960571  */-->
+                                <button id="interest-counter" class="action-button" th:attr="onclick=|increaseInterest('${selectedCircle.alias}'); return false|" th:text="${selectedCircle?.interestCounter}" class="action-button">0</button>
+                            </td>
+                        </tr>
+                        <tr>
                             <td th:text="#{lang.profile.facebook}">Facebook</td>
                             <td><a href="#" target="_blank" th:href="${selectedCircle?.facebookUrl}"
                                    th:text="${selectedCircle} neq null ? #{lang.profile.open-url}">OPEN</a></td>
@@ -116,6 +123,23 @@
     <span class="list-end" id="no-results"></span>
 
     <div th:replace="MainLayout :: footer"></div>
+    <script>
+        function increaseInterest(provider) {
+            return fetch(`/api/provider/${provider}/increaseInterest`, {
+                method: 'POST',
+                cache: 'no-cache',
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'text/plain;charset=UTF-8',
+                    'Content-type': 'application/json;charset=UTF-8'
+                },
+                redirect: 'follow',
+                referrerPolicy: 'no-referrer'
+            }).then(response => {
+                document.getElementById("interest-counter").innerText = response.text();
+            });
+        }
+    </script>
 </div>
 </body>
 </html>
