@@ -2922,6 +2922,8 @@ img.centered-mini {
 
 .site-menu {
     position: fixed;
+    overflow: scroll;
+    display: block;
     top: 0;
     left: 0;
     bottom: 0;
@@ -2990,8 +2992,6 @@ img.centered-mini {
 
 .site-menu .container {
     text-align: center;
-    position: absolute;
-    bottom: 10vh;
     width: 100vw;
     max-height: calc(90vh - 200px);
 }
