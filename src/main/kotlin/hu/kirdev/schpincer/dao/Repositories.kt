@@ -73,5 +73,6 @@ interface UserRepository : JpaRepository<UserEntity, String> {
 
 @Repository
 interface ExtrasRepository : JpaRepository<ExtraEntity, Long> {
-    fun findByCircleAndNameAndInputTypeAndSelectedIndex(circle: CircleEntity, name: String, inputType: CustomComponentType, selectedIndex: Int): Optional<ExtraEntity>
+    fun findByItemAndNameAndInputTypeAndSelectedIndex(item: ItemEntity, name: String, inputType: CustomComponentType, selectedIndex: Int): Optional<ExtraEntity>
+    fun findByItemAndNameAndInputTypeAndSelectedIndexAndActiveTrue(item: ItemEntity, name: String, inputType: CustomComponentType, selectedIndex: Int): Optional<ExtraEntity>
 }

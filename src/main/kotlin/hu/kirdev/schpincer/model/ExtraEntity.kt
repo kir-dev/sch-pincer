@@ -5,30 +5,35 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "extras")
-data class ExtraEntity (
-    @Id
-    @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long = 0,
+data class ExtraEntity(
+        @Id
+        @Column
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        var id: Long = 0,
+
+        @Column
+        val category: String,
+
+        @Column
+        val selectedIndex: Int,
+
+        @Column
+        val displayName: String,
+
+        @Column
+        val inputType: CustomComponentType,
+
+        @Column
+        val name: String,
+
+        @Column
+        val price: Int,
+
+        @Column
+        var active: Boolean? = true) {
 
     @ManyToOne
-    var circle: CircleEntity,
+    @JoinColumn(name = "itemId", columnDefinition = "DEFAULT NULL")
+    var item: ItemEntity? = null
 
-    @Column
-    var category: String,
-
-    @Column
-    var selectedIndex: Int,
-
-    @Column
-    var displayName: String,
-
-    @Column
-    var inputType: CustomComponentType,
-
-    @Column
-    var name: String,
-
-    @Column
-    var price: Int
-)
+}
