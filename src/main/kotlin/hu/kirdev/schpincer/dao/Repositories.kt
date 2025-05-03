@@ -5,6 +5,7 @@ import hu.kirdev.schpincer.web.component.CustomComponentType
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 import java.util.*
 
@@ -38,6 +39,13 @@ interface ItemRepository : JpaRepository<ItemEntity, Long> {
 @Repository
 interface OpeningRepository : JpaRepository<OpeningEntity, Long> {
     fun findAllByOrderByDateStart(): List<OpeningEntity>
+
+    @Query(
+        "select * from openings o where o.date_end < ?1 and o.date_start < ?2 order by o.date_start desc limit ?3",
+        nativeQuery = true
+    )
+    fun findAllEndedOpeningsBefore(now: Long, before: Long, limit: Long): List<OpeningEntity>
+
     fun findAllByDateEndGreaterThanAndDateEndLessThanOrderByDateStart(now: Long, weekFromNow: Long): List<OpeningEntity>
     fun findAllByOrderStartGreaterThanAndOrderStartLessThan(time1: Long, time2: Long): List<OpeningEntity>
     fun findFirstByCircle_IdAndDateEndGreaterThanOrderByDateStart(id: Long, time: Long): Optional<OpeningEntity>

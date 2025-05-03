@@ -6,8 +6,6 @@ import hu.kirdev.schpincer.model.OpeningEntity
 import hu.kirdev.schpincer.model.TimeWindowEntity
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Isolation
-import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import java.text.SimpleDateFormat
 import java.util.*
@@ -42,6 +40,11 @@ open class OpeningService {
         return repo.findAllByDateEndGreaterThanAndDateEndLessThanOrderByDateStart(
                 System.currentTimeMillis(),
                 System.currentTimeMillis() + WEEK)
+    }
+
+    @Transactional(readOnly = true)
+    open fun findEndedBefore(before: Long, limit: Long): List<OpeningEntity> {
+        return repo.findAllEndedOpeningsBefore(System.currentTimeMillis(), before, limit)
     }
 
     @Transactional(readOnly = false)

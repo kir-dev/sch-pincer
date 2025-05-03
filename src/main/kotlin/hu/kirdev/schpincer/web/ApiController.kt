@@ -139,7 +139,7 @@ open class ApiController(
     @ResponseBody
     fun sync() : SyncResponse = SyncResponse(
         circles = circles.findAll()
-            .filter { it.displayName != "Schámi Misztíriusz Boltja" }
+            .filter { it.alias != "schami" }
             .map { CircleResponse(it.id, it.virGroupId, it.displayName) },
         openings = openings.findNextWeek().map {
             OpeningResponse(
@@ -151,12 +151,32 @@ open class ApiController(
                 end = it.dateEnd,
                 orderingStart = it.orderStart,
                 orderingEnd = it.orderEnd,
-                outOfStock = calculateAvailable(it).coerceAtLeast(0) <= 0
+                outOfStock = calculateAvailable(it).coerceAtLeast(0) == 0
             )
         }
     )
 
-
+    @ApiOperation("List of ended openings before a given point in time")
+    @GetMapping("/openings/ended")
+    @ResponseBody
+    fun endedOpenings(
+        @RequestParam before: Long,
+        @RequestParam(defaultValue = "100") count: Long
+    ): List<OpeningResponse> =
+        openings.findEndedBefore(before.coerceAtLeast(0), count.coerceAtLeast(1))
+            .map {
+                OpeningResponse(
+                    id = it.id,
+                    circleId = it.circle?.id,
+                    feeling = it.feeling,
+                    description = it.eventDescription,
+                    start = it.dateStart,
+                    end = it.dateEnd,
+                    orderingStart = it.orderStart,
+                    orderingEnd = it.orderEnd,
+                    outOfStock = null
+                )
+            }
 
     @ApiOperation("List of items orderable tomorrow")
     @GetMapping("/items/tomorrow")

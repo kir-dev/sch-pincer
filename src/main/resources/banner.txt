@@ -4,8 +4,7 @@
  |___/\___|_||_|    |_| |___|_|\_|\___|___|_|_\
   :: SCH-PINCÉR ::            Startup completed
   Project lead: Szabo Gergely
-  Contributors: *add yourself if you contributed*
+  Contributors: Szabó Benedek, Isti
   Github:       https://github.com/kir-dev/sch-pincer
   Profiles:     ${spring.profiles.active}
   Spring Boot: ${spring-boot.formatted-version}
-  
