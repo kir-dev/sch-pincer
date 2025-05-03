@@ -8,7 +8,7 @@
           th:remove="all">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" th:remove="all">
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" th:remove="all"/>
-    <object th:include="MainLayout :: head" th:remove="tag"></object>
+    <object th:insert="~{MainLayout :: head}" th:remove="tag"></object>
     <link rel="stylesheet" th:href="@{/css/stats.css}" href="../static/css/stats.css"/>
     <script src="../static/js/profile.js" th:src="@{/js/profile.js}"></script>
     <script th:inline="javascript">
@@ -16,10 +16,10 @@
     </script>
 </head>
 <body>
-<div class="header" th:replace="MainLayout :: header">
+<div class="header" th:replace="~{MainLayout :: header}">
 </div>
 
-<div class="left-menu" th:replace="MainLayout :: left-menu">
+<div class="left-menu" th:replace="~{MainLayout :: left-menu}">
 </div>
 
 <div class="page content profile-page">
@@ -125,6 +125,6 @@
     <div class="last"></div>
 </div>
 
-<div th:replace="MainLayout :: footer"></div>
+<div th:replace="~{MainLayout :: footer}"></div>
 </body>
 </html>

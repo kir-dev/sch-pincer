@@ -9,7 +9,6 @@ import hu.kirdev.schpincer.dto.OrderDetailsDto
 import hu.kirdev.schpincer.model.*
 import hu.kirdev.schpincer.web.component.*
 import hu.kirdev.schpincer.web.removeNonPrintable
-import java.util.*
 
 class FailedOrderException(val response: String) : RuntimeException()
 
@@ -21,7 +20,6 @@ class MakeOrderProcedure (
         private val comment: String,
         private val detailsJson: String,
         private val itemsRepo: ItemRepository,
-        private val openings: OpeningService,
         private val timeWindowRepo: TimeWindowRepository,
         private val extrasRepository: ExtrasRepository
 ) {
@@ -52,7 +50,7 @@ class MakeOrderProcedure (
                     detailsJson = detailsJson,
                     room = manualUser.room,
                     createdAt = System.currentTimeMillis())
-            item = itemsRepo.getOne(id)
+            item = itemsRepo.getReferenceById(id)
         }
 
         details = calculateExtra(detailsJson, order, item, manualUser?.card ?: user.cardType)
@@ -67,12 +65,12 @@ class MakeOrderProcedure (
 
         if (manualUser == null) {
             validateOrderCount()
-            timeWindow = timeWindowRepo.getOne(time)
+            timeWindow = timeWindowRepo.getReferenceById(time)
             validateTimeWindow()
             updateCategoryLimitations(true)
         } else {
             updateCategoryLimitations(false)
-            timeWindow = timeWindowRepo.getOne(time)
+            timeWindow = timeWindowRepo.getReferenceById(time)
         }
 
         updateRemainingItemCount()
@@ -95,7 +93,7 @@ class MakeOrderProcedure (
     }
 
     internal fun loadTargetItem() {
-        item = itemsRepo.getOne(id)
+        item = itemsRepo.getReferenceById(id)
         if (!item.orderable || item.personallyOrderable)
             throw FailedOrderException(RESPONSE_INTERNAL_ERROR)
     }

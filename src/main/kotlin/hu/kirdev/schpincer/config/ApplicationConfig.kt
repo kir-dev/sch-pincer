@@ -1,13 +1,12 @@
 package hu.kirdev.schpincer.config
 
 import hu.kirdev.schpincer.service.ItemPrecedenceService
+import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
-import javax.annotation.PostConstruct
 
 @Configuration
 @EnableScheduling

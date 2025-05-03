@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.time.Instant
-import javax.annotation.PostConstruct
-import kotlin.math.sign
+import jakarta.annotation.PostConstruct
 
 @Component
 @Profile("test")

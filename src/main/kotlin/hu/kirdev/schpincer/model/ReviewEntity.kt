@@ -2,8 +2,8 @@ package hu.kirdev.schpincer.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.io.Serializable
-import javax.persistence.*
-import javax.validation.constraints.NotBlank
+import jakarta.persistence.*
+import jakarta.validation.constraints.NotBlank
 
 @Entity
 @Table(name = "reviews")
@@ -12,7 +12,7 @@ data class ReviewEntity(
 
         @Id
         @Column
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = 0,
 
         @JsonIgnore
@@ -29,8 +29,7 @@ data class ReviewEntity(
         @Column
         var userName: String? = null,
 
-        @Lob
-        @Column
+        @Column(columnDefinition = "text")
         var review: @NotBlank String = "",
 
         @Column

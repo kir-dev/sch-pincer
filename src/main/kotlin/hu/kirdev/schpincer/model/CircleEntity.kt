@@ -2,29 +2,27 @@ package hu.kirdev.schpincer.model
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import java.io.Serializable
-import javax.persistence.*
-import javax.validation.constraints.Size
+import jakarta.persistence.*
+import jakarta.validation.constraints.Size
 
 @Entity
 @Table(name = "circles")
 data class CircleEntity(
         @Id
         @Column
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = 0,
 
         @Size(min = 2, max = 32)
         @Column(length = 32)
         var displayName: @Size(min = 2, max = 32) String = "",
 
-        @Lob
         @Size(max = 1000)
-        @Column(length = 1000)
+        @Column(columnDefinition = "text")
         var description: @Size(max = 1000) String = "",
 
-        @Lob
         @Size(max = 1000)
-        @Column(length = 1000)
+        @Column(columnDefinition = "text")
         var homePageDescription: @Size(max = 1000) String? = null,
 
         @Size(max = 255)

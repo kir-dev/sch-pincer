@@ -25,9 +25,6 @@ class MakeOrderTest {
     lateinit var itemsRepo: ItemRepository
 
     @Mock
-    lateinit var openings: OpeningService
-
-    @Mock
     lateinit var timewindowRepo: TimeWindowRepository
 
     @Mock
@@ -72,7 +69,6 @@ class MakeOrderTest {
         val item = ItemEntity(20, category = categoryId + 1)
         val procedure = MakeOrderProcedure(user, 0, count, 0, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.current = opening
@@ -107,7 +103,6 @@ class MakeOrderTest {
         val item = ItemEntity(20, category = categoryId + 1)
         val procedure = MakeOrderProcedure(user, 0, count, 0, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.current = opening
@@ -124,13 +119,12 @@ class MakeOrderTest {
 
     @ParameterizedTest
     @ValueSource(ints = [0, 1, 2, 3, 4])
-    fun `check category limitations with default only`(categoryId: Int) {
+    fun `check category limitations with default only`() {
         val opening = OpeningEntity(30, dateStart = 0, dateEnd = 0, orderStart = 0, orderEnd = 0)
         val count = 100
         val item = ItemEntity(20, category = ItemCategory.DEFAULT.id)
         val procedure = MakeOrderProcedure(user, 0, count, 0, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.current = opening
@@ -151,7 +145,6 @@ class MakeOrderTest {
 
         val procedure = MakeOrderProcedure(user, 0, 0, 0, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
 
@@ -164,7 +157,6 @@ class MakeOrderTest {
 
         val procedure = MakeOrderProcedure(user, 0, 0, 0, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
 
@@ -183,7 +175,6 @@ class MakeOrderTest {
         val comment = "comment"
         val procedure = MakeOrderProcedure(user, 0, 0, 0, comment, detailsJson,
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
 
@@ -200,11 +191,10 @@ class MakeOrderTest {
         val itemEntity = ItemEntity()
         itemEntity.orderable = false
         itemEntity.personallyOrderable = false
-        whenever(itemsRepo.getOne(12)).thenReturn(itemEntity)
+        whenever(itemsRepo.getReferenceById(12)).thenReturn(itemEntity)
 
         val procedure = MakeOrderProcedure(user, 12, 0, 0, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
 
@@ -216,11 +206,10 @@ class MakeOrderTest {
         val itemEntity = ItemEntity()
         itemEntity.orderable = true
         itemEntity.personallyOrderable = true
-        whenever(itemsRepo.getOne(12)).thenReturn(itemEntity)
+        whenever(itemsRepo.getReferenceById(12)).thenReturn(itemEntity)
 
         val procedure = MakeOrderProcedure(user, 12, 0, 0, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
 
@@ -232,11 +221,10 @@ class MakeOrderTest {
         val itemEntity = ItemEntity()
         itemEntity.orderable = true
         itemEntity.personallyOrderable = false
-        whenever(itemsRepo.getOne(12)).thenReturn(itemEntity)
+        whenever(itemsRepo.getReferenceById(12)).thenReturn(itemEntity)
 
         val procedure = MakeOrderProcedure(user, 12, 0, 0, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
 
@@ -256,7 +244,6 @@ class MakeOrderTest {
 
         val procedure = MakeOrderProcedure(user, 0, 0, 40, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.item = itemEntity
@@ -275,7 +262,6 @@ class MakeOrderTest {
 
         val procedure = MakeOrderProcedure(user, 0, 0, 0, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.current = opening
@@ -296,7 +282,6 @@ class MakeOrderTest {
 
         val procedure = MakeOrderProcedure(user, 0, 0, 40, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.current = opening
@@ -311,7 +296,6 @@ class MakeOrderTest {
 
         val procedure = MakeOrderProcedure(user, 0, 0, 40, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.current = opening
@@ -328,7 +312,6 @@ class MakeOrderTest {
 
         val procedure = MakeOrderProcedure(user, 0, 0, 40, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.current = opening1
@@ -344,7 +327,6 @@ class MakeOrderTest {
 
         val procedure = MakeOrderProcedure(user, 0, 1, 40, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.current = opening
@@ -362,7 +344,6 @@ class MakeOrderTest {
 
         val procedure = MakeOrderProcedure(user, 0, 4, 40, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.current = opening
@@ -380,7 +361,6 @@ class MakeOrderTest {
 
         val procedure = MakeOrderProcedure(user, 0, 4, 40, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.current = opening
@@ -399,7 +379,6 @@ class MakeOrderTest {
 
         val procedure = MakeOrderProcedure(user, 0, 4, 40, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.current = opening
@@ -418,7 +397,6 @@ class MakeOrderTest {
 
         val procedure = MakeOrderProcedure(user, 0, 4, 40, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.current = opening
@@ -434,7 +412,6 @@ class MakeOrderTest {
     fun `validate clamped item count with too low value`() {
         val procedure = MakeOrderProcedure(user, 0, -1, 0, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.order = OrderEntity(extraTag = false, userId = "", userName = "", comment = "", detailsJson = "", room = "")
@@ -460,7 +437,6 @@ class MakeOrderTest {
     fun `validate clamped item count with too high value`() {
         val procedure = MakeOrderProcedure(user, 0, 100, 0, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.order = OrderEntity(extraTag = false, userId = "", userName = "", comment = "", detailsJson = "", room = "")
@@ -481,7 +457,6 @@ class MakeOrderTest {
 
         val procedure = MakeOrderProcedure(user, 0, 4, 40, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.current = opening
@@ -502,7 +477,6 @@ class MakeOrderTest {
 
         val procedure = MakeOrderProcedure(user, 0, 4, 40, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.current = opening
@@ -528,7 +502,6 @@ class MakeOrderTest {
 
         val procedure = MakeOrderProcedure(user, 0, 4, 40, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.current = opening
@@ -560,7 +533,6 @@ class MakeOrderTest {
 
         val procedure = MakeOrderProcedure(user, 0, 1, 40, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.current = opening
@@ -592,7 +564,6 @@ class MakeOrderTest {
 
         val procedure = MakeOrderProcedure(user, 0, 4, 40, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.current = opening
@@ -624,7 +595,6 @@ class MakeOrderTest {
 
         val procedure = MakeOrderProcedure(user, 0, 1, 40, "", "{}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
         procedure.current = opening
@@ -650,11 +620,11 @@ class MakeOrderTest {
                 orderEnd = System.currentTimeMillis() * 2, maxBeta = 10)
 
         val timeWindow = TimeWindowEntity(opening = opening, name = "6:00-8:00", date = 12, normalItemCount = 5, extraItemCount = 4)
-        whenever(timewindowRepo.getOne(40)).thenReturn(timeWindow)
+        whenever(timewindowRepo.getReferenceById(40)).thenReturn(timeWindow)
         whenever(timewindowRepo.findById(40)).thenReturn(Optional.of(timeWindow))
         val item = ItemEntity(name = "name", category = 2, orderable = true, personallyOrderable = false,
                 alias = "", circle = CircleEntity(10), price = 1200)
-        whenever(itemsRepo.getOne(12)).thenReturn(item)
+        whenever(itemsRepo.getReferenceById(12)).thenReturn(item)
 
         whenever(user.uid).thenReturn("unique")
         whenever(user.room).thenReturn("SCH-1620")
@@ -665,7 +635,6 @@ class MakeOrderTest {
         val comment = "comment here"
         val procedure = MakeOrderProcedure(user, 12, 1, 40, comment, "{\"answers\": []}",
                 itemsRepo = itemsRepo,
-                openings = openings,
                 timeWindowRepo = timewindowRepo,
                 extrasRepository = extrasRepository)
 

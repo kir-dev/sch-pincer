@@ -3,7 +3,7 @@ package hu.kirdev.schpincer.web
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.servlet.HandlerMapping
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 @Controller
 open class FalatozoController {

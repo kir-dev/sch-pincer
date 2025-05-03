@@ -36,7 +36,7 @@ open class ItemService {
 
     @Transactional(readOnly = true)
     open fun getOne(itemId: Long): ItemEntity? {
-        return repo.getOne(itemId)
+        return repo.getReferenceById(itemId)
     }
 
     @Transactional(readOnly = false)

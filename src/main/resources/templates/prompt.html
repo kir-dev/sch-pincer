@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/">
-<head th:replace="MainLayout :: head">
+<head th:replace="~{MainLayout :: head}">
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
@@ -9,10 +9,10 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css"/>
 </head>
 <body>
-<div class="header" th:replace="MainLayout :: header">
+<div class="header" th:replace="~{MainLayout :: header}">
 </div>
 
-<div class="left-menu" th:replace="MainLayout :: left-menu">
+<div class="left-menu" th:replace="~{MainLayout :: left-menu}">
 </div>
 
 <div class="page content">
@@ -31,6 +31,6 @@
     </div>
 </div>
 
-<div th:replace="MainLayout :: footer"></div>
+<div th:replace="~{MainLayout :: footer}"></div>
 </body>
 </html>

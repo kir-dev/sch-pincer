@@ -9,7 +9,7 @@ import hu.kirdev.schpincer.model.ItemEntity
 import hu.kirdev.schpincer.model.OpeningEntity
 import hu.kirdev.schpincer.model.OrderStatus
 import hu.kirdev.schpincer.service.*
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.Operation
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.*
@@ -21,7 +21,7 @@ import java.lang.Integer.min
 import java.text.SimpleDateFormat
 import java.util.concurrent.ConcurrentHashMap
 import java.util.stream.Collectors
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 import kotlin.math.round
 
 @RestController
@@ -44,7 +44,7 @@ open class ApiController(
 
     private val apiTokens = apiTokensRaw.split(Regex(", *"))
 
-    @ApiOperation("Item info")
+    @Operation(summary = "Item info")
     @GetMapping("/item/{id}")
     @ResponseBody
     fun getItem(
@@ -60,7 +60,7 @@ open class ApiController(
         return ItemEntityDto(item, opening, loggedIn, loggedIn && explicitOpening > 0)
     }
 
-    @ApiOperation("List of items")
+    @Operation(summary = "List of items")
     @GetMapping("/items")
     @ResponseBody
     fun getAllItems(
@@ -96,7 +96,7 @@ open class ApiController(
         return ResponseEntity(list, HttpStatus.OK)
     }
 
-    @ApiOperation("List of items orderable right now")
+    @Operation(summary = "List of items orderable right now")
     @GetMapping("/items/now")
     @ResponseBody
     fun getAllItemsToday(request: HttpServletRequest): ResponseEntity<List<ItemEntityDto>> {
@@ -134,7 +134,7 @@ open class ApiController(
     data class SyncResponse(val circles: List<CircleResponse>, val openings: List<OpeningResponse>)
 
 
-    @ApiOperation("Endpoint for start.sch with current openings and all circles")
+    @Operation(summary = "Endpoint for start.sch with current openings and all circles")
     @GetMapping("/sync")
     @ResponseBody
     fun sync() : SyncResponse = SyncResponse(
@@ -156,7 +156,7 @@ open class ApiController(
         }
     )
 
-    @ApiOperation("List of ended openings before a given point in time")
+    @Operation(summary = "List of ended openings before a given point in time")
     @GetMapping("/openings/ended")
     @ResponseBody
     fun endedOpenings(
@@ -178,7 +178,7 @@ open class ApiController(
                 )
             }
 
-    @ApiOperation("List of items orderable tomorrow")
+    @Operation(summary = "List of items orderable tomorrow")
     @GetMapping("/items/tomorrow")
     @ResponseBody
     fun getAllItemsTomorrow(request: HttpServletRequest): ResponseEntity<List<ItemEntityDto>> {
@@ -206,7 +206,7 @@ open class ApiController(
                                var manualOrderDetails: ManualUserDetails? = null
     )
 
-    @ApiOperation("New order")
+    @Operation(summary = "New order")
     @PostMapping("/order")
     @ResponseBody
     @Throws(Exception::class)
@@ -232,7 +232,7 @@ open class ApiController(
 
     data class RoomChangeRequest(var room: String = "")
 
-    @ApiOperation("Set room code")
+    @Operation(summary = "Set room code")
     @PostMapping("/user/room")
     @ResponseBody
     fun setRoom(request: HttpServletRequest, @RequestBody(required = true) requestBody: RoomChangeRequest): String {
@@ -246,7 +246,7 @@ open class ApiController(
 
     data class DeleteRequestDto(var id: Long = 0)
 
-    @ApiOperation("Delete order")
+    @Operation(summary = "Delete order")
     @PostMapping("/order/delete")
     @ResponseBody
     fun deleteOrder(request: HttpServletRequest, @RequestBody(required = true) body: DeleteRequestDto): ResponseEntity<String> {
@@ -261,7 +261,7 @@ open class ApiController(
 
     data class ChangeRequestDto(var id: Long = 0, var room: String = "", var comment: String = "")
 
-    @ApiOperation("Change order")
+    @Operation(summary = "Change order")
     @PostMapping("/order/change")
     @ResponseBody
     fun changeOrder(request: HttpServletRequest, @RequestBody(required = true) body: ChangeRequestDto): ResponseEntity<String> {
@@ -366,9 +366,9 @@ open class ApiController(
         headers.set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
         headers.set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36")
 
-        val body: String = RestTemplate().exchange<String>("https://www.google.com/search?q=1+${currency}+to+huf", HttpMethod.GET, HttpEntity<String>(headers), String::class).body
-        val startIndex = body.indexOf("data-exchange-rate")
-        if (startIndex < 0)
+        val body: String? = RestTemplate().exchange<String>("https://www.google.com/search?q=1+${currency}+to+huf", HttpMethod.GET, HttpEntity<String>(headers), String::class).body
+        val startIndex = body?.indexOf("data-exchange-rate")
+        if (startIndex == null || startIndex < 0)
             return 0.0
         return body.substring(startIndex + 20, body.indexOf("\"", startIndex + 21)).toDoubleOrNull() ?: 0.0
     }
@@ -380,7 +380,7 @@ open class ApiController(
         val maxOverall = openingEntity.maxOrder - orders.sumOf { it.count }
         val available = min(maxOverall, orders.groupBy { it.orderedItem?.category ?: 0 }
             .map { pair -> pair.key to pair.value.sumOf { it.count } }
-            .map { pair ->
+            .maxOfOrNull { pair ->
                 when (ItemCategory.of(pair.first)) {
                     ItemCategory.DEFAULT -> maxOverall
                     ItemCategory.ALPHA -> openingEntity.maxAlpha - pair.second
@@ -389,8 +389,7 @@ open class ApiController(
                     ItemCategory.DELTA -> openingEntity.maxDelta - pair.second
                     ItemCategory.LAMBDA -> openingEntity.maxLambda - pair.second
                 }
-            }
-            .maxOrNull() ?: maxOverall)
+            } ?: maxOverall)
         return available
     }
 

@@ -16,7 +16,7 @@ import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 @Component
 class DI {
@@ -61,7 +61,7 @@ fun HttpServletRequest.getUserIfPresent() = if (hasUser()) DI.instance.users.get
 
 fun HttpServletRequest.getUserId() = this.session.getAttribute(USER_SESSION_ATTRIBUTE_NAME) as String
 
-fun HttpServletRequest.getOwnedCircles() = this.session.getAttribute(CIRCLE_OWNERSHIP_SESSION_ATTRIBUTE_NAME) as List<Long>
+fun HttpServletRequest.getOwnedCircles() = this.session.getAttribute(CIRCLE_OWNERSHIP_SESSION_ATTRIBUTE_NAME) as List<*>
 
 @Throws(NoSuchAlgorithmException::class)
 fun String.sha256(): String {

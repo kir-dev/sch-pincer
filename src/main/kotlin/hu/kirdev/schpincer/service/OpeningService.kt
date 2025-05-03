@@ -65,7 +65,7 @@ open class OpeningService {
 
     @Transactional(readOnly = true)
     open fun getOne(openingId: Long): OpeningEntity {
-        return repo.getOne(openingId)
+        return repo.getReferenceById(openingId)
     }
 
     @Transactional(readOnly = false)

@@ -22,8 +22,8 @@ import java.lang.Integer.max
 import java.lang.Integer.min
 import java.util.*
 import java.util.stream.Collectors
-import javax.servlet.http.HttpServletRequest
-import javax.validation.Valid
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.validation.Valid
 
 enum class PageTypes(val orientation: String) {
     PORTRAIT("portrait"),
@@ -683,10 +683,10 @@ open class ConfigureController {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circle", circles.getOne(circleId))
         model.addAttribute("reviewCount", reviewList.size)
-        model.addAttribute("avgQuality", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumBy { it.rateQuality } / reviewList.size.toFloat()) else null)
-        model.addAttribute("avgPrice", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumBy { it.ratePrice } / reviewList.size.toFloat()) else null)
-        model.addAttribute("avgSpeed", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumBy { it.rateSpeed } / reviewList.size.toFloat()) else null)
-        model.addAttribute("avgOverAll", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumBy { it.rateOverAll } / reviewList.size.toFloat()) else null)
+        model.addAttribute("avgQuality", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumOf { it.rateQuality } / reviewList.size.toFloat()) else null)
+        model.addAttribute("avgPrice", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumOf { it.ratePrice } / reviewList.size.toFloat()) else null)
+        model.addAttribute("avgSpeed", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumOf { it.rateSpeed } / reviewList.size.toFloat()) else null)
+        model.addAttribute("avgOverAll", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumOf { it.rateOverAll } / reviewList.size.toFloat()) else null)
         model.addAttribute("timeService", timeService)
         config.injectPublicValues(model)
         return "circleReviews"

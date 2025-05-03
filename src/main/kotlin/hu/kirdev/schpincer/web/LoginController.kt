@@ -8,7 +8,7 @@ import hu.kirdev.schpincer.model.CardType
 import hu.kirdev.schpincer.model.UserEntity
 import hu.kirdev.schpincer.service.CircleService
 import hu.kirdev.schpincer.service.UserService
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import java.util.*
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 const val USER_SESSION_ATTRIBUTE_NAME = "user_id"
 const val USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME = "user"
@@ -41,7 +41,7 @@ open class LoginController {
     @Value("\${schpincer.sysadmins:}")
     private lateinit var systemAdmins: String
 
-    @ApiOperation("Login re-entry point")
+    @Operation(summary = "Login re-entry point")
     @GetMapping("/loggedin")
     fun loggedIn(@RequestParam code: String, @RequestParam state: String, request: HttpServletRequest): String {
         if (buildUniqueState(request) != state)
@@ -149,7 +149,7 @@ open class LoginController {
         return authorities
     }
 
-    @ApiOperation("Redirection to the auth provider")
+    @Operation(summary = "Redirection to the auth provider")
     @GetMapping("/login")
     fun items(request: HttpServletRequest): String {
         return "redirect:" + authSch.generateLoginUrl(buildUniqueState(request),
@@ -161,7 +161,7 @@ open class LoginController {
                 + request.localAddr).sha256()
     }
 
-    @ApiOperation("Logout user")
+    @Operation(summary = "Logout user")
     @GetMapping("/logout")
     fun logout(request: HttpServletRequest): String {
         request.getSession(false)

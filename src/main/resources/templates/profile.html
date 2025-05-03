@@ -8,18 +8,18 @@
           th:remove="all">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" th:remove="all">
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" th:remove="all"/>
-    <object th:include="MainLayout :: head" th:remove="tag"></object>
-    <object th:include="fragments/lang :: script()" th:remove="tag"></object>
+    <object th:insert="~{MainLayout :: head}" th:remove="tag"></object>
+    <object th:insert="~{fragments/lang :: script()}" th:remove="tag"></object>
     <script src="../static/js/profile.js" th:src="@{/js/profile.js}"></script>
     <script th:inline="javascript">
         const URL_BASE = /*[[ @{/} ]]*/ "/";
     </script>
 </head>
 <body>
-<div class="header" th:replace="MainLayout :: header">
+<div class="header" th:replace="~{MainLayout :: header}">
 </div>
 
-<div class="left-menu" th:replace="MainLayout :: left-menu">
+<div class="left-menu" th:replace="~{MainLayout :: left-menu}">
 </div>
 
 <div class="page content profile-page">
@@ -235,7 +235,7 @@
     </div>
 </div>
 
-<div th:replace="MainLayout :: footer"></div>
+<div th:replace="~{MainLayout :: footer}"></div>
 
 <script th:inline="javascript">
     const orders = [[${ordersForDetails}]];

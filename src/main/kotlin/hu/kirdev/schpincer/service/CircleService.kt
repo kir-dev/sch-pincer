@@ -3,9 +3,7 @@ package hu.kirdev.schpincer.service
 import hu.kirdev.schpincer.dao.CircleRepository
 import hu.kirdev.schpincer.dao.OpeningRepository
 import hu.kirdev.schpincer.dto.CircleEntityInfoDto
-import hu.kirdev.schpincer.dto.RoleEntryDto
 import hu.kirdev.schpincer.model.CircleEntity
-import hu.kirdev.schpincer.web.sha256
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -43,7 +41,7 @@ open class CircleService {
 
     @Transactional(readOnly = true)
     open fun getOne(id: Long): CircleEntity? {
-        return repo.getOne(id)
+        return repo.getReferenceById(id)
     }
 
     @Transactional(readOnly = false)

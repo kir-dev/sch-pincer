@@ -24,7 +24,7 @@ class ChangeOrderProcedure(
     }
 
     private fun loadOrder() {
-        order = orderRepository.getOne(id)
+        order = orderRepository.getReferenceById(id)
     }
 
     private fun validatePrivilege() {

@@ -18,7 +18,7 @@ open class UserService {
 
     @Transactional(readOnly = true)
     open fun getById(uid: String): UserEntity {
-        return repo.getOne(uid)
+        return repo.getReferenceById(uid)
     }
 
     @Transactional(readOnly = true)
@@ -71,7 +71,7 @@ open class UserService {
     @Transactional(readOnly = false)
     open fun grantAdmin(uid: String): Boolean {
         val req: Optional<UserEntity> = repo.findById(uid)
-        if (!req.isPresent())
+        if (!req.isPresent)
             return false
         val user: UserEntity = req.get()
         user.sysadmin = true

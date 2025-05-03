@@ -42,7 +42,6 @@ docker-run:
 	docker run -d --name=schpincer --publish=80:80 \
 		--volume=$(mkfile_dir)docker/application-docker.properties:/opt/schpincer/application.properties \
 		--volume=schpincer-permanent-storage:/permanent/external/ \
-		--volume=schpincer-lucene-cache:/tmp/schpincer/search/ \
 		--network="host" \
 		schpincer:latest
 
@@ -62,7 +61,6 @@ docker-remove:
 
 docker-volume-create:
 	docker volume create --name schpincer-permanent-storage
-	docker volume create --name schpincer-lucene-cache
 
 new-publish:
 	docker build -t harbor.sch.bme.hu/org-kir-dev/sch-pincer -f docker/standalone-Dockerfile .

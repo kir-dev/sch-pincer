@@ -1,12 +1,10 @@
 package hu.kirdev.schpincer.model
 
-import org.hibernate.annotations.Proxy
 import java.io.Serializable
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "users")
-@Proxy(lazy = false)
 data class UserEntity(
 
         @Id

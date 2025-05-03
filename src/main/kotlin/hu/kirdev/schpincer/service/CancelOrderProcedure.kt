@@ -30,7 +30,7 @@ class CancelOrderProcedure(
     }
 
     internal fun loadOrder() {
-        order = orderRepository.getOne(id)
+        order = orderRepository.getReferenceById(id)
     }
 
     internal fun validatePrivilege() {
@@ -52,7 +52,7 @@ class CancelOrderProcedure(
     internal fun updateDetails() {
         order.status = OrderStatus.CANCELLED
         count = order.count
-        timeWindow = timeWindowRepo.getOne(order.intervalId)
+        timeWindow = timeWindowRepo.getReferenceById(order.intervalId)
     }
 
     internal fun updateRemainingCounts() {

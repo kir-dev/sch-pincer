@@ -51,7 +51,7 @@
         <ins th:if="${#arrays.contains(@environment.getActiveProfiles(),'local')}" class="profile-badge">DEV</ins>
         <ins th:if="${#arrays.contains(@environment.getActiveProfiles(),'staging')}" class="profile-badge">STAGING</ins>
         <nav>
-            <object th:include="fragments/menu :: menu(${user})" th:remove="tag"></object>
+            <object th:insert="~{fragments/menu :: menu(${user})}" th:remove="tag"></object>
         </nav>
     </div>
 
