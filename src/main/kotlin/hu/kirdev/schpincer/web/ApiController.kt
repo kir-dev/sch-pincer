@@ -1,5 +1,7 @@
 package hu.kirdev.schpincer.web
 
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonInclude.Include
 import hu.kirdev.schpincer.dto.ItemEntityDto
 import hu.kirdev.schpincer.dto.ManualUserDetails
 import hu.kirdev.schpincer.model.ItemCategory
@@ -15,7 +17,6 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.exchange
-import org.springframework.web.client.getForObject
 import java.lang.Integer.min
 import java.text.SimpleDateFormat
 import java.util.concurrent.ConcurrentHashMap
@@ -26,6 +27,7 @@ import kotlin.math.round
 @RestController
 @RequestMapping("/api")
 open class ApiController(
+        private val circles: CircleService,
         private val openings: OpeningService,
         private val items: ItemService,
         private val users: UserService,
@@ -113,6 +115,68 @@ open class ApiController(
                 .collect(Collectors.toList())
         return ResponseEntity(list, HttpStatus.OK)
     }
+
+    data class CircleResponse(val id: Long, val pekId: Long?, val name: String)
+
+    data class OpeningResponse(
+        val id: Long,
+        val circleId: Long?,
+        val feeling: String?,
+        val description: String?,
+        val start: Long,
+        val end: Long,
+        val orderingStart: Long,
+        val orderingEnd: Long,
+        @field:JsonInclude(Include.NON_NULL)
+        val outOfStock: Boolean?
+    )
+
+    data class SyncResponse(val circles: List<CircleResponse>, val openings: List<OpeningResponse>)
+
+
+    @ApiOperation("Endpoint for start.sch with current openings and all circles")
+    @GetMapping("/sync")
+    @ResponseBody
+    fun sync() : SyncResponse = SyncResponse(
+        circles = circles.findAll()
+            .filter { it.alias != "schami" }
+            .map { CircleResponse(it.id, it.virGroupId, it.displayName) },
+        openings = openings.findNextWeek().map {
+            OpeningResponse(
+                id = it.id,
+                circleId = it.circle?.id,
+                feeling = it.feeling,
+                description = it.eventDescription,
+                start = it.dateStart,
+                end = it.dateEnd,
+                orderingStart = it.orderStart,
+                orderingEnd = it.orderEnd,
+                outOfStock = calculateAvailable(it).coerceAtLeast(0) == 0
+            )
+        }
+    )
+
+    @ApiOperation("List of ended openings before a given point in time")
+    @GetMapping("/openings/ended")
+    @ResponseBody
+    fun endedOpenings(
+        @RequestParam before: Long,
+        @RequestParam(defaultValue = "100") count: Long
+    ): List<OpeningResponse> =
+        openings.findEndedBefore(before.coerceAtLeast(0), count.coerceAtLeast(1))
+            .map {
+                OpeningResponse(
+                    id = it.id,
+                    circleId = it.circle?.id,
+                    feeling = it.feeling,
+                    description = it.eventDescription,
+                    start = it.dateStart,
+                    end = it.dateEnd,
+                    orderingStart = it.orderStart,
+                    orderingEnd = it.orderEnd,
+                    outOfStock = null
+                )
+            }
 
     @ApiOperation("List of items orderable tomorrow")
     @GetMapping("/items/tomorrow")
