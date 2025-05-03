@@ -212,7 +212,7 @@ class MakeOrderProcedure (
             val name = answer.name
             for (selected in answer.selected) {
 
-                val optionalExtra = extrasRepository.findByCircleAndNameAndInputTypeAndSelectedIndex(current.circle!!, name, type, selected)
+                val optionalExtra = extrasRepository.findByItemAndNameAndInputTypeAndSelectedIndexAndActiveTrue(item, name, type, selected)
                 if (optionalExtra.isEmpty) {
                     throw IllegalArgumentException("${current.circle?.displayName ?: "null"} has no optional extra with input type $type and name $name")
                 }
