@@ -10,7 +10,7 @@ class TimeService {
 
     fun format(time: Any?, format: String): String? {
         return if (time == null) null else dateTimeByFormat
-                .computeIfAbsent(format, { SimpleDateFormat(it) })
+                .computeIfAbsent(format) { SimpleDateFormat(it) }
                 .format(time)
     }
 
