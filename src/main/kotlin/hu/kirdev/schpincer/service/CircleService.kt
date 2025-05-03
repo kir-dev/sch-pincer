@@ -41,6 +41,30 @@ open class CircleService {
         repo.save(circleEntity)
     }
 
+    private fun internalIncreaseInterestAndSave(circleEntity: CircleEntity): Long {
+        val newInterest = circleEntity.interestCounter;
+        repo.save(circleEntity)
+        return newInterest
+    }
+
+    @Transactional(readOnly = false)
+    open fun increaseInterest(id: Long): Long? {
+        val circleEntity = getOne(id)
+        if (circleEntity == null) {
+            return null // TODO throw error?
+        }
+        return internalIncreaseInterestAndSave(circleEntity)
+    }
+
+    @Transactional(readOnly = false)
+    open fun increaseInterestByAlias(alias: String): Long? {
+        val circleEntity = findByAlias(alias)
+        if (circleEntity == null) {
+            return null // TODO throw error?
+        }
+        return internalIncreaseInterestAndSave(circleEntity)
+    }
+
     @Transactional(readOnly = true)
     open fun getOne(id: Long): CircleEntity? {
         return repo.getOne(id)

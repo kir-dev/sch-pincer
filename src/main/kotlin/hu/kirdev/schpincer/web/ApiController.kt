@@ -446,6 +446,23 @@ open class ApiController(
 
     private val trashpandaVoters: ConcurrentHashMap<String, Int> = ConcurrentHashMap<String, Int>()
 
+    @ApiOperation("Increase interest in a provider's")
+    @PostMapping("/provider/{circle}/increaseInterest")
+    @ResponseBody
+    fun circleIncreaseInterest(@PathVariable circle: String): ResponseEntity<String> {
+        var result: Long?
+        if (circle.matches("^\\d+$".toRegex())) {
+            val id = circle.toLong()
+            result = circles.increaseInterest(id)
+        } else {
+            result = circles.increaseInterestByAlias(circle)
+        }
+        if (result != null) {
+            return responseOf("Invalid Circle")
+        }
+        return responseOf(""+result)
+    }
+
 //    @PostMapping("/easteregg/trashpanda/{feedback}")
 //    @ResponseBody
     fun trashpandaVote(
