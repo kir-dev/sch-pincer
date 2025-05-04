@@ -15,6 +15,7 @@ import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.whenever
+import java.time.Instant
 import java.util.*
 import kotlin.test.assertEquals
 
@@ -617,7 +618,7 @@ class MakeOrderTest {
     @Test
     fun `composite test`() {
         val opening = OpeningEntity(30, maxOrder = 5, dateStart = 0, dateEnd = 0, orderStart = 0,
-                orderEnd = System.currentTimeMillis() * 2, maxBeta = 10)
+                orderEnd = Instant.now().toEpochMilli() * 2, maxBeta = 10)
 
         val timeWindow = TimeWindowEntity(opening = opening, name = "6:00-8:00", date = 12, normalItemCount = 5, extraItemCount = 4)
         whenever(timewindowRepo.getReferenceById(40)).thenReturn(timeWindow)

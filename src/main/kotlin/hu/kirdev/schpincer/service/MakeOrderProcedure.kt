@@ -9,6 +9,7 @@ import hu.kirdev.schpincer.dto.OrderDetailsDto
 import hu.kirdev.schpincer.model.*
 import hu.kirdev.schpincer.web.component.*
 import hu.kirdev.schpincer.web.removeNonPrintable
+import java.time.Instant
 
 class FailedOrderException(val response: String) : RuntimeException()
 
@@ -49,7 +50,7 @@ class MakeOrderProcedure (
                     additionalComment = "via ${user.name}",
                     detailsJson = detailsJson,
                     room = manualUser.room,
-                    createdAt = System.currentTimeMillis())
+                    createdAt = Instant.now().toEpochMilli())
             item = itemsRepo.getReferenceById(id)
         }
 
@@ -59,7 +60,7 @@ class MakeOrderProcedure (
         order.orderedItem = item
         order.extras = getExtrasOfOrder()
         if (manualUser == null)
-            validateOrderable(System.currentTimeMillis())
+            validateOrderable(Instant.now().toEpochMilli())
 
         clampItemCount()
 
@@ -89,7 +90,7 @@ class MakeOrderProcedure (
                 comment = "[${user.cardType.name}] $comment",
                 detailsJson = detailsJson,
                 room = user.room,
-                createdAt = System.currentTimeMillis())
+                createdAt = Instant.now().toEpochMilli())
     }
 
     internal fun loadTargetItem() {

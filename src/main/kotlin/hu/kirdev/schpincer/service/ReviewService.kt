@@ -6,6 +6,7 @@ import hu.kirdev.schpincer.model.UserEntity
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 
 @Service
 open class ReviewService {
@@ -58,7 +59,7 @@ open class ReviewService {
                 rateQuality = rateQuality.between(1, 5),
                 ratePrice = ratePrice.between(1, 5),
                 rateOverAll = rateOverAll.between(1, 5),
-                date = System.currentTimeMillis()
+                date = Instant.now().toEpochMilli()
         )
         save(fullReview)
         orders.reviewOrder(orderId, fullReview.id)

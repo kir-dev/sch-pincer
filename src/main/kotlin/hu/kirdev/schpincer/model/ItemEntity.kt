@@ -13,7 +13,7 @@ data class ItemEntity(
 
         @Id
         @Column
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @GeneratedValue(strategy = GenerationType.AUTO)
         var id: Long = 0,
 
         @Column

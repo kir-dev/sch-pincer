@@ -1,11 +1,17 @@
 package hu.kirdev.schpincer.config
 
-import hu.gerviba.authsch.AuthSchAPI
-import org.springframework.boot.context.properties.ConfigurationProperties
+import hu.kirdev.schpincer.service.CircleService
+import hu.kirdev.schpincer.service.SchPincerOidcUserService
+import hu.kirdev.schpincer.service.UserService
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService
+import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.security.web.SecurityFilterChain
 
 enum class Role {
@@ -17,7 +23,12 @@ enum class Role {
 open class SecurityConfig {
 
     @Bean
-    open fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    open fun securityFilterChain(
+        http: HttpSecurity,
+        userService: UserService,
+        circleService: CircleService,
+        @Value("\${schpincer.sysadmins:}") admins: String
+    ): SecurityFilterChain {
         http.authorizeHttpRequests { auth ->
             auth.requestMatchers(
                 "/",
@@ -44,8 +55,10 @@ open class SecurityConfig {
             auth.requestMatchers("/configure/**").hasAnyRole(Role.LEADER.name, Role.ADMIN.name)
             auth.requestMatchers("/admin", "/admin/**").hasRole(Role.ADMIN.name)
             auth.anyRequest().permitAll()
-        }.formLogin { form ->
-            form.loginPage("/login")
+        }.oauth2Login {
+            it.userInfoEndpoint { endpoint ->
+                endpoint.oidcUserService(oidcUserService(userService, circleService, admins))
+            }
         }.csrf { csrf ->
             csrf.ignoringRequestMatchers(
                 "/api/**",
@@ -53,14 +66,15 @@ open class SecurityConfig {
                 "/configure/order/set-comment",
                 "/configure/order/change-price",
             )
-        }
+        }.cors(Customizer.withDefaults())
 
         return http.build()
     }
 
-    @Bean
-    @ConfigurationProperties(prefix = "authsch")
-    open fun authSchApi(): AuthSchAPI {
-        return AuthSchAPI()
-    }
+    private fun oidcUserService(
+        userService: UserService,
+        circleService: CircleService,
+        admins: String
+    ): OAuth2UserService<OidcUserRequest, OidcUser> = SchPincerOidcUserService(userService, circleService, admins)
+
 }

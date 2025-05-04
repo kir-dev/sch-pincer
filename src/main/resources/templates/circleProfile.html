@@ -65,7 +65,7 @@
                             <td><a href="#" target="_blank" th:href="${selectedCircle?.websiteUrl}"
                                    th:text="${selectedCircle} neq null ? #{lang.profile.open-url}">OPEN</a></td>
                         </tr>
-                        <tr th:if="${session.user} neq null">
+                        <tr th:if="${user} neq null">
                             <td th:text="#{lang.speedupbutton.label}">Speed the work up</td>
                             <td>
                                 <button th:text="#{lang.speedupbutton.button}" class="action-button">Work up!</button>

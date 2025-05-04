@@ -82,13 +82,13 @@
             Szeptember eleje óta összesen <b class="first" th:text="|${globalOrderedFoodCount} db|">4000 db</b> rendelést adtatok le kollektívan!
         </div>
 
-        <object th:remove="tag" th:if="${session.user?.cardType.name() != 'DO'}">
+        <object th:remove="tag" th:if="${user?.cardType.name() != 'DO'}">
         <h2>Igazi VIP vagy</h2>
         <img class="emoticon pulsate-fwd" src="https://openmoji.org/data/color/svg/1F381.svg" width="200px">
-        <div class="message" th:if="${session.user?.cardType.name() == 'AB'}">
+        <div class="message" th:if="${user?.cardType.name() == 'AB'}">
             Az <b>AB</b> kártyád után <b th:text="|${userKbAbExtra} db|">13db</b> extra feltétet kaptál ingyen!
         </div>
-        <div class="message" th:if="${session.user?.cardType.name() == 'KB'}">
+        <div class="message" th:if="${user?.cardType.name() == 'KB'}">
             A <b>KB</b> kártyád után <b th:text="|${userKbAbExtra} db|">13db</b> extra feltétet kaptál ingyen!
         </div>
         </object>

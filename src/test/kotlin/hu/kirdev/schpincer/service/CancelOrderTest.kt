@@ -14,6 +14,7 @@ import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.whenever
+import java.time.Instant
 import kotlin.test.assertEquals
 
 @ExtendWith(MockitoExtension::class)
@@ -277,7 +278,7 @@ class CancelOrderTest {
                 userName = "", comment = "", detailsJson = "", room = "")
         whenever(orderRepository.getReferenceById(4)).thenReturn(order)
         val opening = OpeningEntity(30, orderCount = 4, dateStart = 0, dateEnd = 0, orderStart = 0,
-                orderEnd = System.currentTimeMillis() * 2)
+                orderEnd = Instant.now().toEpochMilli() * 2)
         whenever(openings.getOne(30)).thenReturn(opening)
         val timeWindow = TimeWindowEntity(opening = opening, normalItemCount = 5, extraItemCount = 3)
         whenever(timeWindowRepo.getReferenceById(70)).thenReturn(timeWindow)

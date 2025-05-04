@@ -22,6 +22,8 @@ import java.text.SimpleDateFormat
 import java.util.concurrent.ConcurrentHashMap
 import java.util.stream.Collectors
 import jakarta.servlet.http.HttpServletRequest
+import org.springframework.security.core.Authentication
+import java.time.Instant
 import kotlin.math.round
 
 @RestController
@@ -50,12 +52,13 @@ open class ApiController(
     fun getItem(
             request: HttpServletRequest,
             @PathVariable id: Long,
-            @RequestParam(defaultValue = "0") explicitOpening: Long
+            @RequestParam(defaultValue = "0") explicitOpening: Long,
+            auth: Authentication?,
     ): ItemEntityDto? {
         val item = items.getOne(id)
-        if (item == null || (!request.hasUser() && !item.visibleWithoutLogin))
+        if (item == null || (auth?.isAuthenticated != true && !item.visibleWithoutLogin))
             return null
-        val loggedIn = request.hasUser() || request.isInInternalNetwork()
+        val loggedIn = auth?.isAuthenticated == true || request.isInInternalNetwork()
         val opening = if (explicitOpening != 0L) openings.getOne(explicitOpening) else openings.findNextOf(item.circle!!.id)
         return ItemEntityDto(item, opening, loggedIn, loggedIn && explicitOpening > 0)
     }
@@ -65,10 +68,11 @@ open class ApiController(
     @ResponseBody
     fun getAllItems(
             request: HttpServletRequest,
-            @RequestParam(required = false) circle: Long?
+            @RequestParam(required = false) circle: Long?,
+            auth: Authentication?,
     ): ResponseEntity<List<ItemEntityDto>> {
         val cache: MutableMap<Long, OpeningEntity?> = HashMap()
-        val loggedIn = request.hasUser()
+        val loggedIn = auth?.isAuthenticated == true || request.isInInternalNetwork()
         if (circle != null) {
             val list = items.findAllByCircle(circle).stream()
                     .filter { it.visibleWithoutLogin || loggedIn }
@@ -99,8 +103,8 @@ open class ApiController(
     @Operation(summary = "List of items orderable right now")
     @GetMapping("/items/now")
     @ResponseBody
-    fun getAllItemsToday(request: HttpServletRequest): ResponseEntity<List<ItemEntityDto>> {
-        val loggedIn = request.hasUser()
+    fun getAllItemsToday(request: HttpServletRequest, auth: Authentication?): ResponseEntity<List<ItemEntityDto>> {
+        val loggedIn = auth?.isAuthenticated == true || request.isInInternalNetwork()
         val cache: MutableMap<Long, OpeningEntity?> = HashMap()
         val list = items.findAllByOrderableNow().stream()
                 .filter { it.visibleWithoutLogin || loggedIn }
@@ -181,8 +185,8 @@ open class ApiController(
     @Operation(summary = "List of items orderable tomorrow")
     @GetMapping("/items/tomorrow")
     @ResponseBody
-    fun getAllItemsTomorrow(request: HttpServletRequest): ResponseEntity<List<ItemEntityDto>> {
-        val loggedIn = request.hasUser()
+    fun getAllItemsTomorrow(request: HttpServletRequest, auth: Authentication?): ResponseEntity<List<ItemEntityDto>> {
+        val loggedIn = auth?.isAuthenticated == true || request.isInInternalNetwork()
         val cache: MutableMap<Long, OpeningEntity?> = HashMap()
         val list = items.findAllByOrerableTomorrow().stream()
                 .filter { it.visibleWithoutLogin || loggedIn }
@@ -210,10 +214,10 @@ open class ApiController(
     @PostMapping("/order")
     @ResponseBody
     @Throws(Exception::class)
-    fun newOrder(request: HttpServletRequest, @RequestBody requestBody: NewOrderRequest): ResponseEntity<String> {
+    fun newOrder(auth: Authentication?, @RequestBody requestBody: NewOrderRequest): ResponseEntity<String> {
         if (requestBody.id < 0 || requestBody.time < 0 || requestBody.detailsJson == "{}")
             return ResponseEntity(RESPONSE_INTERNAL_ERROR, HttpStatus.OK)
-        val user = request.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
+        val user = auth.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
         return try {
             if (requestBody.manualOrderDetails != null) {
                 log.info("{}:{} is making a manual order with details: {}, for {}",
@@ -225,7 +229,7 @@ open class ApiController(
                     requestBody.comment, requestBody.detailsJson)
             }
         } catch (e: FailedOrderException) {
-            log.warn("Failed to make new order by '${request.getUserIfPresent()?.uid ?: "n/a"}' reason: ${e.response}")
+            log.warn("Failed to make new order by '${user.uid}' reason: ${e.response}")
             responseOf(e.response)
         }
     }
@@ -235,9 +239,9 @@ open class ApiController(
     @Operation(summary = "Set room code")
     @PostMapping("/user/room")
     @ResponseBody
-    fun setRoom(request: HttpServletRequest, @RequestBody(required = true) requestBody: RoomChangeRequest): String {
+    fun setRoom(auth: Authentication?, @RequestBody(required = true) requestBody: RoomChangeRequest): String {
         return try {
-            request.session.setAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME, users.setRoom(request.getUserId(), requestBody.room))
+            users.setRoom(auth.getUserId()!!, requestBody.room)
             "ACK"
         } catch (e: Exception) {
             "REJECT"
@@ -249,12 +253,12 @@ open class ApiController(
     @Operation(summary = "Delete order")
     @PostMapping("/order/delete")
     @ResponseBody
-    fun deleteOrder(request: HttpServletRequest, @RequestBody(required = true) body: DeleteRequestDto): ResponseEntity<String> {
-        val user = request.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
+    fun deleteOrder(auth: Authentication?, @RequestBody(required = true) body: DeleteRequestDto): ResponseEntity<String> {
+        val user = auth.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
         return try {
             orders.cancelOrder(user, body.id)
         } catch (e: FailedOrderException) {
-            log.warn("Failed to cancel order by '${request.getUserIfPresent()?.uid ?: "n/a"}' reason: ${e.response}")
+            log.warn("Failed to cancel order by '${user.uid ?: "n/a"}' reason: ${e.response}")
             responseOf(e.response)
         }
     }
@@ -264,12 +268,12 @@ open class ApiController(
     @Operation(summary = "Change order")
     @PostMapping("/order/change")
     @ResponseBody
-    fun changeOrder(request: HttpServletRequest, @RequestBody(required = true) body: ChangeRequestDto): ResponseEntity<String> {
-        val user = request.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
+    fun changeOrder(auth: Authentication?, @RequestBody(required = true) body: ChangeRequestDto): ResponseEntity<String> {
+        val user = auth.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
         return try {
             orders.changeOrder(user, body.id, body.room, body.comment)
         } catch (e: FailedOrderException) {
-            log.warn("Failed to change order by '${request.getUserIfPresent()?.uid ?: "n/a"}' reason: ${e.response}")
+            log.warn("Failed to change order by '${user.uid}' reason: ${e.response}")
             responseOf(e.response)
         }
     }
@@ -283,8 +287,8 @@ open class ApiController(
     @GetMapping("/time")
     @ResponseBody
     fun time(): String {
-        return "Time: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z").format(System.currentTimeMillis())}\n" +
-                "Timestamp: ${System.currentTimeMillis()}"
+        return "Time: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z").format(Instant.now().toEpochMilli())}\n" +
+                "Timestamp: ${Instant.now().toEpochMilli()}"
     }
 
     data class OpeningDetail(
@@ -312,7 +316,7 @@ open class ApiController(
 
         val openings = openings.findNextWeek()
             .filter { it.circle != null }
-            .filter { it.orderStart + it.compensationTime <= System.currentTimeMillis() }
+            .filter { it.orderStart + it.compensationTime <= Instant.now().toEpochMilli() }
             .map { openingEntity ->
                 OpeningDetail(
                     name = openingEntity.circle?.displayName ?: "n/a",
@@ -393,95 +397,4 @@ open class ApiController(
         return available
     }
 
-    data class UpcomingOpeningDetail(
-            var name: String,
-            var orderStart: Long,
-            var openingStart: Long,
-            var icon: String?,
-            var feeling: String,
-            var available: Int,
-            var outOf: Int,
-            var banner: String?,
-            var day: String,
-            var comment: String,
-            var circleUrl: String,
-            var circleColor: String
-    )
-
-    @CrossOrigin(origins = ["*"])
-    @GetMapping("/open/upcoming-openings")
-    @ResponseBody
-    fun upcomingOpeningsApiDeprecated(@RequestParam(required = false) token: String?): List<UpcomingOpeningDetail> {
-        return listOf(UpcomingOpeningDetail("This feature is deprecated", 0, 0,null,
-            "sad", 0, 0, null, "",
-            "Contact the administrator if you think this is a problem", "", ""))
-    }
-
-    fun upcomingOpeningsApi(@RequestParam(required = false) token: String?): List<UpcomingOpeningDetail> {
-        if (token.isNullOrBlank() || !apiTokens.contains(token))
-            return listOf(UpcomingOpeningDetail("Invalid Token", 0, 0,null,
-                    "sad", 0, 0, null, "",
-                    "Contact the administrator if you think this is a problem", "", ""))
-
-        return openings.findNextWeek()
-                .filter { it.circle != null }
-                .map { openingEntity ->
-                    UpcomingOpeningDetail(
-                        name = openingEntity.circle?.displayName ?: "n/a",
-                        orderStart = openingEntity.orderStart,
-                        openingStart = openingEntity.dateStart,
-                        icon =  openingEntity.circle?.logoUrl?.let { url -> baseUrl + url },
-                        feeling = openingEntity.feeling ?: "",
-                        available = calculateAvailable(openingEntity).coerceAtLeast(0),
-                        outOf = openingEntity.maxOrder,
-                        banner = openingEntity.prUrl.let { url -> baseUrl + url },
-                        day = timeService.format(openingEntity.dateStart, "u")?.toInt().let { daysOfTheWeek[it ?: 0] },
-                        comment = "${timeService.format(openingEntity.orderEnd, "u")?.toInt().let { daysOfTheWeek[it ?: 0] }} " +
-                                "${timeService.format(openingEntity.orderEnd, "HH:mm")}-ig rendelhető",
-                        circleUrl = openingEntity.circle?.alias?.let { alias -> baseUrl + "p/" + alias } ?: (baseUrl + "p/" + (openingEntity.circle?.id ?: 0)),
-                        circleColor = openingEntity.circle?.cssClassName ?: "none"
-                ) }
-    }
-
-    private val trashpandaVoters: ConcurrentHashMap<String, Int> = ConcurrentHashMap<String, Int>()
-
-//    @PostMapping("/easteregg/trashpanda/{feedback}")
-//    @ResponseBody
-    fun trashpandaVote(
-            request: HttpServletRequest,
-            @PathVariable feedback: Int
-    ): String {
-        val ip = request.remoteAddr ?: ""
-        if (trashpandaVoters.containsKey(ip)) {
-            if (feedback == 1 || feedback == 2)
-                trashpandaVoters[ip] = feedback
-        } else {
-            trashpandaVoters[ip] = feedback
-        }
-        return "OK"
-    }
-
-//    @GetMapping("/admin/trashpanda")
-//    @ResponseBody
-    fun trashpandaShow(request: HttpServletRequest): String {
-        if (request.getUserIfPresent()?.sysadmin == true) {
-            return "Good: " + trashpandaVoters.values.count { it == 1 } +
-                    " Bad: " + trashpandaVoters.values.count { it == 2 } +
-                    " OK: " + trashpandaVoters.values.count { it == 3 } +
-                    " Side: " + trashpandaVoters.values.count { it == 4 } +
-                    " HACK: " + trashpandaVoters.values.count { it < 1 || it > 4 }
-        } else {
-            return "Nice try!"
-        }
-    }
-
-//    @GetMapping("/admin/trashpanda/raw")
-//    @ResponseBody
-    fun trashpandaShowRaw(request: HttpServletRequest): String {
-        if (request.getUserIfPresent()?.sysadmin == true) {
-            return trashpandaVoters.entries.toString()
-        } else {
-            return "Nice try!"
-        }
-    }
 }

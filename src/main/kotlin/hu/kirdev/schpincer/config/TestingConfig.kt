@@ -74,12 +74,12 @@ class TestingConfig {
         circleMembers.save(CircleMemberEntity(0, circle, "Valami József", "Tag", "demo/profile-pic-1.jpg", 0))
         circleMembers.save(CircleMemberEntity(0, circle, "Valami Attila", "Tag", "demo/profile-pic-1.jpg", 0))
         //        reviews.save(new ReviewEntity(circle, "Szabó Gergely", LONG_LOREM_IPSUM,
-//                System.currentTimeMillis(), 5, 3, 5, 5));
+//                Instant.now().toEpochMilli(), 5, 3, 5, 5));
 //        reviews.save(new ReviewEntity(circle, "Kredit Huszár", "Csicskagyász ez a kör",
-//                System.currentTimeMillis() - 400000000, 1, 1, 1, 1));
+//                Instant.now().toEpochMilli() - 400000000, 1, 1, 1, 1));
 //        reviews.save(new ReviewEntity(circle, "Tavasz Gábor",
 //                "Tesz szöveg. Teszt értékelés. A kockázatok és a mellékhatások pls...",
-//                System.currentTimeMillis() + 332112300, 4, 5, 4, 4));
+//                Instant.now().toEpochMilli() + 332112300, 4, 5, 4, 4));
         items.save(ItemEntity(0, "Albínó Batman", circle,
                 "Fokhagymás alap, Pick szalámi, Lilahagyma, Kukorica, Mozzarella",
                 "Fokhagymás alap, Pick szalámi, Lilahagyma, Kukorica, Mozzarella",
@@ -356,7 +356,7 @@ class TestingConfig {
     }
 
     private fun fromNow(minutes: Int): Long {
-        return System.currentTimeMillis() + minutes * 60000
+        return Instant.now().toEpochMilli() + minutes * 60000
     }
 
 }

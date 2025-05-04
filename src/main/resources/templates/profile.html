@@ -27,14 +27,14 @@
         <div class="decoration profile">
             <i class="material-icons main">person</i>
         </div>
-        <h4 th:text="${session.user?.name}" class="user">User Name</h4>
+        <h4 th:text="${user?.name}" class="user">User Name</h4>
         <table class="profile">
             <tr>
                 <td><i class="material-icons">room</i></td>
                 <td th:text="#{lang.profile.room}">Room</td>
                 <td>
 						<span class="edit">
-							<span id="room" th:text="${session.user?.room} ?: #{lang.profile.not-set}">SCH 1920</span>
+							<span id="room" th:text="${user?.room} ?: #{lang.profile.not-set}">SCH 1920</span>
 							<a id="room-edit" href="#" onclick="showEdit(); return false"><i
                                     class="material-icons">edit</i></a>
 							<form id="room-form" style="display: none" onsubmit="setRoom(); return false" action="#"
@@ -53,12 +53,12 @@
             <tr>
                 <td><i class="material-icons">credit_card</i></td>
                 <td th:text="#{lang.profile.card-type}">Card type</td>
-                <td th:text="#{lang.profile.card-type-__${session.user?.cardType}__}">DO</td>
+                <td th:text="#{lang.profile.card-type-__${user?.cardType}__}">DO</td>
             </tr>
-            <tr th:if="${session.user.orderingPriority > 1}">
+            <tr th:if="${user.orderingPriority > 1}">
                 <td><i class="material-icons">insert_chart_outlined</i></td>
                 <td th:text="#{lang.profile.priority}"></td>
-                <td th:text="${session.user?.orderingPriority}">100</td>
+                <td th:text="${user?.orderingPriority}">100</td>
             </tr>
             <tr>
                 <td><i class="material-icons">fingerprint</i></td>
@@ -102,7 +102,7 @@
 
 
                     <a href="#"
-                       th:if="${order.cancelUntil >= T(java.lang.System).currentTimeMillis() && #strings.equals(order.status, 'ACCEPTED')}"
+                       th:if="${order.cancelUntil >= T(java.time.Instant).now().toEpochMilli() && #strings.equals(order.status, 'ACCEPTED')}"
                        th:onclick="'if (confirm(`'+ #{lang.profile.orders-cancel-confirm} +'`)) cancelItem('+ ${order.id} +'); return false'">
                         <i class="material-icons">delete</i>
                     </a>
@@ -112,10 +112,10 @@
                 </td>
                 <td>
                     <text th:text="*{room}">SCH 1037</text>
-                    <a href="#" th:onclick="|openModalWithOrder(${order.id}); return false|" th:if="${order.cancelUntil >= T(java.lang.System).currentTimeMillis() && #strings.equals(order.status, 'ACCEPTED')}" class="orders-product-name">
+                    <a href="#" th:onclick="|openModalWithOrder(${order.id}); return false|" th:if="${order.cancelUntil >= T(java.time.Instant).now().toEpochMilli() && #strings.equals(order.status, 'ACCEPTED')}" class="orders-product-name">
                         <i class="material-icons">edit</i>
                     </a>
-                    <a href="#" th:onclick="|openModalWithOrder(${order.id}); return false|" th:unless="${order.cancelUntil >= T(java.lang.System).currentTimeMillis() && #strings.equals(order.status, 'ACCEPTED')}" class="orders-product-name">
+                    <a href="#" th:onclick="|openModalWithOrder(${order.id}); return false|" th:unless="${order.cancelUntil >= T(java.time.Instant).now().toEpochMilli() && #strings.equals(order.status, 'ACCEPTED')}" class="orders-product-name">
                         <i class="material-icons">info</i>
                     </a>
                 </td>
@@ -154,7 +154,7 @@
                            th:title="#{lang.profile.status-cancelled}">do_not_disturb</i>
 
                         <a href="#" th:onclick="'cancelItem(' + ${order.id} + '); return false'"
-                           th:if="${order.cancelUntil >= T(java.lang.System).currentTimeMillis() && #strings.equals(order.status, 'ACCEPTED')}">
+                           th:if="${order.cancelUntil >= T(java.time.Instant).now().toEpochMilli() && #strings.equals(order.status, 'ACCEPTED')}">
                             <i class="material-icons">delete</i>
                         </a>
                     </td>
@@ -171,10 +171,10 @@
                     <td th:text="#{lang.profile.orders-room}">Room</td>
                     <td>
                         <text th:text="*{room}">SCH 1037</text>
-                        <a href="#" th:onclick="|openModalWithOrder(${order.id}); return false|" th:if="${order.cancelUntil >= T(java.lang.System).currentTimeMillis() && #strings.equals(order.status, 'ACCEPTED')}" class="orders-product-name">
+                        <a href="#" th:onclick="|openModalWithOrder(${order.id}); return false|" th:if="${order.cancelUntil >= T(java.time.Instant).now().toEpochMilli() && #strings.equals(order.status, 'ACCEPTED')}" class="orders-product-name">
                             <i class="material-icons">edit</i>
                         </a>
-                        <a href="#" th:onclick="|openModalWithOrder(${order.id}); return false|" th:unless="${order.cancelUntil >= T(java.lang.System).currentTimeMillis() && #strings.equals(order.status, 'ACCEPTED')}" class="orders-product-name">
+                        <a href="#" th:onclick="|openModalWithOrder(${order.id}); return false|" th:unless="${order.cancelUntil >= T(java.time.Instant).now().toEpochMilli() && #strings.equals(order.status, 'ACCEPTED')}" class="orders-product-name">
                             <i class="material-icons">info</i>
                         </a>
                     </td>

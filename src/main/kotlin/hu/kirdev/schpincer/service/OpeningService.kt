@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.util.*
 
 @Service
@@ -32,19 +33,19 @@ open class OpeningService {
 
     @Transactional(readOnly = true)
     open fun findUpcomingOpenings(): List<OpeningEntity> {
-        return repo.findAllByOrderEndGreaterThanOrderByDateStart(System.currentTimeMillis())
+        return repo.findAllByOrderEndGreaterThanOrderByDateStart(Instant.now().toEpochMilli())
     }
 
     @Transactional(readOnly = true)
     open fun findNextWeek(): List<OpeningEntity> {
         return repo.findAllByDateEndGreaterThanAndDateEndLessThanOrderByDateStart(
-                System.currentTimeMillis(),
-                System.currentTimeMillis() + WEEK)
+                Instant.now().toEpochMilli(),
+                Instant.now().toEpochMilli() + WEEK)
     }
 
     @Transactional(readOnly = true)
     open fun findEndedBefore(before: Long, limit: Long): List<OpeningEntity> {
-        return repo.findAllEndedOpeningsBefore(System.currentTimeMillis(), before, limit)
+        return repo.findAllEndedOpeningsBefore(Instant.now().toEpochMilli(), before, limit)
     }
 
     @Transactional(readOnly = false)
@@ -54,12 +55,12 @@ open class OpeningService {
 
     @Transactional(readOnly = true)
     open fun findNextOf(id: Long): OpeningEntity? {
-        return repo.findFirstByCircle_IdAndDateEndGreaterThanOrderByDateStart(id, System.currentTimeMillis()).orElse(null)
+        return repo.findFirstByCircle_IdAndDateEndGreaterThanOrderByDateStart(id, Instant.now().toEpochMilli()).orElse(null)
     }
 
     @Transactional(readOnly = true)
     open fun findNextStartDateOf(id: Long): Long? {
-        val opening: Optional<OpeningEntity> = repo.findFirstByCircle_IdAndDateEndGreaterThanOrderByDateStart(id, System.currentTimeMillis())
+        val opening: Optional<OpeningEntity> = repo.findFirstByCircle_IdAndDateEndGreaterThanOrderByDateStart(id, Instant.now().toEpochMilli())
         return opening.map(OpeningEntity::dateStart).orElse(null)
     }
 

@@ -44,9 +44,9 @@ open class UserService {
     @Transactional(readOnly = true)
     open fun findAllCircleRole(circleId: Long): List<CircleRoleEntryDto> {
         return repo.findAll()
-                .filter { !it.sysadmin }
-                .map { CircleRoleEntryDto(it, circleId) }
-                .sortedWith(compareBy<CircleRoleEntryDto> { it.permission }.thenBy { it.name })
+            .filter { !it.sysadmin }
+            .map { CircleRoleEntryDto(it, circleId) }
+            .sortedWith(compareBy<CircleRoleEntryDto> { it.permission }.thenBy { it.name })
     }
 
     @Transactional(readOnly = true)

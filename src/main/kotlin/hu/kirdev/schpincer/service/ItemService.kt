@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 import java.util.*
 
 const val DAY_IN_MILLIS = 24 * 60 * 60 * 1000
@@ -63,7 +64,7 @@ open class ItemService {
 
     @Transactional(readOnly = true)
     open fun findAllByOrderableNow(): List<ItemEntity> {
-        val time = System.currentTimeMillis()
+        val time = Instant.now().toEpochMilli()
         val circles = openingRepo.findAllByOrderStartLessThanAndOrderEndGreaterThan(time, time)
                 .map { opening -> opening.circle?.id!! }
         return repo.findAllByCircle_IdInOrderByPrecedenceDesc(circles)
@@ -71,7 +72,7 @@ open class ItemService {
 
     @Transactional(readOnly = true)
     open fun findAllByOrerableTomorrow(): List<ItemEntity> {
-        val time1 = getJustDateFrom(System.currentTimeMillis()) + DAY_IN_MILLIS
+        val time1 = getJustDateFrom(Instant.now().toEpochMilli()) + DAY_IN_MILLIS
         val time2 = time1 + DAY_IN_MILLIS + HOUR6_IN_MILLIS
         val circles = openingRepo.findAllByOrderStartGreaterThanAndOrderStartLessThan(time1, time2)
                 .map { opening -> opening.circle?.id!! }

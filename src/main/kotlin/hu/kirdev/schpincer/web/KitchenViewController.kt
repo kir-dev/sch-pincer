@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import jakarta.servlet.http.HttpServletRequest
+import org.springframework.security.core.Authentication
 
 @Controller
 class KitchenViewController {
@@ -27,9 +28,9 @@ class KitchenViewController {
             @PathVariable circleId: Long,
             @PathVariable openingId: Long,
             model: Model,
-            request: HttpServletRequest
+            auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/profile"
 
         model.addAttribute("openingId", openingId)
@@ -42,9 +43,9 @@ class KitchenViewController {
             @PathVariable circleId: Long,
             @PathVariable openingId: Long,
             model: Model,
-            request: HttpServletRequest
+            auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/profile"
 
         model.addAttribute("openingId", openingId)
@@ -57,9 +58,9 @@ class KitchenViewController {
             @PathVariable circleId: Long,
             @PathVariable openingId: Long,
             model: Model,
-            request: HttpServletRequest
+            auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/profile"
 
         model.addAttribute("openingId", openingId)
@@ -72,9 +73,9 @@ class KitchenViewController {
             @PathVariable circleId: Long,
             @PathVariable openingId: Long,
             model: Model,
-            request: HttpServletRequest
+            auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/profile"
 
         model.addAttribute("openingId", openingId)
@@ -88,9 +89,9 @@ class KitchenViewController {
             @PathVariable circleId: Long,
             @PathVariable openingId: Long,
             model: Model,
-            request: HttpServletRequest
+            auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/profile"
 
         model.addAttribute("openingId", openingId)
@@ -103,9 +104,9 @@ class KitchenViewController {
             @PathVariable circleId: Long,
             @PathVariable openingId: Long,
             model: Model,
-            request: HttpServletRequest
+            auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/profile"
 
         model.addAttribute("openingId", openingId)
@@ -118,9 +119,9 @@ class KitchenViewController {
             @PathVariable circleId: Long,
             @PathVariable openingId: Long,
             model: Model,
-            request: HttpServletRequest
+            auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/profile"
 
         model.addAttribute("openingId", openingId)
@@ -135,9 +136,9 @@ class KitchenViewController {
     fun fetchHandOver(
             @PathVariable circleId: Long,
             @PathVariable openingId: Long,
-            request: HttpServletRequest
+            auth: Authentication?
     ): List<KitchenOrderDto> {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return listOf()
 
         val openingIntervalLength = openings.getOne(openingId).intervalLength
@@ -154,9 +155,9 @@ class KitchenViewController {
     fun fetchKitchen(
             @PathVariable circleId: Long,
             @PathVariable openingId: Long,
-            request: HttpServletRequest
+            auth: Authentication?
     ): List<KitchenOrderDto> {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return listOf()
 
         val openingIntervalLength = openings.getOne(openingId).intervalLength
@@ -175,9 +176,9 @@ class KitchenViewController {
     fun fetchMerged(
             @PathVariable circleId: Long,
             @PathVariable openingId: Long,
-            request: HttpServletRequest
+            auth: Authentication?
     ): List<KitchenOrderDto> {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return listOf()
 
         val openingIntervalLength = openings.getOne(openingId).intervalLength
@@ -197,9 +198,9 @@ class KitchenViewController {
     fun fetchShipping(
             @PathVariable circleId: Long,
             @PathVariable openingId: Long,
-            request: HttpServletRequest
+            auth: Authentication?
     ): List<KitchenOrderDto> {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return listOf()
 
         val openingIntervalLength = openings.getOne(openingId).intervalLength
@@ -216,9 +217,9 @@ class KitchenViewController {
     fun fetchShipped(
             @PathVariable circleId: Long,
             @PathVariable openingId: Long,
-            request: HttpServletRequest
+            auth: Authentication?
     ): List<KitchenOrderDto> {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return listOf()
 
         val openingIntervalLength = openings.getOne(openingId).intervalLength
@@ -235,9 +236,9 @@ class KitchenViewController {
             @PathVariable view: String,
             @PathVariable orderId: Long,
             @PathVariable status: String,
-            request: HttpServletRequest
+            auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/api/kitchen-view/${circleId}/${openingId}/${view}"
 
         orders.updateStatus(orderId, status)
@@ -254,9 +255,9 @@ class KitchenViewController {
             @PathVariable view: String,
             @PathVariable orderId: Long,
             @RequestBody comment: ChefCommentDto,
-            request: HttpServletRequest
+            auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/api/kitchen-view/${circleId}/${openingId}/${view}"
 
         orders.updateChefComment(orderId, comment.comment)
@@ -276,9 +277,9 @@ class KitchenViewController {
             @PathVariable circleId: Long,
             @PathVariable openingId: Long,
             @RequestBody searchTerms: SearchTermsDto,
-            request: HttpServletRequest
+            auth: Authentication?
     ): List<UserSearchResultDto> {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return listOf()
 
         return if (searchTerms.name.isNotBlank()) {
@@ -307,9 +308,9 @@ class KitchenViewController {
     fun gatherStats(
             @PathVariable circleId: Long,
             @PathVariable openingId: Long,
-            request: HttpServletRequest
+            auth: Authentication?
     ): List<TimeWindowStatDto> {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return listOf()
 
         val intervals = orders.findAllByOpening(openingId)

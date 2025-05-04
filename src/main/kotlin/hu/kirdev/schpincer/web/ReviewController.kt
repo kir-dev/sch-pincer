@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import jakarta.servlet.http.HttpServletRequest
+import org.springframework.security.core.Authentication
 
 @Controller
 open class ReviewController {
@@ -33,10 +34,10 @@ open class ReviewController {
 
     @Operation(summary = "Review order page")
     @GetMapping("/review/{orderId}")
-    fun rateOrder(@PathVariable orderId: Long, request: HttpServletRequest, model: Model): String? {
+    fun rateOrder(@PathVariable orderId: Long, auth: Authentication?, model: Model): String? {
         val order = orders.getOne(orderId)
         val circleId = orders.getCircleIdByOrderId(orderId)
-        if (!request.hasUser() || order == null || order.status != OrderStatus.SHIPPED || circleId == null || order.reviewId != null) {
+        if (!auth.hasUser() || order == null || order.status != OrderStatus.SHIPPED || circleId == null || order.reviewId != null) {
             throw Exception("Requirements before reviewing order are not met!")
         }
 
@@ -56,13 +57,13 @@ open class ReviewController {
                   @RequestParam(required = true) ratePrice: Int,
                   @RequestParam(required = true) rateSpeed: Int,
                   @RequestParam(required = true) rateOverAll: Int,
-                  request: HttpServletRequest
+                  auth: Authentication?
     ): String {
         val order = orders.getOne(orderId)
-        if (!request.hasUser() || order == null || order.status != OrderStatus.SHIPPED || order.reviewId != null) {
+        if (!auth.hasUser() || order == null || order.status != OrderStatus.SHIPPED || order.reviewId != null) {
             throw Exception("Requirements before reviewing order are not met!")
         }
-        val user = request.getUserIfPresent()!!
+        val user = auth.getUserIfPresent()!!
         reviews.createReview(user, orderId, review ?: "", rateQuality, ratePrice, rateSpeed, rateOverAll)
         return "redirect:/profile"
     }

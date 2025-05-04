@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Size
 data class CircleEntity(
         @Id
         @Column
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @GeneratedValue(strategy = GenerationType.AUTO)
         var id: Long = 0,
 
         @Size(min = 2, max = 32)
