@@ -1,6 +1,7 @@
 package hu.kirdev.schpincer.model
 
 import java.io.Serializable
+import org.hibernate.annotations.BatchSize
 import jakarta.persistence.*
 
 @Entity
@@ -28,6 +29,7 @@ data class UserEntity(
 
         @Column
         @ElementCollection(fetch = FetchType.EAGER)
+        @BatchSize(size = 1000)
         var permissions: Set<String> = mutableSetOf(),
 
         @Column(nullable = false)
