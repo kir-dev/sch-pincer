@@ -15,7 +15,7 @@
 spring.security.oauth2.client.registration.authsch.client-id=AUTHSCHKLIENSAZONOSITO
 spring.security.oauth2.client.registration.authsch.client-secret=AUTHSCHKLIENSKULCS
 
-spring.datasource.url=jdbc:mysql://127.0.0.1:3306/schpincer?useSSL=false&useUnicode=yes&characterEncoding=utf8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC  
+spring.datasource.url=jdbc:mysql://127.0.0.1:3306/schpincer?useSSL=false&useUnicode=yes&characterEncoding=utf8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
 spring.datasource.username=schpincer
 spring.datasource.password=mypassword
 
@@ -38,9 +38,9 @@ spring.jpa.hibernate.ddl-auto=update
 - Make sure you've logged in at least once
 - Use eg. this query to grant yourself sysadmin, or set `schincer.sysadmin=YOUR_AUTHSCH_UUID` in your `application-local.properties`
 
-```sql  
+```sql
 `UPDATE `users` SET `sysadmin`=1 WHERE `email`='YOUR_EMAIL';`  
-```  
+```
 
 - Relog (log out and in)
 - You will now see the two administration buttons  
