@@ -9,7 +9,7 @@ import hu.kirdev.schpincer.model.ItemEntity
 import hu.kirdev.schpincer.model.OpeningEntity
 import hu.kirdev.schpincer.model.OrderStatus
 import hu.kirdev.schpincer.service.*
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.Operation
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.*
@@ -21,7 +21,9 @@ import java.lang.Integer.min
 import java.text.SimpleDateFormat
 import java.util.concurrent.ConcurrentHashMap
 import java.util.stream.Collectors
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
+import org.springframework.security.core.Authentication
+import java.time.Instant
 import kotlin.math.round
 
 @RestController
@@ -44,31 +46,33 @@ open class ApiController(
 
     private val apiTokens = apiTokensRaw.split(Regex(", *"))
 
-    @ApiOperation("Item info")
+    @Operation(summary = "Item info")
     @GetMapping("/item/{id}")
     @ResponseBody
     fun getItem(
             request: HttpServletRequest,
             @PathVariable id: Long,
-            @RequestParam(defaultValue = "0") explicitOpening: Long
+            @RequestParam(defaultValue = "0") explicitOpening: Long,
+            auth: Authentication?,
     ): ItemEntityDto? {
         val item = items.getOne(id)
-        if (item == null || (!request.hasUser() && !item.visibleWithoutLogin))
+        if (item == null || (auth?.isAuthenticated != true && !item.visibleWithoutLogin))
             return null
-        val loggedIn = request.hasUser() || request.isInInternalNetwork()
+        val loggedIn = auth?.isAuthenticated == true || request.isInInternalNetwork()
         val opening = if (explicitOpening != 0L) openings.getOne(explicitOpening) else openings.findNextOf(item.circle!!.id)
         return ItemEntityDto(item, opening, loggedIn, loggedIn && explicitOpening > 0)
     }
 
-    @ApiOperation("List of items")
+    @Operation(summary = "List of items")
     @GetMapping("/items")
     @ResponseBody
     fun getAllItems(
             request: HttpServletRequest,
-            @RequestParam(required = false) circle: Long?
+            @RequestParam(required = false) circle: Long?,
+            auth: Authentication?,
     ): ResponseEntity<List<ItemEntityDto>> {
         val cache: MutableMap<Long, OpeningEntity?> = HashMap()
-        val loggedIn = request.hasUser()
+        val loggedIn = auth?.isAuthenticated == true || request.isInInternalNetwork()
         if (circle != null) {
             val list = items.findAllByCircle(circle).stream()
                     .filter { it.visibleWithoutLogin || loggedIn }
@@ -96,11 +100,11 @@ open class ApiController(
         return ResponseEntity(list, HttpStatus.OK)
     }
 
-    @ApiOperation("List of items orderable right now")
+    @Operation(summary = "List of items orderable right now")
     @GetMapping("/items/now")
     @ResponseBody
-    fun getAllItemsToday(request: HttpServletRequest): ResponseEntity<List<ItemEntityDto>> {
-        val loggedIn = request.hasUser()
+    fun getAllItemsToday(request: HttpServletRequest, auth: Authentication?): ResponseEntity<List<ItemEntityDto>> {
+        val loggedIn = auth?.isAuthenticated == true || request.isInInternalNetwork()
         val cache: MutableMap<Long, OpeningEntity?> = HashMap()
         val list = items.findAllByOrderableNow().stream()
                 .filter { it.visibleWithoutLogin || loggedIn }
@@ -134,7 +138,7 @@ open class ApiController(
     data class SyncResponse(val circles: List<CircleResponse>, val openings: List<OpeningResponse>)
 
 
-    @ApiOperation("Endpoint for start.sch with current openings and all circles")
+    @Operation(summary = "Endpoint for start.sch with current openings and all circles")
     @GetMapping("/sync")
     @ResponseBody
     fun sync() : SyncResponse = SyncResponse(
@@ -156,7 +160,7 @@ open class ApiController(
         }
     )
 
-    @ApiOperation("List of ended openings before a given point in time")
+    @Operation(summary = "List of ended openings before a given point in time")
     @GetMapping("/openings/ended")
     @ResponseBody
     fun endedOpenings(
@@ -178,11 +182,11 @@ open class ApiController(
                 )
             }
 
-    @ApiOperation("List of items orderable tomorrow")
+    @Operation(summary = "List of items orderable tomorrow")
     @GetMapping("/items/tomorrow")
     @ResponseBody
-    fun getAllItemsTomorrow(request: HttpServletRequest): ResponseEntity<List<ItemEntityDto>> {
-        val loggedIn = request.hasUser()
+    fun getAllItemsTomorrow(request: HttpServletRequest, auth: Authentication?): ResponseEntity<List<ItemEntityDto>> {
+        val loggedIn = auth?.isAuthenticated == true || request.isInInternalNetwork()
         val cache: MutableMap<Long, OpeningEntity?> = HashMap()
         val list = items.findAllByOrerableTomorrow().stream()
                 .filter { it.visibleWithoutLogin || loggedIn }
@@ -206,14 +210,14 @@ open class ApiController(
                                var manualOrderDetails: ManualUserDetails? = null
     )
 
-    @ApiOperation("New order")
+    @Operation(summary = "New order")
     @PostMapping("/order")
     @ResponseBody
     @Throws(Exception::class)
-    fun newOrder(request: HttpServletRequest, @RequestBody requestBody: NewOrderRequest): ResponseEntity<String> {
+    fun newOrder(auth: Authentication?, @RequestBody requestBody: NewOrderRequest): ResponseEntity<String> {
         if (requestBody.id < 0 || requestBody.time < 0 || requestBody.detailsJson == "{}")
             return ResponseEntity(RESPONSE_INTERNAL_ERROR, HttpStatus.OK)
-        val user = request.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
+        val user = auth.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
         return try {
             if (requestBody.manualOrderDetails != null) {
                 log.info("{}:{} is making a manual order with details: {}, for {}",
@@ -225,19 +229,19 @@ open class ApiController(
                     requestBody.comment, requestBody.detailsJson)
             }
         } catch (e: FailedOrderException) {
-            log.warn("Failed to make new order by '${request.getUserIfPresent()?.uid ?: "n/a"}' reason: ${e.response}")
+            log.warn("Failed to make new order by '${user.uid}' reason: ${e.response}")
             responseOf(e.response)
         }
     }
 
     data class RoomChangeRequest(var room: String = "")
 
-    @ApiOperation("Set room code")
+    @Operation(summary = "Set room code")
     @PostMapping("/user/room")
     @ResponseBody
-    fun setRoom(request: HttpServletRequest, @RequestBody(required = true) requestBody: RoomChangeRequest): String {
+    fun setRoom(auth: Authentication?, @RequestBody(required = true) requestBody: RoomChangeRequest): String {
         return try {
-            request.session.setAttribute(USER_ENTITY_DTO_SESSION_ATTRIBUTE_NAME, users.setRoom(request.getUserId(), requestBody.room))
+            users.setRoom(auth.getUserId()!!, requestBody.room)
             "ACK"
         } catch (e: Exception) {
             "REJECT"
@@ -246,30 +250,30 @@ open class ApiController(
 
     data class DeleteRequestDto(var id: Long = 0)
 
-    @ApiOperation("Delete order")
+    @Operation(summary = "Delete order")
     @PostMapping("/order/delete")
     @ResponseBody
-    fun deleteOrder(request: HttpServletRequest, @RequestBody(required = true) body: DeleteRequestDto): ResponseEntity<String> {
-        val user = request.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
+    fun deleteOrder(auth: Authentication?, @RequestBody(required = true) body: DeleteRequestDto): ResponseEntity<String> {
+        val user = auth.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
         return try {
             orders.cancelOrder(user, body.id)
         } catch (e: FailedOrderException) {
-            log.warn("Failed to cancel order by '${request.getUserIfPresent()?.uid ?: "n/a"}' reason: ${e.response}")
+            log.warn("Failed to cancel order by '${user.uid ?: "n/a"}' reason: ${e.response}")
             responseOf(e.response)
         }
     }
 
     data class ChangeRequestDto(var id: Long = 0, var room: String = "", var comment: String = "")
 
-    @ApiOperation("Change order")
+    @Operation(summary = "Change order")
     @PostMapping("/order/change")
     @ResponseBody
-    fun changeOrder(request: HttpServletRequest, @RequestBody(required = true) body: ChangeRequestDto): ResponseEntity<String> {
-        val user = request.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
+    fun changeOrder(auth: Authentication?, @RequestBody(required = true) body: ChangeRequestDto): ResponseEntity<String> {
+        val user = auth.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
         return try {
             orders.changeOrder(user, body.id, body.room, body.comment)
         } catch (e: FailedOrderException) {
-            log.warn("Failed to change order by '${request.getUserIfPresent()?.uid ?: "n/a"}' reason: ${e.response}")
+            log.warn("Failed to change order by '${user.uid}' reason: ${e.response}")
             responseOf(e.response)
         }
     }
@@ -283,8 +287,8 @@ open class ApiController(
     @GetMapping("/time")
     @ResponseBody
     fun time(): String {
-        return "Time: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z").format(System.currentTimeMillis())}\n" +
-                "Timestamp: ${System.currentTimeMillis()}"
+        return "Time: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z").format(Instant.now().toEpochMilli())}\n" +
+                "Timestamp: ${Instant.now().toEpochMilli()}"
     }
 
     data class OpeningDetail(
@@ -312,7 +316,7 @@ open class ApiController(
 
         val openings = openings.findNextWeek()
             .filter { it.circle != null }
-            .filter { it.orderStart + it.compensationTime <= System.currentTimeMillis() }
+            .filter { it.orderStart + it.compensationTime <= Instant.now().toEpochMilli() }
             .map { openingEntity ->
                 OpeningDetail(
                     name = openingEntity.circle?.displayName ?: "n/a",
@@ -366,9 +370,9 @@ open class ApiController(
         headers.set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
         headers.set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36")
 
-        val body: String = RestTemplate().exchange<String>("https://www.google.com/search?q=1+${currency}+to+huf", HttpMethod.GET, HttpEntity<String>(headers), String::class).body
-        val startIndex = body.indexOf("data-exchange-rate")
-        if (startIndex < 0)
+        val body: String? = RestTemplate().exchange<String>("https://www.google.com/search?q=1+${currency}+to+huf", HttpMethod.GET, HttpEntity<String>(headers), String::class).body
+        val startIndex = body?.indexOf("data-exchange-rate")
+        if (startIndex == null || startIndex < 0)
             return 0.0
         return body.substring(startIndex + 20, body.indexOf("\"", startIndex + 21)).toDoubleOrNull() ?: 0.0
     }
@@ -380,7 +384,7 @@ open class ApiController(
         val maxOverall = openingEntity.maxOrder - orders.sumOf { it.count }
         val available = min(maxOverall, orders.groupBy { it.orderedItem?.category ?: 0 }
             .map { pair -> pair.key to pair.value.sumOf { it.count } }
-            .map { pair ->
+            .maxOfOrNull { pair ->
                 when (ItemCategory.of(pair.first)) {
                     ItemCategory.DEFAULT -> maxOverall
                     ItemCategory.ALPHA -> openingEntity.maxAlpha - pair.second
@@ -389,100 +393,8 @@ open class ApiController(
                     ItemCategory.DELTA -> openingEntity.maxDelta - pair.second
                     ItemCategory.LAMBDA -> openingEntity.maxLambda - pair.second
                 }
-            }
-            .maxOrNull() ?: maxOverall)
+            } ?: maxOverall)
         return available
     }
 
-    data class UpcomingOpeningDetail(
-            var name: String,
-            var orderStart: Long,
-            var openingStart: Long,
-            var icon: String?,
-            var feeling: String,
-            var available: Int,
-            var outOf: Int,
-            var banner: String?,
-            var day: String,
-            var comment: String,
-            var circleUrl: String,
-            var circleColor: String
-    )
-
-    @CrossOrigin(origins = ["*"])
-    @GetMapping("/open/upcoming-openings")
-    @ResponseBody
-    fun upcomingOpeningsApiDeprecated(@RequestParam(required = false) token: String?): List<UpcomingOpeningDetail> {
-        return listOf(UpcomingOpeningDetail("This feature is deprecated", 0, 0,null,
-            "sad", 0, 0, null, "",
-            "Contact the administrator if you think this is a problem", "", ""))
-    }
-
-    fun upcomingOpeningsApi(@RequestParam(required = false) token: String?): List<UpcomingOpeningDetail> {
-        if (token.isNullOrBlank() || !apiTokens.contains(token))
-            return listOf(UpcomingOpeningDetail("Invalid Token", 0, 0,null,
-                    "sad", 0, 0, null, "",
-                    "Contact the administrator if you think this is a problem", "", ""))
-
-        return openings.findNextWeek()
-                .filter { it.circle != null }
-                .map { openingEntity ->
-                    UpcomingOpeningDetail(
-                        name = openingEntity.circle?.displayName ?: "n/a",
-                        orderStart = openingEntity.orderStart,
-                        openingStart = openingEntity.dateStart,
-                        icon =  openingEntity.circle?.logoUrl?.let { url -> baseUrl + url },
-                        feeling = openingEntity.feeling ?: "",
-                        available = calculateAvailable(openingEntity).coerceAtLeast(0),
-                        outOf = openingEntity.maxOrder,
-                        banner = openingEntity.prUrl.let { url -> baseUrl + url },
-                        day = timeService.format(openingEntity.dateStart, "u")?.toInt().let { daysOfTheWeek[it ?: 0] },
-                        comment = "${timeService.format(openingEntity.orderEnd, "u")?.toInt().let { daysOfTheWeek[it ?: 0] }} " +
-                                "${timeService.format(openingEntity.orderEnd, "HH:mm")}-ig rendelhető",
-                        circleUrl = openingEntity.circle?.alias?.let { alias -> baseUrl + "p/" + alias } ?: (baseUrl + "p/" + (openingEntity.circle?.id ?: 0)),
-                        circleColor = openingEntity.circle?.cssClassName ?: "none"
-                ) }
-    }
-
-    private val trashpandaVoters: ConcurrentHashMap<String, Int> = ConcurrentHashMap<String, Int>()
-
-//    @PostMapping("/easteregg/trashpanda/{feedback}")
-//    @ResponseBody
-    fun trashpandaVote(
-            request: HttpServletRequest,
-            @PathVariable feedback: Int
-    ): String {
-        val ip = request.remoteAddr ?: ""
-        if (trashpandaVoters.containsKey(ip)) {
-            if (feedback == 1 || feedback == 2)
-                trashpandaVoters[ip] = feedback
-        } else {
-            trashpandaVoters[ip] = feedback
-        }
-        return "OK"
-    }
-
-//    @GetMapping("/admin/trashpanda")
-//    @ResponseBody
-    fun trashpandaShow(request: HttpServletRequest): String {
-        if (request.getUserIfPresent()?.sysadmin == true) {
-            return "Good: " + trashpandaVoters.values.count { it == 1 } +
-                    " Bad: " + trashpandaVoters.values.count { it == 2 } +
-                    " OK: " + trashpandaVoters.values.count { it == 3 } +
-                    " Side: " + trashpandaVoters.values.count { it == 4 } +
-                    " HACK: " + trashpandaVoters.values.count { it < 1 || it > 4 }
-        } else {
-            return "Nice try!"
-        }
-    }
-
-//    @GetMapping("/admin/trashpanda/raw")
-//    @ResponseBody
-    fun trashpandaShowRaw(request: HttpServletRequest): String {
-        if (request.getUserIfPresent()?.sysadmin == true) {
-            return trashpandaVoters.entries.toString()
-        } else {
-            return "Nice try!"
-        }
-    }
 }

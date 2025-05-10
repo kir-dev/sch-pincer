@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.*
+import java.time.Instant
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
@@ -38,14 +39,14 @@ class OrderingServiceTest {
         val service = spy(OrderService())
 
         val opening = OpeningEntity(30, maxOrder = 5, dateStart = 0, dateEnd = 0, orderStart = 0,
-                orderEnd = System.currentTimeMillis() * 2, maxBeta = 10)
+                orderEnd = Instant.now().toEpochMilli() * 2, maxBeta = 10)
 
         val timeWindow = TimeWindowEntity(opening = opening, name = "6:00-8:00", date = 12, normalItemCount = 5, extraItemCount = 4)
-        whenever(timeWindowRepo.getOne(40)).thenReturn(timeWindow)
+        whenever(timeWindowRepo.getReferenceById(40)).thenReturn(timeWindow)
         whenever(timeWindowRepo.findById(40)).thenReturn(Optional.of(timeWindow))
         val item = ItemEntity(name = "name", category = 2, orderable = true, personallyOrderable = false,
                 alias = "", circle = CircleEntity(10), price = 1200)
-        whenever(itemsRepo.getOne(12)).thenReturn(item)
+        whenever(itemsRepo.getReferenceById(12)).thenReturn(item)
 
         doNothing().whenever(service).save(anyOrNull())
 
@@ -73,12 +74,12 @@ class OrderingServiceTest {
 
         val order = OrderEntity(count = 3, extraTag = true, userId = "unique-id", openingId = 30, intervalId = 70,
                 userName = "", comment = "", detailsJson = "", room = "")
-        whenever(orderRepository.getOne(4)).thenReturn(order)
+        whenever(orderRepository.getReferenceById(4)).thenReturn(order)
         val opening = OpeningEntity(30, orderCount = 4, dateStart = 0, dateEnd = 0, orderStart = 0,
-                orderEnd = System.currentTimeMillis() * 2)
+                orderEnd = Instant.now().toEpochMilli() * 2)
         whenever(openings.getOne(30)).thenReturn(opening)
         val timeWindow = TimeWindowEntity(opening = opening, normalItemCount = 5, extraItemCount = 3)
-        whenever(timeWindowRepo.getOne(70)).thenReturn(timeWindow)
+        whenever(timeWindowRepo.getReferenceById(70)).thenReturn(timeWindow)
         whenever(user.uid).thenReturn("unique-id")
 
         service.repo = orderRepository
@@ -91,6 +92,5 @@ class OrderingServiceTest {
         verify(timeWindowRepo, times(1)).save(anyOrNull())
         verify(openings, times(1)).save(anyOrNull())
     }
-
 
 }

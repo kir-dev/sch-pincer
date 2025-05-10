@@ -22,8 +22,9 @@ import java.lang.Integer.max
 import java.lang.Integer.min
 import java.util.*
 import java.util.stream.Collectors
-import javax.servlet.http.HttpServletRequest
-import javax.validation.Valid
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.validation.Valid
+import org.springframework.security.core.Authentication
 
 enum class PageTypes(val orientation: String) {
     PORTRAIT("portrait"),
@@ -68,10 +69,10 @@ open class ConfigureController {
     private lateinit var uploadPath: String
 
     @GetMapping("/configure")
-    fun configureRoot(request: HttpServletRequest, model: Model): String {
+    fun configureRoot(auth: Authentication?, model: Model): String {
         val all = circles.findAllForMenu()
         model.addAttribute("circles", all)
-        val (_, _, _, _, sysadmin, _, permissions) = request.getUser()
+        val (_, _, _, _, sysadmin, _, permissions) = auth.getUser()
         val editable = circles.findAll().stream()
                 .filter { obj: CircleEntity? -> Objects.nonNull(obj) }
                 .filter { x: CircleEntity -> sysadmin || permissions.contains("CIRCLE_" + x.id) }
@@ -82,16 +83,16 @@ open class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}")
-    fun configure(@PathVariable circleId: Long, model: Model, request: HttpServletRequest): String {
-        if (cannotEditCircle(circleId, request))
+    fun configure(@PathVariable circleId: Long, model: Model, auth: Authentication?): String {
+        if (cannotEditCircle(circleId, auth))
             return "redirect:/configure?error=invalidPermissions"
 
         val circle = circles.getOne(circleId)
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circle", circle)
         model.addAttribute("openings", circle?.openings?.sortedByDescending { it.dateStart } ?: listOf<OpeningEntity>())
-        model.addAttribute("pr", isPR(circleId, request))
-        model.addAttribute("owner", isCircleOwner(circleId, request) || request.getUser().sysadmin)
+        model.addAttribute("pr", isPR(circleId, auth))
+        model.addAttribute("owner", isCircleOwner(circleId, circles, auth) || auth.getUser().sysadmin)
         model.addAttribute("roles", users.findAllCircleRole(circleId).filter { it.permission !== CircleMemberRole.NONE })
         model.addAttribute("circleId", circleId)
         model.addAttribute("items", items.findAllByCircle(circleId))
@@ -101,8 +102,8 @@ open class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/roles/list")
-    fun listUserRole(@PathVariable circleId: Long, model: Model, request: HttpServletRequest): String {
-        if (cannotEditCircle(circleId, request))
+    fun listUserRole(@PathVariable circleId: Long, model: Model, auth: Authentication?): String {
+        if (cannotEditCircle(circleId, auth))
             return "redirect:/configure?error=invalidPermissions"
 
         model.addAttribute("circles", circles.findAllForMenu())
@@ -117,9 +118,9 @@ open class ConfigureController {
         @PathVariable circleId: Long,
         @PathVariable uidHash: String,
         model: Model,
-        request: HttpServletRequest
+        auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request))
+        if (cannotEditCircle(circleId, auth))
             return "redirect:/configure?error=invalidPermissions"
 
         model.addAttribute("circles", circles.findAllForMenu())
@@ -133,10 +134,10 @@ open class ConfigureController {
     fun editUserRoles(@PathVariable circleId: Long,
                       @RequestParam uidHash: String,
                       @RequestParam permission: CircleMemberRole,
-                      request: HttpServletRequest
+                      auth: Authentication?
     ): String {
         val userToEdit = users.getByUidHash(uidHash) ?: return "redirect:/configure/${circleId}?error=invalidUidHash"
-        if ((!isCircleOwner(circleId, request) && !request.getUser().sysadmin) || userToEdit.sysadmin)
+        if ((!isCircleOwner(circleId, circles, auth) && !auth.getUser().sysadmin) || userToEdit.sysadmin)
             return "redirect:/configure/$circleId?error"
 
         val tmp: MutableSet<String> = userToEdit.permissions.toMutableSet()
@@ -157,8 +158,8 @@ open class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/members/new")
-    fun newMember(@PathVariable circleId: Long, model: Model, request: HttpServletRequest): String {
-        if (cannotEditCircle(circleId, request))
+    fun newMember(@PathVariable circleId: Long, model: Model, auth: Authentication?): String {
+        if (cannotEditCircle(circleId, auth))
             return "redirect:/configure?error=invalidPermissions"
 
         model.addAttribute("circles", circles.findAllForMenu())
@@ -174,9 +175,9 @@ open class ConfigureController {
             @PathVariable circleId: Long,
             cme: @Valid CircleMemberEntity?,
             @RequestParam avatarFile: MultipartFile?,
-            request: HttpServletRequest
+            auth: Authentication?
     ): String {
-        if (cannotEditCircleNoPR(circleId, request)) return "redirect:/configure/$circleId?error"
+        if (cannotEditCircleNoPR(circleId, auth)) return "redirect:/configure/$circleId?error"
         val circle = circles.getOne(circleId)
         cme!!.circle = circle
         val file = avatarFile?.uploadFile("avatars")
@@ -190,9 +191,9 @@ open class ConfigureController {
         @PathVariable circleId: Long,
         @PathVariable memberId: Long,
         model: Model,
-        request: HttpServletRequest
+        auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request))
+        if (cannotEditCircle(circleId, auth))
             return "redirect:/configure?error=invalidPermissions"
 
         model.addAttribute("circles", circles.findAllForMenu())
@@ -209,9 +210,9 @@ open class ConfigureController {
         cme: @Valid CircleMemberEntity,
         @RequestParam id: Long,
         @RequestParam avatarFile: MultipartFile?,
-        request: HttpServletRequest
+        auth: Authentication?
     ): String {
-        if (cannotEditCircleNoPR(circleId, request)) return "redirect:/configure/$circleId?error"
+        if (cannotEditCircleNoPR(circleId, auth)) return "redirect:/configure/$circleId?error"
 
         val original = members.getOne(id)
         if (original.circle!!.id != circleId) return "redirect:/configure/$circleId?error"
@@ -232,9 +233,9 @@ open class ConfigureController {
         @PathVariable circleId: Long,
         @PathVariable memberId: Long,
         model: Model,
-        request: HttpServletRequest
+        auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request))
+        if (cannotEditCircle(circleId, auth))
             return "redirect:/configure?error=invalidPermissions"
 
         model.addAttribute("circles", circles.findAllForMenu())
@@ -249,8 +250,8 @@ open class ConfigureController {
     @PostMapping("/configure/{circleId}/members/delete/{memberId}/confirm")
     fun deleteMemberConfirm(@PathVariable circleId: Long,
                             @PathVariable memberId: Long,
-                            request: HttpServletRequest): String {
-        if (cannotEditCircleNoPR(circleId, request)) return "redirect:/configure/$circleId?error"
+                            auth: Authentication?): String {
+        if (cannotEditCircleNoPR(circleId, auth)) return "redirect:/configure/$circleId?error"
         val cme = members.getOne(memberId)
         if (cme.circle!!.id == circleId) members.delete(cme)
         return "redirect:/configure/$circleId"
@@ -260,9 +261,9 @@ open class ConfigureController {
     fun editCircle(
         @PathVariable circleId: Long,
         model: Model,
-        request: HttpServletRequest
+        auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request))
+        if (cannotEditCircle(circleId, auth))
             return "redirect:/configure?error=invalidPermissions"
 
         model.addAttribute("circles", circles.findAllForMenu())
@@ -278,9 +279,9 @@ open class ConfigureController {
                    @RequestParam circleId: Long,
                    @RequestParam(required = false) logo: MultipartFile?,
                    @RequestParam(required = false) background: MultipartFile?,
-                   request: HttpServletRequest
+                   auth: Authentication?
     ): String {
-        if (cannotEditCircleNoPR(circleId, request))
+        if (cannotEditCircleNoPR(circleId, auth))
             return "redirect:/configure/$circleId?error=invalidPermissions"
 
         val original = circles.getOne(circleId) ?: return "redirect:/configure/$circleId?error=invalidId"
@@ -310,9 +311,9 @@ open class ConfigureController {
     fun massUpdateItems(
             @RequestParam allRequestParams: Map<String,String>,
             @PathVariable circleId: Long,
-            request: HttpServletRequest
+            auth: Authentication?
     ): String {
-        if (cannotEditCircleNoPR(circleId, request))
+        if (cannotEditCircleNoPR(circleId, auth))
             return "redirect:/configure/$circleId?error=invalidPermissions"
 
         if (!allRequestParams.containsKey("action"))
@@ -378,9 +379,9 @@ open class ConfigureController {
     fun newItem(@PathVariable circleId: Long,
                 ie: @Valid ItemEntity,
                 @RequestParam imageFile: MultipartFile?,
-                request: HttpServletRequest
+                auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request))
+        if (cannotEditCircle(circleId, auth))
             return "redirect:/configure/$circleId?error"
 
         val circle = circles.getOne(circleId)
@@ -394,9 +395,9 @@ open class ConfigureController {
     @GetMapping("/configure/{circleId}/items/edit/{itemId}")
     fun editItem(@PathVariable itemId: Long,
                  @PathVariable circleId: Long, model: Model,
-                 request: HttpServletRequest
+                 auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request))
+        if (cannotEditCircle(circleId, auth))
             return "redirect:/configure/$circleId?error"
 
         model.addAttribute("circles", circles.findAllForMenu())
@@ -411,10 +412,10 @@ open class ConfigureController {
                  item: @Valid ItemEntity,
                  @RequestParam itemId: Long,
                  @RequestParam(required = false) imageFile: MultipartFile?,
-                 request: HttpServletRequest
+                 auth: Authentication?
     ): String {
 
-        if (cannotEditCircle(circleId, request))
+        if (cannotEditCircle(circleId, auth))
             return "redirect:/configure/$circleId?error=invalidPermissions"
 
         val original = items.getOne(itemId) ?: return "redirect:/configure/$circleId?error=invalidId"
@@ -439,7 +440,7 @@ open class ConfigureController {
             discountPrice = item.discountPrice
             category = item.category
         }
-        if (item.flag < 1000 || request.getUser().sysadmin)
+        if (item.flag < 1000 || auth.getUser().sysadmin)
             original.flag = item.flag
         val file = imageFile?.uploadFile("items")
         if (file != null)
@@ -465,9 +466,9 @@ open class ConfigureController {
     @PostMapping("/configure/{circleId}/items/delete/{itemId}/confirm")
     fun deleteItemConfirm(@PathVariable circleId: Long,
                           @PathVariable itemId: Long,
-                          request: HttpServletRequest
+                          auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request)) return "redirect:/configure/$circleId?error"
+        if (cannotEditCircle(circleId, auth)) return "redirect:/configure/$circleId?error"
         val ie = items.getOne(itemId)
         if (ie!!.circle!!.id == circleId) items.delete(ie)
         return "redirect:/configure/$circleId"
@@ -486,9 +487,9 @@ open class ConfigureController {
     fun newOpening(@PathVariable circleId: Long,
                    oed: OpeningEntityDto,
                    @RequestParam prFile: MultipartFile?,
-                   request: HttpServletRequest
+                   auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request)) return "redirect:/configure/$circleId?error"
+        if (cannotEditCircle(circleId, auth)) return "redirect:/configure/$circleId?error"
         val eo = OpeningEntity(
                 feeling = oed.feeling,
                 circle = circles.getOne(circleId),
@@ -521,9 +522,9 @@ open class ConfigureController {
     fun editOpening(@PathVariable circleId: Long,
                     @PathVariable openingId: Long,
                     oed: OpeningEntityDto,
-                    request: HttpServletRequest
+                    auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request)) return "redirect:/configure/$circleId?error"
+        if (cannotEditCircle(circleId, auth)) return "redirect:/configure/$circleId?error"
         val opening = openings.getOne(openingId)
         with(opening) {
             feeling = oed.feeling
@@ -545,9 +546,9 @@ open class ConfigureController {
     @PostMapping("/configure/{circleId}/action/{openingId}/close-all")
     fun applyCloseAllAction(@PathVariable circleId: Long,
                              @PathVariable openingId: Long,
-                             request: HttpServletRequest
+                             auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/configure/$circleId?error"
 
         orders.closeAllOrdersInOpening(openingId)
@@ -557,9 +558,9 @@ open class ConfigureController {
     @PostMapping("/configure/{circleId}/action/{openingId}/cancel-all")
     fun applyCancelAllAction(@PathVariable circleId: Long,
                             @PathVariable openingId: Long,
-                            request: HttpServletRequest
+                            auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/configure/$circleId?error"
 
         orders.cancelAllOrdersInOpening(openingId)
@@ -570,9 +571,9 @@ open class ConfigureController {
     @PostMapping("/configure/{circleId}/action/{openingId}/emails")
     fun applyCollectEmails(@PathVariable circleId: Long,
                              @PathVariable openingId: Long,
-                             request: HttpServletRequest
+                             auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/configure/$circleId?error"
 
         return orders.findAllByOpening(openingId)
@@ -598,9 +599,9 @@ open class ConfigureController {
     @PostMapping("/configure/{circleId}/openings/delete/{openingId}/confirm")
     fun deleteOpeningConfirm(@PathVariable circleId: Long,
                              @PathVariable openingId: Long?,
-                             request: HttpServletRequest
+                             auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, request) || !openings.isCircleMatches(openingId ?: 0, circleId))
+        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId ?: 0, circleId))
             return "redirect:/configure/$circleId?error=invalidPermissions"
         val ie = openings.getOne(openingId!!)
         orders.cancelAllOrdersInOpening(openingId)
@@ -612,10 +613,10 @@ open class ConfigureController {
     @GetMapping("/configure/{circleId}/openings/show/{openingId}")
     fun showOpenings(@PathVariable circleId: Long,
                      @PathVariable openingId: Long,
-                     request: HttpServletRequest,
+                     auth: Authentication?,
                      model: Model
     ): String {
-        if (cannotEditCircle(circleId, request))
+        if (cannotEditCircle(circleId, auth))
             return "redirect:/configure/$circleId?error=invalidPermissions"
 
         val opening = openings.getOne(openingId)
@@ -637,11 +638,11 @@ open class ConfigureController {
     @PostMapping("/configure/order/update")
     @ResponseBody
     fun updateOrder(@RequestBody body: OrderUpdateDto,
-                    request: HttpServletRequest
+                    auth: Authentication?
     ): String {
         val circleId = orders.getCircleIdByOrderId(body.id) ?: return "INVALID ID"
 
-        if (cannotEditCircle(circleId, request))
+        if (cannotEditCircle(circleId, auth))
             return "NO PERMISSION"
 
         orders.updateOrder(body.id, OrderStatus[body.status])
@@ -651,11 +652,11 @@ open class ConfigureController {
     @PostMapping("/configure/order/set-comment")
     @ResponseBody
     fun updateOrderComment(@RequestBody body: OrderSetCommentDto,
-                    request: HttpServletRequest
+                    auth: Authentication?
     ): String {
         val circleId = orders.getCircleIdByOrderId(body.id) ?: return "INVALID ID"
 
-        if (cannotEditCircle(circleId, request))
+        if (cannotEditCircle(circleId, auth))
             return "NO PERMISSION"
 
         orders.updateOrderComment(body.id, body.comment)
@@ -665,11 +666,11 @@ open class ConfigureController {
     @PostMapping("/configure/order/change-price")
     @ResponseBody
     fun updateOrderPrice(@RequestBody body: OrderChangePriceDto,
-                    request: HttpServletRequest
+                    auth: Authentication?
     ): String {
         val circleId = orders.getCircleIdByOrderId(body.id) ?: return "INVALID ID"
 
-        if (cannotEditCircle(circleId, request))
+        if (cannotEditCircle(circleId, auth))
             return "NO PERMISSION"
 
         orders.updateOrderPrice(body.id, max(0, body.price))
@@ -677,16 +678,16 @@ open class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/reviews")
-    fun showReviews(@PathVariable circleId: Long, model: Model, request: HttpServletRequest): String {
+    fun showReviews(@PathVariable circleId: Long, model: Model, auth: Authentication?): String {
         val reviewList = reviews.findAll(circleId)
         model.addAttribute("reviews", reviewList)
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circle", circles.getOne(circleId))
         model.addAttribute("reviewCount", reviewList.size)
-        model.addAttribute("avgQuality", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumBy { it.rateQuality } / reviewList.size.toFloat()) else null)
-        model.addAttribute("avgPrice", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumBy { it.ratePrice } / reviewList.size.toFloat()) else null)
-        model.addAttribute("avgSpeed", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumBy { it.rateSpeed } / reviewList.size.toFloat()) else null)
-        model.addAttribute("avgOverAll", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumBy { it.rateOverAll } / reviewList.size.toFloat()) else null)
+        model.addAttribute("avgQuality", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumOf { it.rateQuality } / reviewList.size.toFloat()) else null)
+        model.addAttribute("avgPrice", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumOf { it.ratePrice } / reviewList.size.toFloat()) else null)
+        model.addAttribute("avgSpeed", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumOf { it.rateSpeed } / reviewList.size.toFloat()) else null)
+        model.addAttribute("avgOverAll", if (reviewList.isNotEmpty()) "%.2f".format(reviewList.sumOf { it.rateOverAll } / reviewList.size.toFloat()) else null)
         model.addAttribute("timeService", timeService)
         config.injectPublicValues(model)
         return "circleReviews"
@@ -711,11 +712,11 @@ open class ConfigureController {
             @RequestParam(defaultValue = "off") status: String,
             @RequestParam(defaultValue = "off") category: String,
             @RequestParam(defaultValue = "off") systemComment: String,
-            request: HttpServletRequest,
+            auth: Authentication?,
             model: Model
     ): String {
         val circle = openings.getOne(openingId).circle
-        if (cannotEditCircle(circle!!.id, request))
+        if (cannotEditCircle(circle!!.id, auth))
             return "redirect:/configure/${circle.id}?error"
 
         model.addAttribute("artificialId", artificialId != "off")
@@ -744,10 +745,10 @@ open class ConfigureController {
                      type: String,
                      pageOrientation: String,
                      @RequestParam(defaultValue = "0") emptyRows: Int = 0,
-                     request: HttpServletRequest
+                     auth: Authentication?
     ): String {
         val opening = openings.getOne(openingId)
-        if (cannotEditCircle(opening.circle!!.id, request))
+        if (cannotEditCircle(opening.circle!!.id, auth))
             return "redirect:/configure/" + opening.circle!!.id + "?error"
 
         val document = Document()

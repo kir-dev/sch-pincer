@@ -2,7 +2,7 @@ package hu.kirdev.schpincer.config
 
 import org.springframework.context.annotation.Configuration
 import java.util.*
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 
 @Configuration
 open class TimezoneConfig() {

@@ -1,7 +1,6 @@
 	docker run -d --name=webschop --publish=8080:8080 \
 		--volume=$(mkfile_dir)docker/application-docker.properties:/opt/webschop/application.properties \
 		--volume=webschop-permanent-storage:/permanent/external/ \
-		--volume=webschop-lucene-cache:/tmp/webschop/search/ \
 		--network="host" \
 		-e SPRING_DATASOURCE_USERNAME=webschop \
 		-e SPRING_DATASOURCE_PASSWORD=password \

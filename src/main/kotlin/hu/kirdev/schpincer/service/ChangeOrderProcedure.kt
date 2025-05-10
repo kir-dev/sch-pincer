@@ -3,6 +3,7 @@ package hu.kirdev.schpincer.service
 import hu.kirdev.schpincer.dao.OrderRepository
 import hu.kirdev.schpincer.model.*
 import hu.kirdev.schpincer.web.removeNonPrintable
+import java.time.Instant
 
 class ChangeOrderProcedure(
         private val user: UserEntity,
@@ -18,13 +19,13 @@ class ChangeOrderProcedure(
         loadOrder()
         validatePrivilege()
         validateStatus()
-        loadOpening(System.currentTimeMillis())
+        loadOpening(Instant.now().toEpochMilli())
 
         updateDetails()
     }
 
     private fun loadOrder() {
-        order = orderRepository.getOne(id)
+        order = orderRepository.getReferenceById(id)
     }
 
     private fun validatePrivilege() {

@@ -14,7 +14,7 @@ open class CircleMemberService {
 
     @Transactional(readOnly = true)
     open fun getById(id: Long): CircleMemberEntity {
-        return repo.getOne(id)
+        return repo.getReferenceById(id)
     }
 
     @Transactional(readOnly = false)
@@ -24,7 +24,7 @@ open class CircleMemberService {
 
     @Transactional(readOnly = true)
     open fun getOne(memberId: Long): CircleMemberEntity {
-        return repo.getOne(memberId)
+        return repo.getReferenceById(memberId)
     }
 
     @Transactional(readOnly = false)

@@ -25,7 +25,6 @@ Location: `src/main/resources/config/application-local.properties` (Git will aut
 spring.datasource.url=jdbc:mysql://127.0.0.1:3306/schpincer?useSSL=false&useUnicode=yes&characterEncoding=utf8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
 spring.datasource.username=username
 spring.datasource.password=password
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 spring.jpa.hibernate.ddl-auto=create
 spring.jpa.show-sql=true # change to false if you want
 
@@ -36,8 +35,6 @@ authsch.client-key=80 chars length
 #server.error.include-stacktrace=never
 
 schpincer.external=./test/external/
-spring.jpa.properties.hibernate.search.default.directory_provider=filesystem
-spring.jpa.properties.hibernate.search.default.indexBase=/tmp/schpincer/search/
 
 spring.servlet.multipart.max-file-size=2000KB
 spring.servlet.multipart.max-request-size=2000KB

@@ -8,11 +8,11 @@
           th:remove="all">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" th:remove="all">
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" th:remove="all"/>
-    <object th:include="MainLayout :: head" th:remove="tag"></object>
+    <object th:insert="~{MainLayout :: head}" th:remove="tag"></object>
     <link rel="manifest" href="/manifest.json">
     <script src="../static/js/items.js" th:src="@{/js/items.js}"></script>
     <script src="../static/js/kitchen-view.js" th:src="@{/js/kitchen-view.js}"></script>
-    <object th:include="fragments/lang :: script()" th:remove="tag"></object>
+    <object th:insert="~{fragments/lang :: script()}" th:remove="tag"></object>
 </head>
 <body>
 

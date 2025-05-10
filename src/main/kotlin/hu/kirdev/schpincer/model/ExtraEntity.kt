@@ -1,7 +1,7 @@
 package hu.kirdev.schpincer.model
 
 import hu.kirdev.schpincer.web.component.CustomComponentType
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "extras")

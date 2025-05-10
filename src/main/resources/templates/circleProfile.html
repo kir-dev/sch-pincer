@@ -8,20 +8,20 @@
           th:remove="all">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" th:remove="all">
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" th:remove="all"/>
-    <object th:include="MainLayout :: head" th:remove="tag"></object>
+    <object th:insert="~{MainLayout :: head}" th:remove="tag"></object>
     <link rel="manifest" href="/manifest.json">
     <script src="../static/js/items.js" th:src="@{/js/items.js}"></script>
-    <object th:include="fragments/lang :: scriptProfile(${selectedCircle?.id})" th:remove="tag"></object>
+    <object th:insert="~{fragments/lang :: scriptProfile(${selectedCircle?.id})}" th:remove="tag"></object>
 </head>
 <body>
 
-<object th:include="fragments/itemPopup :: popup" th:remove="tag"></object>
+<object th:insert="~{fragments/itemPopup :: popup}" th:remove="tag"></object>
 
 <div id="blur-section">
-    <div class="header" th:replace="MainLayout :: header">
+    <div class="header" th:replace="~{MainLayout :: header}">
     </div>
 
-    <div class="left-menu" th:replace="MainLayout :: left-menu">
+    <div class="left-menu" th:replace="~{MainLayout :: left-menu}">
     </div>
 
     <div class="orange" th:class="${selectedCircle?.cssClassName}">
@@ -65,7 +65,7 @@
                             <td><a href="#" target="_blank" th:href="${selectedCircle?.websiteUrl}"
                                    th:text="${selectedCircle} neq null ? #{lang.profile.open-url}">OPEN</a></td>
                         </tr>
-                        <tr th:if="${session.user} neq null">
+                        <tr th:if="${user} neq null">
                             <td th:text="#{lang.speedupbutton.label}">Speed the work up</td>
                             <td>
                                 <button th:text="#{lang.speedupbutton.button}" class="action-button">Work up!</button>
@@ -115,7 +115,7 @@
     <span class="list-end" id="list-end"></span>
     <span class="list-end" id="no-results"></span>
 
-    <div th:replace="MainLayout :: footer"></div>
+    <div th:replace="~{MainLayout :: footer}"></div>
 </div>
 </body>
 </html>

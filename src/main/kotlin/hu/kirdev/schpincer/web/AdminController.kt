@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.io.IOException
 import java.util.*
-import javax.servlet.http.HttpServletRequest
-import javax.validation.Valid
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.validation.Valid
+import org.springframework.security.core.Authentication
 
 @Controller
 @RequestMapping("/admin")
@@ -211,15 +212,15 @@ open class AdminController {
 
     @ResponseBody
     @GetMapping("/debug/card/{card}")
-    fun changeCard(@PathVariable card: String, request: HttpServletRequest): String {
-        val user = request.getUserIfPresent() ?: return "failed"
+    fun changeCard(@PathVariable card: String, auth: Authentication?): String {
+        val user = auth.getUserIfPresent() ?: return "failed"
         user.cardType = CardType.valueOf(card)
         users.save(user)
         return "ok"
     }
 
     @PostMapping("/config")
-    fun adminConfigUpdate(@ModelAttribute configObject: ConfigObject, request: HttpServletRequest): String {
+    fun adminConfigUpdate(@ModelAttribute configObject: ConfigObject): String {
         config.messageBoxType = configObject.messageBoxType
         config.messageBoxMessage = configObject.messageBoxMessage
         config.persist()

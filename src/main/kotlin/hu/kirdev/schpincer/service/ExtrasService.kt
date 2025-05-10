@@ -11,7 +11,7 @@ import hu.kirdev.schpincer.web.component.CustomComponentModelList
 import hu.kirdev.schpincer.web.component.CustomComponentType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 
 @Service
 class ExtrasService {

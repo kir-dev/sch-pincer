@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
-import javax.servlet.http.HttpServletRequest
+import org.springframework.security.core.Authentication
+import java.time.Instant
 
 @Controller
 open class MainController {
@@ -37,7 +38,7 @@ open class MainController {
     private lateinit var config: RealtimeConfigService
 
     @GetMapping("/")
-    fun root(request: HttpServletRequest, model: Model, @RequestParam(defaultValue = "") error: String): String {
+    fun root(auth: Authentication?, model: Model, @RequestParam(defaultValue = "") error: String): String {
         val circlesList: List<CircleEntity> = circles.findAllForMenu()
         model.addAttribute("circles", circlesList)
 
@@ -51,10 +52,10 @@ open class MainController {
         model.addAttribute("error", error)
 
         model.addAttribute("orders", Collections.EMPTY_LIST)
-        if (request.hasUser()) {
-            model.addAttribute("orders", orders.findAll(request.getUserId())
+        if (auth.hasUser()) {
+            model.addAttribute("orders", orders.findAll(auth.getUserId()!!)
                     .filter { it.status === OrderStatus.ACCEPTED }
-                    .filter { it.date >= (System.currentTimeMillis() - (1000 * 60 * 60 * 24 * 7 * 3)) }
+                    .filter { it.date >= (Instant.now().toEpochMilli() - (1000 * 60 * 60 * 24 * 7 * 3)) }
                     .take(3))
         }
         model.addAttribute("timeService", timeService)
@@ -63,11 +64,11 @@ open class MainController {
     }
 
     @GetMapping("/items")
-    fun items(@RequestParam(name = "q", defaultValue = "") keyword: String, model: Model, request: HttpServletRequest): String {
+    fun items(@RequestParam(name = "q", defaultValue = "") keyword: String, model: Model, auth: Authentication?): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("searchMode", "" != keyword)
         model.addAttribute("keyword", keyword)
-        model.addAttribute("card", (request.getUserIfPresent()?.cardType ?: CardType.DO).name)
+        model.addAttribute("card", (auth.getUserIfPresent()?.cardType ?: CardType.DO).name)
         config.injectPublicValues(model)
         return "items"
     }
@@ -82,9 +83,9 @@ open class MainController {
     }
 
     @GetMapping("/circle/{circle}")
-    fun circleSpecific(@PathVariable circle: String, model: Model, request: HttpServletRequest): String {
+    fun circleSpecific(@PathVariable circle: String, model: Model, auth: Authentication?): String {
         model.addAttribute("circles", circles.findAllForMenu())
-        model.addAttribute("card", (request.getUserIfPresent()?.cardType ?: CardType.DO).name)
+        model.addAttribute("card", (auth.getUserIfPresent()?.cardType ?: CardType.DO).name)
         if (circle.matches("^\\d+$".toRegex())) {
             val id = circle.toLong()
             model.addAttribute("selectedCircle", circles.getOne(id))
@@ -100,8 +101,8 @@ open class MainController {
     }
 
     @GetMapping(path = ["/provider/{circle}", "/p/{circle}"])
-    fun circleSpecificAlias(@PathVariable circle: String, model: Model, request: HttpServletRequest): String {
-        return circleSpecific(circle, model, request)
+    fun circleSpecificAlias(@PathVariable circle: String, model: Model, auth: Authentication?): String {
+        return circleSpecific(circle, model, auth)
     }
 
     data class OrderForDetails(
@@ -117,8 +118,8 @@ open class MainController {
     )
 
     @GetMapping("/profile")
-    fun profile(request: HttpServletRequest, model: Model): String {
-        val orders = this.orders.findAll(request.getUserId())
+    fun profile(auth: Authentication?, model: Model): String {
+        val orders = this.orders.findAll(auth.getUserId()!!)
         model.addAttribute("orders", orders)
         model.addAttribute("ordersForDetails", orders.map {
             OrderForDetails(
@@ -127,13 +128,13 @@ open class MainController {
                 it.orderedItem?.circle?.cssClassName ?: "blank",
                 it.room,
                 it.comment.replace(Regex("^\\[((AB)|(KB)|(DO))] "), ""),
-                it.cancelUntil > System.currentTimeMillis() && it.status == OrderStatus.ACCEPTED
+                it.cancelUntil > Instant.now().toEpochMilli() && it.status == OrderStatus.ACCEPTED
             )
         })
         model.addAttribute("priceBreakdowns", this.orders.generatePriceBreakdowns(orders))
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("timeService", timeService)
-        model.addAttribute("uid", request.getUserId().sha256().substring(0, 6))
+        model.addAttribute("uid", auth.getUserId()!!.sha256().substring(0, 6))
         config.injectPublicValues(model)
         return "profile"
     }
@@ -141,11 +142,11 @@ open class MainController {
     private val statsViews: ConcurrentHashMap<String, String> = ConcurrentHashMap<String, String>()
 
     @GetMapping("/stats")
-    fun stats(request: HttpServletRequest, model: Model): String {
+    fun stats(auth: Authentication?, model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
-        val user = request.getUser()
+        val user = auth.getUser()
         statsViews.computeIfPresent(user.uid) { _, b -> "$b+1" }
-        statsViews.computeIfAbsent(user.uid) { user.name + ";" + System.currentTimeMillis() + ";1" }
+        statsViews.computeIfAbsent(user.uid) { user.name + ";" + Instant.now().toEpochMilli() + ";1" }
         statService.getDetailsForUser(user).entries.forEach { model.addAttribute(it.key, it.value) }
         config.injectPublicValues(model)
         return "stats"
@@ -153,8 +154,8 @@ open class MainController {
 
     @GetMapping("/admin/stats-insight")
     @ResponseBody
-    fun statsInsights(request: HttpServletRequest): String {
-        return if (request.getUserIfPresent()?.sysadmin == true) {
+    fun statsInsights(auth: Authentication?): String {
+        return if (auth.getUserIfPresent()?.sysadmin == true) {
             statsViews.values.toString()
         } else {
             "Nice try!"

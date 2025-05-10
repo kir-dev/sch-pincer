@@ -3,6 +3,7 @@ package hu.kirdev.schpincer.dto
 import hu.kirdev.schpincer.model.*
 import java.lang.Integer.max
 import java.lang.Integer.min
+import java.time.Instant
 
 class ItemEntityDto(base: ItemEntity, opening: OpeningEntity?, loggedin: Boolean, explicitMapping: Boolean) {
     val id: Long
@@ -36,7 +37,7 @@ class ItemEntityDto(base: ItemEntity, opening: OpeningEntity?, loggedin: Boolean
         ingredients = base.ingredients
         detailsConfigJson = base.detailsConfigJson
         price = if (loggedin) base.price else -1
-        orderable = base.orderable && opening != null && opening.isInInterval(System.currentTimeMillis())
+        orderable = base.orderable && opening != null && opening.isInInterval(Instant.now().toEpochMilli())
         service = base.service
         personallyOrderable = base.personallyOrderable
         imageName = base.imageName ?: "/cdn/image/blank-null-item.jpg"

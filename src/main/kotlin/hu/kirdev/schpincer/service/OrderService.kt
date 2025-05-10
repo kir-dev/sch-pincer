@@ -1,12 +1,9 @@
 package hu.kirdev.schpincer.service
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import hu.kirdev.schpincer.dao.*
 import hu.kirdev.schpincer.dto.ManualUserDetails
 import hu.kirdev.schpincer.dto.PriceBreakdown
 import hu.kirdev.schpincer.model.*
-import hu.kirdev.schpincer.web.cannotEditCircle
-import hu.kirdev.schpincer.web.component.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.data.repository.findByIdOrNull
@@ -78,7 +75,7 @@ open class OrderService {
 
     @Transactional(readOnly = true)
     open fun getOne(id: Long): OrderEntity? {
-        return repo.getOne(id)
+        return repo.getReferenceById(id)
     }
 
     @Transactional(readOnly = true)
@@ -113,7 +110,7 @@ open class OrderService {
     @Transactional(readOnly = true)
     open fun getCircleIdByOrderId(id: Long): Long? {
         val order: Optional<OrderEntity> = repo.findById(id)
-        return order.map { orderEntity: OrderEntity -> openingRepo.getOne(orderEntity.openingId!!).circle?.id!! }.orElse(null)
+        return order.map { orderEntity: OrderEntity -> openingRepo.getReferenceById(orderEntity.openingId!!).circle?.id!! }.orElse(null)
     }
 
     @Transactional(readOnly = false)
@@ -125,11 +122,12 @@ open class OrderService {
 
     @Transactional(readOnly = false, isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
     open fun makeOrder(user: UserEntity, id: Long, itemCount: Int, time: Long, comment: String, detailsJson: String): ResponseEntity<String> {
-        val procedure = MakeOrderProcedure(user, id, itemCount, time, comment, detailsJson,
-                itemsRepo = itemsRepo,
-                openings = openings,
-                timeWindowRepo = timeWindowRepo,
-                extrasRepository = extrasRepository)
+        val procedure = MakeOrderProcedure(
+            user, id, itemCount, time, comment, detailsJson,
+            itemsRepo = itemsRepo,
+            timeWindowRepo = timeWindowRepo,
+            extrasRepository = extrasRepository
+        )
         procedure.makeOrder()
 
         timeWindowRepo.save(procedure.timeWindow)
@@ -147,11 +145,12 @@ open class OrderService {
             return responseOf(RESPONSE_MANUAL_FAIL)
         }
 
-        val procedure = MakeOrderProcedure(user, id, itemCount, time, comment, detailsJson,
-                itemsRepo = itemsRepo,
-                openings = openings,
-                timeWindowRepo = timeWindowRepo,
-                extrasRepository = extrasRepository)
+        val procedure = MakeOrderProcedure(
+            user, id, itemCount, time, comment, detailsJson,
+            itemsRepo = itemsRepo,
+            timeWindowRepo = timeWindowRepo,
+            extrasRepository = extrasRepository
+        )
         procedure.makeOrder(manualUser)
 
         timeWindowRepo.save(procedure.timeWindow)
@@ -241,7 +240,7 @@ open class OrderService {
     @Transactional(readOnly = false)
     open fun updateStatus(orderId: Long, status: String) {
         repo.findById(orderId).orElse(null)?.let {
-            it.status = OrderStatus.get(status)
+            it.status = OrderStatus[status]
             repo.save(it)
         }
     }

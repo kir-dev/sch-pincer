@@ -38,11 +38,11 @@
                         </ins>
                         <div id="noManualOrderRoom">
                             <object th:remove="tag"
-                                    th:if="${session.user} neq null and ${session.user.room} neq null and ${session.user.room.length()} gt 0">
-                                <a th:href="@{/profile}"><p th:utext="#{lang.items.room-comment(${session.user.room})}"></p>
+                                    th:if="${user} neq null and ${user.room} neq null and ${user.room.length()} gt 0">
+                                <a th:href="@{/profile}"><p th:utext="#{lang.items.room-comment(${user.room})}"></p>
                                 </a>
                             </object>
-                            <p th:if="${session.user} neq null and (${session.user.room} eq null or ${session.user.room.length()} eq 0)">
+                            <p th:if="${user} neq null and (${user.room} eq null or ${user.room.length()} eq 0)">
                                 <a th:href="@{/profile}" th:text="#{lang.items.no-room-comment}"></a></p>
                         </div>
                         <p id="manualOrderRoom"></p>
@@ -62,12 +62,12 @@
                                    onchange="this.value = this.value.replaceAll(/[^\x00-\u0170]/, '')"
                                    onkeyup="this.value = this.value.replaceAll(/[^\x00-\u0170]/, '')"/>
                             <input type="submit" id="submit-order-button" class="colored-light submit-button" value="Order"
-                                   th:value="#{lang.items.buy}" th:unless="${session.user} eq null"/>
+                                   th:value="#{lang.items.buy}" th:unless="${user} eq null"/>
                         </div>
-                        <em th:text="#{lang.items.loggedin}" th:if="${session.user} eq null">
+                        <em th:text="#{lang.items.loggedin}" th:if="${user} eq null">
                             You need to be logged in to order
                         </em>
-                        <em th:text="#{lang.msgbox.already-closed}" th:unless="${session.user} eq null"
+                        <em th:text="#{lang.msgbox.already-closed}" th:unless="${user} eq null"
                             id="popup-not-orderable" style="display: none">
                             Not orderable right now
                         </em>

@@ -18,7 +18,7 @@ open class UserService {
 
     @Transactional(readOnly = true)
     open fun getById(uid: String): UserEntity {
-        return repo.getOne(uid)
+        return repo.getReferenceById(uid)
     }
 
     @Transactional(readOnly = true)
@@ -44,9 +44,9 @@ open class UserService {
     @Transactional(readOnly = true)
     open fun findAllCircleRole(circleId: Long): List<CircleRoleEntryDto> {
         return repo.findAll()
-                .filter { !it.sysadmin }
-                .map { CircleRoleEntryDto(it, circleId) }
-                .sortedWith(compareBy<CircleRoleEntryDto> { it.permission }.thenBy { it.name })
+            .filter { !it.sysadmin }
+            .map { CircleRoleEntryDto(it, circleId) }
+            .sortedWith(compareBy<CircleRoleEntryDto> { it.permission }.thenBy { it.name })
     }
 
     @Transactional(readOnly = true)
@@ -71,7 +71,7 @@ open class UserService {
     @Transactional(readOnly = false)
     open fun grantAdmin(uid: String): Boolean {
         val req: Optional<UserEntity> = repo.findById(uid)
-        if (!req.isPresent())
+        if (!req.isPresent)
             return false
         val user: UserEntity = req.get()
         user.sysadmin = true

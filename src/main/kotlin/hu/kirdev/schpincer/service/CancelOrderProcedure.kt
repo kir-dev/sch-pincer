@@ -3,6 +3,7 @@ package hu.kirdev.schpincer.service
 import hu.kirdev.schpincer.dao.OrderRepository
 import hu.kirdev.schpincer.dao.TimeWindowRepository
 import hu.kirdev.schpincer.model.*
+import java.time.Instant
 
 class CancelOrderProcedure(
         private val user: UserEntity,
@@ -22,7 +23,7 @@ class CancelOrderProcedure(
         loadOrder()
         validatePrivilege()
         validateStatus()
-        loadOpening(System.currentTimeMillis())
+        loadOpening(Instant.now().toEpochMilli())
 
         updateDetails()
         updateRemainingCounts()
@@ -30,7 +31,7 @@ class CancelOrderProcedure(
     }
 
     internal fun loadOrder() {
-        order = orderRepository.getOne(id)
+        order = orderRepository.getReferenceById(id)
     }
 
     internal fun validatePrivilege() {
@@ -52,7 +53,7 @@ class CancelOrderProcedure(
     internal fun updateDetails() {
         order.status = OrderStatus.CANCELLED
         count = order.count
-        timeWindow = timeWindowRepo.getOne(order.intervalId)
+        timeWindow = timeWindowRepo.getReferenceById(order.intervalId)
     }
 
     internal fun updateRemainingCounts() {

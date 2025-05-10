@@ -1,8 +1,8 @@
 package hu.kirdev.schpincer.model
 
 import java.io.Serializable
-import javax.persistence.*
-import javax.validation.constraints.Size
+import jakarta.persistence.*
+import jakarta.validation.constraints.Size
 
 @Entity
 @Table(name = "orders")
@@ -38,8 +38,7 @@ data class OrderEntity(
         @ManyToOne(optional = true)
         var orderedItem: ItemEntity? = null,
 
-        @Lob
-        @Column
+        @Column(columnDefinition = "text")
         var detailsJson: String,
 
         @Column

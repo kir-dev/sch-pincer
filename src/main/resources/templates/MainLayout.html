@@ -32,9 +32,9 @@
             <a href="circle.html" th:href="@{/falatozo}" th:text="#{lang.nav.circle}">Circles</a>
             <a href="items.html" th:href="@{/items}" th:text="#{lang.nav.items}">Items</a>
 
-            <a th:if="${session.user} neq null" th:href="@{/profile}"
-               th:text="${session.user?.name.substring(session.user?.name.trim().lastIndexOf(' ')+1)}">Test User</a>
-            <a th:if="${session.user} eq null" href="#login" th:href="@{/login}" th:text="#{lang.nav.login}">Login</a>
+            <a th:if="${user} neq null" th:href="@{/profile}"
+               th:text="${user?.name.substring(user?.name.trim().lastIndexOf(' ')+1)}">Test User</a>
+            <a th:if="${user} eq null" href="#login" th:href="@{/oauth2/authorization/authsch}" th:text="#{lang.nav.login}">Login</a>
         </div>
 
         <div class="container">
@@ -51,7 +51,7 @@
         <ins th:if="${#arrays.contains(@environment.getActiveProfiles(),'local')}" class="profile-badge">DEV</ins>
         <ins th:if="${#arrays.contains(@environment.getActiveProfiles(),'staging')}" class="profile-badge">STAGING</ins>
         <nav>
-            <object th:include="fragments/menu :: menu(${user})" th:remove="tag"></object>
+            <object th:insert="~{fragments/menu :: menu(${user})}" th:remove="tag"></object>
         </nav>
     </div>
 

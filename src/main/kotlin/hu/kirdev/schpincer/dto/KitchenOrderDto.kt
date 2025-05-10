@@ -3,6 +3,7 @@ package hu.kirdev.schpincer.dto
 import hu.kirdev.schpincer.model.MILLIS_TO_MINS
 import hu.kirdev.schpincer.model.OrderEntity
 import hu.kirdev.schpincer.model.OrderStatus
+import java.time.Instant
 
 data class KitchenOrderDto(
         var id: Long = 0,
@@ -44,8 +45,8 @@ data class KitchenOrderDto(
             count = order.count,
             priority = order.priority,
             intervalStatus = when {
-                System.currentTimeMillis() < (order.date) -> "before"
-                System.currentTimeMillis() > (order.date + (intervalLength * MILLIS_TO_MINS)) -> "after"
+                Instant.now().toEpochMilli() < (order.date) -> "before"
+                Instant.now().toEpochMilli() > (order.date + (intervalLength * MILLIS_TO_MINS)) -> "after"
                 else -> "ok"
             }
     )

@@ -1,11 +1,11 @@
 <html xmlns:th="http://www.thymeleaf.org/">
 <body>
 <div th:fragment="menu(user)">
-    <object th:if="${session.user} != null" th:remove="tag">
-        <a th:if="${session.user.sysadmin}" th:href="@{/admin/}" class="icon">
+    <object th:if="${user} != null" th:remove="tag">
+        <a th:if="${user.sysadmin}" th:href="@{/admin/}" class="icon">
             <i class="material-icons main">dashboard</i>
         </a>
-        <a th:if="${not #lists.isEmpty(session.user.permissions) or session.user.sysadmin}"
+        <a th:if="${not #lists.isEmpty(user.permissions) or user.sysadmin}"
            th:href="@{/configure/}" class="icon">
             <i class="material-icons main">tune</i>
         </a>
@@ -15,10 +15,10 @@
     <a href="circle.html" th:href="@{/falatozo}" th:text="#{lang.nav.circle}" class="long">Circles</a>
     <a href="items.html" th:href="@{/items}" th:text="#{lang.nav.items}" class="long">Items</a>
 
-    <a th:if="${session.user} neq null" th:href="@{/profile}"
-       th:text="${session.user?.name.substring(session.user?.name.trim().lastIndexOf(' ')+1)}" class="long">Test
+    <a th:if="${user} neq null" th:href="@{/profile}"
+       th:text="${user?.name.substring(user?.name.trim().lastIndexOf(' ')+1)}" class="long">Test
         User</a>
-    <a th:if="${session.user} eq null" href="#login" th:href="@{/login}" th:text="#{lang.nav.login}"
+    <a th:if="${user} eq null" href="#login" th:href="@{/oauth2/authorization/authsch}" th:text="#{lang.nav.login}"
        class="long">Login</a>
 
     <a href="#" class="icon short" onclick="document.getElementById('site-menu').classList.remove('invisible')"><i

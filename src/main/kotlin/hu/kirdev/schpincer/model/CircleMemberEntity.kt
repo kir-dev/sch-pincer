@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo
 import com.fasterxml.jackson.annotation.JsonIdentityReference
 import com.fasterxml.jackson.annotation.ObjectIdGenerators.PropertyGenerator
 import java.io.Serializable
-import javax.persistence.*
-import javax.validation.constraints.Size
+import jakarta.persistence.*
+import jakarta.validation.constraints.Size
 
 @Entity
 @Table(name = "circleMembers")

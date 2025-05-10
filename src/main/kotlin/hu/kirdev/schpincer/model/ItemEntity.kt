@@ -4,14 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo
 import com.fasterxml.jackson.annotation.JsonIdentityReference
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.ObjectIdGenerators.PropertyGenerator
-import org.hibernate.search.annotations.Field
-import org.hibernate.search.annotations.Indexed
-import org.hibernate.search.annotations.TermVector
 import java.io.Serializable
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
-@Indexed
 @Table(name = "items")
 data class ItemEntity(
 
@@ -20,7 +16,6 @@ data class ItemEntity(
         @GeneratedValue(strategy = GenerationType.AUTO)
         var id: Long = 0,
 
-        @Field(termVector = TermVector.YES)
         @Column
         var name: String = "",
 
@@ -29,23 +24,17 @@ data class ItemEntity(
         @ManyToOne(fetch = FetchType.LAZY)
         var circle: CircleEntity? = null,
 
-        @Lob
-        @Column
-        @Field(termVector = TermVector.YES)
+        @Column(columnDefinition = "text")
         var description: String = "",
 
-        @Lob
-        @Field(termVector = TermVector.YES)
-        @Column
+        @Column(columnDefinition = "text")
         var ingredients: String = "",
 
         @JsonIgnore
-        @Field(termVector = TermVector.YES)
         @Column
         var keywords: String? = null,
 
-        @Lob
-        @Column
+        @Column(columnDefinition = "text")
         var detailsConfigJson: String = "[]",
 
         @Column

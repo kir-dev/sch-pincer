@@ -8,16 +8,16 @@
           th:remove="all">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" th:remove="all">
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" th:remove="all"/>
-    <object th:include="MainLayout :: head" th:remove="tag"></object>
+    <object th:insert="~{MainLayout :: head}" th:remove="tag"></object>
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
 <!--    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">-->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
-<div class="header" th:replace="MainLayout :: header">
+<div class="header" th:replace="~{MainLayout :: header}">
 </div>
 
-<div class="left-menu" th:replace="MainLayout :: left-menu">
+<div class="left-menu" th:replace="~{MainLayout :: left-menu}">
 </div>
 
 <div class="page content">
@@ -102,7 +102,7 @@
         </form>
     </div>
 </div>
-<div th:replace="MainLayout :: footer"></div>
+<div th:replace="~{MainLayout :: footer}"></div>
 
 <script>
     flatpickr(".datetime-picker", {
