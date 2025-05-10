@@ -8,8 +8,9 @@ RUN ./mvnw clean package
 
 FROM eclipse-temurin:23-jre-alpine
 MAINTAINER gerviba@sch.bme.hu
+
 COPY --from=build /usr/src/app/target/schpincer.jar /opt/schpincer/
-COPY docker/application-docker.properties /opt/schpincer/application.properties
+
 WORKDIR /opt/schpincer
-ENTRYPOINT ["java", "-Dspring.profiles.include=docker", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-XX:+UseSerialGC", "-XX:MaxRAMPercentage=90", "-jar", "/opt/schpincer/schpincer.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.include=docker,production", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseContainerSupport", "-XX:+UseSerialGC", "-XX:MaxRAMPercentage=90", "-jar", "/opt/schpincer/schpincer.jar"]
 EXPOSE 80
