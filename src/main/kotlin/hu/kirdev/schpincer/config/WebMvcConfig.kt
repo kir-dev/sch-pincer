@@ -5,6 +5,7 @@ import org.springframework.context.MessageSource
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.support.ResourceBundleMessageSource
+import org.springframework.http.CacheControl
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.web.servlet.LocaleResolver
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
@@ -13,12 +14,16 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor
 import org.springframework.web.servlet.i18n.SessionLocaleResolver
+import java.time.Duration
 import java.util.*
 
 
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
-open class WebMvcConfig : WebMvcConfigurer {
+open class WebMvcConfig(
+    @Value("\${schpincer.storage-cache-max-age}")
+    private val storageCacheMaxAge: Long
+) : WebMvcConfigurer {
 
     @Bean
     open fun localeResolver(): LocaleResolver {
@@ -53,7 +58,10 @@ open class WebMvcConfig : WebMvcConfigurer {
     @Value("\${schpincer.external}")
     private val uploadPath = "/etc/schpincer/external/"
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
-        registry.addResourceHandler("/cdn/**")
-                .addResourceLocations("file:$uploadPath")
+        val handler = registry.addResourceHandler("/cdn/**").addResourceLocations("file:$uploadPath")
+        if (storageCacheMaxAge > 0) {
+            handler.setCacheControl(CacheControl.maxAge(Duration.ofSeconds(storageCacheMaxAge)))
+        }
+
     }
 }
