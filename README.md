@@ -38,7 +38,7 @@ spring.jpa.hibernate.ddl-auto=update
 - Use eg. this query to grant yourself sysadmin, or set `schincer.sysadmin=YOUR_AUTHSCH_UUID` in your `application-local.properties`
 
 ```sql
-`UPDATE `users` SET `sysadmin`=1 WHERE `email`='YOUR_EMAIL';`  
+UPDATE `users` SET `sysadmin`=1 WHERE `email`='YOUR_EMAIL';
 ```
 
 - Relog (log out and in)
