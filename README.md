@@ -1,7 +1,6 @@
 # SCH-PINCÉR
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=kir-dev_sch-pincer&metric=alert_status)](https://sonarcloud.io/dashboard?id=kir-dev_sch-pincer)
-
+Food ordering website for the Schönherz Dormitory
 
 ## Running/debugging locally
 
