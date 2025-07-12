@@ -35,7 +35,7 @@
     <div th:remove="all" class="trashpanda-container" onclick="closeTrashPanda(4)" id="trashpanda" style="display: none">
         <div class="trashpanda-popup" onclick="event.stopPropagation()">
             <div class="trashpanda-logo">
-                <img th:src="@{/image/trashpanda.png}" alt="trashpanda logó" />
+                <img th:src="@{/image/trashpanda.png}" alt="trashpanda logó"/>
             </div>
             <div class="trashpanda-content">
                 <h3>az sch-pincér mostantól trashpanda</h3>
@@ -85,7 +85,9 @@
                 <div class="placeholder"></div>
             </div>
         </div>
-
+        <object th:remove="tag">
+            <div th:replace="~{news/news_2023_09_06 :: article}"></div>
+        </object>
     </div>
 
     <div class="highlighted latest" th:if="${not #lists.isEmpty(openings)}">
@@ -115,11 +117,12 @@
     function showTrashPanda(key) {
         if (localStorage.getItem("traspanda") == null
             || (localStorage.getItem("traspanda") != 1
-            && localStorage.getItem("traspanda") != 2)
+                && localStorage.getItem("traspanda") != 2)
         ) {
             document.getElementById('trashpanda').style.display = 'block';
         }
     }
+
     function closeTrashPanda(typeOfClose) {
         localStorage.setItem("traspanda", typeOfClose);
         document.getElementById('trashpanda').style.display = 'none';
