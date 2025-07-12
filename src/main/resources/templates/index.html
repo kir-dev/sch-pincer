@@ -88,7 +88,7 @@
 
     </div>
 
-    <div class="highlighted latest">
+    <div class="highlighted latest" th:if="${not #lists.isEmpty(openings)}">
         <h2 th:text="#{lang.circle.next-openings}">Következő nyitások</h2>
 
         <table class="circles-table">
