@@ -53,7 +53,7 @@ class OrderingServiceTest {
         whenever(user.uid).thenReturn("unique")
         whenever(user.room).thenReturn("SCH-1620")
         whenever(user.name).thenReturn("Test User")
-        whenever(user.cardType).thenReturn(CardType.KB)
+        whenever(user.grantedCardType).thenReturn(CardType.KB)
         whenever(user.orderingPriority).thenReturn(5)
 
         service.itemsRepo = itemsRepo

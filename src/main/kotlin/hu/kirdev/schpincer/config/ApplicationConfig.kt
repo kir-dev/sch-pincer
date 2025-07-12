@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled
 @Configuration
 @EnableScheduling
 open class ApplicationConfig(
-    @Value("\${spring.datasource.url:}") private val datasourceUrl: String,
+    @param:Value("\${spring.datasource.url:}") private val datasourceUrl: String,
     private val itemPrecedenceService: ItemPrecedenceService
 ) {
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org/">
+<html lang="hu" xmlns:th="http://www.thymeleaf.org/">
 <head>
     <meta charset="UTF-8" th:remove="all"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" th:remove="all"/>
@@ -82,13 +82,13 @@
             Szeptember eleje óta összesen <b class="first" th:text="|${globalOrderedFoodCount} db|">4000 db</b> rendelést adtatok le kollektívan!
         </div>
 
-        <object th:remove="tag" th:if="${user?.cardType.name() != 'DO'}">
+        <object th:remove="tag" th:if="${user?.grantedCardType.name() != 'DO'}">
         <h2>Igazi VIP vagy</h2>
         <img class="emoticon pulsate-fwd" src="https://openmoji.org/data/color/svg/1F381.svg" width="200px">
-        <div class="message" th:if="${user?.cardType.name() == 'AB'}">
+        <div class="message" th:if="${user?.grantedCardType.name() == 'AB'}">
             Az <b>AB</b> kártyád után <b th:text="|${userKbAbExtra} db|">13db</b> extra feltétet kaptál ingyen!
         </div>
-        <div class="message" th:if="${user?.cardType.name() == 'KB'}">
+        <div class="message" th:if="${user?.grantedCardType.name() == 'KB'}">
             A <b>KB</b> kártyád után <b th:text="|${userKbAbExtra} db|">13db</b> extra feltétet kaptál ingyen!
         </div>
         </object>

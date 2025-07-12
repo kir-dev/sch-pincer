@@ -68,7 +68,7 @@ open class MainController {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("searchMode", "" != keyword)
         model.addAttribute("keyword", keyword)
-        model.addAttribute("card", (auth.getUserIfPresent()?.cardType ?: CardType.DO).name)
+        model.addAttribute("card", (auth.getUserIfPresent()?.grantedCardType ?: CardType.DO).name)
         config.injectPublicValues(model)
         return "items"
     }
@@ -85,7 +85,7 @@ open class MainController {
     @GetMapping("/circle/{circle}")
     fun circleSpecific(@PathVariable circle: String, model: Model, auth: Authentication?): String {
         model.addAttribute("circles", circles.findAllForMenu())
-        model.addAttribute("card", (auth.getUserIfPresent()?.cardType ?: CardType.DO).name)
+        model.addAttribute("card", (auth.getUserIfPresent()?.grantedCardType ?: CardType.DO).name)
         if (circle.matches("^\\d+$".toRegex())) {
             val id = circle.toLong()
             model.addAttribute("selectedCircle", circles.getOne(id))

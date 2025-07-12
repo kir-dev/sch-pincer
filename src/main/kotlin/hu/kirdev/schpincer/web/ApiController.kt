@@ -19,7 +19,6 @@ import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.exchange
 import java.lang.Integer.min
 import java.text.SimpleDateFormat
-import java.util.concurrent.ConcurrentHashMap
 import java.util.stream.Collectors
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.core.Authentication
@@ -38,7 +37,7 @@ open class ApiController(
         @Value("\${schpincer.api-tokens:}")
         apiTokensRaw: String,
 
-        @Value("\${schpincer.api.base-url}")
+        @param:Value("\${schpincer.api.base-url}")
         private val baseUrl: String
 ) {
 
@@ -258,7 +257,7 @@ open class ApiController(
         return try {
             orders.cancelOrder(user, body.id)
         } catch (e: FailedOrderException) {
-            log.warn("Failed to cancel order by '${user.uid ?: "n/a"}' reason: ${e.response}")
+            log.warn("Failed to cancel order by '${user.uid}' reason: ${e.response}")
             responseOf(e.response)
         }
     }

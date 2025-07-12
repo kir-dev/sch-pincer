@@ -30,8 +30,8 @@ open class SchPincerOidcUserService(
             if (admins.contains(user.uid))
                 user.sysadmin = true
             val card = schPincerUser.cardType
-            if (user.cardType !== card) {
-                user.cardType = card
+            if (user.pekCardType !== card) {
+                user.pekCardType = card
             }
             if (user.orderingPriority == 0)
                 user.orderingPriority = 1
@@ -51,6 +51,7 @@ open class SchPincerOidcUserService(
                 "",
                 admins.contains(schPincerUser.internalId),
                 card,
+                false,
                 getCirclePermissionList(ownedCircles),
                 1
             )

@@ -45,7 +45,7 @@ class ChangeOrderProcedure(
 
     private fun updateDetails() {
         order.room = room
-        order.comment = "[${user.cardType.name}] ${comment.removeNonPrintable()}"
+        order.comment = "[${user.grantedCardType.name}] ${comment.removeNonPrintable()}"
     }
 
 }

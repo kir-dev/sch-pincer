@@ -170,7 +170,7 @@ class MakeOrderTest {
         whenever(user.uid).thenReturn("unique")
         whenever(user.room).thenReturn("SCH-1620")
         whenever(user.name).thenReturn("Test User")
-        whenever(user.cardType).thenReturn(CardType.KB)
+        whenever(user.grantedCardType).thenReturn(CardType.KB)
 
         val detailsJson = "{\"details\": \"detail\"}"
         val comment = "comment"
@@ -630,7 +630,7 @@ class MakeOrderTest {
         whenever(user.uid).thenReturn("unique")
         whenever(user.room).thenReturn("SCH-1620")
         whenever(user.name).thenReturn("Test User")
-        whenever(user.cardType).thenReturn(CardType.KB)
+        whenever(user.grantedCardType).thenReturn(CardType.KB)
         whenever(user.orderingPriority).thenReturn(5)
 
         val comment = "comment here"

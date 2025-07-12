@@ -54,7 +54,7 @@ class MakeOrderProcedure (
             item = itemsRepo.getReferenceById(id)
         }
 
-        details = calculateExtra(detailsJson, order, item, manualUser?.card ?: user.cardType)
+        details = calculateExtra(detailsJson, order, item, manualUser?.card ?: user.grantedCardType)
         updateBasicDetails()
 
         order.orderedItem = item
@@ -87,7 +87,7 @@ class MakeOrderProcedure (
         order = OrderEntity(
                 userId = user.uid,
                 userName = user.name,
-                comment = "[${user.cardType.name}] $comment",
+                comment = "[${user.grantedCardType.name}] $comment",
                 detailsJson = detailsJson,
                 room = user.room,
                 createdAt = Instant.now().toEpochMilli())
