@@ -21,7 +21,7 @@ import java.util.*
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
 open class WebMvcConfig(
-    @Value("\${schpincer.storage-cache-max-age}")
+    @param:Value("\${schpincer.storage-cache-max-age}")
     private val storageCacheMaxAge: Long
 ) : WebMvcConfigurer {
 

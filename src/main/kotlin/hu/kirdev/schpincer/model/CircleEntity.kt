@@ -13,19 +13,19 @@ data class CircleEntity(
         @GeneratedValue(strategy = GenerationType.AUTO)
         var id: Long = 0,
 
-        @Size(min = 2, max = 32)
+        @param:Size(min = 2, max = 32)
         @Column(length = 32)
         var displayName: @Size(min = 2, max = 32) String = "",
 
-        @Size(max = 1000)
+        @param:Size(max = 1000)
         @Column(columnDefinition = "text")
         var description: @Size(max = 1000) String = "",
 
-        @Size(max = 1000)
+        @param:Size(max = 1000)
         @Column(columnDefinition = "text")
         var homePageDescription: @Size(max = 1000) String? = null,
 
-        @Size(max = 255)
+        @param:Size(max = 255)
         @Column(length = 255)
         var avgOpening: @Size(max = 255) String? = null,
 

@@ -173,6 +173,7 @@ open class AdminController {
         model.addAttribute("roles", user.permissions.joinToString(", "))
         model.addAttribute("priority", user.orderingPriority)
         model.addAttribute("forceGrantLoginAccess", user.forceGrantLoginAccess)
+        model.addAttribute("alwaysGrantAb", user.alwaysGrantAb)
         config.injectPublicValues(model)
         return "userModify"
     }
@@ -183,6 +184,7 @@ open class AdminController {
                   @RequestParam(required = false, defaultValue = "false") sysadmin: Boolean,
                   @RequestParam(defaultValue = "1") priority: Int,
                   @RequestParam(required = false, defaultValue = "false") forceGrantLoginAccess: Boolean,
+                  @RequestParam(required = false, defaultValue = "false") alwaysGrantAb: Boolean,
     ): String {
         val user = users.getByUidHash(uidHash) ?: return "redirect:/admin/?error=invalidUidHash"
         user.sysadmin = sysadmin
@@ -199,6 +201,7 @@ open class AdminController {
         user.permissions = permissions
         user.orderingPriority = priority
         user.forceGrantLoginAccess = forceGrantLoginAccess
+        user.alwaysGrantAb = alwaysGrantAb
         users.save(user)
         return REDIRECT_TO_ADMIN
     }
@@ -214,7 +217,7 @@ open class AdminController {
     @GetMapping("/debug/card/{card}")
     fun changeCard(@PathVariable card: String, auth: Authentication?): String {
         val user = auth.getUserIfPresent() ?: return "failed"
-        user.cardType = CardType.valueOf(card)
+        user.pekCardType = CardType.valueOf(card)
         users.save(user)
         return "ok"
     }

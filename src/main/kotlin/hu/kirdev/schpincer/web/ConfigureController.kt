@@ -22,7 +22,6 @@ import java.lang.Integer.max
 import java.lang.Integer.min
 import java.util.*
 import java.util.stream.Collectors
-import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.security.core.Authentication
 
@@ -72,7 +71,7 @@ open class ConfigureController {
     fun configureRoot(auth: Authentication?, model: Model): String {
         val all = circles.findAllForMenu()
         model.addAttribute("circles", all)
-        val (_, _, _, _, sysadmin, _, permissions) = auth.getUser()
+        val (_, _, _, _, sysadmin, _, _, permissions) = auth.getUser()
         val editable = circles.findAll().stream()
                 .filter { obj: CircleEntity? -> Objects.nonNull(obj) }
                 .filter { x: CircleEntity -> sysadmin || permissions.contains("CIRCLE_" + x.id) }
@@ -623,7 +622,7 @@ open class ConfigureController {
         if (opening.circle!!.id != circleId)
             return "redirect:/configure/$circleId?error"
 
-        model.addAttribute("exportTypes", ExportType.values())
+        model.addAttribute("exportTypes", ExportType.entries)
         model.addAttribute("openingId", opening.id)
         model.addAttribute("circles", circles.findAllForMenu())
         val ordersToReturn = orders.findAllByOpening(openingId)
@@ -678,7 +677,7 @@ open class ConfigureController {
     }
 
     @GetMapping("/configure/{circleId}/reviews")
-    fun showReviews(@PathVariable circleId: Long, model: Model, auth: Authentication?): String {
+    fun showReviews(@PathVariable circleId: Long, model: Model): String {
         val reviewList = reviews.findAll(circleId)
         model.addAttribute("reviews", reviewList)
         model.addAttribute("circles", circles.findAllForMenu())

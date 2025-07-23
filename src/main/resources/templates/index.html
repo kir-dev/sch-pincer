@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org/">
+<html lang="hu" xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="~{MainLayout :: head}">
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css"/>
 </head>
-<body onload="showTrashPanda()">
+<body>
 <div class="header" th:replace="~{MainLayout :: header}">
 </div>
 
@@ -35,7 +35,7 @@
     <div th:remove="all" class="trashpanda-container" onclick="closeTrashPanda(4)" id="trashpanda" style="display: none">
         <div class="trashpanda-popup" onclick="event.stopPropagation()">
             <div class="trashpanda-logo">
-                <img th:src="@{/image/trashpanda.png}" alt="trashpanda logó" />
+                <img th:src="@{/image/trashpanda.png}" alt="trashpanda logó"/>
             </div>
             <div class="trashpanda-content">
                 <h3>az sch-pincér mostantól trashpanda</h3>
@@ -85,10 +85,12 @@
                 <div class="placeholder"></div>
             </div>
         </div>
-
+        <object th:remove="tag">
+            <div th:replace="~{news/news_2023_09_06 :: article}"></div>
+        </object>
     </div>
 
-    <div class="highlighted latest">
+    <div class="highlighted latest" th:if="${not #lists.isEmpty(openings)}">
         <h2 th:text="#{lang.circle.next-openings}">Következő nyitások</h2>
 
         <table class="circles-table">
@@ -111,31 +113,5 @@
 
 <div th:replace="~{MainLayout :: footer}"></div>
 
-<script th:remove="all">
-    function showTrashPanda(key) {
-        if (localStorage.getItem("traspanda") == null
-            || (localStorage.getItem("traspanda") != 1
-            && localStorage.getItem("traspanda") != 2)
-        ) {
-            document.getElementById('trashpanda').style.display = 'block';
-        }
-    }
-    function closeTrashPanda(typeOfClose) {
-        localStorage.setItem("traspanda", typeOfClose);
-        document.getElementById('trashpanda').style.display = 'none';
-
-        return fetch("/api/easteregg/trashpanda/" + typeOfClose, {
-            method: 'POST',
-            cache: 'no-cache',
-            credentials: 'same-origin',
-            headers: {
-                'Accept': 'text/plain;charset=UTF-8',
-                'Content-type': 'application/json;charset=UTF-8'
-            },
-            redirect: 'follow',
-            referrerPolicy: 'no-referrer'
-        }).then(response => response.text());
-    }
-</script>
 </body>
 </html>

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.core.Authentication
 
 @Controller
@@ -283,9 +282,9 @@ class KitchenViewController {
             return listOf()
 
         return if (searchTerms.name.isNotBlank()) {
-            users.findByUsernameContains(searchTerms.name).map { UserSearchResultDto(it.uid, it.name, it.room, it.uid.sha256().substring(0, 6), it.cardType) }
+            users.findByUsernameContains(searchTerms.name).map { UserSearchResultDto(it.uid, it.name, it.room, it.uid.sha256().substring(0, 6), it.grantedCardType) }
         } else if (searchTerms.room.isNotBlank()) {
-            users.findByRoomContains(searchTerms.room).map { UserSearchResultDto(it.uid, it.name, it.room, it.uid.sha256().substring(0, 6), it.cardType) }
+            users.findByRoomContains(searchTerms.room).map { UserSearchResultDto(it.uid, it.name, it.room, it.uid.sha256().substring(0, 6), it.grantedCardType) }
         } else {
             listOf()
         }

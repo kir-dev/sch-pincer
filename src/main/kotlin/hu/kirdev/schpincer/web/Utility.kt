@@ -85,12 +85,12 @@ fun String.sha256(): String {
 }
 
 fun cannotEditCircle(circleId: Long, auth: Authentication?): Boolean {
-    val (_, _, _, _, sysadmin, _, permissions) = auth.getUser()
+    val (_, _, _, _, sysadmin, _, _, permissions) = auth.getUser()
     return !((permissions.contains("ROLE_LEADER") && permissions.contains("CIRCLE_$circleId")) || sysadmin)
 }
 
 fun cannotEditCircleNoPR(circleId: Long, auth: Authentication?): Boolean {
-    val (_, _, _, _, sysadmin, _, permissions) = auth.getUser()
+    val (_, _, _, _, sysadmin, _, _, permissions) = auth.getUser()
     return !((permissions.contains("ROLE_LEADER") && permissions.contains("CIRCLE_$circleId") && !permissions.contains("PR_$circleId")) || sysadmin)
 }
 

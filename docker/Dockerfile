@@ -1,4 +1,4 @@
-FROM eclipse-temurin:23-jdk-alpine AS build
+FROM eclipse-temurin:24-jdk-alpine AS build
 COPY src /usr/src/app/src
 COPY pom.xml /usr/src/app
 COPY .mvn /usr/src/app/.mvn
@@ -6,7 +6,7 @@ COPY mvnw /usr/src/app
 WORKDIR /usr/src/app
 RUN ./mvnw clean package
 
-FROM eclipse-temurin:23-jre-alpine
+FROM eclipse-temurin:24-jre-alpine
 MAINTAINER gerviba@sch.bme.hu
 
 COPY --from=build /usr/src/app/target/schpincer.jar /opt/schpincer/

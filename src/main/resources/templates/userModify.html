@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org/">
+<html lang="hu" xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="~{MainLayout :: head}">
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
@@ -51,6 +51,10 @@
                 <tr>
                     <td th:text="#{lang.admin.roles.force-grant-login-access}">Grant explicit login</td>
                     <td><input type="checkbox" name="forceGrantLoginAccess" th:checked="${forceGrantLoginAccess}"/></td>
+                </tr>
+                <tr>
+                    <td th:text="#{lang.admin.roles.always-grant-ab}">Always Grant AB</td>
+                    <td><input type="checkbox" name="alwaysGrantAb" th:checked="${alwaysGrantAb}"/></td>
                 </tr>
             </table>
             <input class="button" type="submit" th:value="#{lang.admin.title-roles}"/>

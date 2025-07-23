@@ -19,8 +19,8 @@ data class ItemEntity(
         @Column
         var name: String = "",
 
-        @JsonIdentityInfo(generator = PropertyGenerator::class, property = "id")
-        @JsonIdentityReference(alwaysAsId = true)
+        @param:JsonIdentityInfo(generator = PropertyGenerator::class, property = "id")
+        @param:JsonIdentityReference(alwaysAsId = true)
         @ManyToOne(fetch = FetchType.LAZY)
         var circle: CircleEntity? = null,
 
