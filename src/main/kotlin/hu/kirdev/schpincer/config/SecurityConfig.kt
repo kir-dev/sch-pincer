@@ -51,6 +51,7 @@ open class SecurityConfig {
             ).permitAll()
             auth.requestMatchers("/loggedin", "/login").permitAll()
             auth.requestMatchers("/api/**").permitAll()
+            auth.requestMatchers("/order/**").hasRole(Role.USER.name)
             auth.requestMatchers("/profile", "/profile/**", "/stats").hasRole(Role.USER.name)
             auth.requestMatchers("/configure/**").hasAnyRole(Role.LEADER.name, Role.ADMIN.name)
             auth.requestMatchers("/admin", "/admin/**").hasRole(Role.ADMIN.name)
