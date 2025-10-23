@@ -1,5 +1,6 @@
 package hu.kirdev.schpincer.web
 
+import hu.kirdev.schpincer.config.Role
 import hu.kirdev.schpincer.dto.RoleEntryDto
 import hu.kirdev.schpincer.model.CardType
 import hu.kirdev.schpincer.model.CircleEntity
@@ -197,7 +198,7 @@ open class AdminController {
                 permissions.add(roleName)
         }
         if (permissions.isNotEmpty())
-            permissions.add("ROLE_LEADER")
+            permissions.add("ROLE_${Role.LEADER.name}")
         user.permissions = permissions
         user.orderingPriority = priority
         user.forceGrantLoginAccess = forceGrantLoginAccess

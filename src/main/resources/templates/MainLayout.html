@@ -84,7 +84,7 @@
         <div>
             <h3 th:text="#{lang.footer.about-us}">Rólunk</h3>
             <p th:text="#{lang.footer.about-us-long}">Az SCH-Pincér a KIR-DEV projektje</p>
-            <a href="https://kir-dev.sch.bme.hu/"><img src="../image/kirdev.svg" th:src="@{/image/kirdev.svg}" height="120" class="white"/></a><br/>
+            <a href="https://kir-dev.hu/"><img src="/image/kirdev.svg" th:src="@{/image/kirdev.svg}" height="120" class="white"/></a><br/>
             <a href="https://github.com/kir-dev/sch-pincer" target="_blank"><i class="material-icons">link</i><span>FORRÁSKÓD (GIT)</span></a>
         </div>
         <div>
@@ -98,10 +98,10 @@
         </div>
         <div>
             <h3 th:text="#{lang.footer.partners}">Partnerek</h3>
-            <a href="https://foodex.sch.bme.hu/"><img src="../image/foodex.png" th:src="@{/image/foodex.png}"
+            <a href="https://foodex.sch.bme.hu/"><img src="/image/foodex.png" th:src="@{/image/foodex.png}"
                                                      class="white"/></a><br/>
             <ins th:text="#{lang.footer.app-by}">App by</ins>
-            : <a href="https://kir-dev.sch.bme.hu/"><i class="material-icons">link</i><span>KIR-DEV</span></a><br/>
+            : <a href="https://kir-dev.hu/"><i class="material-icons">link</i><span>KIR-DEV</span></a><br/>
             <ins th:text="#{lang.footer.hosting}">Hosting</ins>
             : <a href="https://kszk.sch.bme.hu/"><i class="material-icons">link</i><span>KSZK</span></a><br />
             <br />
@@ -114,18 +114,6 @@
         by <span><a href="https://kir-dev.hu/about/members">ALBI, BENI, BERCI, ISTI, SCHÁMI, SZABÓ BENI, TRISZ</a></span>
     </div>
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-151909044-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-
-        gtag('js', new Date());
-
-        gtag('config', 'UA-151909044-1');
-    </script>
-</div>
+    <script defer="defer" data-domain="schpincer.sch.bme.hu" src="https://visit.kir-dev.hu/js/script.js"></script></div>
 </body>
 </html>

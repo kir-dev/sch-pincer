@@ -7,22 +7,24 @@ import hu.kirdev.schpincer.dao.TimeWindowRepository
 import hu.kirdev.schpincer.dto.ManualUserDetails
 import hu.kirdev.schpincer.dto.OrderDetailsDto
 import hu.kirdev.schpincer.model.*
-import hu.kirdev.schpincer.web.component.*
+import hu.kirdev.schpincer.web.component.CustomComponentAnswerList
+import hu.kirdev.schpincer.web.component.CustomComponentType
+import hu.kirdev.schpincer.web.component.calculateExtra
 import hu.kirdev.schpincer.web.removeNonPrintable
 import java.time.Instant
 
 class FailedOrderException(val response: String) : RuntimeException()
 
-class MakeOrderProcedure (
-        private val user: UserEntity,
-        private val id: Long,
-        private val itemCount: Int,
-        private val time: Long,
-        private val comment: String,
-        private val detailsJson: String,
-        private val itemsRepo: ItemRepository,
-        private val timeWindowRepo: TimeWindowRepository,
-        private val extrasRepository: ExtrasRepository
+class MakeOrderProcedure(
+    private val user: UserEntity,
+    private val id: Long,
+    private val itemCount: Int,
+    private val time: Long,
+    private val comment: String,
+    private val detailsJson: String,
+    private val itemsRepo: ItemRepository,
+    private val timeWindowRepo: TimeWindowRepository,
+    private val extrasRepository: ExtrasRepository
 ) {
 
     internal lateinit var item: ItemEntity
@@ -44,13 +46,13 @@ class MakeOrderProcedure (
             loadTargetItem()
         } else {
             order = OrderEntity(
-                    userId = manualUser.id,
-                    userName = manualUser.name,
-                    comment = "[${manualUser.card}] @ ${user.name} | ${comment.removeNonPrintable()}",
-                    additionalComment = "via ${user.name}",
-                    detailsJson = detailsJson,
-                    room = manualUser.room,
-                    createdAt = Instant.now().toEpochMilli())
+                userId = manualUser.id,
+                userName = manualUser.name,
+                comment = "[${manualUser.card}] @ ${user.name} | ${comment.removeNonPrintable()}",
+                additionalComment = "via ${user.name}",
+                detailsJson = detailsJson,
+                room = manualUser.room,
+                createdAt = Instant.now().toEpochMilli())
             item = itemsRepo.getReferenceById(id)
         }
 
@@ -85,12 +87,12 @@ class MakeOrderProcedure (
 
     internal fun createOrderEntity() {
         order = OrderEntity(
-                userId = user.uid,
-                userName = user.name,
-                comment = "[${user.grantedCardType.name}] $comment",
-                detailsJson = detailsJson,
-                room = user.room,
-                createdAt = Instant.now().toEpochMilli())
+            userId = user.uid,
+            userName = user.name,
+            comment = "[${user.grantedCardType.name}] $comment",
+            detailsJson = detailsJson,
+            room = user.room,
+            createdAt = Instant.now().toEpochMilli())
     }
 
     internal fun loadTargetItem() {
@@ -151,7 +153,7 @@ class MakeOrderProcedure (
             ItemCategory.DELTA -> {
                 if (current.usedDelta + count <= current.maxDelta)
                     current.usedDelta += count
-                else if (force)  throw FailedOrderException(RESPONSE_CATEGORY_FULL)
+                else if (force) throw FailedOrderException(RESPONSE_CATEGORY_FULL)
                 else return
             }
 
@@ -181,10 +183,10 @@ class MakeOrderProcedure (
     }
 
     internal fun updateRemainingItemCount() {
-        timeWindow.normalItemCount = timeWindow.normalItemCount - count
+        timeWindow.normalItemCount -= count
         if (order.extraTag)
-            timeWindow.extraItemCount = timeWindow.extraItemCount - count
-        current.orderCount = current.orderCount + count
+            timeWindow.extraItemCount -= count
+        current.orderCount += count
     }
 
     internal fun updateOrderDetails() {
@@ -195,12 +197,13 @@ class MakeOrderProcedure (
             cancelUntil = current.orderEnd
             category = item.category
             priority = user.orderingPriority
-            compactName = (item.alias.ifEmpty { item.name }) + (if (this@MakeOrderProcedure.count == 1) "" else " x ${this@MakeOrderProcedure.count}")
+            compactName =
+                (item.alias.ifEmpty { item.name }) + (if (this@MakeOrderProcedure.count == 1) "" else " x ${this@MakeOrderProcedure.count}")
             order.count = this@MakeOrderProcedure.count
         }
     }
 
-    private fun getExtrasOfOrder(): Set<ExtraEntity> {
+    private fun getExtrasOfOrder(): MutableSet<ExtraEntity> {
 
         val extras = mutableSetOf<ExtraEntity>()
         val mapper = ObjectMapper()
@@ -211,7 +214,10 @@ class MakeOrderProcedure (
             val name = answer.name
             for (selected in answer.selected) {
 
-                val optionalExtra = extrasRepository.findByCircleAndNameAndInputTypeAndSelectedIndex(current.circle!!, name, type, selected)
+                val optionalExtra = extrasRepository.findByCircleAndNameAndInputTypeAndSelectedIndex(current.circle!!,
+                    name,
+                    type,
+                    selected)
                 if (optionalExtra.isEmpty) {
                     throw IllegalArgumentException("${current.circle?.displayName ?: "null"} has no optional extra with input type $type and name $name")
                 }
@@ -222,6 +228,5 @@ class MakeOrderProcedure (
         }
 
         return extras
-
     }
 }

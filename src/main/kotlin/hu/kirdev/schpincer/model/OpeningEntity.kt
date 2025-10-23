@@ -8,6 +8,7 @@ import hu.kirdev.schpincer.service.OpeningService
 import java.io.Serializable
 import jakarta.persistence.*
 import jakarta.validation.constraints.Size
+import org.hibernate.annotations.ColumnDefault
 
 const val MILLIS_TO_MINS: Long = 60000
 
@@ -103,7 +104,8 @@ data class OpeningEntity(
         @Column(nullable = false)
         var usedLambda: Int = 0,
 
-        @Column(nullable = false, columnDefinition = "bigint(20) DEFAULT 0")
+        @ColumnDefault("0")
+        @Column(nullable = false, columnDefinition = "bigint")
         var compensationTime: Long = 0
 
 ) : Serializable {

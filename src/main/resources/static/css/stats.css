@@ -7,7 +7,7 @@
 
 .stats .decoration.profile {
     background-color: #f5f5f5;
-    background-image: url("../image/stat-bg.svg");
+    background-image: url("/image/stat-bg.svg");
     background-size: cover;
     border-bottom: 8px solid #3185e2;
 }
@@ -633,4 +633,3 @@ b {
         transform: translate(0)
     }
 }
-

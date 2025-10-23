@@ -29,10 +29,9 @@ data class UserEntity(
     var pekCardType: CardType = CardType.DO,
 
     @Column(nullable = false)
-    @ColumnDefault("0")
+    @ColumnDefault("false")
     var alwaysGrantAb: Boolean = false,
 
-    @Column
     @ElementCollection(fetch = FetchType.EAGER)
     @BatchSize(size = 1000)
     var permissions: Set<String> = mutableSetOf(),

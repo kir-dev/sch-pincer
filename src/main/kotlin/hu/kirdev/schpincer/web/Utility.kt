@@ -1,5 +1,6 @@
 package hu.kirdev.schpincer.web
 
+import hu.kirdev.schpincer.config.Role
 import hu.kirdev.schpincer.dto.CircleMemberRole
 import hu.kirdev.schpincer.model.CircleMembership
 import hu.kirdev.schpincer.model.SchPincerOidcUser
@@ -86,12 +87,12 @@ fun String.sha256(): String {
 
 fun cannotEditCircle(circleId: Long, auth: Authentication?): Boolean {
     val (_, _, _, _, sysadmin, _, _, permissions) = auth.getUser()
-    return !((permissions.contains("ROLE_LEADER") && permissions.contains("CIRCLE_$circleId")) || sysadmin)
+    return !((permissions.contains("ROLE_${Role.LEADER.name}") && permissions.contains("CIRCLE_$circleId")) || sysadmin)
 }
 
 fun cannotEditCircleNoPR(circleId: Long, auth: Authentication?): Boolean {
     val (_, _, _, _, sysadmin, _, _, permissions) = auth.getUser()
-    return !((permissions.contains("ROLE_LEADER") && permissions.contains("CIRCLE_$circleId") && !permissions.contains("PR_$circleId")) || sysadmin)
+    return !((permissions.contains("ROLE_${Role.LEADER.name}") && permissions.contains("CIRCLE_$circleId") && !permissions.contains("PR_$circleId")) || sysadmin)
 }
 
 fun isPR(circleId: Long, auth: Authentication?): Boolean {
@@ -103,7 +104,7 @@ fun isCircleOwner(circleId: Long, circleService: CircleService, auth: Authentica
 }
 
 fun toReadableRole(permissions: Set<String>, circleID: Long): CircleMemberRole {
-    val isLeader = permissions.contains("ROLE_LEADER")
+    val isLeader = permissions.contains("ROLE_${Role.LEADER.name}")
     val isCircleOwner = permissions.contains("CIRCLE_${circleID}")
     val isPr = permissions.contains("PR_${circleID}")
     return if (!isLeader || !isCircleOwner) CircleMemberRole.NONE

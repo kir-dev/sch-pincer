@@ -5,18 +5,14 @@ Food ordering website for the Schönherz Dormitory
 ## Running/debugging locally
 
 - Open the repository in IntelliJ IDEA
-- Create a database with this mysql query: `CREATE DATABASE schpincer CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
+- Create a database with this query: `CREATE DATABASE schpincer;`
 - Go to https://auth.sch.bme.hu/console/create, set *Átirányítási cím* to
   `http://localhost:8080/login/oauth2/code/authsch`, then use the created credentials in the following config file:
-- Create `src/main/resources/config/application-local.properties` using the below config and update it with your AuthSCH and MySQL credentials:
+- Create `src/main/resources/config/application-local.properties` using the below config and update it with your AuthSCH credentials:
 
 ```properties
 spring.security.oauth2.client.registration.authsch.client-id=AUTHSCHKLIENSAZONOSITO
 spring.security.oauth2.client.registration.authsch.client-secret=AUTHSCHKLIENSKULCS
-
-spring.datasource.url=jdbc:mysql://127.0.0.1:3306/schpincer?useSSL=false&useUnicode=yes&characterEncoding=utf8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-spring.datasource.username=schpincer
-spring.datasource.password=mypassword
 
 # use "create" to reset the database when restarting the server  
 spring.jpa.hibernate.ddl-auto=update
@@ -32,8 +28,7 @@ spring.jpa.hibernate.ddl-auto=update
 
 ### Grant admin privilege via SQL queries
 
-- Open mysql console
-- `use schpincer;`
+- Open postgres console and select your database
 - Make sure you've logged in at least once
 - Use eg. this query to grant yourself sysadmin, or set `schincer.sysadmin=YOUR_AUTHSCH_UUID` in your `application-local.properties`
 
@@ -43,4 +38,3 @@ UPDATE `users` SET `sysadmin`=1 WHERE `email`='YOUR_EMAIL';
 
 - Relog (log out and in)
 - You will now see the two administration buttons  
-  
