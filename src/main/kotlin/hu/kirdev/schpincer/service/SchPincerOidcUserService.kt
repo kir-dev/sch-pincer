@@ -23,7 +23,7 @@ open class SchPincerOidcUserService(
         val authschUser = super.loadUser(userRequest) ?: return null
 
         val schPincerUser = SchPincerOidcUser(authschUser)
-        val ownedCircles = getOwnedCircleIds(schPincerUser.memberships, circleService)
+        val ownedCircles = getOwnedCircleIds(schPincerUser.executiveAtCircles, circleService)
         if (userService.exists(schPincerUser.internalId)) {
             val user = userService.getById(schPincerUser.internalId)
             user.email = schPincerUser.email
