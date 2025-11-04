@@ -4,6 +4,7 @@ import com.itextpdf.text.*
 import com.itextpdf.text.pdf.PdfPCell
 import com.itextpdf.text.pdf.PdfPTable
 import com.itextpdf.text.pdf.PdfWriter
+import hu.kirdev.schpincer.config.Role
 import hu.kirdev.schpincer.dto.CircleMemberRole
 import hu.kirdev.schpincer.dto.OpeningEntityDto
 import hu.kirdev.schpincer.model.*
@@ -142,13 +143,13 @@ open class ConfigureController {
         val tmp: MutableSet<String> = userToEdit.permissions.toMutableSet()
         when (permission) {
             CircleMemberRole.NONE -> tmp.removeAll(listOf("CIRCLE_${circleId}", "PR_${circleId}"))
-            CircleMemberRole.PR -> tmp.addAll(listOf("CIRCLE_${circleId}", "PR_${circleId}", "ROLE_LEADER"))
+            CircleMemberRole.PR -> tmp.addAll(listOf("CIRCLE_${circleId}", "PR_${circleId}", "ROLE_${Role.LEADER.name}"))
             CircleMemberRole.LEADER -> {
-                tmp.addAll(listOf("CIRCLE_${circleId}", "ROLE_LEADER"))
+                tmp.addAll(listOf("CIRCLE_${circleId}", "ROLE_${Role.LEADER.name}"))
                 tmp.remove("PR_${circleId}")
             }
         }
-        if (tmp.count() == 1 && tmp.first() == "ROLE_LEADER")
+        if (tmp.count() == 1 && tmp.first() == "ROLE_${Role.LEADER.name}")
             tmp.clear()
         userToEdit.permissions = tmp
         users.save(userToEdit)

@@ -64,7 +64,7 @@ open class SchPincerOidcUserService(
     private fun getCirclePermissionList(ownedCircles: List<Long>): MutableSet<String> {
         val permissions = mutableSetOf<String>()
         if (ownedCircles.isNotEmpty()) {
-            permissions.add("ROLE_LEADER")
+            permissions.add("ROLE_${Role.LEADER.name}")
             permissions.addAll(ownedCircles.map { "CIRCLE_${it}" })
         }
         return permissions
