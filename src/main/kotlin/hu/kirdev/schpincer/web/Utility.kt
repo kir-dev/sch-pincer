@@ -2,7 +2,7 @@ package hu.kirdev.schpincer.web
 
 import hu.kirdev.schpincer.config.Role
 import hu.kirdev.schpincer.dto.CircleMemberRole
-import hu.kirdev.schpincer.model.CircleMembership
+import hu.kirdev.schpincer.model.ExecutiveAt
 import hu.kirdev.schpincer.model.SchPincerOidcUser
 import hu.kirdev.schpincer.service.CircleService
 import hu.kirdev.schpincer.service.UserService
@@ -70,12 +70,10 @@ fun Authentication?.getUserIfPresent() = if (hasUser()) getUser() else null
 fun Authentication?.getUserId() = (this?.principal as? SchPincerOidcUser)?.internalId
 
 fun Authentication?.getOwnedCircles(circleService: CircleService) =
-    getOwnedCircleIds((this?.principal!! as SchPincerOidcUser).memberships, circleService)
+    getOwnedCircleIds((this?.principal!! as SchPincerOidcUser).executiveAtCircles, circleService)
 
-fun getOwnedCircleIds(memberships: List<CircleMembership>, circleService: CircleService): List<Long> {
-    return memberships
-        .filter { it.title.any { it.lowercase().matches("^k[oö]rvezet[oöő]$".toRegex()) } }
-        .mapNotNull { circleService.findByVirGroupId(it.id)?.id }
+fun getOwnedCircleIds(executiveAt: List<ExecutiveAt>, circleService: CircleService): List<Long> {
+    return executiveAt.mapNotNull { circleService.findByVirGroupId(it.id)?.id }
 }
 
 
