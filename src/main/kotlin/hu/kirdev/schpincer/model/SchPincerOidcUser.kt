@@ -60,7 +60,7 @@ class SchPincerOidcUser(private val oidcUser: OidcUser) : OidcUser by oidcUser {
         return entrants.mapNotNull {
             runCatching {
                 Entrant(
-                    (it["id"] as Number).toLong(),
+                    (it["groupId"] as Number).toLong(),
                     it["groupName"].toString(),
                     it["entrantType"].toString(),
                 )
