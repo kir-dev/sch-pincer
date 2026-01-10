@@ -1,4 +1,4 @@
-FROM eclipse-temurin:24-jdk-alpine AS build
+FROM eclipse-temurin:25-jdk-alpine AS build
 WORKDIR /usr/src/app
 
 COPY pom.xml .
@@ -10,7 +10,7 @@ RUN ./mvnw dependency:go-offline -B -U
 COPY src ./src
 RUN ./mvnw package -B
 
-FROM eclipse-temurin:24-jre-alpine
+FROM eclipse-temurin:25-jre-alpine
 MAINTAINER gerviba@sch.bme.hu
 
 COPY --from=build /usr/src/app/target/schpincer.jar /opt/schpincer/

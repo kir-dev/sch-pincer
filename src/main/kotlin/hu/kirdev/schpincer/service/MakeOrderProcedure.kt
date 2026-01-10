@@ -1,6 +1,5 @@
 package hu.kirdev.schpincer.service
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import hu.kirdev.schpincer.dao.ExtrasRepository
 import hu.kirdev.schpincer.dao.ItemRepository
 import hu.kirdev.schpincer.dao.TimeWindowRepository
@@ -11,6 +10,7 @@ import hu.kirdev.schpincer.web.component.CustomComponentAnswerList
 import hu.kirdev.schpincer.web.component.CustomComponentType
 import hu.kirdev.schpincer.web.component.calculateExtra
 import hu.kirdev.schpincer.web.removeNonPrintable
+import tools.jackson.databind.ObjectMapper
 import java.time.Instant
 
 class FailedOrderException(val response: String) : RuntimeException()
@@ -104,7 +104,8 @@ class MakeOrderProcedure(
     internal fun updateBasicDetails() {
         order.intervalId = time
         order.name = item.name
-        current = timeWindowRepo.findById(time).map { it.opening }.orElse(null) ?: throw FailedOrderException(RESPONSE_TIME_WINDOW_INVALID)
+        current = timeWindowRepo.findById(time).map { it.opening }.orElse(null) ?: throw FailedOrderException(
+            RESPONSE_TIME_WINDOW_INVALID)
         order.openingId = current.id
     }
 

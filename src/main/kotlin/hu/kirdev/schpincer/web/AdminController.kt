@@ -21,7 +21,7 @@ import org.springframework.security.core.Authentication
 @RequestMapping("/admin")
 open class AdminController {
 
-    private val REDIRECT_TO_ADMIN = "redirect:/admin/"
+    private val REDIRECT_TO_ADMIN = "redirect:/admin"
 
     @Autowired
     private lateinit var circles: CircleService

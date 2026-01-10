@@ -2,11 +2,11 @@
 <body>
 <div th:fragment="menu(user)">
     <object th:if="${user} != null" th:remove="tag">
-        <a th:if="${user.sysadmin}" th:href="@{/admin/}" class="icon">
+        <a th:if="${user.sysadmin}" th:href="@{/admin}" class="icon">
             <i class="material-icons main">dashboard</i>
         </a>
         <a th:if="${not #lists.isEmpty(user.permissions) or user.sysadmin}"
-           th:href="@{/configure/}" class="icon">
+           th:href="@{/configure}" class="icon">
             <i class="material-icons main">tune</i>
         </a>
     </object>
