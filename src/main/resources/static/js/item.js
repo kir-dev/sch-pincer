@@ -14,7 +14,7 @@ function appendNext(profile = 0) {
     if (page === 0)
         clearAll();
 
-    getForJsonObject('api/items/' + getFilter('/') + (profile !== parseInt(0) ? '?circle=' + profile : ''))
+    getForJsonObject('api/items' + getFilter('') + (profile !== parseInt(0) ? '?circle=' + profile : ''))
         .then(function (data) {
             endReached = true;
             if (data.length === 0) {
@@ -74,7 +74,7 @@ function showLoading() {
 }
 
 function searchFor(keyword) {
-    getForJsonObject('api/items/' + getFilter('/'))
+    getForJsonObject('api/items' + getFilter(''))
         .then(function (data) {
             searchResult = data;
             document.getElementById('search-input').value = keyword;
@@ -87,12 +87,12 @@ function searchFor(keyword) {
 function updateUrl(keyword) {
     if (keyword == null) {
         window.history.pushState({
-            route: '/items/' + (getFilter('') !== '' ? ('?' + getFilter('')) : '')
-        }, document.title, '/items/' + (getFilter('') !== '' ? ('?' + getFilter('')) : ''));
+            route: '/items' + (getFilter('') !== '' ? ('?' + getFilter('')) : '')
+        }, document.title, '/items' + (getFilter('') !== '' ? ('?' + getFilter('')) : ''));
     } else {
         window.history.pushState({
-            route: '/items/?' + (getFilter('') !== '' ? (getFilter('') + '&') : '') + 'q=' + encodeURI(keyword)
-        }, document.title, '/items/?' + (getFilter('') !== '' ? (getFilter('') + '&') : '') + 'q=' + encodeURI(keyword));
+            route: '/items?' + (getFilter('') !== '' ? (getFilter('') + '&') : '') + 'q=' + encodeURI(keyword)
+        }, document.title, '/items?' + (getFilter('') !== '' ? (getFilter('') + '&') : '') + 'q=' + encodeURI(keyword));
     }
 }
 

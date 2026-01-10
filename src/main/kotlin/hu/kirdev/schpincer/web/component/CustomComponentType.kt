@@ -1,11 +1,10 @@
 package hu.kirdev.schpincer.web.component
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import hu.kirdev.schpincer.dto.OrderDetailsDto
 import hu.kirdev.schpincer.model.CardType
 import hu.kirdev.schpincer.model.ItemEntity
 import hu.kirdev.schpincer.model.OrderEntity
-import hu.kirdev.schpincer.model.UserEntity
+import tools.jackson.databind.ObjectMapper
 import java.io.IOException
 import java.util.*
 
@@ -19,7 +18,7 @@ enum class CustomComponentType {
             ccm: CustomComponentModel,
             cardType: CardType
         ): Int {
-            return ccm.prices.get(cca.selected.get(0))
+            return ccm.prices?.get(cca.selected[0]) ?: 0
         }
 
         override fun processMessage(
@@ -29,7 +28,7 @@ enum class CustomComponentType {
             cardType: CardType
         ): List<String> {
             val list: MutableList<String> = ArrayList()
-            list.add(ccm.aliases.get(cca.selected.get(0)))
+            list.add(ccm.aliases?.get(cca.selected[0]) ?: "")
             return list
         }
 
@@ -40,7 +39,7 @@ enum class CustomComponentType {
             cardType: CardType
         ): Map<String, Int> {
             return mapOf(
-                Pair("${cca.name}- ${ccm.values[cca.selected[0]]}", ccm.prices[cca.selected[0]])
+                Pair("${cca.name}- ${ccm.values?.get(cca.selected[0])}", ccm.prices?.get(cca.selected[0]) ?: 0)
             )
         }
     },
@@ -54,7 +53,7 @@ enum class CustomComponentType {
         ): Int {
             var result = 0
             for (index in cca.selected)
-                result += ccm.prices[index]
+                result += ccm.prices?.get(index) ?: 0
             return result
         }
 
@@ -66,7 +65,7 @@ enum class CustomComponentType {
         ): List<String> {
             val result: MutableList<String> = ArrayList()
             for (index in cca.selected)
-                result.add(ccm.aliases[index])
+                result.add(ccm.aliases?.get(index) ?: "")
             return result
         }
 
@@ -78,7 +77,7 @@ enum class CustomComponentType {
         ): Map<String, Int> {
             val result = mutableMapOf<String, Int>()
             for (index in cca.selected)
-                result["${cca.name}- ${ccm.values[index]}"] = ccm.prices[index]
+                result["${cca.name}- ${ccm.values?.get(index)}"] = ccm.prices?.get(index) ?: 0
             return result
         }
     },
@@ -91,7 +90,7 @@ enum class CustomComponentType {
             ccm: CustomComponentModel,
             cardType: CardType
         ): Int {
-            return ccm.prices[cca.selected[0]]
+            return ccm.prices?.get(cca.selected[0]) ?: 0
         }
 
         override fun processMessage(
@@ -101,7 +100,7 @@ enum class CustomComponentType {
             cardType: CardType
         ): List<String> {
             val list: MutableList<String> = ArrayList()
-            list.add(ccm.aliases[cca.selected[0]])
+            list.add(ccm.aliases?.get(cca.selected[0]) ?: "")
             return list
         }
 
@@ -116,7 +115,7 @@ enum class CustomComponentType {
             cardType: CardType
         ): Map<String, Int> {
             return mapOf(
-                Pair("${cca.name}- ${ccm.values[cca.selected[0]]}", ccm.prices[cca.selected[0]])
+                Pair("${cca.name}- ${ccm.values?.get(cca.selected[0])}", ccm.prices?.get(cca.selected[0]) ?: 0)
             )
         }
     },
@@ -132,7 +131,7 @@ enum class CustomComponentType {
         ): Int {
             var result = 0
             for (index in cca.selected)
-                result += ccm.prices[index]
+                result += ccm.prices?.get(index) ?: 0
             return result
         }
 
@@ -142,9 +141,9 @@ enum class CustomComponentType {
             ccm: CustomComponentModel,
             cardType: CardType
         ): List<String> {
-            val result: MutableList<String> = ArrayList(ccm.values)
+            val result: MutableList<String> = ccm.values?.toMutableList() ?: mutableListOf()
             for (index in cca.selected)
-                result.removeIf { x: String -> x == ccm.aliases[index] }
+                result.removeIf { x: String -> x == ccm.aliases?.get(index) }
             return result
         }
 
@@ -156,7 +155,7 @@ enum class CustomComponentType {
         ): Map<String, Int> {
             val result = mutableMapOf<String, Int>()
             for (index in cca.selected)
-                result["${cca.name}- ${ccm.values[index]}"] = ccm.prices[index]
+                result["${cca.name}- ${ccm.values?.get(index)}"] = ccm.prices?.get(index) ?: 0
             return result
         }
     },
@@ -169,7 +168,7 @@ enum class CustomComponentType {
             cardType: CardType
         ): Int {
             if (cardType == CardType.DO)
-                return ccm.prices.get(cca.selected.get(0))
+                return ccm.prices?.get(cca.selected[0]) ?: 0
             return 0
         }
 
@@ -181,7 +180,7 @@ enum class CustomComponentType {
         ): List<String> {
             val list: MutableList<String> = ArrayList()
             if (cardType == CardType.DO)
-                list.add(ccm.aliases.get(cca.selected.get(0)))
+                list.add(ccm.aliases?.get(cca.selected[0]) ?: "")
             return list
         }
 
@@ -193,7 +192,7 @@ enum class CustomComponentType {
         ): Map<String, Int> {
             if (cardType == CardType.DO)
                 return mapOf(
-                    Pair("${cca.name}- ${ccm.values[cca.selected[0]]}", ccm.prices[cca.selected[0]])
+                    Pair("${cca.name}- ${ccm.values?.get(cca.selected[0])}", ccm.prices?.get(cca.selected[0]) ?: 0)
                 )
             return mapOf()
         }
@@ -207,7 +206,7 @@ enum class CustomComponentType {
             cardType: CardType
         ): Int {
             if (cardType == CardType.KB)
-                return ccm.prices.get(cca.selected.get(0))
+                return ccm.prices?.get(cca.selected[0]) ?: 0
             return 0
         }
 
@@ -219,7 +218,7 @@ enum class CustomComponentType {
         ): List<String> {
             val list: MutableList<String> = ArrayList()
             if (cardType == CardType.KB)
-                list.add(ccm.aliases.get(cca.selected.get(0)))
+                list.add(ccm.aliases?.get(cca.selected[0]) ?: "")
             return list
         }
 
@@ -231,7 +230,7 @@ enum class CustomComponentType {
         ): Map<String, Int> {
             if (cardType == CardType.KB)
                 return mapOf(
-                    Pair("${cca.name}- ${ccm.values[cca.selected[0]]}", ccm.prices[cca.selected[0]])
+                    Pair("${cca.name}- ${ccm.values?.get(cca.selected[0])}", ccm.prices?.get(cca.selected[0]) ?: 0)
                 )
             return mapOf()
         }
@@ -245,7 +244,7 @@ enum class CustomComponentType {
             cardType: CardType
         ): Int {
             if (cardType == CardType.AB)
-                return ccm.prices.get(cca.selected.get(0))
+                return ccm.prices?.get(cca.selected[0]) ?: 0
             return 0
         }
 
@@ -257,7 +256,7 @@ enum class CustomComponentType {
         ): List<String> {
             val list: MutableList<String> = ArrayList()
             if (cardType == CardType.AB)
-                list.add(ccm.aliases.get(cca.selected.get(0)))
+                list.add(ccm.aliases?.get(cca.selected[0]) ?: "")
             return list
         }
 
@@ -269,7 +268,7 @@ enum class CustomComponentType {
         ): Map<String, Int> {
             if (cardType == CardType.AB)
                 return mapOf(
-                    Pair("${cca.name}- ${ccm.values[cca.selected[0]]}", ccm.prices[cca.selected[0]])
+                    Pair("${cca.name}- ${ccm.values?.get(cca.selected[0])}", ccm.prices?.get(cca.selected[0]) ?: 0)
                 )
             return mapOf()
         }
@@ -283,7 +282,7 @@ enum class CustomComponentType {
             cardType: CardType
         ): Int {
             if (cardType == CardType.KB || cardType == CardType.AB)
-                return ccm.prices.get(cca.selected.get(0))
+                return ccm.prices?.get(cca.selected[0]) ?: 0
             return 0
         }
 
@@ -295,7 +294,7 @@ enum class CustomComponentType {
         ): List<String> {
             val list: MutableList<String> = ArrayList()
             if (cardType == CardType.KB || cardType == CardType.AB)
-                list.add(ccm.aliases.get(cca.selected.get(0)))
+                list.add(ccm.aliases?.get(cca.selected[0]) ?: "")
             return list
         }
 
@@ -307,7 +306,7 @@ enum class CustomComponentType {
         ): Map<String, Int> {
             val result = mutableMapOf<String, Int>()
             if (cardType == CardType.KB || cardType == CardType.AB)
-                result["${cca.name}- ${ccm.values[cca.selected[0]]}"] = ccm.prices[cca.selected[0]]
+                result["${cca.name}- ${ccm.values?.get(cca.selected[0])}"] = ccm.prices?.get(cca.selected[0]) ?: 0
             return result
         }
     },
@@ -322,7 +321,7 @@ enum class CustomComponentType {
             var result = 0
             if (cardType == CardType.DO)
                 for (index in cca.selected)
-                    result += ccm.prices[index]
+                    result += ccm.prices?.get(index) ?: 0
             return result
         }
 
@@ -335,7 +334,7 @@ enum class CustomComponentType {
             val result: MutableList<String> = ArrayList()
             if (cardType == CardType.DO)
                 for (index in cca.selected)
-                    result.add(ccm.aliases[index])
+                    result.add(ccm.aliases?.get(index) ?: "")
             return result
         }
 
@@ -348,7 +347,7 @@ enum class CustomComponentType {
             val result = mutableMapOf<String, Int>()
             if (cardType == CardType.DO)
                 for (index in cca.selected)
-                    result["${cca.name}- ${ccm.values[index]}"] = ccm.prices[index]
+                    result["${cca.name}- ${ccm.values?.get(index)}"] = ccm.prices?.get(index) ?: 0
             return result
         }
     },
@@ -363,7 +362,7 @@ enum class CustomComponentType {
             var result = 0
             if (cardType == CardType.KB)
                 for (index in cca.selected)
-                    result += ccm.prices[index]
+                    result += ccm.prices?.get(index) ?: 0
             return result
         }
 
@@ -376,7 +375,7 @@ enum class CustomComponentType {
             val result: MutableList<String> = ArrayList()
             if (cardType == CardType.KB)
                 for (index in cca.selected)
-                    result.add(ccm.aliases[index])
+                    result.add(ccm.aliases?.get(index) ?: "")
             return result
         }
 
@@ -389,7 +388,7 @@ enum class CustomComponentType {
             val result = mutableMapOf<String, Int>()
             if (cardType == CardType.KB)
                 for (index in cca.selected)
-                    result["${cca.name}- ${ccm.values[index]}"] = ccm.prices[index]
+                    result["${cca.name}- ${ccm.values?.get(index)}"] = ccm.prices?.get(index) ?: 0
             return result
         }
     },
@@ -404,7 +403,7 @@ enum class CustomComponentType {
             var result = 0
             if (cardType == CardType.AB)
                 for (index in cca.selected)
-                    result += ccm.prices[index]
+                    result += ccm.prices?.get(index) ?: 0
             return result
         }
 
@@ -417,7 +416,7 @@ enum class CustomComponentType {
             val result: MutableList<String> = ArrayList()
             if (cardType == CardType.AB)
                 for (index in cca.selected)
-                    result.add(ccm.aliases[index])
+                    result.add(ccm.aliases?.get(index) ?: "")
             return result
         }
 
@@ -430,7 +429,7 @@ enum class CustomComponentType {
             val result = mutableMapOf<String, Int>()
             if (cardType == CardType.AB)
                 for (index in cca.selected)
-                    result["${cca.name}- ${ccm.values[index]}"] = ccm.prices[index]
+                    result["${cca.name}- ${ccm.values?.get(index)}"] = ccm.prices?.get(index) ?: 0
             return result
         }
     },
@@ -445,7 +444,7 @@ enum class CustomComponentType {
             var result = 0
             if (cardType == CardType.KB || cardType == CardType.AB)
                 for (index in cca.selected)
-                    result += ccm.prices[index]
+                    result += ccm.prices?.get(index) ?: 0
             return result
         }
 
@@ -458,7 +457,7 @@ enum class CustomComponentType {
             val result: MutableList<String> = ArrayList()
             if (cardType == CardType.KB || cardType == CardType.AB)
                 for (index in cca.selected)
-                    result.add(ccm.aliases[index])
+                    result.add(ccm.aliases?.get(index) ?: "")
             return result
         }
 
@@ -471,7 +470,7 @@ enum class CustomComponentType {
             val result = mutableMapOf<String, Int>()
             if (cardType == CardType.KB || cardType == CardType.AB)
                 for (index in cca.selected)
-                    result["${cca.name}- ${ccm.values[index]}"] = ccm.prices[index]
+                    result["${cca.name}- ${ccm.values?.get(index)}"] = ccm.prices?.get(index) ?: 0
             return result
         }
     },
@@ -514,7 +513,7 @@ enum class CustomComponentType {
 }
 
 private val mapper = ObjectMapper()
-private val types: Map<String, CustomComponentType> = CustomComponentType.values().associateBy({ it.name }, { it })
+private val types: Map<String, CustomComponentType> = CustomComponentType.entries.associateBy({ it.name }, { it })
 
 @Throws(IOException::class)
 fun calculateExtra(detailsJson: String, order: OrderEntity, ie: ItemEntity, cardType: CardType): OrderDetailsDto {
@@ -522,12 +521,12 @@ fun calculateExtra(detailsJson: String, order: OrderEntity, ie: ItemEntity, card
     val answers = mapper.readValue(detailsJson.toByteArray(), CustomComponentAnswerList::class.java)
     val models =
         mapper.readValue(("{\"models\":${ie.detailsConfigJson}}").toByteArray(), CustomComponentModelList::class.java)
-    val mapped: Map<String, CustomComponentModel> = models.models.associateBy({ it.name }, { it })
+    val mapped: Map<String, CustomComponentModel> = models.models.associateBy({ it.name ?: "" }, { it })
 
     for (model in models.models) {
         if (model.type == ITEM_COUNT_COMPONENT_TYPE) {
-            details.minCount = model.min
-            details.maxCount = model.max
+            details.minCount = model.min ?: 0
+            details.maxCount = model.max ?: 0
         }
     }
     var extraPrice = 0

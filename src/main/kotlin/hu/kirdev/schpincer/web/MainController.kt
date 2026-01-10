@@ -37,7 +37,7 @@ open class MainController {
     @Autowired
     private lateinit var config: RealtimeConfigService
 
-    @GetMapping("/")
+    @GetMapping("/", "")
     fun root(auth: Authentication?, model: Model, @RequestParam(defaultValue = "") error: String): String {
         val circlesList: List<CircleEntity> = circles.findAllForMenu()
         model.addAttribute("circles", circlesList)

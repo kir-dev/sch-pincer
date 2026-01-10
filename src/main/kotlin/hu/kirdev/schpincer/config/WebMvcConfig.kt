@@ -51,10 +51,6 @@ open class WebMvcConfig(
         registry.addInterceptor(localeChangeInterceptor())
     }
 
-    override fun configurePathMatch(configurer: PathMatchConfigurer) {
-        configurer.isUseTrailingSlashMatch = true
-    }
-
     @Value("\${schpincer.external}")
     private val uploadPath = "/etc/schpincer/external/"
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {

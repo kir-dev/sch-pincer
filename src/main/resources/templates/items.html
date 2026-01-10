@@ -10,7 +10,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css" th:remove="all"/>
     <object th:insert="~{MainLayout :: head}" th:remove="tag"></object>
     <link rel="manifest" href="/manifest.json">
-    <script src="../static/js/items.js" th:src="@{/js/items.js}"></script>
+    <script src="../static/js/item.js" th:src="@{/js/item.js}"></script>
     <object th:insert="~{fragments/lang :: script()}" th:remove="tag"></object>
 </head>
 <body>
@@ -31,7 +31,7 @@
             <a th:href="@{/items/?tomorrow}"><i
                     class="material-icons">calendar_today</i>&nbsp;<span>Holnap rendelhető</span></a>
 
-            <form class="search" action="#" th:action="@{/search/}" method="get"
+            <form class="search" action="#" th:action="@{/search}" method="get"
                   onsubmit="searchSubmit(); return false">
                 <input type="text" name="q" id="search-input" th:value="${keyword}" autocomplete="off"
                        spellcheck="false" autofocus onkeyup="filterSearch()"/>

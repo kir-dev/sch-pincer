@@ -21,7 +21,7 @@ import org.springframework.security.core.Authentication
 @RequestMapping("/admin")
 open class AdminController {
 
-    private val REDIRECT_TO_ADMIN = "redirect:/admin/"
+    private val REDIRECT_TO_ADMIN = "redirect:/admin"
 
     @Autowired
     private lateinit var circles: CircleService
@@ -38,7 +38,7 @@ open class AdminController {
     @Autowired
     private lateinit var config: RealtimeConfigService
 
-    @GetMapping("/")
+    @GetMapping("")
     fun adminRoot(model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circlesToEdit", circles.findAll())

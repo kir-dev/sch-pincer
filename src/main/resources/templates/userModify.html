@@ -21,7 +21,7 @@
             <i class="material-icons main">security</i>
         </div>
         <h3 th:text="#{lang.admin.roles.title-roles}" class="topless">Prompt text comes here?</h3>
-        <form action="#" th:action="@{/admin/roles/edit/}" method="post">
+        <form action="#" th:action="@{/admin/roles/edit}" method="post">
             <table class="form full-table">
                 <input type="hidden" name="uidHash" th:value="${uidHash}"/>
                 <tr>
