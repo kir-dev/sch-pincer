@@ -57,9 +57,9 @@ function filterSearch() {
 
 function getFilter(separator) {
     if (location.search.includes('?now'))
-        return 'now' + separator;
+        return '/now' + separator;
     if (location.search.includes('?tomorrow'))
-        return 'tomorrow' + separator;
+        return '/tomorrow' + separator;
     return '';
 }
 
@@ -688,6 +688,7 @@ function limitNumber(element, min, max) {
 }
 
 function getForJsonObject(path) {
+    console.log("URL_BASE: " + URL_BASE + "\tpath: " + path)
     return fetch(URL_BASE + path, {
         method: 'GET',
         mode: 'no-cors',
