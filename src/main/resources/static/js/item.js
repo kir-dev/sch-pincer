@@ -57,9 +57,9 @@ function filterSearch() {
 
 function getFilter(separator) {
     if (location.search.includes('?now'))
-        return 'now' + separator;
+        return '/now' + separator;
     if (location.search.includes('?tomorrow'))
-        return 'tomorrow' + separator;
+        return '/tomorrow' + separator;
     return '';
 }
 
