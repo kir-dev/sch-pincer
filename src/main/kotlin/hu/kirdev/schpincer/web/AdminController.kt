@@ -1,11 +1,15 @@
 package hu.kirdev.schpincer.web
 
+import hu.kirdev.schpincer.config.ApplicationConfig
 import hu.kirdev.schpincer.config.Role
+import hu.kirdev.schpincer.dao.UserRepository
 import hu.kirdev.schpincer.dto.RoleEntryDto
 import hu.kirdev.schpincer.model.CardType
 import hu.kirdev.schpincer.model.CircleEntity
 import hu.kirdev.schpincer.service.*
-import org.springframework.beans.factory.annotation.Autowired
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.validation.Valid
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
@@ -13,38 +17,29 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.io.IOException
 import java.util.*
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.validation.Valid
-import org.springframework.security.core.Authentication
+
+const val REDIRECT_TO_ADMIN = "redirect:/admin"
+
 
 @Controller
 @RequestMapping("/admin")
-open class AdminController {
-
-    private val REDIRECT_TO_ADMIN = "redirect:/admin"
-
-    @Autowired
-    private lateinit var circles: CircleService
-
-    @Autowired
-    private lateinit var items: ItemService
-
-    @Autowired
-    private lateinit var users: UserService
-
-    @Autowired
-    private lateinit var itemSorter: ItemPrecedenceService
-
-    @Autowired
-    private lateinit var config: RealtimeConfigService
+open class AdminController(
+    private val circles: CircleService,
+    private val items: ItemService,
+    private val users: UserService,
+    private val itemSorter: ItemPrecedenceService,
+    private val config: RealtimeConfigService,
+    private val userRepository: UserRepository,
+    private val app: ApplicationConfig
+) {
 
     @GetMapping("")
     fun adminRoot(model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circlesToEdit", circles.findAll())
         val roles: List<RoleEntryDto> = users.findAll()
-                .map { RoleEntryDto(it.uid.sha256(), it) }
-                .sortedBy { it.name }
+            .map { RoleEntryDto(it.uid, it) }
+            .sortedBy { it.name }
         model.addAttribute("roles", roles)
         model.addAttribute("configObject", ConfigObject(config))
         config.injectPublicValues(model)
@@ -71,16 +66,17 @@ open class AdminController {
 
     @PostMapping("/circles/new")
     @Throws(IllegalStateException::class, IOException::class)
-    fun adminAddCircle(request: HttpServletRequest,
-                       circle: @Valid CircleEntity,
-                       @RequestParam("logo") logo: MultipartFile?,
-                       @RequestParam("background") background: MultipartFile?
+    fun adminAddCircle(
+        request: HttpServletRequest,
+        circle: @Valid CircleEntity,
+        @RequestParam("logo") logo: MultipartFile?,
+        @RequestParam("background") background: MultipartFile?
     ): String {
 
-        var file = logo?.uploadFile("logos")
+        var file = logo?.uploadFile(app.uploadPath, "logos")
         circle.logoUrl = if (file == null) "image/blank-logo.svg" else "cdn/logos/$file"
 
-        file = background?.uploadFile("backgrounds")
+        file = background?.uploadFile(app.uploadPath, "backgrounds")
         circle.backgroundUrl = if (file == null) "image/blank-background.jpg" else "cdn/backgrounds/$file"
 
         circles.save(circle)
@@ -98,13 +94,14 @@ open class AdminController {
     }
 
     @PostMapping("/circles/edit")
-    fun adminEditCircle(@ModelAttribute circle:
-                        @Valid CircleEntity,
-                        bindingResult: BindingResult,
-                        @RequestParam circleId: Long,
-                        @RequestParam(required = false) logo: MultipartFile?,
-                        @RequestParam(required = false) background: MultipartFile?,
-                        model: Model
+    fun adminEditCircle(
+        @ModelAttribute circle:
+        @Valid CircleEntity,
+        bindingResult: BindingResult,
+        @RequestParam circleId: Long,
+        @RequestParam(required = false) logo: MultipartFile?,
+        @RequestParam(required = false) background: MultipartFile?,
+        model: Model
     ): String {
 
         if (bindingResult.hasErrors()) {
@@ -130,11 +127,11 @@ open class AdminController {
             visible = circle.visible
             virGroupId = circle.virGroupId
 
-            var file = logo?.uploadFile("logos")
+            var file = logo?.uploadFile(app.uploadPath, "logos")
             if (file != null)
                 logoUrl = "cdn/logos/$file"
 
-            file = background?.uploadFile("backgrounds")
+            file = background?.uploadFile(app.uploadPath, "backgrounds")
             if (file != null)
                 backgroundUrl = "cdn/backgrounds/$file"
         }
@@ -155,19 +152,19 @@ open class AdminController {
 
     @PostMapping("/circles/delete/{circleId}/confirm")
     fun adminDeleteCircleConfirm(
-            @PathVariable circleId: Long,
-            request: HttpServletRequest
+        @PathVariable circleId: Long,
+        request: HttpServletRequest
     ): String {
         items.deleteByCircle(circleId)
         circles.delete(circles.getOne(circleId)!!)
         return REDIRECT_TO_ADMIN
     }
 
-    @GetMapping("/roles/edit/{uidHash}")
-    fun editRoles(@PathVariable uidHash: String, model: Model): String {
+    @GetMapping("/roles/edit/{uid}")
+    fun editRoles(@PathVariable uid: String, model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
-        model.addAttribute("uidHash", uidHash)
-        val user = users.getByUidHash(uidHash)
+        model.addAttribute("uid", uid)
+        val user = users.getByIdOrNull(uid)
         model.addAttribute("name", user!!.name)
         model.addAttribute("sysadmin", user.sysadmin)
         model.addAttribute("email", user.email ?: "-")
@@ -180,14 +177,15 @@ open class AdminController {
     }
 
     @PostMapping("/roles/edit/")
-    fun editRoles(@RequestParam uidHash: String,
-                  @RequestParam roles: String,
-                  @RequestParam(required = false, defaultValue = "false") sysadmin: Boolean,
-                  @RequestParam(defaultValue = "1") priority: Int,
-                  @RequestParam(required = false, defaultValue = "false") forceGrantLoginAccess: Boolean,
-                  @RequestParam(required = false, defaultValue = "false") alwaysGrantAb: Boolean,
+    fun editRoles(
+        @RequestParam uid: String,
+        @RequestParam roles: String,
+        @RequestParam(required = false, defaultValue = "false") sysadmin: Boolean,
+        @RequestParam(defaultValue = "1") priority: Int,
+        @RequestParam(required = false, defaultValue = "false") forceGrantLoginAccess: Boolean,
+        @RequestParam(required = false, defaultValue = "false") alwaysGrantAb: Boolean,
     ): String {
-        val user = users.getByUidHash(uidHash) ?: return "redirect:/admin/?error=invalidUidHash"
+        val user = users.getByIdOrNull(uid) ?: return "redirect:/admin/?error=invalidUid"
         user.sysadmin = sysadmin
         val permissions = mutableSetOf<String>()
         for (role in roles.split(",".toRegex()).toTypedArray()) {
@@ -217,7 +215,7 @@ open class AdminController {
     @ResponseBody
     @GetMapping("/debug/card/{card}")
     fun changeCard(@PathVariable card: String, auth: Authentication?): String {
-        val user = auth.getUserIfPresent() ?: return "failed"
+        val user = auth.getUser(userRepository) ?: return "failed"
         user.pekCardType = CardType.valueOf(card)
         users.save(user)
         return "ok"
@@ -227,7 +225,6 @@ open class AdminController {
     fun adminConfigUpdate(@ModelAttribute configObject: ConfigObject): String {
         config.messageBoxType = configObject.messageBoxType
         config.messageBoxMessage = configObject.messageBoxMessage
-        config.persist()
         return REDIRECT_TO_ADMIN
     }
 

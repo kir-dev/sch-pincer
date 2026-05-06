@@ -1,5 +1,6 @@
 package hu.kirdev.schpincer.web
 
+import hu.kirdev.schpincer.dao.UserRepository
 import hu.kirdev.schpincer.model.OrderStatus
 import hu.kirdev.schpincer.model.ReviewEntity
 import hu.kirdev.schpincer.service.CircleService
@@ -7,30 +8,22 @@ import hu.kirdev.schpincer.service.OrderService
 import hu.kirdev.schpincer.service.RealtimeConfigService
 import hu.kirdev.schpincer.service.ReviewService
 import io.swagger.v3.oas.annotations.Operation
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
-import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.core.Authentication
 
 @Controller
-open class ReviewController {
-
-    @Autowired
-    private lateinit var orders: OrderService
-
-    @Autowired
-    private lateinit var circles: CircleService
-
-    @Autowired
-    private lateinit var reviews: ReviewService
-
-    @Autowired
-    private lateinit var config: RealtimeConfigService
+open class ReviewController(
+    private val userRepository: UserRepository,
+    private val orders: OrderService,
+    private val circles: CircleService,
+    private val reviews: ReviewService,
+    private val config: RealtimeConfigService,
+){
 
     @Operation(summary = "Review order page")
     @GetMapping("/review/{orderId}")
@@ -63,7 +56,7 @@ open class ReviewController {
         if (!auth.hasUser() || order == null || order.status != OrderStatus.SHIPPED || order.reviewId != null) {
             throw Exception("Requirements before reviewing order are not met!")
         }
-        val user = auth.getUserIfPresent()!!
+        val user = auth.getUser(userRepository)!!
         reviews.createReview(user, orderId, review ?: "", rateQuality, ratePrice, rateSpeed, rateOverAll)
         return "redirect:/profile"
     }

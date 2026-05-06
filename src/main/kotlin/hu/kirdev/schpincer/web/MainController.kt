@@ -1,10 +1,10 @@
 package hu.kirdev.schpincer.web
 
+import hu.kirdev.schpincer.dao.UserRepository
 import hu.kirdev.schpincer.model.CardType
 import hu.kirdev.schpincer.model.CircleEntity
 import hu.kirdev.schpincer.model.OrderStatus
 import hu.kirdev.schpincer.service.*
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -17,25 +17,15 @@ import org.springframework.security.core.Authentication
 import java.time.Instant
 
 @Controller
-open class MainController {
-
-    @Autowired
-    private lateinit var circles: CircleService
-
-    @Autowired
-    private lateinit var openings: OpeningService
-
-    @Autowired
-    private lateinit var orders: OrderService
-
-    @Autowired
-    private lateinit var timeService: TimeService
-
-    @Autowired
-    private lateinit var statService: StatisticsService
-
-    @Autowired
-    private lateinit var config: RealtimeConfigService
+open class MainController(
+    private val circles: CircleService,
+    private val openings: OpeningService,
+    private val orders: OrderService,
+    private val timeService: TimeService,
+    private val statService: StatisticsService,
+    private val config: RealtimeConfigService,
+    private val userRepository: UserRepository,
+) {
 
     @GetMapping("/", "")
     fun root(auth: Authentication?, model: Model, @RequestParam(defaultValue = "") error: String): String {
@@ -68,7 +58,7 @@ open class MainController {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("searchMode", "" != keyword)
         model.addAttribute("keyword", keyword)
-        model.addAttribute("card", (auth.getUserIfPresent()?.grantedCardType ?: CardType.DO).name)
+        model.addAttribute("card", (auth.getUser(userRepository)?.grantedCardType ?: CardType.DO).name)
         config.injectPublicValues(model)
         return "items"
     }
@@ -85,7 +75,7 @@ open class MainController {
     @GetMapping("/circle/{circle}")
     fun circleSpecific(@PathVariable circle: String, model: Model, auth: Authentication?): String {
         model.addAttribute("circles", circles.findAllForMenu())
-        model.addAttribute("card", (auth.getUserIfPresent()?.grantedCardType ?: CardType.DO).name)
+        model.addAttribute("card", (auth.getUser(userRepository)?.grantedCardType ?: CardType.DO).name)
         if (circle.matches("^\\d+$".toRegex())) {
             val id = circle.toLong()
             model.addAttribute("selectedCircle", circles.getOne(id))
@@ -134,7 +124,7 @@ open class MainController {
         model.addAttribute("priceBreakdowns", this.orders.generatePriceBreakdowns(orders))
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("timeService", timeService)
-        model.addAttribute("uid", auth.getUserId()!!.sha256().substring(0, 6))
+        model.addAttribute("uid", auth.getUserId()!!)
         config.injectPublicValues(model)
         return "profile"
     }
@@ -144,7 +134,7 @@ open class MainController {
     @GetMapping("/stats")
     fun stats(auth: Authentication?, model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
-        val user = auth.getUser()
+        val user = auth.getUser(userRepository)!!
         statsViews.computeIfPresent(user.uid) { _, b -> "$b+1" }
         statsViews.computeIfAbsent(user.uid) { user.name + ";" + Instant.now().toEpochMilli() + ";1" }
         statService.getDetailsForUser(user).entries.forEach { model.addAttribute(it.key, it.value) }
@@ -155,7 +145,7 @@ open class MainController {
     @GetMapping("/admin/stats-insight")
     @ResponseBody
     fun statsInsights(auth: Authentication?): String {
-        return if (auth.getUserIfPresent()?.sysadmin == true) {
+        return if (auth.getUser(userRepository)?.sysadmin == true) {
             statsViews.values.toString()
         } else {
             "Nice try!"
