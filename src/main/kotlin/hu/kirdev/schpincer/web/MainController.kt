@@ -78,7 +78,7 @@ open class MainController(
             model.addAttribute("selectedCircle", circles.getOne(id))
             model.addAttribute("nextOpening", openings.findNextStartDateOf(id))
         } else {
-            val circleEntity: CircleEntity = circles.findByAlias(circle)
+            val circleEntity: CircleEntity = circles.findByAlias(circle) ?: return "error"
             model.addAttribute("selectedCircle", circleEntity)
             model.addAttribute("nextOpening", openings.findNextStartDateOf(circleEntity.id))
         }

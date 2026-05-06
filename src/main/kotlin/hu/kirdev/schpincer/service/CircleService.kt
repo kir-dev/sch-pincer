@@ -51,8 +51,9 @@ open class CircleService {
     }
 
     @Transactional(readOnly = true)
-    open fun findByAlias(alias: String): CircleEntity {
-        return repo.findAllByAlias(alias)[0]
+    open fun findByAlias(alias: String): CircleEntity? {
+        val results = repo.findAllByAlias(alias)
+        return if (results.isEmpty()) null else results[0]
     }
 
     @Transactional(readOnly = true)
