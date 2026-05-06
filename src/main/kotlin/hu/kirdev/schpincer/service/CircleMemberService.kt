@@ -2,15 +2,11 @@ package hu.kirdev.schpincer.service
 
 import hu.kirdev.schpincer.dao.CircleMemberRepository
 import hu.kirdev.schpincer.model.CircleMemberEntity
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-open class CircleMemberService {
-
-    @Autowired
-    private lateinit var repo: CircleMemberRepository
+open class CircleMemberService(private val repo: CircleMemberRepository) {
 
     @Transactional(readOnly = true)
     open fun getById(id: Long): CircleMemberEntity {

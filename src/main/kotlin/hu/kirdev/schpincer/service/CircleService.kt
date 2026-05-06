@@ -4,7 +4,6 @@ import hu.kirdev.schpincer.dao.CircleRepository
 import hu.kirdev.schpincer.dao.OpeningRepository
 import hu.kirdev.schpincer.dto.CircleEntityInfoDto
 import hu.kirdev.schpincer.model.CircleEntity
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -12,13 +11,10 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 
 @Service
-open class CircleService {
-
-    @Autowired
-    private lateinit var repo: CircleRepository
-
-    @Autowired
-    private lateinit var openings: OpeningRepository
+open class CircleService(
+    private val repo: CircleRepository,
+    private val openings: OpeningRepository,
+) {
 
     @Transactional(readOnly = true)
     open fun findAll(pageable: Pageable): Page<CircleEntity> {

@@ -2,6 +2,7 @@ package hu.kirdev.schpincer.service
 
 import hu.kirdev.schpincer.dao.ExtrasRepository
 import hu.kirdev.schpincer.dao.ItemRepository
+import hu.kirdev.schpincer.dao.OpeningRepository
 import hu.kirdev.schpincer.dao.OrderRepository
 import hu.kirdev.schpincer.dao.TimeWindowRepository
 import hu.kirdev.schpincer.model.*
@@ -34,9 +35,12 @@ class OrderingServiceTest {
     @Mock
     lateinit var extrasRepository: ExtrasRepository
 
+    @Mock
+    lateinit var openingRepo: OpeningRepository
+
     @Test
     fun makeValidOrder() {
-        val service = spy(OrderService())
+        val service = spy(OrderService(orderRepository, openingRepo, openings, timeWindowRepo, itemsRepo, extrasRepository))
 
         val opening = OpeningEntity(30, maxOrder = 5, dateStart = 0, dateEnd = 0, orderStart = 0,
                 orderEnd = Instant.now().toEpochMilli() * 2, maxBeta = 10)
@@ -48,7 +52,7 @@ class OrderingServiceTest {
                 alias = "", circle = CircleEntity(10), price = 1200)
         whenever(itemsRepo.getReferenceById(12)).thenReturn(item)
 
-        doNothing().whenever(service).save(anyOrNull())
+        doNothing().whenever(service).save(any())
 
         whenever(user.uid).thenReturn("unique")
         whenever(user.room).thenReturn("SCH-1620")
@@ -56,21 +60,16 @@ class OrderingServiceTest {
         whenever(user.grantedCardType).thenReturn(CardType.KB)
         whenever(user.orderingPriority).thenReturn(5)
 
-        service.itemsRepo = itemsRepo
-        service.timeWindowRepo = timeWindowRepo
-        service.openings = openings
-        service.extrasRepository = extrasRepository
-
         service.makeOrder(user, 12, 2, 40, "comment", "{\"answers\": []}")
 
-        verify(service, times(1)).save(anyOrNull())
-        verify(timeWindowRepo, times(1)).save(anyOrNull())
-        verify(openings, times(1)).save(anyOrNull())
+        verify(service, times(1)).save(any())
+        verify(timeWindowRepo, times(1)).save(any())
+        verify(openings, times(1)).save(any())
     }
 
     @Test
     fun cancelValidOrder() {
-        val service = spy(OrderService())
+        val service = spy(OrderService(orderRepository, openingRepo, openings, timeWindowRepo, itemsRepo, extrasRepository))
 
         val order = OrderEntity(count = 3, extraTag = true, userId = "unique-id", openingId = 30, intervalId = 70,
                 userName = "", comment = "", detailsJson = "", room = "")
@@ -82,15 +81,10 @@ class OrderingServiceTest {
         whenever(timeWindowRepo.getReferenceById(70)).thenReturn(timeWindow)
         whenever(user.uid).thenReturn("unique-id")
 
-        service.repo = orderRepository
-        service.openings = openings
-        service.timeWindowRepo = timeWindowRepo
-
         service.cancelOrder(user, 4)
 
-        verify(service, times(1)).save(anyOrNull())
-        verify(timeWindowRepo, times(1)).save(anyOrNull())
-        verify(openings, times(1)).save(anyOrNull())
+        verify(service, times(1)).save(any())
+        verify(timeWindowRepo, times(1)).save(any())
+        verify(openings, times(1)).save(any())
     }
-
 }

@@ -4,7 +4,6 @@ import hu.kirdev.schpincer.dao.OpeningRepository
 import hu.kirdev.schpincer.dao.TimeWindowRepository
 import hu.kirdev.schpincer.model.OpeningEntity
 import hu.kirdev.schpincer.model.TimeWindowEntity
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.text.SimpleDateFormat
@@ -13,18 +12,15 @@ import java.util.*
 
 @Service
 @Transactional
-open class OpeningService {
+open class OpeningService(
+    private val repo: OpeningRepository,
+    private val twRepo: TimeWindowRepository,
+) {
 
     companion object {
         val DATE_FORMATTER_HH_MM by lazy { SimpleDateFormat("HH:mm") }
         private const val WEEK = 1000L * 60L * 60L * 24L * 7L
     }
-
-    @Autowired
-    private lateinit var repo: OpeningRepository
-
-    @Autowired
-    private lateinit var twRepo: TimeWindowRepository
 
     @Transactional(readOnly = true)
     open fun findAll(): List<OpeningEntity> {
