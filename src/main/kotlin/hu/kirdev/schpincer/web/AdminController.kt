@@ -176,7 +176,7 @@ open class AdminController(
         return "userModify"
     }
 
-    @PostMapping("/roles/edit/")
+    @PostMapping("/roles/edit")
     fun editRoles(
         @RequestParam uid: String,
         @RequestParam roles: String,

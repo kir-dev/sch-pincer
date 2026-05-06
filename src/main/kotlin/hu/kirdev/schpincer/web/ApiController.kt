@@ -65,7 +65,7 @@ open class ApiController(
     }
 
     @Operation(summary = "List of items")
-    @GetMapping("/items")
+    @GetMapping("/items", "/items/")
     @ResponseBody
     fun getAllItems(
             request: HttpServletRequest,
