@@ -10,9 +10,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.ResponseBody
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 import org.springframework.security.core.Authentication
 import java.time.Instant
 
@@ -22,7 +20,6 @@ open class MainController(
     private val openings: OpeningService,
     private val orders: OrderService,
     private val timeService: TimeService,
-    private val statService: StatisticsService,
     private val config: RealtimeConfigService,
     private val userRepository: UserRepository,
 ) {
@@ -127,29 +124,6 @@ open class MainController(
         model.addAttribute("uid", auth.getUserId()!!)
         config.injectPublicValues(model)
         return "profile"
-    }
-
-    private val statsViews: ConcurrentHashMap<String, String> = ConcurrentHashMap<String, String>()
-
-    @GetMapping("/stats")
-    fun stats(auth: Authentication?, model: Model): String {
-        model.addAttribute("circles", circles.findAllForMenu())
-        val user = auth.getUser(userRepository)!!
-        statsViews.computeIfPresent(user.uid) { _, b -> "$b+1" }
-        statsViews.computeIfAbsent(user.uid) { user.name + ";" + Instant.now().toEpochMilli() + ";1" }
-        statService.getDetailsForUser(user).entries.forEach { model.addAttribute(it.key, it.value) }
-        config.injectPublicValues(model)
-        return "stats"
-    }
-
-    @GetMapping("/admin/stats-insight")
-    @ResponseBody
-    fun statsInsights(auth: Authentication?): String {
-        return if (auth.getUser(userRepository)?.sysadmin == true) {
-            statsViews.values.toString()
-        } else {
-            "Nice try!"
-        }
     }
 
 }
