@@ -4,6 +4,7 @@ import hu.kirdev.schpincer.dao.ItemRepository
 import hu.kirdev.schpincer.dao.OpeningRepository
 import hu.kirdev.schpincer.model.ItemEntity
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
@@ -31,7 +32,7 @@ open class ItemService(
 
     @Transactional(readOnly = true)
     open fun getOne(itemId: Long): ItemEntity? {
-        return repo.getReferenceById(itemId)
+        return repo.findByIdOrNull(itemId)
     }
 
     @Transactional(readOnly = false)

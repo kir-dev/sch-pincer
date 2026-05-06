@@ -201,7 +201,7 @@ open class ConfigureController(
     ): String {
         if (cannotEditCircleNoPR(userRepository, circleId, auth)) return "redirect:/configure/$circleId?error"
 
-        val original = members.getOne(id)
+        val original = members.getOne(id)!!
         if (original.circle!!.id != circleId) return "redirect:/configure/$circleId?error"
 
         original.name = cme.name
@@ -227,7 +227,7 @@ open class ConfigureController(
 
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("topic", "member")
-        model.addAttribute("arg", members.getOne(memberId).name)
+        model.addAttribute("arg", members.getOne(memberId)?.name)
         model.addAttribute("ok", "configure/$circleId/members/delete/$memberId/confirm")
         model.addAttribute("cancel", "configure/$circleId")
         config.injectPublicValues(model)
@@ -239,7 +239,7 @@ open class ConfigureController(
                             @PathVariable memberId: Long,
                             auth: Authentication?): String {
         if (cannotEditCircleNoPR(userRepository, circleId, auth)) return "redirect:/configure/$circleId?error"
-        val cme = members.getOne(memberId)
+        val cme = members.getOne(memberId)!!
         if (cme.circle!!.id == circleId) members.delete(cme)
         return "redirect:/configure/$circleId"
     }
@@ -512,7 +512,7 @@ open class ConfigureController(
                     auth: Authentication?
     ): String {
         if (cannotEditCircle(userRepository, circleId, auth)) return "redirect:/configure/$circleId?error"
-        val opening = openings.getOne(openingId)
+        val opening = openings.getOne(openingId)!!
         with(opening) {
             feeling = oed.feeling
             if (oed.orderStart != "") orderStart = parseDate(oed.orderStart)
@@ -564,7 +564,7 @@ open class ConfigureController(
             return "redirect:/configure/$circleId?error"
 
         return orders.findAllByOpening(openingId)
-            .map { users.getById(it.userId) }
+            .map { users.getById(it.userId)!! }
             .distinctBy { it.uid }
             .joinToString(", <br>") { "\"${it.name}\" &lt;${it.email ?: ""}&gt;" }
     }
@@ -576,7 +576,7 @@ open class ConfigureController(
     ): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("topic", "opening")
-        model.addAttribute("arg", formatDate(openings.getOne(openingId).dateStart))
+        model.addAttribute("arg", formatDate(openings.getOne(openingId)!!.dateStart))
         model.addAttribute("ok", "configure/$circleId/openings/delete/$openingId/confirm")
         model.addAttribute("cancel", "configure/$circleId")
         config.injectPublicValues(model)
@@ -590,7 +590,7 @@ open class ConfigureController(
     ): String {
         if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId ?: 0, circleId))
             return "redirect:/configure/$circleId?error=invalidPermissions"
-        val ie = openings.getOne(openingId!!)
+        val ie = openings.getOne(openingId!!)!!
         orders.cancelAllOrdersInOpening(openingId)
         if (ie.circle!!.id == circleId)
             openings.delete(ie)
@@ -606,7 +606,7 @@ open class ConfigureController(
         if (cannotEditCircle(userRepository, circleId, auth))
             return "redirect:/configure/$circleId?error=invalidPermissions"
 
-        val opening = openings.getOne(openingId)
+        val opening = openings.getOne(openingId)!!
         if (opening.circle!!.id != circleId)
             return "redirect:/configure/$circleId?error"
 
@@ -702,7 +702,7 @@ open class ConfigureController(
             auth: Authentication?,
             model: Model
     ): String {
-        val circle = openings.getOne(openingId).circle
+        val circle = openings.getOne(openingId)!!.circle
         if (cannotEditCircle(userRepository, circle!!.id, auth))
             return "redirect:/configure/${circle.id}?error"
 
@@ -734,7 +734,7 @@ open class ConfigureController(
                      @RequestParam(defaultValue = "0") emptyRows: Int = 0,
                      auth: Authentication?
     ): String {
-        val opening = openings.getOne(openingId)
+        val opening = openings.getOne(openingId)!!
         if (cannotEditCircle(userRepository, opening.circle!!.id, auth))
             return "redirect:/configure/" + opening.circle!!.id + "?error"
 

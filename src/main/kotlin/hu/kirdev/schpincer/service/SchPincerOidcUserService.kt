@@ -25,7 +25,7 @@ open class SchPincerOidcUserService(
         val schPincerUser = SchPincerOidcUser(authschUser)
         val ownedCircles = getOwnedCircleIds(schPincerUser.executiveAtCircles, circleService)
         if (userService.exists(schPincerUser.internalId)) {
-            val user = userService.getById(schPincerUser.internalId)
+            val user = userService.getById(schPincerUser.internalId)!!
             user.email = schPincerUser.email
             if (admins.contains(user.uid))
                 user.sysadmin = true

@@ -3,6 +3,7 @@ package hu.kirdev.schpincer.service
 import hu.kirdev.schpincer.dao.OrderRepository
 import hu.kirdev.schpincer.model.*
 import hu.kirdev.schpincer.web.removeNonPrintable
+import org.springframework.data.repository.findByIdOrNull
 import java.time.Instant
 
 class ChangeOrderProcedure(
@@ -25,7 +26,7 @@ class ChangeOrderProcedure(
     }
 
     private fun loadOrder() {
-        order = orderRepository.getReferenceById(id)
+        order = orderRepository.findByIdOrNull(id)!!
     }
 
     private fun validatePrivilege() {

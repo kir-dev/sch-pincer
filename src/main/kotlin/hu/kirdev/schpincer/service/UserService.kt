@@ -3,6 +3,7 @@ package hu.kirdev.schpincer.service
 import hu.kirdev.schpincer.dao.UserRepository
 import hu.kirdev.schpincer.dto.CircleRoleEntryDto
 import hu.kirdev.schpincer.model.UserEntity
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -11,8 +12,8 @@ import java.util.*
 open class UserService(private val repo: UserRepository) {
 
     @Transactional(readOnly = true)
-    open fun getById(uid: String): UserEntity {
-        return repo.getReferenceById(uid)
+    open fun getById(uid: String): UserEntity? {
+        return repo.findByIdOrNull(uid)
     }
 
     @Transactional(readOnly = true)
@@ -62,7 +63,7 @@ open class UserService(private val repo: UserRepository) {
 
     @Transactional(readOnly = false)
     open fun setRoom(userId: String, room: String): UserEntity {
-        val user = getById(userId)
+        val user = getById(userId)!!
         user.room = room.replace(Regex("[^A-Za-z0-9 -_()]"), "")
         repo.save(user)
         return user

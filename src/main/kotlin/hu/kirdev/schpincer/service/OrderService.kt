@@ -59,7 +59,7 @@ open class OrderService(
 
     @Transactional(readOnly = true)
     open fun getOne(id: Long): OrderEntity? {
-        return repo.getReferenceById(id)
+        return repo.findByIdOrNull(id)
     }
 
     @Transactional(readOnly = true)
@@ -94,7 +94,7 @@ open class OrderService(
     @Transactional(readOnly = true)
     open fun getCircleIdByOrderId(id: Long): Long? {
         val order: Optional<OrderEntity> = repo.findById(id)
-        return order.map { orderEntity: OrderEntity -> openingRepo.getReferenceById(orderEntity.openingId!!).circle?.id!! }.orElse(null)
+        return order.map { orderEntity: OrderEntity -> openingRepo.findByIdOrNull(orderEntity.openingId!!)?.circle?.id!! }.orElse(null)
     }
 
     @Transactional(readOnly = false)

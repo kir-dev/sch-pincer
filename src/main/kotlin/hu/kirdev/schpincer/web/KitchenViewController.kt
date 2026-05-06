@@ -139,7 +139,7 @@ class KitchenViewController(
         if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return listOf()
 
-        val openingIntervalLength = openings.getOne(openingId).intervalLength
+        val openingIntervalLength = openings.getOne(openingId)!!.intervalLength
 
         return orders.findToExport(openingId, OrderStrategy.ORDER_GROUPED.representation)
                 .filter { it.status == OrderStatus.COMPLETED }
@@ -158,7 +158,7 @@ class KitchenViewController(
         if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return listOf()
 
-        val openingIntervalLength = openings.getOne(openingId).intervalLength
+        val openingIntervalLength = openings.getOne(openingId)!!.intervalLength
 
         return orders.findToExport(openingId, OrderStrategy.ORDER_GROUPED.representation)
                 .filter { it.status == OrderStatus.ACCEPTED
@@ -179,7 +179,7 @@ class KitchenViewController(
         if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return listOf()
 
-        val openingIntervalLength = openings.getOne(openingId).intervalLength
+        val openingIntervalLength = openings.getOne(openingId)!!.intervalLength
 
         return orders.findToExport(openingId, OrderStrategy.ORDER_GROUPED.representation)
                 .filter { it.status == OrderStatus.ACCEPTED
@@ -201,7 +201,7 @@ class KitchenViewController(
         if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return listOf()
 
-        val openingIntervalLength = openings.getOne(openingId).intervalLength
+        val openingIntervalLength = openings.getOne(openingId)!!.intervalLength
 
         return orders.findToExport(openingId, OrderStrategy.ORDER_GROUPED.representation)
                 .filter { it.status == OrderStatus.HANDED_OVER }
@@ -220,7 +220,7 @@ class KitchenViewController(
         if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return listOf()
 
-        val openingIntervalLength = openings.getOne(openingId).intervalLength
+        val openingIntervalLength = openings.getOne(openingId)!!.intervalLength
 
         return orders.findToExport(openingId, OrderStrategy.ORDER_GROUPED.representation)
                 .filter { it.status == OrderStatus.SHIPPED }

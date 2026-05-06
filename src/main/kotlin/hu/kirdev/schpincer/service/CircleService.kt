@@ -6,6 +6,7 @@ import hu.kirdev.schpincer.dto.CircleEntityInfoDto
 import hu.kirdev.schpincer.model.CircleEntity
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
@@ -38,7 +39,7 @@ open class CircleService(
 
     @Transactional(readOnly = true)
     open fun getOne(id: Long): CircleEntity? {
-        return repo.getReferenceById(id)
+        return repo.findByIdOrNull(id)
     }
 
     @Transactional(readOnly = false)

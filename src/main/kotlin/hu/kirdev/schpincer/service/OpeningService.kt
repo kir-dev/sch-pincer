@@ -4,6 +4,7 @@ import hu.kirdev.schpincer.dao.OpeningRepository
 import hu.kirdev.schpincer.dao.TimeWindowRepository
 import hu.kirdev.schpincer.model.OpeningEntity
 import hu.kirdev.schpincer.model.TimeWindowEntity
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.text.SimpleDateFormat
@@ -61,8 +62,8 @@ open class OpeningService(
     }
 
     @Transactional(readOnly = true)
-    open fun getOne(openingId: Long): OpeningEntity {
-        return repo.getReferenceById(openingId)
+    open fun getOne(openingId: Long): OpeningEntity? {
+        return repo.findByIdOrNull(openingId)
     }
 
     @Transactional(readOnly = false)

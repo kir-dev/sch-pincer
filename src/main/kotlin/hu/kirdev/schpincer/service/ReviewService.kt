@@ -44,7 +44,7 @@ open class ReviewService(
         val fullReview = ReviewEntity(
                 circle = circles.getOne(circleId),
                 order = order,
-                openingFeeling = openings.getOne(order?.openingId!!).feeling,
+                openingFeeling = openings.getOne(order?.openingId!!)?.feeling,
                 userName = user.name,
                 review = if (review.length > 1000) review.substring(0, 1000) else review,
                 rateSpeed = rateSpeed.between(1, 5),

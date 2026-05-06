@@ -10,6 +10,7 @@ import hu.kirdev.schpincer.web.component.CustomComponentAnswerList
 import hu.kirdev.schpincer.web.component.CustomComponentType
 import hu.kirdev.schpincer.web.component.calculateExtra
 import hu.kirdev.schpincer.web.removeNonPrintable
+import org.springframework.data.repository.findByIdOrNull
 import tools.jackson.databind.ObjectMapper
 import java.time.Instant
 
@@ -53,7 +54,7 @@ class MakeOrderProcedure(
                 detailsJson = detailsJson,
                 room = manualUser.room,
                 createdAt = Instant.now().toEpochMilli())
-            item = itemsRepo.getReferenceById(id)
+            item = itemsRepo.findByIdOrNull(id)!!
         }
 
         details = calculateExtra(detailsJson, order, item, manualUser?.card ?: user.grantedCardType)
@@ -68,12 +69,12 @@ class MakeOrderProcedure(
 
         if (manualUser == null) {
             validateOrderCount()
-            timeWindow = timeWindowRepo.getReferenceById(time)
+            timeWindow = timeWindowRepo.findByIdOrNull(time)!!
             validateTimeWindow()
             updateCategoryLimitations(true)
         } else {
             updateCategoryLimitations(false)
-            timeWindow = timeWindowRepo.getReferenceById(time)
+            timeWindow = timeWindowRepo.findByIdOrNull(time)!!
         }
 
         updateRemainingItemCount()
@@ -96,7 +97,7 @@ class MakeOrderProcedure(
     }
 
     internal fun loadTargetItem() {
-        item = itemsRepo.getReferenceById(id)
+        item = itemsRepo.findByIdOrNull(id)!!
         if (!item.orderable || item.personallyOrderable)
             throw FailedOrderException(RESPONSE_INTERNAL_ERROR)
     }

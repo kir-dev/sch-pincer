@@ -2,16 +2,12 @@ package hu.kirdev.schpincer.service
 
 import hu.kirdev.schpincer.dao.CircleMemberRepository
 import hu.kirdev.schpincer.model.CircleMemberEntity
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 open class CircleMemberService(private val repo: CircleMemberRepository) {
-
-    @Transactional(readOnly = true)
-    open fun getById(id: Long): CircleMemberEntity {
-        return repo.getReferenceById(id)
-    }
 
     @Transactional(readOnly = false)
     open fun save(member: CircleMemberEntity) {
@@ -19,8 +15,8 @@ open class CircleMemberService(private val repo: CircleMemberRepository) {
     }
 
     @Transactional(readOnly = true)
-    open fun getOne(memberId: Long): CircleMemberEntity {
-        return repo.getReferenceById(memberId)
+    open fun getOne(memberId: Long): CircleMemberEntity? {
+        return repo.findByIdOrNull(memberId)
     }
 
     @Transactional(readOnly = false)
