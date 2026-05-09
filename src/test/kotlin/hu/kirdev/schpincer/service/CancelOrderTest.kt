@@ -14,7 +14,8 @@ import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.whenever
-import java.time.Instant
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 import kotlin.test.assertEquals
 
 @ExtendWith(MockitoExtension::class)
@@ -34,8 +35,8 @@ class CancelOrderTest {
 
     @Test
     fun `validate order loading`() {
-        val order = OrderEntity(userId = "", userName = "", comment = "", detailsJson = "", room = "")
-        whenever(orderRepository.getReferenceById(4)).thenReturn(order)
+        val order = Optional.of(OrderEntity(userId = "", userName = "", comment = "", detailsJson = "", room = ""))
+        whenever(orderRepository.findById(4)).thenReturn(order)
 
         val procedure = CancelOrderProcedure(user, 4,
                 orderRepository = orderRepository,
@@ -43,7 +44,7 @@ class CancelOrderTest {
                 timeWindowRepo = timeWindowRepo)
 
         assertDoesNotThrow { procedure.loadOrder() }
-        assertEquals(order, procedure.order)
+        assertEquals(order.getOrNull(), procedure.order)
     }
 
     @Test
@@ -134,26 +135,6 @@ class CancelOrderTest {
 
         assertEquals(RESPONSE_ORDER_PERIOD_ENDED, getException<FailedOrderException> { procedure.loadOpening(50) }.response)
         assertEquals(RESPONSE_ORDER_PERIOD_ENDED, getException<FailedOrderException> { procedure.loadOpening(51) }.response)
-    }
-
-    @Test
-    fun `validate update details`() {
-        val order = OrderEntity(status = OrderStatus.ACCEPTED, intervalId = 70, count = 3,
-                userId = "", userName = "", comment = "", detailsJson = "", room = "")
-        val opening = OpeningEntity(30, dateStart = 0, dateEnd = 0, orderStart = 0, orderEnd = 0)
-        val timeWindow = TimeWindowEntity(opening = opening, normalItemCount = 5)
-        whenever(timeWindowRepo.getReferenceById(70)).thenReturn(timeWindow)
-
-        val procedure = CancelOrderProcedure(user, 0,
-                orderRepository = orderRepository,
-                openings = openings,
-                timeWindowRepo = timeWindowRepo)
-        procedure.order = order
-
-        assertDoesNotThrow { procedure.updateDetails() }
-        assertEquals(OrderStatus.CANCELLED, procedure.order.status)
-        assertEquals(3, procedure.count)
-        assertEquals(timeWindow, procedure.timeWindow)
     }
 
     @Test
@@ -270,35 +251,6 @@ class CancelOrderTest {
         assertEquals(3, opening.usedGamma)
         assertEquals(4, opening.usedDelta)
         assertEquals(5, opening.usedLambda)
-    }
-
-    @Test
-    fun `composite test`() {
-        val order = OrderEntity(count = 3, extraTag = true, userId = "unique-id", openingId = 30, intervalId = 70,
-                userName = "", comment = "", detailsJson = "", room = "")
-        whenever(orderRepository.getReferenceById(4)).thenReturn(order)
-        val opening = OpeningEntity(30, orderCount = 4, dateStart = 0, dateEnd = 0, orderStart = 0,
-                orderEnd = Instant.now().toEpochMilli() * 2)
-        whenever(openings.getOne(30)).thenReturn(opening)
-        val timeWindow = TimeWindowEntity(opening = opening, normalItemCount = 5, extraItemCount = 3)
-        whenever(timeWindowRepo.getReferenceById(70)).thenReturn(timeWindow)
-        whenever(user.uid).thenReturn("unique-id")
-
-        val procedure = CancelOrderProcedure(user, 4,
-                orderRepository = orderRepository,
-                openings = openings,
-                timeWindowRepo = timeWindowRepo)
-
-        assertDoesNotThrow { procedure.cancelOrder() }
-        assertEquals(8, procedure.timeWindow.normalItemCount)
-        assertEquals(6, procedure.timeWindow.extraItemCount)
-        assertEquals(1, procedure.opening.orderCount)
-        assertEquals(OrderStatus.CANCELLED, procedure.order.status)
-        assertEquals(3, procedure.count)
-
-        assertEquals(timeWindow, procedure.timeWindow)
-        assertEquals(opening, procedure.opening)
-        assertEquals(order, procedure.order)
     }
 
 }

@@ -2,6 +2,7 @@ package hu.kirdev.schpincer.web
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonInclude.Include
+import hu.kirdev.schpincer.dao.UserRepository
 import hu.kirdev.schpincer.dto.ItemEntityDto
 import hu.kirdev.schpincer.dto.ManualUserDetails
 import hu.kirdev.schpincer.model.ItemCategory
@@ -28,17 +29,18 @@ import kotlin.math.round
 @RestController
 @RequestMapping("/api")
 open class ApiController(
-        private val circles: CircleService,
-        private val openings: OpeningService,
-        private val items: ItemService,
-        private val users: UserService,
-        private val orders: OrderService,
-        private val timeService: TimeService,
-        @Value("\${schpincer.api-tokens:}")
-        apiTokensRaw: String,
+    private val circles: CircleService,
+    private val openings: OpeningService,
+    private val items: ItemService,
+    private val users: UserService,
+    private val orders: OrderService,
+    private val timeService: TimeService,
+    @Value("\${schpincer.api-tokens:}")
+    apiTokensRaw: String,
 
-        @param:Value("\${schpincer.api.base-url}")
-        private val baseUrl: String
+    @param:Value("\${schpincer.api.base-url}")
+    private val baseUrl: String,
+    private val userRepository: UserRepository
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -55,15 +57,15 @@ open class ApiController(
             auth: Authentication?,
     ): ItemEntityDto? {
         val item = items.getOne(id)
-        if (item == null || (auth?.isAuthenticated != true && !item.visibleWithoutLogin))
+        val loggedIn = auth.getUser(userRepository) != null
+        if (item == null || (!loggedIn && !item.visibleWithoutLogin))
             return null
-        val loggedIn = auth?.isAuthenticated == true || request.isInInternalNetwork()
         val opening = if (explicitOpening != 0L) openings.getOne(explicitOpening) else openings.findNextOf(item.circle!!.id)
         return ItemEntityDto(item, opening, loggedIn, loggedIn && explicitOpening > 0)
     }
 
     @Operation(summary = "List of items")
-    @GetMapping("/items")
+    @GetMapping("/items", "/items/")
     @ResponseBody
     fun getAllItems(
             request: HttpServletRequest,
@@ -71,7 +73,7 @@ open class ApiController(
             auth: Authentication?,
     ): ResponseEntity<List<ItemEntityDto>> {
         val cache: MutableMap<Long, OpeningEntity?> = HashMap()
-        val loggedIn = auth?.isAuthenticated == true || request.isInInternalNetwork()
+        val loggedIn = auth.getUser(userRepository) != null
         if (circle != null) {
             val list = items.findAllByCircle(circle).stream()
                     .filter { it.visibleWithoutLogin || loggedIn }
@@ -79,7 +81,7 @@ open class ApiController(
                     .map { item: ItemEntity ->
                         ItemEntityDto(item,
                                 cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
-                                loggedIn || request.isInInternalNetwork(),
+                                loggedIn,
                                 false)
                     }
                     .collect(Collectors.toList())
@@ -92,7 +94,7 @@ open class ApiController(
                 .map { item: ItemEntity ->
                     ItemEntityDto(item,
                             cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
-                            loggedIn || request.isInInternalNetwork(),
+                            loggedIn,
                             false)
                 }
                 .collect(Collectors.toList())
@@ -103,7 +105,7 @@ open class ApiController(
     @GetMapping("/items/now")
     @ResponseBody
     fun getAllItemsToday(request: HttpServletRequest, auth: Authentication?): ResponseEntity<List<ItemEntityDto>> {
-        val loggedIn = auth?.isAuthenticated == true || request.isInInternalNetwork()
+        val loggedIn = auth.getUser(userRepository) != null
         val cache: MutableMap<Long, OpeningEntity?> = HashMap()
         val list = items.findAllByOrderableNow().stream()
                 .filter { it.visibleWithoutLogin || loggedIn }
@@ -112,7 +114,7 @@ open class ApiController(
                 .map { item: ItemEntity ->
                     ItemEntityDto(item,
                             cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
-                            loggedIn || request.isInInternalNetwork(),
+                            loggedIn,
                             false)
                 }
                 .collect(Collectors.toList())
@@ -185,7 +187,7 @@ open class ApiController(
     @GetMapping("/items/tomorrow")
     @ResponseBody
     fun getAllItemsTomorrow(request: HttpServletRequest, auth: Authentication?): ResponseEntity<List<ItemEntityDto>> {
-        val loggedIn = auth?.isAuthenticated == true || request.isInInternalNetwork()
+        val loggedIn = auth.getUser(userRepository) != null
         val cache: MutableMap<Long, OpeningEntity?> = HashMap()
         val list = items.findAllByOrerableTomorrow().stream()
                 .filter { it.visibleWithoutLogin || loggedIn }
@@ -194,7 +196,7 @@ open class ApiController(
                 .map { item: ItemEntity ->
                     ItemEntityDto(item,
                             cache.computeIfAbsent(item.circle!!.id) { openings.findNextOf(it) },
-                            loggedIn || request.isInInternalNetwork(),
+                            loggedIn,
                             false)
                 }
                 .collect(Collectors.toList())
@@ -216,7 +218,7 @@ open class ApiController(
     fun newOrder(auth: Authentication?, @RequestBody requestBody: NewOrderRequest): ResponseEntity<String> {
         if (requestBody.id < 0 || requestBody.time < 0 || requestBody.detailsJson == "{}")
             return ResponseEntity(RESPONSE_INTERNAL_ERROR, HttpStatus.OK)
-        val user = auth.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
+        val user = auth.getUser(userRepository) ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
         return try {
             if (requestBody.manualOrderDetails != null) {
                 log.info("{}:{} is making a manual order with details: {}, for {}",
@@ -253,7 +255,7 @@ open class ApiController(
     @PostMapping("/order/delete")
     @ResponseBody
     fun deleteOrder(auth: Authentication?, @RequestBody(required = true) body: DeleteRequestDto): ResponseEntity<String> {
-        val user = auth.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
+        val user = auth.getUser(userRepository) ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
         return try {
             orders.cancelOrder(user, body.id)
         } catch (e: FailedOrderException) {
@@ -268,7 +270,7 @@ open class ApiController(
     @PostMapping("/order/change")
     @ResponseBody
     fun changeOrder(auth: Authentication?, @RequestBody(required = true) body: ChangeRequestDto): ResponseEntity<String> {
-        val user = auth.getUserIfPresent() ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
+        val user = auth.getUser(userRepository) ?: return responseOf("Error 403", HttpStatus.FORBIDDEN)
         return try {
             orders.changeOrder(user, body.id, body.room, body.comment)
         } catch (e: FailedOrderException) {

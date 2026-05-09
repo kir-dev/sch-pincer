@@ -14,7 +14,11 @@ function appendNext(profile = 0) {
     if (page === 0)
         clearAll();
 
-    getForJsonObject('api/items' + getFilter('') + (profile !== parseInt(0) ? '?circle=' + profile : ''))
+    const filter = getFilter('');
+    const base = 'api/items' + filter;
+    const separator = base.includes('?') ? '&' : '?';
+    const url = base + (profile !== parseInt(0) ? separator + 'circle=' + profile : '');
+    getForJsonObject(url)
         .then(function (data) {
             endReached = true;
             if (data.length === 0) {
@@ -56,9 +60,10 @@ function filterSearch() {
 }
 
 function getFilter(separator) {
-    if (location.search.includes('?now'))
+    const params = new URLSearchParams(location.search);
+    if (params.get('filter') === 'now')
         return '/now' + separator;
-    if (location.search.includes('?tomorrow'))
+    if (params.get('filter') === 'tomorrow')
         return '/tomorrow' + separator;
     return '';
 }
@@ -74,7 +79,11 @@ function showLoading() {
 }
 
 function searchFor(keyword) {
-    getForJsonObject('api/items' + getFilter(''))
+    const filter = getFilter('');
+    const base = 'api/items' + filter;
+    const separator = base.includes('?') ? '&' : '?';
+    const url = base + (keyword ? separator + 'q=' + encodeURIComponent(keyword) : '');
+    getForJsonObject(url)
         .then(function (data) {
             searchResult = data;
             document.getElementById('search-input').value = keyword;
@@ -85,14 +94,15 @@ function searchFor(keyword) {
 }
 
 function updateUrl(keyword) {
+    const filter = getFilter('');
+    const baseUrl = '/items';
+    const filterParam = filter !== '' ? '?filter=' + filter.substring(1) : '';
     if (keyword == null) {
-        window.history.pushState({
-            route: '/items' + (getFilter('') !== '' ? ('?' + getFilter('')) : '')
-        }, document.title, '/items' + (getFilter('') !== '' ? ('?' + getFilter('')) : ''));
+        const url = baseUrl + filterParam;
+        window.history.pushState({ route: url }, document.title, url);
     } else {
-        window.history.pushState({
-            route: '/items?' + (getFilter('') !== '' ? (getFilter('') + '&') : '') + 'q=' + encodeURI(keyword)
-        }, document.title, '/items?' + (getFilter('') !== '' ? (getFilter('') + '&') : '') + 'q=' + encodeURI(keyword));
+        const url = baseUrl + filterParam + (filterParam ? '&' : '?') + 'q=' + encodeURIComponent(keyword);
+        window.history.pushState({ route: url }, document.title, url);
     }
 }
 

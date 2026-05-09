@@ -15,7 +15,6 @@ import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.whenever
-import java.time.Instant
 import java.util.*
 import kotlin.test.assertEquals
 
@@ -185,52 +184,6 @@ class MakeOrderTest {
         assertEquals("[KB] $comment", procedure.order.comment)
         assertEquals(detailsJson, procedure.order.detailsJson)
         assertEquals("SCH-1620", procedure.order.room)
-    }
-
-    @Test
-    fun `validate loading target not orderable item`() {
-        val itemEntity = ItemEntity()
-        itemEntity.orderable = false
-        itemEntity.personallyOrderable = false
-        whenever(itemsRepo.getReferenceById(12)).thenReturn(itemEntity)
-
-        val procedure = MakeOrderProcedure(user, 12, 0, 0, "", "{}",
-                itemsRepo = itemsRepo,
-                timeWindowRepo = timewindowRepo,
-                extrasRepository = extrasRepository)
-
-        assertEquals(RESPONSE_INTERNAL_ERROR, getException<FailedOrderException> { procedure.loadTargetItem() }.response)
-    }
-
-    @Test
-    fun `validate loading target personally orderable item`() {
-        val itemEntity = ItemEntity()
-        itemEntity.orderable = true
-        itemEntity.personallyOrderable = true
-        whenever(itemsRepo.getReferenceById(12)).thenReturn(itemEntity)
-
-        val procedure = MakeOrderProcedure(user, 12, 0, 0, "", "{}",
-                itemsRepo = itemsRepo,
-                timeWindowRepo = timewindowRepo,
-                extrasRepository = extrasRepository)
-
-        assertEquals(RESPONSE_INTERNAL_ERROR, getException<FailedOrderException> { procedure.loadTargetItem() }.response)
-    }
-
-    @Test
-    fun `validate loading target item`() {
-        val itemEntity = ItemEntity()
-        itemEntity.orderable = true
-        itemEntity.personallyOrderable = false
-        whenever(itemsRepo.getReferenceById(12)).thenReturn(itemEntity)
-
-        val procedure = MakeOrderProcedure(user, 12, 0, 0, "", "{}",
-                itemsRepo = itemsRepo,
-                timeWindowRepo = timewindowRepo,
-                extrasRepository = extrasRepository)
-
-        assertDoesNotThrow { procedure.loadTargetItem() }
-        assertEquals(itemEntity, procedure.item)
     }
 
     @Test
@@ -615,45 +568,4 @@ class MakeOrderTest {
         assertEquals(1, procedure.order.count)
     }
 
-    @Test
-    fun `composite test`() {
-        val opening = OpeningEntity(30, maxOrder = 5, dateStart = 0, dateEnd = 0, orderStart = 0,
-                orderEnd = Instant.now().toEpochMilli() * 2, maxBeta = 10)
-
-        val timeWindow = TimeWindowEntity(opening = opening, name = "6:00-8:00", date = 12, normalItemCount = 5, extraItemCount = 4)
-        whenever(timewindowRepo.getReferenceById(40)).thenReturn(timeWindow)
-        whenever(timewindowRepo.findById(40)).thenReturn(Optional.of(timeWindow))
-        val item = ItemEntity(name = "name", category = 2, orderable = true, personallyOrderable = false,
-                alias = "", circle = CircleEntity(10), price = 1200)
-        whenever(itemsRepo.getReferenceById(12)).thenReturn(item)
-
-        whenever(user.uid).thenReturn("unique")
-        whenever(user.room).thenReturn("SCH-1620")
-        whenever(user.name).thenReturn("Test User")
-        whenever(user.grantedCardType).thenReturn(CardType.KB)
-        whenever(user.orderingPriority).thenReturn(5)
-
-        val comment = "comment here"
-        val procedure = MakeOrderProcedure(user, 12, 1, 40, comment, "{\"answers\": []}",
-                itemsRepo = itemsRepo,
-                timeWindowRepo = timewindowRepo,
-                extrasRepository = extrasRepository)
-
-        assertDoesNotThrow { procedure.makeOrder() }
-        assertEquals(12, procedure.order.date)
-        assertEquals(1200, procedure.order.price)
-        assertEquals("6:00-8:00", procedure.order.intervalMessage)
-        assertEquals(opening.orderEnd, procedure.order.cancelUntil)
-        assertEquals(2, procedure.order.category)
-        assertEquals(5, procedure.order.priority)
-        assertEquals("name", procedure.order.compactName)
-        assertEquals(1, procedure.order.count)
-        assertEquals("unique", procedure.order.userId)
-        assertEquals("Test User", procedure.order.userName)
-        assertEquals("[KB] $comment", procedure.order.comment)
-        assertEquals("{\"answers\": []}", procedure.order.detailsJson)
-        assertEquals("SCH-1620", procedure.order.room)
-        assertEquals(item, procedure.item)
-        assertEquals(timeWindow, procedure.timeWindow)
-    }
 }

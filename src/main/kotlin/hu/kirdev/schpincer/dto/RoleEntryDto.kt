@@ -1,20 +1,12 @@
 package hu.kirdev.schpincer.dto
 
 import hu.kirdev.schpincer.model.UserEntity
-import hu.kirdev.schpincer.web.sha256
 import hu.kirdev.schpincer.web.toReadableRole
 
-class RoleEntryDto(val uidHash: String, ue: UserEntity) {
-    val name: String
-    val sysadmin: Boolean
-    val permissions: String
-
-    init {
-        name = ue.name
-        sysadmin = ue.sysadmin
-        permissions = if (ue.permissions.isEmpty()) "-" else ue.permissions.joinToString(", ")
-    }
-
+class RoleEntryDto(val uid: String, ue: UserEntity) {
+    val name: String = ue.name
+    val sysadmin: Boolean = ue.sysadmin
+    val permissions: String = if (ue.permissions.isEmpty()) "-" else ue.permissions.joinToString(", ")
 }
 
 enum class CircleMemberRole {
@@ -24,13 +16,7 @@ enum class CircleMemberRole {
 }
 
 class CircleRoleEntryDto(ue: UserEntity, circleId: Long) {
-    val uidHash: String
-    val name: String
-    val permission: CircleMemberRole
-
-    init {
-        uidHash = ue.uid.sha256()
-        name = ue.name
-        permission = toReadableRole(ue.permissions, circleId)
-    }
+    val uid: String = ue.uid
+    val name: String = ue.name
+    val permission: CircleMemberRole = toReadableRole(ue.permissions, circleId)
 }

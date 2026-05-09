@@ -1,35 +1,34 @@
 package hu.kirdev.schpincer.web
 
+import hu.kirdev.schpincer.dao.UserRepository
 import hu.kirdev.schpincer.dto.KitchenOrderDto
 import hu.kirdev.schpincer.model.CardType
 import hu.kirdev.schpincer.model.OrderStatus
-import hu.kirdev.schpincer.service.*
-import org.springframework.beans.factory.annotation.Autowired
+import hu.kirdev.schpincer.service.OpeningService
+import hu.kirdev.schpincer.service.OrderService
+import hu.kirdev.schpincer.service.OrderStrategy
+import hu.kirdev.schpincer.service.UserService
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import org.springframework.security.core.Authentication
 
 @Controller
-class KitchenViewController {
+class KitchenViewController(
+    private val users: UserService,
+    private val openings: OpeningService,
+    private val orders: OrderService,
+    private val userRepository: UserRepository,
+) {
 
-    @Autowired
-    private lateinit var users: UserService
-
-    @Autowired
-    private lateinit var openings: OpeningService
-
-    @Autowired
-    private lateinit var orders: OrderService
-
-    @GetMapping("/kitchen-view/{circleId}/{openingId}/hand-over")
+     @GetMapping("/kitchen-view/{circleId}/{openingId}/hand-over")
     fun handOver(
             @PathVariable circleId: Long,
             @PathVariable openingId: Long,
             model: Model,
             auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/profile"
 
         model.addAttribute("openingId", openingId)
@@ -44,7 +43,7 @@ class KitchenViewController {
             model: Model,
             auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/profile"
 
         model.addAttribute("openingId", openingId)
@@ -59,7 +58,7 @@ class KitchenViewController {
             model: Model,
             auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/profile"
 
         model.addAttribute("openingId", openingId)
@@ -74,7 +73,7 @@ class KitchenViewController {
             model: Model,
             auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/profile"
 
         model.addAttribute("openingId", openingId)
@@ -90,7 +89,7 @@ class KitchenViewController {
             model: Model,
             auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/profile"
 
         model.addAttribute("openingId", openingId)
@@ -105,7 +104,7 @@ class KitchenViewController {
             model: Model,
             auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/profile"
 
         model.addAttribute("openingId", openingId)
@@ -120,7 +119,7 @@ class KitchenViewController {
             model: Model,
             auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/profile"
 
         model.addAttribute("openingId", openingId)
@@ -137,10 +136,10 @@ class KitchenViewController {
             @PathVariable openingId: Long,
             auth: Authentication?
     ): List<KitchenOrderDto> {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return listOf()
 
-        val openingIntervalLength = openings.getOne(openingId).intervalLength
+        val openingIntervalLength = openings.getOne(openingId)?.intervalLength ?: return listOf()
 
         return orders.findToExport(openingId, OrderStrategy.ORDER_GROUPED.representation)
                 .filter { it.status == OrderStatus.COMPLETED }
@@ -156,10 +155,10 @@ class KitchenViewController {
             @PathVariable openingId: Long,
             auth: Authentication?
     ): List<KitchenOrderDto> {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return listOf()
 
-        val openingIntervalLength = openings.getOne(openingId).intervalLength
+        val openingIntervalLength = openings.getOne(openingId)?.intervalLength ?: return listOf()
 
         return orders.findToExport(openingId, OrderStrategy.ORDER_GROUPED.representation)
                 .filter { it.status == OrderStatus.ACCEPTED
@@ -177,10 +176,10 @@ class KitchenViewController {
             @PathVariable openingId: Long,
             auth: Authentication?
     ): List<KitchenOrderDto> {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return listOf()
 
-        val openingIntervalLength = openings.getOne(openingId).intervalLength
+        val openingIntervalLength = openings.getOne(openingId)?.intervalLength ?: return listOf()
 
         return orders.findToExport(openingId, OrderStrategy.ORDER_GROUPED.representation)
                 .filter { it.status == OrderStatus.ACCEPTED
@@ -199,10 +198,10 @@ class KitchenViewController {
             @PathVariable openingId: Long,
             auth: Authentication?
     ): List<KitchenOrderDto> {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return listOf()
 
-        val openingIntervalLength = openings.getOne(openingId).intervalLength
+        val openingIntervalLength = openings.getOne(openingId)?.intervalLength ?: return listOf()
 
         return orders.findToExport(openingId, OrderStrategy.ORDER_GROUPED.representation)
                 .filter { it.status == OrderStatus.HANDED_OVER }
@@ -218,10 +217,10 @@ class KitchenViewController {
             @PathVariable openingId: Long,
             auth: Authentication?
     ): List<KitchenOrderDto> {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return listOf()
 
-        val openingIntervalLength = openings.getOne(openingId).intervalLength
+        val openingIntervalLength = openings.getOne(openingId)?.intervalLength ?: return listOf()
 
         return orders.findToExport(openingId, OrderStrategy.ORDER_GROUPED.representation)
                 .filter { it.status == OrderStatus.SHIPPED }
@@ -237,7 +236,7 @@ class KitchenViewController {
             @PathVariable status: String,
             auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/api/kitchen-view/${circleId}/${openingId}/${view}"
 
         orders.updateStatus(orderId, status)
@@ -256,7 +255,7 @@ class KitchenViewController {
             @RequestBody comment: ChefCommentDto,
             auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/api/kitchen-view/${circleId}/${openingId}/${view}"
 
         orders.updateChefComment(orderId, comment.comment)
@@ -278,13 +277,13 @@ class KitchenViewController {
             @RequestBody searchTerms: SearchTermsDto,
             auth: Authentication?
     ): List<UserSearchResultDto> {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return listOf()
 
         return if (searchTerms.name.isNotBlank()) {
-            users.findByUsernameContains(searchTerms.name).map { UserSearchResultDto(it.uid, it.name, it.room, it.uid.sha256().substring(0, 6), it.grantedCardType) }
+            users.findByUsernameContains(searchTerms.name).map { UserSearchResultDto(it.uid, it.name, it.room, it.uid, it.grantedCardType) }
         } else if (searchTerms.room.isNotBlank()) {
-            users.findByRoomContains(searchTerms.room).map { UserSearchResultDto(it.uid, it.name, it.room, it.uid.sha256().substring(0, 6), it.grantedCardType) }
+            users.findByRoomContains(searchTerms.room).map { UserSearchResultDto(it.uid, it.name, it.room, it.uid, it.grantedCardType) }
         } else {
             listOf()
         }
@@ -309,7 +308,7 @@ class KitchenViewController {
             @PathVariable openingId: Long,
             auth: Authentication?
     ): List<TimeWindowStatDto> {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(userRepository,circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return listOf()
 
         val intervals = orders.findAllByOpening(openingId)
