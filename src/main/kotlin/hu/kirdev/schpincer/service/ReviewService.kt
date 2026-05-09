@@ -38,13 +38,13 @@ open class ReviewService(
                           rateSpeed: Int,
                           rateOverAll: Int
     ) {
-        val circleId = orders.getCircleIdByOrderId(orderId)!!
+        val circleId = orders.getCircleIdByOrderId(orderId) ?: return
         val order = orders.getOne(orderId)
 
         val fullReview = ReviewEntity(
                 circle = circles.getOne(circleId),
                 order = order,
-                openingFeeling = openings.getOne(order?.openingId!!)?.feeling,
+                openingFeeling = order?.openingId?.let { openings.getOne(it)?.feeling },
                 userName = user.name,
                 review = if (review.length > 1000) review.substring(0, 1000) else review,
                 rateSpeed = rateSpeed.between(1, 5),

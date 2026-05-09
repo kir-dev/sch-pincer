@@ -24,24 +24,24 @@ open class SchPincerOidcUserService(
 
         val schPincerUser = SchPincerOidcUser(authschUser)
         val ownedCircles = getOwnedCircleIds(schPincerUser.executiveAtCircles, circleService)
-        if (userService.exists(schPincerUser.internalId)) {
-            val user = userService.getById(schPincerUser.internalId)!!
-            user.email = schPincerUser.email
-            if (admins.contains(user.uid))
-                user.sysadmin = true
+        val existingUser = userService.getById(schPincerUser.internalId)
+        if (existingUser != null) {
+            existingUser.email = schPincerUser.email
+            if (admins.contains(existingUser.uid))
+                existingUser.sysadmin = true
             val card = schPincerUser.cardType
-            if (user.pekCardType !== card) {
-                user.pekCardType = card
+            if (existingUser.pekCardType !== card) {
+                existingUser.pekCardType = card
             }
-            if (user.orderingPriority == 0)
-                user.orderingPriority = 1
+            if (existingUser.orderingPriority == 0)
+                existingUser.orderingPriority = 1
             val permissionsByVIR = getCirclePermissionList(ownedCircles)
-            if (!user.permissions.containsAll(permissionsByVIR)) {
-                permissionsByVIR.addAll(user.permissions)
-                user.permissions = permissionsByVIR
+            if (!existingUser.permissions.containsAll(permissionsByVIR)) {
+                permissionsByVIR.addAll(existingUser.permissions)
+                existingUser.permissions = permissionsByVIR
             }
-            schPincerUser.extraAuthorities = getAuthoritiesFromEntity(user)
-            userService.save(user)
+            schPincerUser.extraAuthorities = getAuthoritiesFromEntity(existingUser)
+            userService.save(existingUser)
         } else {
             val card = schPincerUser.cardType
             val user = UserEntity(

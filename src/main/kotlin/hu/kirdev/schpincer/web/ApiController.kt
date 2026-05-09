@@ -57,9 +57,9 @@ open class ApiController(
             auth: Authentication?,
     ): ItemEntityDto? {
         val item = items.getOne(id)
-        if (item == null || (auth?.isAuthenticated != true && !item.visibleWithoutLogin))
+        val loggedIn = auth.getUser(userRepository) != null
+        if (item == null || (!loggedIn && !item.visibleWithoutLogin))
             return null
-        val loggedIn = auth?.isAuthenticated == true
         val opening = if (explicitOpening != 0L) openings.getOne(explicitOpening) else openings.findNextOf(item.circle!!.id)
         return ItemEntityDto(item, opening, loggedIn, loggedIn && explicitOpening > 0)
     }
@@ -73,7 +73,7 @@ open class ApiController(
             auth: Authentication?,
     ): ResponseEntity<List<ItemEntityDto>> {
         val cache: MutableMap<Long, OpeningEntity?> = HashMap()
-        val loggedIn = auth?.isAuthenticated == true
+        val loggedIn = auth.getUser(userRepository) != null
         if (circle != null) {
             val list = items.findAllByCircle(circle).stream()
                     .filter { it.visibleWithoutLogin || loggedIn }
@@ -105,7 +105,7 @@ open class ApiController(
     @GetMapping("/items/now")
     @ResponseBody
     fun getAllItemsToday(request: HttpServletRequest, auth: Authentication?): ResponseEntity<List<ItemEntityDto>> {
-        val loggedIn = auth?.isAuthenticated == true
+        val loggedIn = auth.getUser(userRepository) != null
         val cache: MutableMap<Long, OpeningEntity?> = HashMap()
         val list = items.findAllByOrderableNow().stream()
                 .filter { it.visibleWithoutLogin || loggedIn }
@@ -187,7 +187,7 @@ open class ApiController(
     @GetMapping("/items/tomorrow")
     @ResponseBody
     fun getAllItemsTomorrow(request: HttpServletRequest, auth: Authentication?): ResponseEntity<List<ItemEntityDto>> {
-        val loggedIn = auth?.isAuthenticated == true
+        val loggedIn = auth.getUser(userRepository) != null
         val cache: MutableMap<Long, OpeningEntity?> = HashMap()
         val list = items.findAllByOrerableTomorrow().stream()
                 .filter { it.visibleWithoutLogin || loggedIn }

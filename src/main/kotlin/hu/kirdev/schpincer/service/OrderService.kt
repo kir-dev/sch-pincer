@@ -94,7 +94,11 @@ open class OrderService(
     @Transactional(readOnly = true)
     open fun getCircleIdByOrderId(id: Long): Long? {
         val order: Optional<OrderEntity> = repo.findById(id)
-        return order.map { orderEntity: OrderEntity -> openingRepo.findByIdOrNull(orderEntity.openingId!!)?.circle?.id!! }.orElse(null)
+        return order.map { orderEntity: OrderEntity ->
+            orderEntity.openingId?.let { openingId ->
+                openingRepo.findByIdOrNull(openingId)?.circle?.id
+            }
+        }.orElse(null)
     }
 
     @Transactional(readOnly = false)

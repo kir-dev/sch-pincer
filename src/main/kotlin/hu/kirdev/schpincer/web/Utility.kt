@@ -54,12 +54,16 @@ fun getOwnedCircleIds(executiveAt: List<ExecutiveAt>, circleService: CircleServi
 
 
 fun cannotEditCircle(users: UserRepository, circleId: Long, auth: Authentication?): Boolean {
-    val (_, _, _, _, sysadmin, _, _, permissions) = auth.getUser(users) ?: return true
+    val user = auth.getUser(users) ?: return true
+    val sysadmin = user.sysadmin
+    val permissions = user.permissions
     return !((permissions.contains("ROLE_${Role.LEADER.name}") && permissions.contains("CIRCLE_$circleId")) || sysadmin)
 }
 
 fun cannotEditCircleNoPR(users: UserRepository, circleId: Long, auth: Authentication?): Boolean {
-    val (_, _, _, _, sysadmin, _, _, permissions) = auth.getUser(users) ?: return true
+    val user = auth.getUser(users) ?: return true
+    val sysadmin = user.sysadmin
+    val permissions = user.permissions
     return !((permissions.contains("ROLE_${Role.LEADER.name}") && permissions.contains("CIRCLE_$circleId") && !permissions.contains("PR_$circleId")) || sysadmin)
 }
 

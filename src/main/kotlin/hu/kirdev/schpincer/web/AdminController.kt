@@ -88,7 +88,7 @@ open class AdminController(
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("mode", "edit")
         model.addAttribute("adminMode", true)
-        model.addAttribute("circle", circles.getOne(circleId)!!.copy())
+        model.addAttribute("circle", circles.getOne(circleId)?.copy() ?: return "redirect:/admin/?error=invalidCircleId")
         config.injectPublicValues(model)
         return "circleModify"
     }
@@ -143,7 +143,7 @@ open class AdminController(
     fun adminDeleteCircle(@PathVariable circleId: Long, model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("topic", "circle")
-        model.addAttribute("arg", circles.getOne(circleId)!!.displayName)
+        model.addAttribute("arg", circles.getOne(circleId)?.displayName ?: return "redirect:/admin/?error=invalidCircleId")
         model.addAttribute("ok", "admin/circles/delete/$circleId/confirm")
         model.addAttribute("cancel", "admin/")
         config.injectPublicValues(model)
@@ -156,7 +156,8 @@ open class AdminController(
         request: HttpServletRequest
     ): String {
         items.deleteByCircle(circleId)
-        circles.delete(circles.getOne(circleId)!!)
+        val circle = circles.getOne(circleId) ?: return "redirect:/admin/?error=invalidCircleId"
+        circles.delete(circle)
         return REDIRECT_TO_ADMIN
     }
 
@@ -164,8 +165,8 @@ open class AdminController(
     fun editRoles(@PathVariable uid: String, model: Model): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("uid", uid)
-        val user = users.getByIdOrNull(uid)
-        model.addAttribute("name", user!!.name)
+        val user = users.getByIdOrNull(uid) ?: return "redirect:/admin/?error=invalidUid"
+        model.addAttribute("name", user.name)
         model.addAttribute("sysadmin", user.sysadmin)
         model.addAttribute("email", user.email ?: "-")
         model.addAttribute("roles", user.permissions.joinToString(", "))
@@ -216,7 +217,12 @@ open class AdminController(
     @GetMapping("/debug/card/{card}")
     fun changeCard(@PathVariable card: String, auth: Authentication?): String {
         val user = auth.getUser(userRepository) ?: return "failed"
-        user.pekCardType = CardType.valueOf(card)
+        val cardType = try {
+            CardType.valueOf(card)
+        } catch (e: IllegalArgumentException) {
+            return "failed"
+        }
+        user.pekCardType = cardType
         users.save(user)
         return "ok"
     }

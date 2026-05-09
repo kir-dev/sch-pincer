@@ -54,7 +54,7 @@ class MakeOrderProcedure(
                 detailsJson = detailsJson,
                 room = manualUser.room,
                 createdAt = Instant.now().toEpochMilli())
-            item = itemsRepo.findByIdOrNull(id)!!
+            item = itemsRepo.findByIdOrNull(id) ?: throw FailedOrderException(RESPONSE_INTERNAL_ERROR)
         }
 
         details = calculateExtra(detailsJson, order, item, manualUser?.card ?: user.grantedCardType)
@@ -69,12 +69,12 @@ class MakeOrderProcedure(
 
         if (manualUser == null) {
             validateOrderCount()
-            timeWindow = timeWindowRepo.findByIdOrNull(time)!!
+            timeWindow = timeWindowRepo.findByIdOrNull(time) ?: throw FailedOrderException(RESPONSE_TIME_WINDOW_INVALID)
             validateTimeWindow()
             updateCategoryLimitations(true)
         } else {
             updateCategoryLimitations(false)
-            timeWindow = timeWindowRepo.findByIdOrNull(time)!!
+            timeWindow = timeWindowRepo.findByIdOrNull(time) ?: throw FailedOrderException(RESPONSE_TIME_WINDOW_INVALID)
         }
 
         updateRemainingItemCount()
@@ -97,7 +97,7 @@ class MakeOrderProcedure(
     }
 
     internal fun loadTargetItem() {
-        item = itemsRepo.findByIdOrNull(id)!!
+        item = itemsRepo.findByIdOrNull(id) ?: throw FailedOrderException(RESPONSE_INTERNAL_ERROR)
         if (!item.orderable || item.personallyOrderable)
             throw FailedOrderException(RESPONSE_INTERNAL_ERROR)
     }

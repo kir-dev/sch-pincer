@@ -62,8 +62,8 @@ open class UserService(private val repo: UserRepository) {
     }
 
     @Transactional(readOnly = false)
-    open fun setRoom(userId: String, room: String): UserEntity {
-        val user = getById(userId)!!
+    open fun setRoom(userId: String, room: String): UserEntity? {
+        val user = getById(userId) ?: return null
         user.room = room.replace(Regex("[^A-Za-z0-9 -_()]"), "")
         repo.save(user)
         return user

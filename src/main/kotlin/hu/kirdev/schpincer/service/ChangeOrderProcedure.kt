@@ -26,7 +26,7 @@ class ChangeOrderProcedure(
     }
 
     private fun loadOrder() {
-        order = orderRepository.findByIdOrNull(id)!!
+        order = orderRepository.findByIdOrNull(id) ?: throw FailedOrderException(RESPONSE_BAD_REQUEST)
     }
 
     private fun validatePrivilege() {

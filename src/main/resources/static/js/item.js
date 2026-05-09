@@ -15,7 +15,9 @@ function appendNext(profile = 0) {
         clearAll();
 
     const filter = getFilter('');
-    const url = 'api/items' + filter + (profile !== parseInt(0) ? (filter ? '&' : '?') + 'circle=' + profile : '');
+    const base = 'api/items' + filter;
+    const separator = base.includes('?') ? '&' : '?';
+    const url = base + (profile !== parseInt(0) ? separator + 'circle=' + profile : '');
     getForJsonObject(url)
         .then(function (data) {
             endReached = true;
@@ -78,7 +80,9 @@ function showLoading() {
 
 function searchFor(keyword) {
     const filter = getFilter('');
-    const url = 'api/items' + filter + (filter ? '' : '') + (keyword ? (filter ? '&' : '?') + 'q=' + encodeURI(keyword) : '');
+    const base = 'api/items' + filter;
+    const separator = base.includes('?') ? '&' : '?';
+    const url = base + (keyword ? separator + 'q=' + encodeURIComponent(keyword) : '');
     getForJsonObject(url)
         .then(function (data) {
             searchResult = data;
@@ -97,7 +101,7 @@ function updateUrl(keyword) {
         const url = baseUrl + filterParam;
         window.history.pushState({ route: url }, document.title, url);
     } else {
-        const url = baseUrl + filterParam + (filterParam ? '&' : '?') + 'q=' + encodeURI(keyword);
+        const url = baseUrl + filterParam + (filterParam ? '&' : '?') + 'q=' + encodeURIComponent(keyword);
         window.history.pushState({ route: url }, document.title, url);
     }
 }
