@@ -47,6 +47,7 @@
                 'basePrice': /*[[ #{lang.items.base-price} ]]*/ 'Price'
             };
             const URL_BASE = /*[[ @{/} ]]*/ '/';
+            const ITEM_FILTER = /*[[${#ctx.containsVariable('itemFilter') ? itemFilter : ''}]]*/ '';
         </script>
         <script th:if='${searchMode}' th:inline='javascript'>
             document.addEventListener('DOMContentLoaded', function () {
@@ -110,6 +111,7 @@
                 'basePrice': /*[[ #{lang.items.base-price} ]]*/ 'Price'
             };
             const URL_BASE = /*[[ @{/} ]]*/ '/';
+            const ITEM_FILTER = /*[[${#ctx.containsVariable('itemFilter') ? itemFilter : ''}]]*/ '';
             document.addEventListener('DOMContentLoaded', function () {
                 searchFor(/*[[ ${keyword} ]]*/ '');
                 if ((/*[[ ${keyword} ]]*/ '').length === 0) appendNext(/*[[ ${profile} ]]*/ '0');
@@ -162,6 +164,7 @@
                 'basePrice': /*[[ #{lang.items.base-price} ]]*/ 'Price'
             };
             const URL_BASE = /*[[ @{/} ]]*/ '/';
+            const ITEM_FILTER = /*[[${#ctx.containsVariable('itemFilter') ? itemFilter : ''}]]*/ '';
             document.addEventListener('DOMContentLoaded', function () {
                 appendNext(/*[[ ${profile} ]]*/ '0');
             });

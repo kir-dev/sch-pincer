@@ -8,7 +8,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
-import java.util.*
+import java.time.ZoneId
 
 const val DAY_IN_MILLIS = 24 * 60 * 60 * 1000
 const val HOUR6_IN_MILLIS = 6 * 60 * 60 * 1000
@@ -63,31 +63,45 @@ open class ItemService {
     }
 
     @Transactional(readOnly = true)
-    open fun findAllByOrderableNow(): List<ItemEntity> {
-        val time = Instant.now().toEpochMilli()
-        val circles = openingRepo.findAllByOrderStartLessThanAndOrderEndGreaterThan(time, time)
-                .map { opening -> opening.circle?.id!! }
-        return repo.findAllByCircle_IdInOrderByPrecedenceDesc(circles)
+    open fun findAllByOrderableNow(): List<ItemEntity> =
+        findAllOrderableNowAt(Instant.now().toEpochMilli())
+
+    internal fun findAllOrderableNowAt(now: Long): List<ItemEntity> {
+        val circleIds = openingRepo.findAllOpenForOrdering(now)
+            .filter { it.orderStart <= now && it.orderEnd >= now }
+            .mapNotNull { it.circle?.id }
+            .distinct()
+        return itemsOfCircles(circleIds)
     }
 
     @Transactional(readOnly = true)
-    open fun findAllByOrerableTomorrow(): List<ItemEntity> {
-        val time1 = getJustDateFrom(Instant.now().toEpochMilli()) + DAY_IN_MILLIS
-        val time2 = time1 + DAY_IN_MILLIS + HOUR6_IN_MILLIS
-        val circles = openingRepo.findAllByOrderStartGreaterThanAndOrderStartLessThan(time1, time2)
-                .map { opening -> opening.circle?.id!! }
-        return repo.findAllByCircle_IdInOrderByPrecedenceDesc(circles)
+    open fun findAllByOrerableTomorrow(): List<ItemEntity> =
+        findAllOrderableTomorrowAt(Instant.now().toEpochMilli())
+
+    internal fun findAllOrderableTomorrowAt(now: Long): List<ItemEntity> {
+        val (from, to) = tomorrowOrderStartRange(now)
+        val circleIds = openingRepo.findAllByOrderStartGreaterThanAndOrderStartLessThan(from, to)
+            .filter { it.orderStart > from && it.orderStart < to }
+            .mapNotNull { it.circle?.id }
+            .distinct()
+        return itemsOfCircles(circleIds)
     }
 
-    @Transactional(readOnly = false)
-    open fun getJustDateFrom(millis: Long): Long {
-        val c = Calendar.getInstance()
-        c.timeInMillis = millis
-        c[Calendar.HOUR_OF_DAY] = 0
-        c[Calendar.MINUTE] = 0
-        c[Calendar.SECOND] = 0
-        c[Calendar.MILLISECOND] = 0
-        return c.timeInMillis
+    internal fun tomorrowOrderStartRange(nowMillis: Long): Pair<Long, Long> {
+        val zone = ZoneId.of("Europe/Budapest")
+        val from = Instant.ofEpochMilli(nowMillis)
+            .atZone(zone)
+            .toLocalDate()
+            .plusDays(1)
+            .atStartOfDay(zone)
+            .toInstant()
+            .toEpochMilli()
+        return from to from + DAY_IN_MILLIS + HOUR6_IN_MILLIS
+    }
+
+    private fun itemsOfCircles(circleIds: List<Long>): List<ItemEntity> {
+        if (circleIds.isEmpty()) return emptyList()
+        return repo.findAllByCircle_IdInOrderByPrecedenceDesc(circleIds)
     }
 
     @Transactional(readOnly = false)
