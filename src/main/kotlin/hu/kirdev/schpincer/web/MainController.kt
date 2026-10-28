@@ -64,10 +64,21 @@ open class MainController {
     }
 
     @GetMapping("/items")
-    fun items(@RequestParam(name = "q", defaultValue = "") keyword: String, model: Model, auth: Authentication?): String {
+    fun items(
+        @RequestParam(name = "q", defaultValue = "") keyword: String,
+        @RequestParam(name = "now", required = false) now: String?,
+        @RequestParam(name = "tomorrow", required = false) tomorrow: String?,
+        model: Model,
+        auth: Authentication?
+    ): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("searchMode", "" != keyword)
         model.addAttribute("keyword", keyword)
+        model.addAttribute("itemFilter", when {
+            now != null -> "now"
+            tomorrow != null -> "tomorrow"
+            else -> ""
+        })
         model.addAttribute("card", (auth.getUserIfPresent()?.grantedCardType ?: CardType.DO).name)
         config.injectPublicValues(model)
         return "items"
