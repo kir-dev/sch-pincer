@@ -48,14 +48,13 @@ interface OpeningRepository : JpaRepository<OpeningEntity, Long> {
     fun findAllEndedOpeningsBefore(now: Long, before: Long, limit: Long): List<OpeningEntity>
 
     fun findAllByDateEndGreaterThanAndDateEndLessThanOrderByDateStart(now: Long, weekFromNow: Long): List<OpeningEntity>
-    @Query("SELECT o FROM OpeningEntity o WHERE o.orderStart > :fromExclusive AND o.orderStart < :toExclusive")
-    fun findAllByOrderStartGreaterThanAndOrderStartLessThan(
-        @Param("fromExclusive") fromExclusive: Long,
-        @Param("toExclusive") toExclusive: Long
-    ): List<OpeningEntity>
+    fun findAllByOrderStartGreaterThanAndOrderStartLessThan(time1: Long, time2: Long): List<OpeningEntity>
 
-    @Query("SELECT o FROM OpeningEntity o WHERE o.orderStart <= :now AND o.orderEnd >= :now")
-    fun findAllOpenForOrdering(@Param("now") now: Long): List<OpeningEntity>
+    @Query("SELECT o FROM OpeningEntity o WHERE o.orderStart <= :time AND o.orderEnd >= :time")
+    fun findAllOrderableAt(@Param("time") time: Long): List<OpeningEntity>
+
+    @Query("SELECT o FROM OpeningEntity o WHERE o.orderStart < :to AND o.orderEnd > :from")
+    fun findAllOrderableBetween(@Param("from") from: Long, @Param("to") to: Long): List<OpeningEntity>
 
     fun findFirstByCircle_IdAndDateEndGreaterThanOrderByDateStart(id: Long, time: Long): Optional<OpeningEntity>
     fun findAllByOrderEndGreaterThanOrderByDateStart(currentTimeMillis: Long): List<OpeningEntity>

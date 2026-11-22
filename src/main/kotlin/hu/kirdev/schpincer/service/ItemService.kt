@@ -1,5 +1,6 @@
 package hu.kirdev.schpincer.service
 
+import hu.kirdev.schpincer.config.APP_ZONE
 import hu.kirdev.schpincer.dao.ItemRepository
 import hu.kirdev.schpincer.dao.OpeningRepository
 import hu.kirdev.schpincer.model.ItemEntity
@@ -8,10 +9,10 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
-import java.time.ZoneId
+import java.time.LocalTime
 
-const val DAY_IN_MILLIS = 24 * 60 * 60 * 1000
-const val HOUR6_IN_MILLIS = 6 * 60 * 60 * 1000
+/** The "tomorrow" list also covers the night after tomorrow, until this local time. */
+private val TOMORROW_CUTOFF: LocalTime = LocalTime.of(6, 0)
 
 @Service
 open class ItemService {
@@ -67,8 +68,7 @@ open class ItemService {
         findAllOrderableNowAt(Instant.now().toEpochMilli())
 
     internal fun findAllOrderableNowAt(now: Long): List<ItemEntity> {
-        val circleIds = openingRepo.findAllOpenForOrdering(now)
-            .filter { it.orderStart <= now && it.orderEnd >= now }
+        val circleIds = openingRepo.findAllOrderableAt(now)
             .mapNotNull { it.circle?.id }
             .distinct()
         return itemsOfCircles(circleIds)
@@ -79,24 +79,19 @@ open class ItemService {
         findAllOrderableTomorrowAt(Instant.now().toEpochMilli())
 
     internal fun findAllOrderableTomorrowAt(now: Long): List<ItemEntity> {
-        val (from, to) = tomorrowOrderStartRange(now)
-        val circleIds = openingRepo.findAllByOrderStartGreaterThanAndOrderStartLessThan(from, to)
-            .filter { it.orderStart > from && it.orderStart < to }
+        val (from, to) = tomorrowOrderingRange(now)
+        val circleIds = openingRepo.findAllOrderableBetween(from, to)
             .mapNotNull { it.circle?.id }
             .distinct()
         return itemsOfCircles(circleIds)
     }
 
-    internal fun tomorrowOrderStartRange(nowMillis: Long): Pair<Long, Long> {
-        val zone = ZoneId.of("Europe/Budapest")
-        val from = Instant.ofEpochMilli(nowMillis)
-            .atZone(zone)
-            .toLocalDate()
-            .plusDays(1)
-            .atStartOfDay(zone)
-            .toInstant()
-            .toEpochMilli()
-        return from to from + DAY_IN_MILLIS + HOUR6_IN_MILLIS
+    /** From tomorrow 00:00 until the day after tomorrow 06:00, local time (correct on DST change days too). */
+    internal fun tomorrowOrderingRange(nowMillis: Long): Pair<Long, Long> {
+        val tomorrow = Instant.ofEpochMilli(nowMillis).atZone(APP_ZONE).toLocalDate().plusDays(1)
+        val from = tomorrow.atStartOfDay(APP_ZONE).toInstant().toEpochMilli()
+        val to = tomorrow.plusDays(1).atTime(TOMORROW_CUTOFF).atZone(APP_ZONE).toInstant().toEpochMilli()
+        return from to to
     }
 
     private fun itemsOfCircles(circleIds: List<Long>): List<ItemEntity> {
