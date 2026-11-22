@@ -19,8 +19,8 @@ open class SchPincerOidcUserService(
     private val admins: List<String> = admins.split(Regex(", *"))
 
     @Transactional(readOnly = false)
-    override fun loadUser(userRequest: OidcUserRequest?): OidcUser? {
-        val authschUser = super.loadUser(userRequest) ?: return null
+    override fun loadUser(userRequest: OidcUserRequest): OidcUser {
+        val authschUser = super.loadUser(userRequest)
 
         val schPincerUser = SchPincerOidcUser(authschUser)
         val ownedCircles = getOwnedCircleIds(schPincerUser.executiveAtCircles, circleService)

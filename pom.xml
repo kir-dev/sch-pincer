@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.1</version>
+        <version>4.2.0</version>
         <relativePath/>
     </parent>
     <groupId>hu.gerviba</groupId>
@@ -23,7 +23,7 @@
         <sonar.organization>kir-dev</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <java.version>25</java.version>
-        <kotlin.version>2.3.0</kotlin.version>
+        <kotlin.version>2.4.21</kotlin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -74,13 +74,13 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>3.0.1</version>
+            <version>3.2.1</version>
         </dependency>
 
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>
-            <version>5.5.13.4</version>
+            <version>5.5.13.7</version>
         </dependency>
 
         <dependency>
@@ -108,7 +108,7 @@
         <dependency>
             <groupId>org.mockito.kotlin</groupId>
             <artifactId>mockito-kotlin</artifactId>
-            <version>5.4.0</version>
+            <version>6.4.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -122,7 +122,7 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-bom</artifactId>
-            <version>1.16.1</version>
+            <version>1.18.0</version>
             <type>pom</type>
         </dependency>
         <dependency>
