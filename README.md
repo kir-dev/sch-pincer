@@ -37,4 +37,14 @@ UPDATE `users` SET `sysadmin`=1 WHERE `email`='YOUR_EMAIL';
 ```
 
 - Relog (log out and in)
-- You will now see the two administration buttons  
+- You will now see the two administration buttons
+
+## Deployment
+
+Production runs on the Kir-Dev Kubernetes cluster, configured in
+[`kir-dev/k8s/schpincer`](https://github.com/kir-dev/k8s/tree/main/schpincer) (deployment docs, secrets, backups).
+
+Pushing to `master` runs the [`Deploy`](.github/workflows/deploy.yml) workflow: it builds
+[`docker/Dockerfile`](docker/Dockerfile), publishes `ghcr.io/kir-dev/schpincer:v0.0.<run number>`, tags the commit,
+then runs Renovate, which opens a PR in `kir-dev/k8s` with the new image. Merging that PR deploys it with Argo CD.
+The workflow needs the `KIR_DEV_BOT_PAT` Actions secret (the Kir-Dev bot's token).  
