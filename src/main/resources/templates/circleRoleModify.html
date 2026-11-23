@@ -23,7 +23,7 @@
         <h3 th:text="#{lang.configure.title-member-roles-modify}" class="topless">Prompt text comes here?</h3>
         <form action="#" th:action="@{/configure/__${circleId}__/roles/edit}" method="post">
             <table class="form full-table" th:object="${role}">
-                <input type="hidden" name="uidHash" th:value="*{uidHash}"/>
+                <input type="hidden" name="uid" th:value="*{uid}"/>
                 <tr>
                     <th th:text="#{lang.modify.property}">Property</th>
                     <th th:text="#{lang.modify.value}">Value</th>

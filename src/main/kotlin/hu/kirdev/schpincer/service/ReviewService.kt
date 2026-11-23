@@ -3,25 +3,17 @@ package hu.kirdev.schpincer.service
 import hu.kirdev.schpincer.dao.ReviewRepository
 import hu.kirdev.schpincer.model.ReviewEntity
 import hu.kirdev.schpincer.model.UserEntity
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 
 @Service
-open class ReviewService {
-
-    @Autowired
-    private lateinit var repo: ReviewRepository
-
-    @Autowired
-    private lateinit var orders: OrderService
-
-    @Autowired
-    private lateinit var circles: CircleService
-
-    @Autowired
-    private lateinit var openings: OpeningService
+open class ReviewService(
+    private val repo: ReviewRepository,
+    private val orders: OrderService,
+    private val circles: CircleService,
+    private val openings: OpeningService,
+) {
 
     @Transactional(readOnly = true)
     open fun findAll(): List<ReviewEntity> {
@@ -46,13 +38,13 @@ open class ReviewService {
                           rateSpeed: Int,
                           rateOverAll: Int
     ) {
-        val circleId = orders.getCircleIdByOrderId(orderId)!!
+        val circleId = orders.getCircleIdByOrderId(orderId) ?: return
         val order = orders.getOne(orderId)
 
         val fullReview = ReviewEntity(
                 circle = circles.getOne(circleId),
                 order = order,
-                openingFeeling = openings.getOne(order?.openingId!!).feeling,
+                openingFeeling = order?.openingId?.let { openings.getOne(it)?.feeling },
                 userName = user.name,
                 review = if (review.length > 1000) review.substring(0, 1000) else review,
                 rateSpeed = rateSpeed.between(1, 5),

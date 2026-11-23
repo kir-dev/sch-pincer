@@ -5,7 +5,6 @@ import hu.kirdev.schpincer.model.CircleMemberEntity
 import hu.kirdev.schpincer.model.ItemEntity
 import hu.kirdev.schpincer.model.OpeningEntity
 import hu.kirdev.schpincer.service.*
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.time.Instant
@@ -15,22 +14,13 @@ import jakarta.annotation.PostConstruct
 @Profile("test")
 @SuppressWarnings("kotlin:S1192" // ignore duplicated string
 )
-class TestingConfig {
-
-    @Autowired
-    private lateinit var circles: CircleService
-
-    @Autowired
-    private lateinit var openings: OpeningService
-
-    @Autowired
-    private lateinit var items: ItemService
-
-    @Autowired
-    private lateinit var circleMembers: CircleMemberService
-
-    @Autowired
-    private lateinit var reviews: ReviewService
+class TestingConfig(
+    private val circles: CircleService,
+    private val openings: OpeningService,
+    private val items: ItemService,
+    private val circleMembers: CircleMemberService,
+    private val reviews: ReviewService,
+) {
 
     @PostConstruct
     fun insertDbData() {

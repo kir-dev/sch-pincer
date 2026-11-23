@@ -4,13 +4,14 @@ import com.itextpdf.text.*
 import com.itextpdf.text.pdf.PdfPCell
 import com.itextpdf.text.pdf.PdfPTable
 import com.itextpdf.text.pdf.PdfWriter
+import hu.kirdev.schpincer.config.ApplicationConfig
 import hu.kirdev.schpincer.config.Role
+import hu.kirdev.schpincer.dao.UserRepository
 import hu.kirdev.schpincer.dto.CircleMemberRole
 import hu.kirdev.schpincer.dto.OpeningEntityDto
 import hu.kirdev.schpincer.model.*
 import hu.kirdev.schpincer.service.*
 import hu.kirdev.schpincer.web.component.ExportType
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -36,34 +37,19 @@ data class OrderSetCommentDto(var id: Long = 0, var comment: String = "")
 data class OrderChangePriceDto(var id: Long = 0, var price: Int = 0)
 
 @Controller
-open class ConfigureController {
-
-    @Autowired
-    private lateinit var circles: CircleService
-
-    @Autowired
-    private lateinit var members: CircleMemberService
-
-    @Autowired
-    private lateinit var items: ItemService
-
-    @Autowired
-    private lateinit var users: UserService
-
-    @Autowired
-    private lateinit var openings: OpeningService
-
-    @Autowired
-    private lateinit var orders: OrderService
-
-    @Autowired
-    private lateinit var reviews: ReviewService
-
-    @Autowired
-    private lateinit var timeService: TimeService
-
-    @Autowired
-    private lateinit var config: RealtimeConfigService
+open class ConfigureController(
+    private val circles: CircleService,
+    private val members: CircleMemberService,
+    private val items: ItemService,
+    private val users: UserService,
+    private val openings: OpeningService,
+    private val orders: OrderService,
+    private val reviews: ReviewService,
+    private val timeService: TimeService,
+    private val config: RealtimeConfigService,
+    private val userRepository: UserRepository,
+    private val app: ApplicationConfig
+) {
 
     @Value("\${schpincer.external:/etc/schpincer/external}")
     private lateinit var uploadPath: String
@@ -72,10 +58,11 @@ open class ConfigureController {
     fun configureRoot(auth: Authentication?, model: Model): String {
         val all = circles.findAllForMenu()
         model.addAttribute("circles", all)
-        val (_, _, _, _, sysadmin, _, _, permissions) = auth.getUser()
+        val user = auth.getUser(userRepository)
+        val sysadmin = user?.sysadmin ?: false
         val editable = circles.findAll().stream()
                 .filter { obj: CircleEntity? -> Objects.nonNull(obj) }
-                .filter { x: CircleEntity -> sysadmin || permissions.contains("CIRCLE_" + x.id) }
+                .filter { x: CircleEntity -> sysadmin || user?.permissions?.contains("CIRCLE_" + x.id) ?: false }
                 .collect(Collectors.toList())
         model.addAttribute("editable", editable)
         config.injectPublicValues(model)
@@ -84,15 +71,15 @@ open class ConfigureController {
 
     @GetMapping("/configure/{circleId}")
     fun configure(@PathVariable circleId: Long, model: Model, auth: Authentication?): String {
-        if (cannotEditCircle(circleId, auth))
+        if (cannotEditCircle(userRepository, circleId, auth))
             return "redirect:/configure?error=invalidPermissions"
 
         val circle = circles.getOne(circleId)
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circle", circle)
         model.addAttribute("openings", circle?.openings?.sortedByDescending { it.dateStart } ?: listOf<OpeningEntity>())
-        model.addAttribute("pr", isPR(circleId, auth))
-        model.addAttribute("owner", isCircleOwner(circleId, circles, auth) || auth.getUser().sysadmin)
+        model.addAttribute("pr", isPR(userRepository, circleId, auth))
+        model.addAttribute("owner", isCircleOwner(circleId, circles, auth) || auth.getUser(userRepository)?.sysadmin ?: false)
         model.addAttribute("roles", users.findAllCircleRole(circleId).filter { it.permission !== CircleMemberRole.NONE })
         model.addAttribute("circleId", circleId)
         model.addAttribute("items", items.findAllByCircle(circleId))
@@ -103,7 +90,7 @@ open class ConfigureController {
 
     @GetMapping("/configure/{circleId}/roles/list")
     fun listUserRole(@PathVariable circleId: Long, model: Model, auth: Authentication?): String {
-        if (cannotEditCircle(circleId, auth))
+        if (cannotEditCircle(userRepository, circleId, auth))
             return "redirect:/configure?error=invalidPermissions"
 
         model.addAttribute("circles", circles.findAllForMenu())
@@ -113,31 +100,31 @@ open class ConfigureController {
         return "circleRoleList"
     }
 
-    @GetMapping("/configure/{circleId}/roles/edit/{uidHash}")
+    @GetMapping("/configure/{circleId}/roles/edit/{uid}")
     fun editUserRole(
         @PathVariable circleId: Long,
-        @PathVariable uidHash: String,
+        @PathVariable uid: String,
         model: Model,
         auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth))
+        if (cannotEditCircle(userRepository, circleId, auth))
             return "redirect:/configure?error=invalidPermissions"
 
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("circleId", circleId)
-        model.addAttribute("role", users.findPermissionByUidHash(uidHash, circleId))
+        model.addAttribute("role", users.findPermissionByUid(uid, circleId))
         config.injectPublicValues(model)
         return "circleRoleModify"
     }
 
     @PostMapping("/configure/{circleId}/roles/edit")
     fun editUserRoles(@PathVariable circleId: Long,
-                      @RequestParam uidHash: String,
+                      @RequestParam uid: String,
                       @RequestParam permission: CircleMemberRole,
                       auth: Authentication?
     ): String {
-        val userToEdit = users.getByUidHash(uidHash) ?: return "redirect:/configure/${circleId}?error=invalidUidHash"
-        if ((!isCircleOwner(circleId, circles, auth) && !auth.getUser().sysadmin) || userToEdit.sysadmin)
+        val userToEdit = users.getByIdOrNull(uid) ?: return "redirect:/configure/${circleId}?error=invalidUid"
+        if ((!isCircleOwner(circleId, circles, auth) && !(auth.getUser(userRepository)?.sysadmin ?: false)) || userToEdit.sysadmin)
             return "redirect:/configure/$circleId?error"
 
         val tmp: MutableSet<String> = userToEdit.permissions.toMutableSet()
@@ -159,7 +146,7 @@ open class ConfigureController {
 
     @GetMapping("/configure/{circleId}/members/new")
     fun newMember(@PathVariable circleId: Long, model: Model, auth: Authentication?): String {
-        if (cannotEditCircle(circleId, auth))
+        if (cannotEditCircle(userRepository, circleId, auth))
             return "redirect:/configure?error=invalidPermissions"
 
         model.addAttribute("circles", circles.findAllForMenu())
@@ -177,10 +164,10 @@ open class ConfigureController {
             @RequestParam avatarFile: MultipartFile?,
             auth: Authentication?
     ): String {
-        if (cannotEditCircleNoPR(circleId, auth)) return "redirect:/configure/$circleId?error"
+        if (cannotEditCircleNoPR(userRepository, circleId, auth)) return "redirect:/configure/$circleId?error"
         val circle = circles.getOne(circleId)
         cme!!.circle = circle
-        val file = avatarFile?.uploadFile("avatars")
+        val file = avatarFile?.uploadFile(app.uploadPath, "avatars")
         cme.avatar = if (file == null) "image/blank-avatar.png" else "cdn/avatars/$file"
         members.save(cme)
         return "redirect:/configure/$circleId"
@@ -193,7 +180,7 @@ open class ConfigureController {
         model: Model,
         auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth))
+        if (cannotEditCircle(userRepository, circleId, auth))
             return "redirect:/configure?error=invalidPermissions"
 
         model.addAttribute("circles", circles.findAllForMenu())
@@ -212,16 +199,16 @@ open class ConfigureController {
         @RequestParam avatarFile: MultipartFile?,
         auth: Authentication?
     ): String {
-        if (cannotEditCircleNoPR(circleId, auth)) return "redirect:/configure/$circleId?error"
+        if (cannotEditCircleNoPR(userRepository, circleId, auth)) return "redirect:/configure/$circleId?error"
 
-        val original = members.getOne(id)
+        val original = members.getOne(id) ?: return "redirect:/configure/$circleId?error=invalidId"
         if (original.circle!!.id != circleId) return "redirect:/configure/$circleId?error"
 
         original.name = cme.name
         original.precedence = cme.precedence
         original.rank = cme.rank
         original.sort = cme.sort
-        val file = avatarFile?.uploadFile("avatars")
+        val file = avatarFile?.uploadFile(app.uploadPath, "avatars")
         if (file != null) original.avatar = "cdn/avatars/$file"
 
         members.save(original)
@@ -235,12 +222,12 @@ open class ConfigureController {
         model: Model,
         auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth))
+        if (cannotEditCircle(userRepository, circleId, auth))
             return "redirect:/configure?error=invalidPermissions"
 
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("topic", "member")
-        model.addAttribute("arg", members.getOne(memberId).name)
+        model.addAttribute("arg", members.getOne(memberId)?.name)
         model.addAttribute("ok", "configure/$circleId/members/delete/$memberId/confirm")
         model.addAttribute("cancel", "configure/$circleId")
         config.injectPublicValues(model)
@@ -251,8 +238,8 @@ open class ConfigureController {
     fun deleteMemberConfirm(@PathVariable circleId: Long,
                             @PathVariable memberId: Long,
                             auth: Authentication?): String {
-        if (cannotEditCircleNoPR(circleId, auth)) return "redirect:/configure/$circleId?error"
-        val cme = members.getOne(memberId)
+        if (cannotEditCircleNoPR(userRepository, circleId, auth)) return "redirect:/configure/$circleId?error"
+        val cme = members.getOne(memberId) ?: return "redirect:/configure/$circleId?error=invalidId"
         if (cme.circle!!.id == circleId) members.delete(cme)
         return "redirect:/configure/$circleId"
     }
@@ -263,7 +250,7 @@ open class ConfigureController {
         model: Model,
         auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth))
+        if (cannotEditCircle(userRepository, circleId, auth))
             return "redirect:/configure?error=invalidPermissions"
 
         model.addAttribute("circles", circles.findAllForMenu())
@@ -281,7 +268,7 @@ open class ConfigureController {
                    @RequestParam(required = false) background: MultipartFile?,
                    auth: Authentication?
     ): String {
-        if (cannotEditCircleNoPR(circleId, auth))
+        if (cannotEditCircleNoPR(userRepository, circleId, auth))
             return "redirect:/configure/$circleId?error=invalidPermissions"
 
         val original = circles.getOne(circleId) ?: return "redirect:/configure/$circleId?error=invalidId"
@@ -295,11 +282,11 @@ open class ConfigureController {
         original.homePageDescription = circle.homePageDescription
         original.websiteUrl = circle.websiteUrl
 
-        val logoFile = logo?.uploadFile("logos")
+        val logoFile = logo?.uploadFile(app.uploadPath, "logos")
         if (logoFile != null)
             original.logoUrl = "cdn/logos/$logoFile"
 
-        val backgroundFile = background?.uploadFile("backgrounds")
+        val backgroundFile = background?.uploadFile(app.uploadPath, "backgrounds")
         if (backgroundFile != null)
             original.backgroundUrl = "cdn/backgrounds/$backgroundFile"
 
@@ -313,7 +300,7 @@ open class ConfigureController {
             @PathVariable circleId: Long,
             auth: Authentication?
     ): String {
-        if (cannotEditCircleNoPR(circleId, auth))
+        if (cannotEditCircleNoPR(userRepository, circleId, auth))
             return "redirect:/configure/$circleId?error=invalidPermissions"
 
         if (!allRequestParams.containsKey("action"))
@@ -381,12 +368,12 @@ open class ConfigureController {
                 @RequestParam imageFile: MultipartFile?,
                 auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth))
+        if (cannotEditCircle(userRepository, circleId, auth))
             return "redirect:/configure/$circleId?error"
 
         val circle = circles.getOne(circleId)
         ie.circle = circle
-        val file: String? = imageFile?.uploadFile("items")
+        val file: String? = imageFile?.uploadFile(app.uploadPath, "items")
         ie.imageName = if (file == null) "image/blank-item.jpg" else "cdn/items/$file"
         items.save(ie)
         return "redirect:/configure/$circleId"
@@ -397,7 +384,7 @@ open class ConfigureController {
                  @PathVariable circleId: Long, model: Model,
                  auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth))
+        if (cannotEditCircle(userRepository, circleId, auth))
             return "redirect:/configure/$circleId?error"
 
         model.addAttribute("circles", circles.findAllForMenu())
@@ -415,7 +402,7 @@ open class ConfigureController {
                  auth: Authentication?
     ): String {
 
-        if (cannotEditCircle(circleId, auth))
+        if (cannotEditCircle(userRepository, circleId, auth))
             return "redirect:/configure/$circleId?error=invalidPermissions"
 
         val original = items.getOne(itemId) ?: return "redirect:/configure/$circleId?error=invalidId"
@@ -440,9 +427,9 @@ open class ConfigureController {
             discountPrice = item.discountPrice
             category = item.category
         }
-        if (item.flag < 1000 || auth.getUser().sysadmin)
+        if (item.flag < 1000 || auth.getUser(userRepository)?.sysadmin ?: false)
             original.flag = item.flag
-        val file = imageFile?.uploadFile("items")
+        val file = imageFile?.uploadFile(app.uploadPath, "items")
         if (file != null)
             original.imageName = "cdn/items/$file"
         items.save(original)
@@ -468,7 +455,7 @@ open class ConfigureController {
                           @PathVariable itemId: Long,
                           auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth)) return "redirect:/configure/$circleId?error"
+        if (cannotEditCircle(userRepository, circleId, auth)) return "redirect:/configure/$circleId?error"
         val ie = items.getOne(itemId)
         if (ie!!.circle!!.id == circleId) items.delete(ie)
         return "redirect:/configure/$circleId"
@@ -489,7 +476,7 @@ open class ConfigureController {
                    @RequestParam prFile: MultipartFile?,
                    auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth)) return "redirect:/configure/$circleId?error"
+        if (cannotEditCircle(userRepository, circleId, auth)) return "redirect:/configure/$circleId?error"
         val eo = OpeningEntity(
                 feeling = oed.feeling,
                 circle = circles.getOne(circleId),
@@ -509,7 +496,7 @@ open class ConfigureController {
                 maxLambda = oed.maxLambda,
                 compensationTime = oed.compensationTime
         )
-        val file = prFile?.uploadFile("pr")
+        val file = prFile?.uploadFile(app.uploadPath, "pr")
         eo.prUrl = if (file == null) "image/blank-pr.jpg" else "cdn/pr/$file"
         openings.save(eo)
         eo.generateTimeWindows(openings)
@@ -524,8 +511,8 @@ open class ConfigureController {
                     oed: OpeningEntityDto,
                     auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth)) return "redirect:/configure/$circleId?error"
-        val opening = openings.getOne(openingId)
+        if (cannotEditCircle(userRepository, circleId, auth)) return "redirect:/configure/$circleId?error"
+        val opening = openings.getOne(openingId) ?: return "redirect:/configure/$circleId?error=invalidOpening"
         with(opening) {
             feeling = oed.feeling
             if (oed.orderStart != "") orderStart = parseDate(oed.orderStart)
@@ -548,7 +535,7 @@ open class ConfigureController {
                              @PathVariable openingId: Long,
                              auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/configure/$circleId?error"
 
         orders.closeAllOrdersInOpening(openingId)
@@ -560,7 +547,7 @@ open class ConfigureController {
                             @PathVariable openingId: Long,
                             auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/configure/$circleId?error"
 
         orders.cancelAllOrdersInOpening(openingId)
@@ -573,11 +560,11 @@ open class ConfigureController {
                              @PathVariable openingId: Long,
                              auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId, circleId))
+        if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId, circleId))
             return "redirect:/configure/$circleId?error"
 
         return orders.findAllByOpening(openingId)
-            .map { users.getById(it.userId) }
+            .mapNotNull { users.getById(it.userId) }
             .distinctBy { it.uid }
             .joinToString(", <br>") { "\"${it.name}\" &lt;${it.email ?: ""}&gt;" }
     }
@@ -589,7 +576,8 @@ open class ConfigureController {
     ): String {
         model.addAttribute("circles", circles.findAllForMenu())
         model.addAttribute("topic", "opening")
-        model.addAttribute("arg", formatDate(openings.getOne(openingId).dateStart))
+        val opening = openings.getOne(openingId) ?: return "redirect:/configure/$circleId?error=invalidOpening"
+        model.addAttribute("arg", formatDate(opening.dateStart))
         model.addAttribute("ok", "configure/$circleId/openings/delete/$openingId/confirm")
         model.addAttribute("cancel", "configure/$circleId")
         config.injectPublicValues(model)
@@ -601,9 +589,9 @@ open class ConfigureController {
                              @PathVariable openingId: Long?,
                              auth: Authentication?
     ): String {
-        if (cannotEditCircle(circleId, auth) || !openings.isCircleMatches(openingId ?: 0, circleId))
+        if (cannotEditCircle(userRepository, circleId, auth) || !openings.isCircleMatches(openingId ?: 0, circleId))
             return "redirect:/configure/$circleId?error=invalidPermissions"
-        val ie = openings.getOne(openingId!!)
+        val ie = openings.getOne(openingId!!) ?: return "redirect:/configure/$circleId?error=invalidOpening"
         orders.cancelAllOrdersInOpening(openingId)
         if (ie.circle!!.id == circleId)
             openings.delete(ie)
@@ -616,10 +604,10 @@ open class ConfigureController {
                      auth: Authentication?,
                      model: Model
     ): String {
-        if (cannotEditCircle(circleId, auth))
+        if (cannotEditCircle(userRepository, circleId, auth))
             return "redirect:/configure/$circleId?error=invalidPermissions"
 
-        val opening = openings.getOne(openingId)
+        val opening = openings.getOne(openingId) ?: return "redirect:/configure/$circleId?error=invalidOpening"
         if (opening.circle!!.id != circleId)
             return "redirect:/configure/$circleId?error"
 
@@ -642,7 +630,7 @@ open class ConfigureController {
     ): String {
         val circleId = orders.getCircleIdByOrderId(body.id) ?: return "INVALID ID"
 
-        if (cannotEditCircle(circleId, auth))
+        if (cannotEditCircle(userRepository, circleId, auth))
             return "NO PERMISSION"
 
         orders.updateOrder(body.id, OrderStatus[body.status])
@@ -656,7 +644,7 @@ open class ConfigureController {
     ): String {
         val circleId = orders.getCircleIdByOrderId(body.id) ?: return "INVALID ID"
 
-        if (cannotEditCircle(circleId, auth))
+        if (cannotEditCircle(userRepository, circleId, auth))
             return "NO PERMISSION"
 
         orders.updateOrderComment(body.id, body.comment)
@@ -670,7 +658,7 @@ open class ConfigureController {
     ): String {
         val circleId = orders.getCircleIdByOrderId(body.id) ?: return "INVALID ID"
 
-        if (cannotEditCircle(circleId, auth))
+        if (cannotEditCircle(userRepository, circleId, auth))
             return "NO PERMISSION"
 
         orders.updateOrderPrice(body.id, max(0, body.price))
@@ -715,8 +703,9 @@ open class ConfigureController {
             auth: Authentication?,
             model: Model
     ): String {
-        val circle = openings.getOne(openingId).circle
-        if (cannotEditCircle(circle!!.id, auth))
+        val opening = openings.getOne(openingId) ?: return "redirect:/configure?error=invalidOpening"
+        val circle = opening.circle
+        if (cannotEditCircle(userRepository, circle!!.id, auth))
             return "redirect:/configure/${circle.id}?error"
 
         model.addAttribute("artificialId", artificialId != "off")
@@ -747,8 +736,8 @@ open class ConfigureController {
                      @RequestParam(defaultValue = "0") emptyRows: Int = 0,
                      auth: Authentication?
     ): String {
-        val opening = openings.getOne(openingId)
-        if (cannotEditCircle(opening.circle!!.id, auth))
+        val opening = openings.getOne(openingId) ?: return "redirect:/configure?error=invalidOpening"
+        if (cannotEditCircle(userRepository, opening.circle!!.id, auth))
             return "redirect:/configure/" + opening.circle!!.id + "?error"
 
         val document = Document()

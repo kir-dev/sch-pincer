@@ -30,11 +30,11 @@
             </tr>
             <tr th:each="role : ${roles}" th:object="${role}">
                 <td th:text="*{name}">Test Name</td>
-                <td>
-                    <a href="#" th:href="@{/configure/__${circleId}__/roles/edit/__*{uidHash}__}"><i
-                            class="material-icons">edit</i></a>
-                </td>
-                <td th:text="*{uidHash}" class="uid">XYZ</td>
+                 <td>
+                     <a href="#" th:href="@{'/configure/' + ${circleId} + '/roles/edit/' + *{uid}}"><i
+                             class="material-icons">edit</i></a>
+                 </td>
+                 <td th:text="*{uid}" class="uid">XYZ</td>
                 <td th:text="#{lang.configure.member.role.__*{permission}__}"></td>
             </tr>
         </table>

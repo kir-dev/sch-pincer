@@ -3,22 +3,17 @@ package hu.kirdev.schpincer.service
 import hu.kirdev.schpincer.dao.UserRepository
 import hu.kirdev.schpincer.dto.CircleRoleEntryDto
 import hu.kirdev.schpincer.model.UserEntity
-import hu.kirdev.schpincer.web.sha256
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.security.NoSuchAlgorithmException
 import java.util.*
 
 @Service
-open class UserService {
-
-    @Autowired
-    private lateinit var repo: UserRepository
+open class UserService(private val repo: UserRepository) {
 
     @Transactional(readOnly = true)
-    open fun getById(uid: String): UserEntity {
-        return repo.getReferenceById(uid)
+    open fun getById(uid: String): UserEntity? {
+        return repo.findByIdOrNull(uid)
     }
 
     @Transactional(readOnly = true)
@@ -50,22 +45,9 @@ open class UserService {
     }
 
     @Transactional(readOnly = true)
-    open fun findPermissionByUidHash(uidHash: String, circleId: Long): CircleRoleEntryDto? {
-        val user: UserEntity = getByUidHash(uidHash) ?: return null
+    open fun findPermissionByUid(uid: String, circleId: Long): CircleRoleEntryDto? {
+        val user: UserEntity = getByIdOrNull(uid) ?: return null
         return CircleRoleEntryDto(user, circleId)
-    }
-
-    @Transactional(readOnly = true)
-    open fun getByUidHash(uidHash: String): UserEntity? {
-        val users: List<UserEntity> = repo.findAll()
-        return users.stream().filter {
-            try {
-                return@filter it.uid.sha256().equals(uidHash, ignoreCase = true)
-            } catch (e: NoSuchAlgorithmException) {
-                e.printStackTrace()
-            }
-            false
-        }.findAny().orElse(null)
     }
 
     @Transactional(readOnly = false)
@@ -80,8 +62,8 @@ open class UserService {
     }
 
     @Transactional(readOnly = false)
-    open fun setRoom(userId: String, room: String): UserEntity {
-        val user = getById(userId)
+    open fun setRoom(userId: String, room: String): UserEntity? {
+        val user = getById(userId) ?: return null
         user.room = room.replace(Regex("[^A-Za-z0-9 -_()]"), "")
         repo.save(user)
         return user

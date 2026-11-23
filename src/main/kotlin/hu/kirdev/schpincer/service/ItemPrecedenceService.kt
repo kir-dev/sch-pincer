@@ -2,19 +2,14 @@ package hu.kirdev.schpincer.service
 
 import hu.kirdev.schpincer.dao.ItemRepository
 import hu.kirdev.schpincer.model.ItemEntity
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 private const val FLAG_EDITORS_CHOICE = 1010
 private const val FLAG_HIDDEN_EDITORS_CHOICE = 1011
-private const val FLAG_FUNKY_ITEM = 1069
 
 @Service
-open class ItemPrecedenceService {
-
-    @Autowired
-    private lateinit var items: ItemRepository
+open class ItemPrecedenceService(private val items: ItemRepository) {
 
     @Transactional(readOnly = false)
     open fun reorder() {

@@ -3,8 +3,8 @@ package hu.kirdev.schpincer.service
 import hu.kirdev.schpincer.dao.ItemRepository
 import hu.kirdev.schpincer.dao.OpeningRepository
 import hu.kirdev.schpincer.model.ItemEntity
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
@@ -14,16 +14,11 @@ const val DAY_IN_MILLIS = 24 * 60 * 60 * 1000
 const val HOUR6_IN_MILLIS = 6 * 60 * 60 * 1000
 
 @Service
-open class ItemService {
-
-    @Autowired
-    private lateinit var repo: ItemRepository
-
-    @Autowired
-    private lateinit var openingRepo: OpeningRepository
-
-    @Autowired
-    private lateinit var extrasService: ExtrasService
+open class ItemService(
+    private val repo: ItemRepository,
+    private val openingRepo: OpeningRepository,
+    private val extrasService: ExtrasService,
+) {
 
     @Transactional(readOnly = true)
     open fun findAll(): List<ItemEntity> {
@@ -37,7 +32,7 @@ open class ItemService {
 
     @Transactional(readOnly = true)
     open fun getOne(itemId: Long): ItemEntity? {
-        return repo.getReferenceById(itemId)
+        return repo.findByIdOrNull(itemId)
     }
 
     @Transactional(readOnly = false)

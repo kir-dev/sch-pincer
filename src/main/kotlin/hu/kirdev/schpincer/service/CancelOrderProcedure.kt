@@ -3,6 +3,7 @@ package hu.kirdev.schpincer.service
 import hu.kirdev.schpincer.dao.OrderRepository
 import hu.kirdev.schpincer.dao.TimeWindowRepository
 import hu.kirdev.schpincer.model.*
+import org.springframework.data.repository.findByIdOrNull
 import java.time.Instant
 
 class CancelOrderProcedure(
@@ -31,7 +32,7 @@ class CancelOrderProcedure(
     }
 
     internal fun loadOrder() {
-        order = orderRepository.getReferenceById(id)
+        order = orderRepository.findByIdOrNull(id) ?: throw FailedOrderException(RESPONSE_BAD_REQUEST)
     }
 
     internal fun validatePrivilege() {
@@ -45,7 +46,8 @@ class CancelOrderProcedure(
     }
 
     internal fun loadOpening(now: Long) {
-        opening = openings.getOne(order.openingId!!)
+        val openingId = order.openingId ?: throw FailedOrderException(RESPONSE_INTERNAL_ERROR)
+        opening = openings.getOne(openingId) ?: throw FailedOrderException(RESPONSE_INTERNAL_ERROR)
         if (opening.orderEnd <= now)
             throw FailedOrderException(RESPONSE_ORDER_PERIOD_ENDED)
     }
@@ -53,7 +55,7 @@ class CancelOrderProcedure(
     internal fun updateDetails() {
         order.status = OrderStatus.CANCELLED
         count = order.count
-        timeWindow = timeWindowRepo.getReferenceById(order.intervalId)
+        timeWindow = timeWindowRepo.findByIdOrNull(order.intervalId) ?: throw FailedOrderException(RESPONSE_INTERNAL_ERROR)
     }
 
     internal fun updateRemainingCounts() {

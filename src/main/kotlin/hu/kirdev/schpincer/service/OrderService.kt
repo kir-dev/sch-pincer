@@ -4,8 +4,6 @@ import hu.kirdev.schpincer.dao.*
 import hu.kirdev.schpincer.dto.ManualUserDetails
 import hu.kirdev.schpincer.dto.PriceBreakdown
 import hu.kirdev.schpincer.model.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.MessageSource
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -40,28 +38,14 @@ const val RESPONSE_TIME_WINDOW_INVALID = "TIME_WINDOW_INVALID"
 const val BASE_PRICE = "basePrice"
 
 @Service
-open class OrderService {
-
-    @Autowired
-    internal lateinit var repo: OrderRepository
-
-    @Autowired
-    internal lateinit var openingRepo: OpeningRepository
-
-    @Autowired
-    internal lateinit var openings: OpeningService
-
-    @Autowired
-    internal lateinit var timeWindowRepo: TimeWindowRepository
-
-    @Autowired
-    internal lateinit var itemsRepo: ItemRepository
-
-    @Autowired
-    internal lateinit var extrasRepository: ExtrasRepository
-
-    @Autowired
-    lateinit var messageSource: MessageSource
+open class OrderService(
+    private val repo: OrderRepository,
+    private val openingRepo: OpeningRepository,
+    private val openings: OpeningService,
+    private val timeWindowRepo: TimeWindowRepository,
+    private val itemsRepo: ItemRepository,
+    private val extrasRepository: ExtrasRepository,
+) {
 
     @Transactional
     open fun save(order: OrderEntity) {
@@ -75,7 +59,7 @@ open class OrderService {
 
     @Transactional(readOnly = true)
     open fun getOne(id: Long): OrderEntity? {
-        return repo.getReferenceById(id)
+        return repo.findByIdOrNull(id)
     }
 
     @Transactional(readOnly = true)
@@ -110,7 +94,11 @@ open class OrderService {
     @Transactional(readOnly = true)
     open fun getCircleIdByOrderId(id: Long): Long? {
         val order: Optional<OrderEntity> = repo.findById(id)
-        return order.map { orderEntity: OrderEntity -> openingRepo.getReferenceById(orderEntity.openingId!!).circle?.id!! }.orElse(null)
+        return order.map { orderEntity: OrderEntity ->
+            orderEntity.openingId?.let { openingId ->
+                openingRepo.findByIdOrNull(openingId)?.circle?.id
+            }
+        }.orElse(null)
     }
 
     @Transactional(readOnly = false)

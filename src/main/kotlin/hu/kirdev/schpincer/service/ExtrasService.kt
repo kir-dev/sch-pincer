@@ -8,25 +8,17 @@ import hu.kirdev.schpincer.model.ExtraEntity
 import hu.kirdev.schpincer.web.component.CustomComponentModel
 import hu.kirdev.schpincer.web.component.CustomComponentModelList
 import hu.kirdev.schpincer.web.component.CustomComponentType
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import jakarta.annotation.PostConstruct
 import tools.jackson.databind.ObjectMapper
 
 @Service
-class ExtrasService {
-
-    @Autowired
-    lateinit var extrasRepository: ExtrasRepository
-
-    @Autowired
-    lateinit var itemRepository: ItemRepository
-
-    @Autowired
-    lateinit var circleRepository: CircleRepository
-
-    @Autowired
-    lateinit var mapper: ObjectMapper
+class ExtrasService(
+    private val extrasRepository: ExtrasRepository,
+    private val itemRepository: ItemRepository,
+    private val circleRepository: CircleRepository,
+    private val mapper: ObjectMapper,
+) {
 
     fun createExtrasForCircle(circle: CircleEntity) {
 

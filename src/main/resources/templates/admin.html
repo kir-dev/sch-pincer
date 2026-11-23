@@ -75,30 +75,30 @@
             </tr>
             <tr th:each="role : ${roles}" th:object="${role}">
                 <td th:text="*{name}">Test Name</td>
-                <td>
-                    <a href="#" th:href="@{/admin/roles/edit/__*{uidHash}__}"><i class="material-icons">edit</i></a>
-                </td>
-                <td th:text="*{sysadmin} ? #{lang.yes} : #{lang.no}">No</td>
-                <td th:text="*{uidHash}" class="uid">XYZ</td>
-                <td th:text="*{permissions}"></td>
-            </tr>
-        </table>
-
-        <table class="responsive-table full-table">
-            <object th:each="role : ${roles}" th:object="${role}" th:remove="tag">
-                <tr>
-                    <td th:text="*{name}">Test Name</td>
-                    <td>
-                        <a href="#" th:href="@{/admin/roles/edit/__*{uidHash}__}"><i class="material-icons">edit</i></a>
-                    </td>
+                 <td>
+                     <a href="#" th:href="@{'/admin/roles/edit/' + *{uid}}"><i class="material-icons">edit</i></a>
+                 </td>
+                 <td th:text="*{sysadmin} ? #{lang.yes} : #{lang.no}">No</td>
+                 <td th:text="*{uid}" class="uid">XYZ</td>
+                 <td th:text="*{permissions}"></td>
+             </tr>
+         </table>
+ 
+         <table class="responsive-table full-table">
+             <object th:each="role : ${roles}" th:object="${role}" th:remove="tag">
+                 <tr>
+                     <td th:text="*{name}">Test Name</td>
+                     <td>
+                         <a href="#" th:href="@{'/admin/roles/edit/' + *{uid}}"><i class="material-icons">edit</i></a>
+                     </td>
                 </tr>
                 <tr>
                     <td th:text="#{lang.admin.roles-admin}">Admin</td>
                     <td th:text="*{sysadmin} ? #{lang.yes} : #{lang.no}">No</td>
                 </tr>
                 <tr>
-                    <td th:text="#{lang.admin.roles.uid}">UID</td>
-                    <td th:text="*{uidHash}" class="uid">XYZ</td>
+                <td th:text="#{lang.admin.roles.uid}">UID</td>
+                 <td th:text="*{uid}" class="uid">XYZ</td>
                 </tr>
                 <tr>
                     <td th:text="#{lang.admin.roles-permissions}">Permissions</td>
