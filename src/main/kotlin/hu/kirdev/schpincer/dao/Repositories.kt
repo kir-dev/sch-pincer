@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import java.util.*
 
@@ -48,8 +49,14 @@ interface OpeningRepository : JpaRepository<OpeningEntity, Long> {
 
     fun findAllByDateEndGreaterThanAndDateEndLessThanOrderByDateStart(now: Long, weekFromNow: Long): List<OpeningEntity>
     fun findAllByOrderStartGreaterThanAndOrderStartLessThan(time1: Long, time2: Long): List<OpeningEntity>
+
+    @Query("SELECT o FROM OpeningEntity o WHERE o.orderStart <= :time AND o.orderEnd >= :time")
+    fun findAllOrderableAt(@Param("time") time: Long): List<OpeningEntity>
+
+    @Query("SELECT o FROM OpeningEntity o WHERE o.orderStart < :to AND o.orderEnd > :from")
+    fun findAllOrderableBetween(@Param("from") from: Long, @Param("to") to: Long): List<OpeningEntity>
+
     fun findFirstByCircle_IdAndDateEndGreaterThanOrderByDateStart(id: Long, time: Long): Optional<OpeningEntity>
-    fun findAllByOrderStartLessThanAndOrderEndGreaterThan(currentTime1: Long, currentTime2: Long): List<OpeningEntity>
     fun findAllByOrderEndGreaterThanOrderByDateStart(currentTimeMillis: Long): List<OpeningEntity>
 }
 

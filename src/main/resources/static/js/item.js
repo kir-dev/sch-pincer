@@ -14,7 +14,7 @@ function appendNext(profile = 0) {
     if (page === 0)
         clearAll();
 
-    getForJsonObject('api/items' + getFilter('') + (profile !== parseInt(0) ? '?circle=' + profile : ''))
+    getForJsonObject(itemsApiPath(profile))
         .then(function (data) {
             endReached = true;
             if (data.length === 0) {
@@ -55,12 +55,34 @@ function filterSearch() {
         .forEach(val => addItem(val));
 }
 
-function getFilter(separator) {
-    if (location.search.includes('?now'))
-        return '/now' + separator;
-    if (location.search.includes('?tomorrow'))
-        return '/tomorrow' + separator;
+function activeFilter() {
+    if (typeof ITEM_FILTER === 'string' && (ITEM_FILTER === 'now' || ITEM_FILTER === 'tomorrow'))
+        return ITEM_FILTER;
+    const params = new URLSearchParams(location.search);
+    if (params.has('now'))
+        return 'now';
+    if (params.has('tomorrow'))
+        return 'tomorrow';
     return '';
+}
+
+function itemsApiPath(profile) {
+    const filter = activeFilter();
+    if (filter === 'now' || filter === 'tomorrow')
+        return 'api/items/' + filter;
+    if (profile !== parseInt(0))
+        return 'api/items?circle=' + profile;
+    return 'api/items';
+}
+
+function itemsPageUrl(keyword) {
+    const parts = [];
+    const filter = activeFilter();
+    if (filter === 'now' || filter === 'tomorrow')
+        parts.push(filter);
+    if (keyword != null && keyword !== '')
+        parts.push('q=' + encodeURIComponent(keyword));
+    return '/items' + (parts.length === 0 ? '' : '?' + parts.join('&'));
 }
 
 function searchSubmit() {
@@ -74,7 +96,7 @@ function showLoading() {
 }
 
 function searchFor(keyword) {
-    getForJsonObject('api/items' + getFilter(''))
+    getForJsonObject(itemsApiPath(0))
         .then(function (data) {
             searchResult = data;
             document.getElementById('search-input').value = keyword;
@@ -85,15 +107,8 @@ function searchFor(keyword) {
 }
 
 function updateUrl(keyword) {
-    if (keyword == null) {
-        window.history.pushState({
-            route: '/items' + (getFilter('') !== '' ? ('?' + getFilter('')) : '')
-        }, document.title, '/items' + (getFilter('') !== '' ? ('?' + getFilter('')) : ''));
-    } else {
-        window.history.pushState({
-            route: '/items?' + (getFilter('') !== '' ? (getFilter('') + '&') : '') + 'q=' + encodeURI(keyword)
-        }, document.title, '/items?' + (getFilter('') !== '' ? (getFilter('') + '&') : '') + 'q=' + encodeURI(keyword));
-    }
+    const url = itemsPageUrl(keyword);
+    window.history.pushState({ route: url }, document.title, url);
 }
 
 function addItem(item) {

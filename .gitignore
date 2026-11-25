@@ -9,7 +9,7 @@ secret_notes
 tmp/
 .application-path.properties
 .factorypath/
-test/
+/test/
 .factorypath
 WEBSCHOP-DOCS.html
 docs.md
