@@ -9,14 +9,14 @@ data class ExecutiveAt(val id: Long, val name: String)
 data class Entrant(val groupId: Long, val groupName: String, val entrantType: String)
 
 class SchPincerOidcUser(private val oidcUser: OidcUser) : OidcUser by oidcUser {
-    val internalId get() = subject
+    val internalId: String get() = checkNotNull(subject) { "OIDC token has no sub claim" }
     var extraAuthorities: List<GrantedAuthority> = listOf()
     val memberships = parseCircleMemberships()
     val executiveAtCircles = parseExecutiveAt()
     val entrants = parseEntrants()
     val cardType = getCardType(entrants)
 
-    override fun getAuthorities(): Collection<GrantedAuthority?> = oidcUser.authorities union extraAuthorities
+    override fun getAuthorities(): Collection<GrantedAuthority> = oidcUser.authorities union extraAuthorities
 
     private fun getCardType(entrants: List<Entrant>): CardType {
         var card = CardType.DO

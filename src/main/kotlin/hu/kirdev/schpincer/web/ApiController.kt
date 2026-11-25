@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.*
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.client.RestTemplate
-import org.springframework.web.client.exchange
+import org.springframework.web.client.RestClient
+import org.springframework.web.client.body
 import java.lang.Integer.min
 import java.text.SimpleDateFormat
 import java.util.stream.Collectors
@@ -364,12 +364,15 @@ open class ApiController(
         println("EUR: ${EUR_PRICE} USD: ${USD_PRICE}")
     }
 
-    private fun getPrice(currency: String): Double {
-        val headers = HttpHeaders()
-        headers.set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
-        headers.set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36")
+    private val restClient = RestClient.create()
 
-        val body: String? = RestTemplate().exchange<String>("https://www.google.com/search?q=1+${currency}+to+huf", HttpMethod.GET, HttpEntity<String>(headers), String::class).body
+    private fun getPrice(currency: String): Double {
+        val body: String? = restClient.get()
+            .uri("https://www.google.com/search?q=1+${currency}+to+huf")
+            .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+            .header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36")
+            .retrieve()
+            .body<String>()
         val startIndex = body?.indexOf("data-exchange-rate")
         if (startIndex == null || startIndex < 0)
             return 0.0
